@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { Navigation } from '../../components/Navigation'
-import { CategoryCard } from '../../components/CategoryCard'
 import { AdBanner } from '../../components/AdBanner'
 import { QUIZ_CATEGORIES } from '../../data/quizDatabase'
 
@@ -59,127 +58,158 @@ export default function StartPage() {
       })
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <Navigation />
       
-      <main className="flex-1 p-4 max-w-7xl mx-auto">
-        {/* Header */}
+      <main className="flex-1 p-4 max-w-md mx-auto md:max-w-4xl">
+        {/* Mobile-First Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Choose Your Tech Category
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">
+            Choose Category
           </h1>
-          <p className="text-blue-200 text-lg mb-2">
+          <p className="text-blue-200 text-sm md:text-lg mb-2">
             Select a category to start your quiz journey
           </p>
-          <p className="text-blue-300 text-sm">
-            {categories.length} categories • 50+ original questions • Multiple difficulty levels
+          <p className="text-blue-300 text-xs md:text-sm">
+            {categories.length} categories • 50+ questions • Multiple levels
           </p>
         </motion.div>
 
-        {/* AdSense Banner */}
+        {/* AdSense Banner - Mobile Optimized */}
         <AdBanner 
           adSlot="1111111111"
           adFormat="leaderboard"
-          className="mb-8"
+          className="mb-6"
         />
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* Category Tabs - Horizontal Scroll on Mobile */}
+        <div className="flex overflow-x-auto gap-2 mb-6 pb-2 scrollbar-hide">
           {categoryTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setSelectedCategory(tab.id)}
-              className={`px-4 py-2 rounded-full font-semibold transition-all ${
+              className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
                 selectedCategory === tab.id
-                  ? 'bg-yellow-500 text-black'
+                  ? 'bg-orange-500 text-white'
                   : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
               {tab.name}
-              <span className="ml-2 text-sm opacity-70">({tab.count})</span>
+              <span className="ml-1 text-xs opacity-70">({tab.count})</span>
             </button>
           ))}
         </div>
 
-        {/* Categories Grid */}
+        {/* Categories - Mobile-First Card Design */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="space-y-4"
         >
           {filteredCategories.map((category, index) => (
             <motion.div
               key={category.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="glass-effect rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300"
+              onClick={() => handleCategorySelect(category.id)}
             >
-              <CategoryCard
-                category={category}
-                onSelect={handleCategorySelect}
-                userCoins={state.user.coins}
-              />
+              <div className="flex items-center justify-between">
+                {/* Left Section - Icon and Info */}
+                <div className="flex items-center space-x-4 flex-1">
+                  <div className="text-4xl md:text-5xl">
+                    {category.icon}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <h3 className="text-white font-bold text-lg md:text-xl truncate">
+                        {category.name}
+                      </h3>
+                      <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                        Live
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="text-yellow-400 font-bold flex items-center">
+                        <span className="mr-1">🏆</span>
+                        <span className="text-lg md:text-xl">{category.prizePool}</span>
+                      </div>
+                      
+                      <div className="text-blue-200 text-xs">
+                        Entry: <span className="text-orange-400">🪙{category.entryFee}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="text-gray-400 text-xs mt-1">
+                      Winner announcement: 00:00:00
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Section - Play Button */}
+                <div className="flex-shrink-0">
+                  <button
+                    className={`px-6 py-3 rounded-full font-semibold text-sm transition-all ${
+                      state.user.coins >= category.entryFee
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    }`}
+                    disabled={state.user.coins < category.entryFee}
+                  >
+                    {state.user.coins >= category.entryFee ? 'PLAY NOW' : 'NEED COINS'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Topics - Mobile Hidden, Desktop Visible */}
+              <div className="hidden md:block mt-3 pt-3 border-t border-white/10">
+                <div className="flex flex-wrap gap-2">
+                  {category.subcategories.slice(0, 4).map((topic, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs"
+                    >
+                      {topic}
+                    </span>
+                  ))}
+                  {category.subcategories.length > 4 && (
+                    <span className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs">
+                      +{category.subcategories.length - 4} more
+                    </span>
+                  )}
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Feature Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-12 glass-effect p-8 rounded-2xl"
-        >
-          <h2 className="text-2xl font-bold text-white text-center mb-8">
-            🎯 Quiz Features
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-4xl mb-4">🎚️</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                3 Difficulty Levels
-              </h3>
-              <p className="text-blue-200 text-sm">
-                Beginner, Intermediate, and Advanced levels with different rewards and challenges
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl mb-4">⏱️</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Timed Questions
-              </h3>
-              <p className="text-blue-200 text-sm">
-                Race against time! Faster answers earn bonus coins and build your streak
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl mb-4">🔥</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Streak System
-              </h3>
-              <p className="text-blue-200 text-sm">
-                Build consecutive correct answers for streak bonuses and special achievements
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Bottom Ad */}
+        {/* Bottom Ad - Mobile Optimized */}
         <AdBanner 
           adSlot="2222222222"
           adFormat="rectangle"
-          className="mt-8"
+          className="mt-6"
         />
       </main>
+      
+      {/* Custom Scrollbar Styles */}
+      <style jsx global>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 }
