@@ -22,10 +22,13 @@ interface QuizPageProps {
   }>
 }
 
-export default async function QuizPage({ params }: QuizPageProps) {
-  const resolvedParams = await params
+export default function QuizPage({ params }: QuizPageProps) {
   const router = useRouter()
   const { state, dispatch } = useApp()
+  
+  // Category state
+  const [categoryId, setCategoryId] = useState<string>('')
+  const [categoryInfo, setCategoryInfo] = useState<any>(null)
   
   // Quiz state
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -43,30 +46,40 @@ export default async function QuizPage({ params }: QuizPageProps) {
   const [streak, setStreak] = useState(0)
   const [maxStreak, setMaxStreak] = useState(0)
 
-  const categoryInfo = getCategoryInfo(resolvedParams.category)
+  // Handle async params
+  useEffect(() => {
+    const resolveParams = async () => {
+      const resolvedParams = await params
+      setCategoryId(resolvedParams.category)
+      setCategoryInfo(getCategoryInfo(resolvedParams.category))
+      setLoading(false)
+    }
+    resolveParams()
+  }, [params])
 
   // Initialize quiz data based on difficulty
   useEffect(() => {
-    if (quizStarted) {
+    if (quizStarted && categoryId) {
       const config = DIFFICULTY_CONFIG[difficulty]
-      const questions = getQuestionsForCategory(resolvedParams.category, difficulty, config.questions)
+      const questions = getQuestionsForCategory(categoryId, difficulty, config.questions)
       setQuizData(questions)
       setTimeLeft(config.timeLimit)
-      setLoading(false)
     }
-  }, [resolvedParams.category, difficulty, quizStarted])
+  }, [categoryId, difficulty, quizStarted])
 
   // Timer logic
   useEffect(() => {
-    if (timeLeft > 0 && !quizCompleted && !loading && quizStarted) {
+    if (timeLeft > 0 && !quizCompleted && quizStarted && quizData.length > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
       return () => clearTimeout(timer)
     } else if (timeLeft === 0 && !quizCompleted && quizStarted) {
       handleAnswerSelect(-1) // Time up
     }
-  }, [timeLeft, quizCompleted, loading, quizStarted])
+  }, [timeLeft, quizCompleted, quizStarted, quizData.length])
 
   const handleDifficultySelect = (selectedDifficulty: 'beginner' | 'intermediate' | 'advanced') => {
+    if (!categoryInfo) return
+    
     const config = DIFFICULTY_CONFIG[selectedDifficulty]
     const requiredCoins = categoryInfo.entryFee * (selectedDifficulty === 'advanced' ? 2 : selectedDifficulty === 'intermediate' ? 1.5 : 1)
     
@@ -79,6 +92,8 @@ export default async function QuizPage({ params }: QuizPageProps) {
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
+    if (quizData.length === 0) return
+    
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
@@ -118,7 +133,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
         dispatch({ 
           type: 'END_QUIZ', 
           payload: { 
-            category: resolvedParams.category, 
+            category: categoryId, 
             difficulty,
             score, 
             totalQuestions: quizData.length,
@@ -142,7 +157,20 @@ export default async function QuizPage({ params }: QuizPageProps) {
     setStreak(0)
     setMaxStreak(0)
     setTimeLeft(30)
-    setLoading(true)
+  }
+
+  if (loading || !categoryInfo) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="glass-effect p-8 rounded-2xl text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white">Loading quiz...</p>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   if (!quizStarted) {
@@ -222,7 +250,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-200">Entry Fee:</span>
-                        <span className="text-red-400 font-semibold">🪙{entryCost}</span>
+                        <span className="text-red-400 font-semibold">🪙{Math.round(entryCost)}</span>
                       </div>
                     </div>
                     
@@ -234,7 +262,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
                       }`}
                       disabled={!canAfford}
                     >
-                      {canAfford ? 'Start Quiz' : `Need ${entryCost - state.user.coins} more coins`}
+                      {canAfford ? 'Start Quiz' : `Need ${Math.round(entryCost - state.user.coins)} more coins`}
                     </button>
                   </div>
                 </motion.div>
@@ -261,7 +289,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     )
   }
 
-  if (loading) {
+  if (quizData.length === 0) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
