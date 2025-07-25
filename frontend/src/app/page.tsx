@@ -68,77 +68,111 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <Navigation />
       
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-width-lg">
-          {/* AdSense Banner */}
-          <AdBanner 
-            adSlot="1234567890"
-            adFormat="auto"
-            className="mb-6"
-          />
-          
-          <div className="flex flex-col items-center space-y-6">
-            {!quizCompleted ? (
-              <>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full max-w-md"
-                >
-                  <QuizInterface
-                    questionData={quickStartQuiz[currentQuestion]}
-                    currentQuestion={currentQuestion}
-                    totalQuestions={quickStartQuiz.length}
-                    selectedAnswer={selectedAnswer}
-                    onAnswerSelect={handleAnswerSelect}
-                  />
-                </motion.div>
-                
-                <FunFact fact={quickStartQuiz[currentQuestion]?.funFact} />
-              </>
-            ) : (
+      <main className="flex-1 flex flex-col justify-center p-4 max-w-md mx-auto md:max-w-4xl">
+        {/* AdSense Banner - Mobile Optimized */}
+        <AdBanner 
+          adSlot="1234567890"
+          adFormat="auto"
+          className="mb-4 md:mb-6"
+        />
+        
+        <div className="flex flex-col items-center space-y-4 md:space-y-6">
+          {!quizCompleted ? (
+            <>
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="glass-effect p-8 rounded-2xl text-center max-w-md w-full"
+                className="w-full"
               >
-                <div className="text-4xl mb-4">🎉</div>
-                <h2 className="text-white text-2xl font-bold mb-4">
-                  Quick Start Complete!
-                </h2>
-                <p className="text-blue-200 mb-2">
-                  You scored {score} out of {quickStartQuiz.length}
-                </p>
-                <p className="text-yellow-400 text-lg font-semibold mb-4">
-                  Earned: {score * 100} coins
-                </p>
-                <div className="text-blue-200 text-sm mb-4">
-                  Redirecting to categories...
+                <QuizInterface
+                  questionData={quickStartQuiz[currentQuestion]}
+                  currentQuestion={currentQuestion}
+                  totalQuestions={quickStartQuiz.length}
+                  selectedAnswer={selectedAnswer}
+                  onAnswerSelect={handleAnswerSelect}
+                />
+              </motion.div>
+              
+              <FunFact fact={quickStartQuiz[currentQuestion]?.funFact} />
+              
+              {/* Mobile Quick Actions */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="w-full mt-6"
+              >
+                <div className="glass-effect p-4 rounded-xl">
+                  <h3 className="text-white font-semibold text-center mb-3 text-sm">
+                    🚀 Ready for More?
+                  </h3>
+                  <button
+                    onClick={() => router.push('/start')}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors"
+                  >
+                    Explore All Categories
+                  </button>
                 </div>
+              </motion.div>
+            </>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="glass-effect p-6 md:p-8 rounded-2xl text-center w-full"
+            >
+              <div className="text-4xl mb-4">🎉</div>
+              <h2 className="text-white text-xl md:text-2xl font-bold mb-4">
+                Quick Start Complete!
+              </h2>
+              <p className="text-blue-200 mb-2">
+                You scored {score} out of {quickStartQuiz.length}
+              </p>
+              <p className="text-orange-400 text-lg font-semibold mb-4">
+                Earned: {score * 100} coins
+              </p>
+              <div className="text-blue-200 text-sm mb-4">
+                Redirecting to categories...
+              </div>
+              <div className="space-y-3">
                 <button
                   onClick={() => router.push('/start')}
-                  className="button-primary px-6 py-3 rounded-lg font-semibold"
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors"
                 >
                   Continue to Categories
                 </button>
-              </motion.div>
-            )}
-            
-            <Features />
-            
-            {/* Bottom Ad */}
-            <AdBanner 
-              adSlot="9876543210"
-              adFormat="rectangle"
-              className="mt-6"
-            />
-          </div>
+                <button
+                  onClick={resetQuiz}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-lg transition-colors"
+                >
+                  Play Again
+                </button>
+              </div>
+            </motion.div>
+          )}
         </div>
+
+        {/* Features Section - Simplified for Mobile */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-8 md:mt-12"
+        >
+          <Features />
+        </motion.div>
+        
+        {/* Bottom Ad - Mobile Optimized */}
+        <AdBanner 
+          adSlot="9876543210"
+          adFormat="rectangle"
+          className="mt-6 md:mt-8"
+        />
       </main>
     </div>
   )
