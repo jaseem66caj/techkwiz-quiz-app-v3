@@ -166,7 +166,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
         dispatch({ 
           type: 'END_QUIZ', 
           payload: { 
-            category: params.category, 
+            category: resolvedParams.category, 
             score, 
             totalQuestions: quizData.length,
             correctAnswers: score 
