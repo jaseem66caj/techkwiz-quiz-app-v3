@@ -9,6 +9,12 @@ import { QuizInterface } from '../../../components/QuizInterface'
 import { FunFact } from '../../../components/FunFact'
 import { AdBanner } from '../../../components/AdBanner'
 import { QuizResult } from '../../../components/QuizResult'
+import { 
+  getQuestionsForCategory, 
+  getCategoryInfo, 
+  DIFFICULTY_CONFIG,
+  type QuizQuestion 
+} from '../../../data/quizDatabase'
 
 interface QuizPageProps {
   params: Promise<{
@@ -20,160 +26,110 @@ export default async function QuizPage({ params }: QuizPageProps) {
   const resolvedParams = await params
   const router = useRouter()
   const { state, dispatch } = useApp()
+  
+  // Quiz state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [quizCompleted, setQuizCompleted] = useState(false)
   const [timeLeft, setTimeLeft] = useState(30)
-  const [quizData, setQuizData] = useState<any[]>([])
+  const [quizData, setQuizData] = useState<QuizQuestion[]>([])
   const [loading, setLoading] = useState(true)
+  
+  // New features
+  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
+  const [quizStarted, setQuizStarted] = useState(false)
+  const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
+  const [streak, setStreak] = useState(0)
+  const [maxStreak, setMaxStreak] = useState(0)
 
-  // Mock quiz data for different categories
-  const generateQuizData = (category: string) => {
-    const quizzes: Record<string, any[]> = {
-      programming: [
-        {
-          question: "Which of the following is NOT a JavaScript data type?",
-          options: ["String", "Boolean", "Float", "Number"],
-          correctAnswer: 2,
-          funFact: "JavaScript has 7 primitive data types: string, number, boolean, null, undefined, symbol, and bigint."
-        },
-        {
-          question: "What does the 'this' keyword refer to in JavaScript?",
-          options: ["The current function", "The current object", "The global object", "It depends on the context"],
-          correctAnswer: 3,
-          funFact: "The 'this' keyword in JavaScript refers to different objects depending on how it's called."
-        },
-        {
-          question: "Which method is used to add an element to the end of an array?",
-          options: ["push()", "pop()", "shift()", "unshift()"],
-          correctAnswer: 0,
-          funFact: "Array.push() adds elements to the end, while unshift() adds to the beginning."
-        },
-        {
-          question: "What is the purpose of the 'use strict' directive?",
-          options: ["Enable strict mode", "Disable debugging", "Optimize performance", "Enable ES6 features"],
-          correctAnswer: 0,
-          funFact: "Strict mode helps catch common coding mistakes and prevents certain actions."
-        },
-        {
-          question: "Which operator is used for strict equality comparison?",
-          options: ["==", "===", "!=", "!=="],
-          correctAnswer: 1,
-          funFact: "=== checks for both value and type equality, while == performs type coercion."
-        }
-      ],
-      ai: [
-        {
-          question: "What is the primary goal of machine learning?",
-          options: ["To replace human intelligence", "To learn patterns from data", "To create robots", "To increase processing speed"],
-          correctAnswer: 1,
-          funFact: "Machine learning focuses on algorithms that can learn and improve from experience without being explicitly programmed."
-        },
-        {
-          question: "Which of these is a supervised learning algorithm?",
-          options: ["K-means clustering", "Linear regression", "Principal Component Analysis", "DBSCAN"],
-          correctAnswer: 1,
-          funFact: "Supervised learning uses labeled training data to learn a mapping from inputs to outputs."
-        },
-        {
-          question: "What does 'overfitting' mean in machine learning?",
-          options: ["Model is too simple", "Model performs well on training data but poorly on new data", "Model has too few parameters", "Model trains too slowly"],
-          correctAnswer: 1,
-          funFact: "Overfitting occurs when a model learns the training data too well, including noise and outliers."
-        },
-        {
-          question: "Which activation function is commonly used in hidden layers of neural networks?",
-          options: ["Sigmoid", "ReLU", "Tanh", "Softmax"],
-          correctAnswer: 1,
-          funFact: "ReLU (Rectified Linear Unit) is popular because it's computationally efficient and helps with the vanishing gradient problem."
-        },
-        {
-          question: "What is the purpose of backpropagation in neural networks?",
-          options: ["To feed data forward", "To calculate gradients and update weights", "To initialize weights", "To prevent overfitting"],
-          correctAnswer: 1,
-          funFact: "Backpropagation is the algorithm used to train neural networks by computing gradients of the loss function."
-        }
-      ],
-      'web-dev': [
-        {
-          question: "Which HTTP status code indicates a successful response?",
-          options: ["404", "500", "200", "302"],
-          correctAnswer: 2,
-          funFact: "HTTP status codes starting with 2xx indicate success, 4xx indicate client errors, and 5xx indicate server errors."
-        },
-        {
-          question: "What does CSS stand for?",
-          options: ["Computer Style Sheets", "Cascading Style Sheets", "Creative Style Sheets", "Colorful Style Sheets"],
-          correctAnswer: 1,
-          funFact: "CSS was first proposed by Håkon Wium Lie in 1994 while working with Tim Berners-Lee at CERN."
-        },
-        {
-          question: "Which HTML element is used for the largest heading?",
-          options: ["<h6>", "<h1>", "<header>", "<title>"],
-          correctAnswer: 1,
-          funFact: "HTML headings go from <h1> (largest) to <h6> (smallest) and are important for SEO and accessibility."
-        },
-        {
-          question: "What is the purpose of the 'alt' attribute in images?",
-          options: ["To resize the image", "To provide alternative text for accessibility", "To add filters", "To set image quality"],
-          correctAnswer: 1,
-          funFact: "The alt attribute is crucial for screen readers and improves web accessibility for visually impaired users."
-        },
-        {
-          question: "Which method is used to make HTTP requests in modern JavaScript?",
-          options: ["XMLHttpRequest", "fetch()", "ajax()", "http()"],
-          correctAnswer: 1,
-          funFact: "The fetch() API is the modern way to make HTTP requests and returns promises for easier async handling."
-        }
-      ]
+  const categoryInfo = getCategoryInfo(resolvedParams.category)
+
+  // Initialize quiz data based on difficulty
+  useEffect(() => {
+    if (quizStarted) {
+      const config = DIFFICULTY_CONFIG[difficulty]
+      const questions = getQuestionsForCategory(resolvedParams.category, difficulty, config.questions)
+      setQuizData(questions)
+      setTimeLeft(config.timeLimit)
+      setLoading(false)
     }
+  }, [resolvedParams.category, difficulty, quizStarted])
 
-    return quizzes[category] || quizzes.programming
-  }
-
+  // Timer logic
   useEffect(() => {
-    const data = generateQuizData(resolvedParams.category)
-    setQuizData(data)
-    setLoading(false)
-  }, [resolvedParams.category])
-
-  useEffect(() => {
-    if (timeLeft > 0 && !quizCompleted && !loading) {
+    if (timeLeft > 0 && !quizCompleted && !loading && quizStarted) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
       return () => clearTimeout(timer)
-    } else if (timeLeft === 0 && !quizCompleted) {
-      // Time up, move to next question or end quiz
-      handleAnswerSelect(-1) // -1 indicates no answer selected
+    } else if (timeLeft === 0 && !quizCompleted && quizStarted) {
+      handleAnswerSelect(-1) // Time up
     }
-  }, [timeLeft, quizCompleted, loading])
+  }, [timeLeft, quizCompleted, loading, quizStarted])
+
+  const handleDifficultySelect = (selectedDifficulty: 'beginner' | 'intermediate' | 'advanced') => {
+    const config = DIFFICULTY_CONFIG[selectedDifficulty]
+    const requiredCoins = categoryInfo.entryFee * (selectedDifficulty === 'advanced' ? 2 : selectedDifficulty === 'intermediate' ? 1.5 : 1)
+    
+    if (state.user.coins >= requiredCoins) {
+      setDifficulty(selectedDifficulty)
+      setQuizStarted(true)
+      // Deduct entry fee
+      dispatch({ type: 'UPDATE_COINS', payload: -requiredCoins })
+    }
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
-      if (answerIndex === quizData[currentQuestion].correctAnswer) {
-        setScore(score + 1)
-        dispatch({ type: 'UPDATE_COINS', payload: 200 })
+      const isCorrect = answerIndex === quizData[currentQuestion].correctAnswer
+      const config = DIFFICULTY_CONFIG[difficulty]
+      
+      if (isCorrect) {
+        const newScore = score + 1
+        setScore(newScore)
+        
+        // Calculate coins with streak bonus
+        const baseCoins = config.coinsPerCorrect
+        const streakBonus = Math.min(streak * 10, 100) // Max 100 bonus
+        const timeBonus = Math.floor(timeLeft / 5) * 5 // 5 coins per 5 seconds left
+        const totalCoins = baseCoins + streakBonus + timeBonus
+        
+        setTotalCoinsEarned(prev => prev + totalCoins)
+        setStreak(prev => {
+          const newStreak = prev + 1
+          setMaxStreak(Math.max(maxStreak, newStreak))
+          return newStreak
+        })
+        
+        dispatch({ type: 'UPDATE_COINS', payload: totalCoins })
+      } else {
+        setStreak(0)
       }
       
       if (currentQuestion < quizData.length - 1) {
         setCurrentQuestion(currentQuestion + 1)
         setSelectedAnswer(null)
-        setTimeLeft(30) // Reset timer for next question
+        setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
       } else {
         setQuizCompleted(true)
+        
+        // Save quiz result
         dispatch({ 
           type: 'END_QUIZ', 
           payload: { 
             category: resolvedParams.category, 
+            difficulty,
             score, 
             totalQuestions: quizData.length,
-            correctAnswers: score 
+            correctAnswers: score,
+            coinsEarned: totalCoinsEarned,
+            maxStreak,
+            completedAt: new Date().toISOString()
           }
         })
       }
-    }, 1000)
+    }, 1500)
   }
 
   const handlePlayAgain = () => {
@@ -181,21 +137,129 @@ export default async function QuizPage({ params }: QuizPageProps) {
     setSelectedAnswer(null)
     setScore(0)
     setQuizCompleted(false)
+    setQuizStarted(false)
+    setTotalCoinsEarned(0)
+    setStreak(0)
+    setMaxStreak(0)
     setTimeLeft(30)
+    setLoading(true)
   }
 
-  const getCategoryInfo = (category: string) => {
-    const categoryMap: Record<string, { name: string; icon: string; color: string }> = {
-      programming: { name: 'Programming', icon: '💻', color: 'from-blue-500 to-purple-600' },
-      ai: { name: 'Artificial Intelligence', icon: '🤖', color: 'from-purple-500 to-pink-600' },
-      'web-dev': { name: 'Web Development', icon: '🌐', color: 'from-green-500 to-teal-600' },
-      'mobile-dev': { name: 'Mobile Development', icon: '📱', color: 'from-orange-500 to-red-600' },
-      'data-science': { name: 'Data Science', icon: '📊', color: 'from-indigo-500 to-blue-600' },
-    }
-    return categoryMap[category] || categoryMap.programming
-  }
+  if (!quizStarted) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        
+        <main className="flex-1 p-4 max-w-4xl mx-auto">
+          {/* Category Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8"
+          >
+            <div className="text-6xl mb-4">{categoryInfo.icon}</div>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              {categoryInfo.name} Quiz
+            </h1>
+            <p className="text-blue-200 text-lg mb-2">
+              Choose your difficulty level
+            </p>
+            <p className="text-blue-300 text-sm">
+              Higher difficulties earn more coins but cost more to enter
+            </p>
+          </motion.div>
 
-  const categoryInfo = getCategoryInfo(resolvedParams.category)
+          {/* AdSense Banner */}
+          <AdBanner 
+            adSlot="3333333333"
+            adFormat="leaderboard"
+            className="mb-8"
+          />
+
+          {/* Difficulty Selection */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+          >
+            {Object.entries(DIFFICULTY_CONFIG).map(([level, config], index) => {
+              const entryCost = categoryInfo.entryFee * (level === 'advanced' ? 2 : level === 'intermediate' ? 1.5 : 1)
+              const canAfford = state.user.coins >= entryCost
+              
+              return (
+                <motion.div
+                  key={level}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                  className={`glass-effect p-6 rounded-2xl cursor-pointer transition-all duration-300 hover:scale-105 ${
+                    !canAfford ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  onClick={() => canAfford && handleDifficultySelect(level as any)}
+                >
+                  <div className="text-center">
+                    <div className="text-4xl mb-4">
+                      {level === 'beginner' ? '🟢' : level === 'intermediate' ? '🟡' : '🔴'}
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 capitalize">
+                      {level}
+                    </h3>
+                    
+                    <div className="space-y-3 mb-6">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-blue-200">Questions:</span>
+                        <span className="text-white font-semibold">{config.questions}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-blue-200">Time/Question:</span>
+                        <span className="text-white font-semibold">{config.timeLimit}s</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-blue-200">Coins/Correct:</span>
+                        <span className="text-yellow-400 font-semibold">🪙{config.coinsPerCorrect}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-blue-200">Entry Fee:</span>
+                        <span className="text-red-400 font-semibold">🪙{entryCost}</span>
+                      </div>
+                    </div>
+                    
+                    <button
+                      className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                        canAfford
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black hover:from-yellow-400 hover:to-orange-400'
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
+                      disabled={!canAfford}
+                    >
+                      {canAfford ? 'Start Quiz' : `Need ${entryCost - state.user.coins} more coins`}
+                    </button>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+          
+          {/* Back Button */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => router.push('/start')}
+              className="button-secondary px-6 py-3 rounded-xl font-semibold"
+            >
+              ← Back to Categories
+            </button>
+          </motion.div>
+        </main>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -204,7 +268,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">Loading quiz...</p>
+            <p className="text-white">Loading {difficulty} quiz...</p>
           </div>
         </main>
       </div>
@@ -216,42 +280,66 @@ export default async function QuizPage({ params }: QuizPageProps) {
       <Navigation />
       
       <main className="flex-1 p-4 max-w-4xl mx-auto">
-        {/* Category Header */}
+        {/* Quiz Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-6"
         >
-          <div className="text-6xl mb-2">{categoryInfo.icon}</div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            {categoryInfo.name} Quiz
-          </h1>
-          <p className="text-blue-200">
-            Test your knowledge and earn coins!
-          </p>
+          <div className="flex items-center justify-center space-x-4 mb-4">
+            <div className="text-4xl">{categoryInfo.icon}</div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                {categoryInfo.name} Quiz
+              </h1>
+              <p className="text-blue-200 capitalize">
+                {difficulty} Level
+              </p>
+            </div>
+          </div>
         </motion.div>
 
-        {/* AdSense Banner */}
-        <AdBanner 
-          adSlot="3333333333"
-          adFormat="leaderboard"
-          className="mb-6"
-        />
+        {/* Progress & Stats Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="glass-effect p-4 rounded-xl mb-6"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-lg font-bold text-white">{currentQuestion + 1}/{quizData.length}</div>
+              <div className="text-xs text-blue-200">Progress</div>
+            </div>
+            <div>
+              <div className={`text-lg font-bold ${timeLeft <= 10 ? 'text-red-400' : 'text-green-400'}`}>
+                {timeLeft}s
+              </div>
+              <div className="text-xs text-blue-200">Time Left</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-yellow-400">{score}</div>
+              <div className="text-xs text-blue-200">Correct</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-purple-400">{streak}</div>
+              <div className="text-xs text-blue-200">Streak</div>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 bg-white/10 rounded-full h-2">
+            <div 
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
+            />
+          </div>
+        </motion.div>
 
         <div className="flex flex-col items-center space-y-6">
           {!quizCompleted ? (
             <>
-              {/* Timer */}
-              <div className="glass-effect p-4 rounded-xl">
-                <div className="flex items-center space-x-4">
-                  <div className="text-white font-semibold">Time:</div>
-                  <div className={`text-2xl font-bold ${timeLeft <= 10 ? 'text-red-400' : 'text-green-400'}`}>
-                    {timeLeft}s
-                  </div>
-                </div>
-              </div>
-
               <motion.div
                 key={currentQuestion}
                 initial={{ opacity: 0, x: 20 }}
@@ -275,6 +363,9 @@ export default async function QuizPage({ params }: QuizPageProps) {
               score={score}
               totalQuestions={quizData.length}
               category={categoryInfo.name}
+              difficulty={difficulty}
+              coinsEarned={totalCoinsEarned}
+              maxStreak={maxStreak}
               onPlayAgain={handlePlayAgain}
               onBackToCategories={() => router.push('/start')}
             />
