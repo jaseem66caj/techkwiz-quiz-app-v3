@@ -195,7 +195,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     return categoryMap[category] || categoryMap.programming
   }
 
-  const categoryInfo = getCategoryInfo(params.category)
+  const categoryInfo = getCategoryInfo(resolvedParams.category)
 
   if (loading) {
     return (
