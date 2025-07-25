@@ -1,19 +1,19 @@
 'use client'
 
-import { createContext, useContext, useReducer, ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
+import { 
+  getCurrentUser, 
+  saveUserToStorage, 
+  updateUserCoins, 
+  addQuizResult,
+  isAuthenticated,
+  type User 
+} from '../utils/auth'
 
 // Types
-interface User {
-  id: string
-  name: string
-  coins: number
-  level: number
-  totalQuizzes: number
-  correctAnswers: number
-}
-
 interface AppState {
-  user: User
+  user: User | null
+  isAuthenticated: boolean
   currentQuiz: any
   quizHistory: any[]
   loading: boolean
@@ -26,17 +26,11 @@ interface AppContextType {
 
 // Initial state
 const initialState: AppState = {
-  user: {
-    id: 'user_1',
-    name: 'Tech Enthusiast',
-    coins: 0,
-    level: 1,
-    totalQuizzes: 0,
-    correctAnswers: 0,
-  },
+  user: null,
+  isAuthenticated: false,
   currentQuiz: null,
   quizHistory: [],
-  loading: false,
+  loading: true,
 }
 
 // Context
@@ -48,13 +42,36 @@ function appReducer(state: AppState, action: any) {
     case 'SET_LOADING':
       return { ...state, loading: action.payload }
     
-    case 'UPDATE_COINS':
+    case 'LOGIN_SUCCESS':
       return {
         ...state,
-        user: {
-          ...state.user,
-          coins: state.user.coins + action.payload,
-        },
+        user: action.payload,
+        isAuthenticated: true,
+        loading: false,
+      }
+    
+    case 'LOGOUT':
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        currentQuiz: null,
+        quizHistory: [],
+      }
+    
+    case 'UPDATE_COINS':
+      if (!state.user) return state
+      
+      const newCoins = Math.max(0, state.user.coins + action.payload)
+      const updatedUser = { ...state.user, coins: newCoins }
+      
+      // Save to localStorage
+      saveUserToStorage(updatedUser)
+      updateUserCoins(updatedUser.id, newCoins)
+      
+      return {
+        ...state,
+        user: updatedUser,
       }
     
     case 'START_QUIZ':
@@ -64,15 +81,28 @@ function appReducer(state: AppState, action: any) {
       }
     
     case 'END_QUIZ':
+      if (!state.user) return state
+      
+      const quizResult = action.payload
+      const updatedUserWithQuiz = {
+        ...state.user,
+        totalQuizzes: state.user.totalQuizzes + 1,
+        correctAnswers: state.user.correctAnswers + quizResult.correctAnswers,
+      }
+      
+      // Calculate new level (every 5 quizzes)
+      const newLevel = Math.floor(updatedUserWithQuiz.totalQuizzes / 5) + 1
+      updatedUserWithQuiz.level = newLevel
+      
+      // Save quiz result and user data
+      addQuizResult(state.user.id, quizResult)
+      saveUserToStorage(updatedUserWithQuiz)
+      
       return {
         ...state,
+        user: updatedUserWithQuiz,
         currentQuiz: null,
-        quizHistory: [...state.quizHistory, action.payload],
-        user: {
-          ...state.user,
-          totalQuizzes: state.user.totalQuizzes + 1,
-          correctAnswers: state.user.correctAnswers + action.payload.correctAnswers,
-        },
+        quizHistory: [...state.quizHistory, quizResult],
       }
     
     case 'RESET_USER':
@@ -89,6 +119,24 @@ function appReducer(state: AppState, action: any) {
 // Provider component
 export function Providers({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
+
+  // Initialize user from localStorage on app start
+  useEffect(() => {
+    const initializeAuth = () => {
+      if (isAuthenticated()) {
+        const user = getCurrentUser()
+        if (user) {
+          dispatch({ type: 'LOGIN_SUCCESS', payload: user })
+        } else {
+          dispatch({ type: 'SET_LOADING', payload: false })
+        }
+      } else {
+        dispatch({ type: 'SET_LOADING', payload: false })
+      }
+    }
+
+    initializeAuth()
+  }, [])
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
