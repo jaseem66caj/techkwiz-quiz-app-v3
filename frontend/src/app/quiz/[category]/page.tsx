@@ -133,10 +133,10 @@ export default async function QuizPage({ params }: QuizPageProps) {
   }
 
   useEffect(() => {
-    const data = generateQuizData(params.category)
+    const data = generateQuizData(resolvedParams.category)
     setQuizData(data)
     setLoading(false)
-  }, [params.category])
+  }, [resolvedParams.category])
 
   useEffect(() => {
     if (timeLeft > 0 && !quizCompleted && !loading) {
