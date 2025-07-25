@@ -11,12 +11,13 @@ import { AdBanner } from '../../../components/AdBanner'
 import { QuizResult } from '../../../components/QuizResult'
 
 interface QuizPageProps {
-  params: {
+  params: Promise<{
     category: string
-  }
+  }>
 }
 
-export default function QuizPage({ params }: QuizPageProps) {
+export default async function QuizPage({ params }: QuizPageProps) {
+  const resolvedParams = await params
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [currentQuestion, setCurrentQuestion] = useState(0)
