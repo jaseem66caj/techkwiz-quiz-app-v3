@@ -137,7 +137,7 @@ export default function StartPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4 px-2"
           >
             {filteredCategories.map((category, index) => (
               <motion.div
@@ -145,30 +145,30 @@ export default function StartPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="glass-effect rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300 cursor-pointer"
+                className="glass-effect rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:scale-[1.02] transition-all duration-300 cursor-pointer"
                 onClick={() => handleCategorySelect(category.id)}
               >
                 <div className="flex items-center justify-between">
                   {/* Left Section - Icon and Info */}
-                  <div className="flex items-center space-x-4 flex-1">
-                    <div className="text-4xl md:text-5xl">
+                  <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                    <div className="text-3xl sm:text-4xl md:text-5xl flex-shrink-0">
                       {category.icon}
                     </div>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="text-white font-bold text-lg md:text-xl truncate">
+                        <h3 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl truncate">
                           {category.name}
                         </h3>
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                        <span className="bg-green-500 text-white text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full flex-shrink-0">
                           Live
                         </span>
                       </div>
                       
-                      <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
                         <div className="text-yellow-400 font-bold flex items-center">
                           <span className="mr-1">🏆</span>
-                          <span className="text-lg md:text-xl">{category.prizePool}</span>
+                          <span className="text-sm sm:text-base md:text-lg lg:text-xl">{category.prizePool}</span>
                         </div>
                         
                         <div className="text-blue-200 text-xs">
@@ -176,7 +176,7 @@ export default function StartPage() {
                         </div>
                       </div>
                       
-                      <div className="text-gray-400 text-xs mt-1">
+                      <div className="text-gray-400 text-xs mt-1 hidden sm:block">
                         Winner announcement: 00:00:00
                       </div>
                     </div>
@@ -185,22 +185,22 @@ export default function StartPage() {
                   {/* Right Section - Play Button */}
                   <div className="flex-shrink-0">
                     <button
-                      className={`px-6 py-3 rounded-full font-semibold text-sm transition-all ${
+                      className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all ${
                         state.isAuthenticated && state.user && state.user.coins >= category.entryFee
                           ? 'bg-orange-500 hover:bg-orange-600 text-white'
                           : 'bg-gray-600 text-gray-400'
                       }`}
                     >
                       {!state.isAuthenticated 
-                        ? 'LOGIN TO PLAY' 
+                        ? 'LOGIN' 
                         : state.user && state.user.coins >= category.entryFee 
-                          ? 'PLAY NOW' 
-                          : 'NEED COINS'}
+                          ? 'PLAY' 
+                          : 'COINS'}
                     </button>
                   </div>
                 </div>
 
-                {/* Topics - Mobile Hidden, Desktop Visible */}
+                {/* Topics - Desktop Only */}
                 <div className="hidden md:block mt-3 pt-3 border-t border-white/10">
                   <div className="flex flex-wrap gap-2">
                     {category.subcategories.slice(0, 4).map((topic, idx) => (
