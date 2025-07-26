@@ -214,12 +214,12 @@ export default function StartPage() {
             ))}
           </div>
 
-          {/* Categories - Mobile-First Card Design */}
+          {/* Categories - Full Width Mobile Cards */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="space-y-3 sm:space-y-4 px-2"
+            className="space-y-4 px-2"
           >
             {filteredCategories.map((category, index) => (
               <motion.div
@@ -227,38 +227,38 @@ export default function StartPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="glass-effect rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:scale-[1.02] transition-all duration-300 cursor-pointer"
+                className="glass-effect rounded-2xl p-5 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
                 onClick={() => handleCategorySelect(category.id)}
               >
                 <div className="flex items-center justify-between">
                   {/* Left Section - Icon and Info */}
-                  <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
-                    <div className="text-3xl sm:text-4xl md:text-5xl flex-shrink-0">
+                  <div className="flex items-center space-x-4 flex-1 min-w-0">
+                    <div className="text-5xl flex-shrink-0">
                       {category.icon}
                     </div>
                     
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl truncate">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h3 className="text-white font-bold text-xl truncate">
                           {category.name}
                         </h3>
-                        <span className="bg-green-500 text-white text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full flex-shrink-0">
+                        <span className="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex-shrink-0 font-semibold">
                           Live
                         </span>
                       </div>
                       
-                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
+                      <div className="flex items-center space-x-4 text-base mb-2">
                         <div className="text-yellow-400 font-bold flex items-center">
-                          <span className="mr-1">🏆</span>
-                          <span className="text-sm sm:text-base md:text-lg lg:text-xl">{category.prizePool}</span>
+                          <span className="mr-2 text-xl">🏆</span>
+                          <span className="text-2xl">{category.prizePool}</span>
                         </div>
                         
-                        <div className="text-blue-200 text-xs">
-                          Entry: <span className="text-orange-400">🪙{category.entryFee}</span>
+                        <div className="text-blue-200 text-base">
+                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entryFee}</span>
                         </div>
                       </div>
                       
-                      <div className="text-gray-400 text-xs mt-1 hidden sm:block">
+                      <div className="text-gray-400 text-sm">
                         Winner announcement: 00:00:00
                       </div>
                     </div>
@@ -267,7 +267,7 @@ export default function StartPage() {
                   {/* Right Section - Play Button */}
                   <div className="flex-shrink-0">
                     <button
-                      className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base transition-all ${
+                      className={`px-6 py-4 rounded-2xl font-bold text-lg transition-all ${
                         (state.user?.coins || 0) >= category.entryFee
                           ? 'bg-orange-500 hover:bg-orange-600 text-white'
                           : 'bg-purple-600 hover:bg-purple-700 text-white'
@@ -281,18 +281,18 @@ export default function StartPage() {
                 </div>
 
                 {/* Topics - Desktop Only */}
-                <div className="hidden md:block mt-3 pt-3 border-t border-white/10">
+                <div className="hidden md:block mt-4 pt-4 border-t border-white/10">
                   <div className="flex flex-wrap gap-2">
                     {category.subcategories.slice(0, 4).map((topic, idx) => (
                       <span
                         key={idx}
-                        className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs"
+                        className="bg-white/10 text-blue-200 px-3 py-2 rounded text-sm"
                       >
                         {topic}
                       </span>
                     ))}
                     {category.subcategories.length > 4 && (
-                      <span className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs">
+                      <span className="bg-white/10 text-blue-200 px-3 py-2 rounded text-sm">
                         +{category.subcategories.length - 4} more
                       </span>
                     )}
