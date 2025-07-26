@@ -18,15 +18,20 @@ export async function fetchWordPressPosts(
   const apiUrl = `${siteUrl}/wp-json/wp/v2/posts?per_page=${perPage}&_embed`
   
   try {
+    // Create a timeout controller for older browsers
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+    
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'User-Agent': 'TechKwiz-App/1.0'
       },
-      // Add timeout and other fetch options
-      signal: AbortSignal.timeout(10000) // 10 second timeout
+      signal: controller.signal
     })
+    
+    clearTimeout(timeoutId)
     
     if (!response.ok) {
       throw new Error(`WordPress API responded with status: ${response.status}`)
