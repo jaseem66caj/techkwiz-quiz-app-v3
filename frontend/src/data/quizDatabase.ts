@@ -115,7 +115,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['String', 'Boolean', 'Float', 'Number'],
       correct_answer: 2,
       difficulty: 'beginner',
-      funFact: 'JavaScript has 7 primitive data types: string, number, boolean, null, undefined, symbol, and bigint.',
+      fun_fact: 'JavaScript has 7 primitive data types: string, number, boolean, null, undefined, symbol, and bigint.',
       category: 'programming',
       subcategory: 'JavaScript'
     },
@@ -125,7 +125,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyperlink and Text Markup Language'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'HTML was first developed by Tim Berners-Lee in 1990 at CERN.',
+      fun_fact: 'HTML was first developed by Tim Berners-Lee in 1990 at CERN.',
       category: 'programming',
       subcategory: 'HTML'
     },
@@ -135,7 +135,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['//', '#', '/*', '--'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Python uses # for single-line comments and triple quotes for multi-line comments.',
+      fun_fact: 'Python uses # for single-line comments and triple quotes for multi-line comments.',
       category: 'programming',
       subcategory: 'Python'
     },
@@ -145,7 +145,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['var x = 5;', 'variable x = 5;', 'v x = 5;', 'declare x = 5;'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'JavaScript also supports let and const keywords for variable declaration with different scoping rules.',
+      fun_fact: 'JavaScript also supports let and const keywords for variable declaration with different scoping rules.',
       category: 'programming',
       subcategory: 'JavaScript'
     },
@@ -155,7 +155,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Assembly', 'C', 'FORTRAN', 'COBOL'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'C was developed by Dennis Ritchie at Bell Labs between 1969 and 1973.',
+      fun_fact: 'C was developed by Dennis Ritchie at Bell Labs between 1969 and 1973.',
       category: 'programming',
       subcategory: 'C'
     },
@@ -167,7 +167,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['The current function', 'The current object', 'The global object', 'It depends on the context'],
       correct_answer: 3,
       difficulty: 'intermediate',
-      funFact: 'The "this" keyword in JavaScript refers to different objects depending on how it\'s called.',
+      fun_fact: 'The "this" keyword in JavaScript refers to different objects depending on how it\'s called.',
       category: 'programming',
       subcategory: 'JavaScript'
     },
@@ -177,7 +177,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['O(n)', 'O(log n)', 'O(n²)', 'O(1)'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Binary search works by repeatedly dividing the search interval in half.',
+      fun_fact: 'Binary search works by repeatedly dividing the search interval in half.',
       category: 'programming',
       subcategory: 'Algorithms'
     },
@@ -187,7 +187,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Factory', 'Observer', 'Singleton', 'Strategy'],
       correct_answer: 2,
       difficulty: 'intermediate',
-      funFact: 'The Singleton pattern is useful for logging, driver objects, caching, and thread pools.',
+      fun_fact: 'The Singleton pattern is useful for logging, driver objects, caching, and thread pools.',
       category: 'programming',
       subcategory: 'Design Patterns'
     },
@@ -197,7 +197,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', '== checks type, === checks value', '=== checks both type and value', '== is deprecated'],
       correct_answer: 2,
       difficulty: 'intermediate',
-      funFact: '=== is called strict equality operator and performs no type conversion.',
+      fun_fact: '=== is called strict equality operator and performs no type conversion.',
       category: 'programming',
       subcategory: 'JavaScript'
     },
@@ -207,7 +207,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['push()', 'append()', 'add()', 'insert()'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Python lists also have extend() method to add multiple elements at once.',
+      fun_fact: 'Python lists also have extend() method to add multiple elements at once.',
       category: 'programming',
       subcategory: 'Python'
     },
@@ -219,7 +219,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A way to close a function', 'A function that has access to outer scope variables', 'A method to close loops', 'A type of callback'],
       correct_answer: 1,
       difficulty: 'advanced',
-      funFact: 'Closures are created every time a function is created, at function creation time.',
+      fun_fact: 'Closures are created every time a function is created, at function creation time.',
       category: 'programming',
       subcategory: 'JavaScript'
     },
@@ -229,7 +229,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['O(n log n)', 'O(n²)', 'O(log n)', 'O(n)'],
       correct_answer: 1,
       difficulty: 'advanced',
-      funFact: 'QuickSort\'s worst case occurs when the pivot is always the smallest or largest element.',
+      fun_fact: 'QuickSort\'s worst case occurs when the pivot is always the smallest or largest element.',
       category: 'programming',
       subcategory: 'Algorithms'
     }
@@ -243,7 +243,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Artificial Intelligence', 'Automated Intelligence', 'Advanced Intelligence', 'Algorithmic Intelligence'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'The term "Artificial Intelligence" was coined by John McCarthy in 1956.',
+      fun_fact: 'The term "Artificial Intelligence" was coined by John McCarthy in 1956.',
       category: 'ai',
       subcategory: 'Fundamentals'
     },
@@ -253,7 +253,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Supervised Learning', 'Unsupervised Learning', 'Reinforcement Learning', 'All of the above'],
       correct_answer: 3,
       difficulty: 'beginner',
-      funFact: 'Machine learning is broadly categorized into these three main types.',
+      fun_fact: 'Machine learning is broadly categorized into these three main types.',
       category: 'ai',
       subcategory: 'Machine Learning'
     },
@@ -263,7 +263,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['To replace humans', 'To learn patterns from data', 'To create robots', 'To increase speed'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Machine learning enables computers to learn without being explicitly programmed.',
+      fun_fact: 'Machine learning enables computers to learn without being explicitly programmed.',
       category: 'ai',
       subcategory: 'Machine Learning'
     },
@@ -273,7 +273,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Google', 'Microsoft', 'OpenAI', 'Meta'],
       correct_answer: 2,
       difficulty: 'beginner',
-      funFact: 'OpenAI was founded in 2015 by Sam Altman, Elon Musk, and others.',
+      fun_fact: 'OpenAI was founded in 2015 by Sam Altman, Elon Musk, and others.',
       category: 'ai',
       subcategory: 'Companies'
     },
@@ -283,7 +283,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Natural Language Processing', 'Neural Learning Process', 'Network Layer Protocol', 'Numeric Logic Programming'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'NLP helps computers understand, interpret, and generate human language.',
+      fun_fact: 'NLP helps computers understand, interpret, and generate human language.',
       category: 'ai',
       subcategory: 'NLP'
     },
@@ -295,7 +295,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Model is too simple', 'Model performs well on training but poorly on new data', 'Model has too few parameters', 'Model trains too slowly'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Overfitting can be reduced using techniques like cross-validation and regularization.',
+      fun_fact: 'Overfitting can be reduced using techniques like cross-validation and regularization.',
       category: 'ai',
       subcategory: 'Machine Learning'
     },
@@ -305,7 +305,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Sigmoid', 'ReLU', 'Tanh', 'Softmax'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'ReLU helps solve the vanishing gradient problem in deep networks.',
+      fun_fact: 'ReLU helps solve the vanishing gradient problem in deep networks.',
       category: 'ai',
       subcategory: 'Neural Networks'
     },
@@ -315,7 +315,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Feed data forward', 'Calculate gradients and update weights', 'Initialize weights', 'Prevent overfitting'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Backpropagation is the backbone of training deep neural networks.',
+      fun_fact: 'Backpropagation is the backbone of training deep neural networks.',
       category: 'ai',
       subcategory: 'Neural Networks'
     },
@@ -325,7 +325,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Linear Regression', 'K-Means', 'Decision Tree', 'Logistic Regression'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'K-Means is an unsupervised learning algorithm that groups similar data points.',
+      fun_fact: 'K-Means is an unsupervised learning algorithm that groups similar data points.',
       category: 'ai',
       subcategory: 'Machine Learning'
     },
@@ -335,7 +335,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A type of robot', 'An attention-based neural network architecture', 'A data preprocessing tool', 'A optimization algorithm'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Transformers revolutionized NLP and are the foundation of GPT and BERT models.',
+      fun_fact: 'Transformers revolutionized NLP and are the foundation of GPT and BERT models.',
       category: 'ai',
       subcategory: 'Deep Learning'
     },
@@ -347,7 +347,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Gradients become too large', 'Gradients become too small in deep networks', 'Gradients disappear entirely', 'Gradients become negative'],
       correct_answer: 1,
       difficulty: 'advanced',
-      funFact: 'This problem was a major obstacle in training deep networks before ReLU and other solutions.',
+      fun_fact: 'This problem was a major obstacle in training deep networks before ReLU and other solutions.',
       category: 'ai',
       subcategory: 'Deep Learning'
     },
@@ -357,7 +357,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'GANs are generative, VAEs are discriminative', 'GANs use adversarial training, VAEs use variational inference', 'VAEs are newer than GANs'],
       correct_answer: 2,
       difficulty: 'advanced',
-      funFact: 'Both are generative models but use different approaches to learn data distributions.',
+      fun_fact: 'Both are generative models but use different approaches to learn data distributions.',
       category: 'ai',
       subcategory: 'Deep Learning'
     }
@@ -371,7 +371,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Computer Style Sheets', 'Cascading Style Sheets', 'Creative Style Sheets', 'Colorful Style Sheets'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'CSS was first proposed by Håkon Wium Lie in 1994.',
+      fun_fact: 'CSS was first proposed by Håkon Wium Lie in 1994.',
       category: 'web-dev',
       subcategory: 'CSS'
     },
@@ -381,7 +381,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['404', '500', '200', '302'],
       correct_answer: 2,
       difficulty: 'beginner',
-      funFact: 'HTTP status codes starting with 2xx indicate success.',
+      fun_fact: 'HTTP status codes starting with 2xx indicate success.',
       category: 'web-dev',
       subcategory: 'HTTP'
     },
@@ -391,7 +391,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['<h6>', '<h1>', '<header>', '<title>'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'HTML headings go from <h1> (largest) to <h6> (smallest).',
+      fun_fact: 'HTML headings go from <h1> (largest) to <h6> (smallest).',
       category: 'web-dev',
       subcategory: 'HTML'
     },
@@ -401,7 +401,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['To resize the image', 'To provide alternative text for accessibility', 'To add filters', 'To set image quality'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'The alt attribute is crucial for screen readers and web accessibility.',
+      fun_fact: 'The alt attribute is crucial for screen readers and web accessibility.',
       category: 'web-dev',
       subcategory: 'HTML'
     },
@@ -411,7 +411,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['XMLHttpRequest', 'fetch()', 'ajax()', 'http()'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'The fetch() API returns promises for easier async handling.',
+      fun_fact: 'The fetch() API returns promises for easier async handling.',
       category: 'web-dev',
       subcategory: 'JavaScript'
     },
@@ -423,7 +423,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A real DOM element', 'A JavaScript representation of the real DOM', 'A browser API', 'A CSS framework'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Virtual DOM allows React to optimize rendering by batching updates.',
+      fun_fact: 'Virtual DOM allows React to optimize rendering by batching updates.',
       category: 'web-dev',
       subcategory: 'React'
     },
@@ -433,7 +433,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Cross-Origin Resource Sharing', 'Cross-Object Resource System', 'Computer Origin Resource Security', 'Cross-Origin Request Security'],
       correct_answer: 0,
       difficulty: 'intermediate',
-      funFact: 'CORS is a security feature implemented by web browsers.',
+      fun_fact: 'CORS is a security feature implemented by web browsers.',
       category: 'web-dev',
       subcategory: 'Security'
     },
@@ -443,7 +443,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['display: flex', 'layout: flex', 'flex: true', 'flexbox: enable'],
       correct_answer: 0,
       difficulty: 'intermediate',
-      funFact: 'Flexbox provides a more efficient way to arrange and distribute items.',
+      fun_fact: 'Flexbox provides a more efficient way to arrange and distribute items.',
       category: 'web-dev',
       subcategory: 'CSS'
     },
@@ -453,7 +453,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A programming language', 'An architectural style for APIs', 'A database type', 'A JavaScript framework'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'REST stands for Representational State Transfer.',
+      fun_fact: 'REST stands for Representational State Transfer.',
       category: 'web-dev',
       subcategory: 'APIs'
     },
@@ -463,7 +463,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['To pack web pages', 'To bundle JavaScript modules', 'To compress images', 'To test web applications'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Webpack is a module bundler that can transform and bundle assets.',
+      fun_fact: 'Webpack is a module bundler that can transform and bundle assets.',
       category: 'web-dev',
       subcategory: 'Build Tools'
     },
@@ -475,7 +475,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Rendering on the client', 'Rendering HTML on the server before sending to client', 'Rendering images on server', 'A type of API'],
       correct_answer: 1,
       difficulty: 'advanced',
-      funFact: 'SSR improves SEO and initial page load times.',
+      fun_fact: 'SSR improves SEO and initial page load times.',
       category: 'web-dev',
       subcategory: 'Performance'
     },
@@ -485,7 +485,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'localStorage persists after browser close, sessionStorage doesn\'t', 'sessionStorage is larger', 'localStorage is newer'],
       correct_answer: 1,
       difficulty: 'advanced',
-      funFact: 'Both are part of the Web Storage API introduced in HTML5.',
+      fun_fact: 'Both are part of the Web Storage API introduced in HTML5.',
       category: 'web-dev',
       subcategory: 'Browser APIs'
     }
@@ -499,7 +499,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Java', 'Swift', 'Python', 'C#'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Swift was introduced by Apple in 2014 to replace Objective-C.',
+      fun_fact: 'Swift was introduced by Apple in 2014 to replace Objective-C.',
       category: 'mobile-dev',
       subcategory: 'iOS'
     },
@@ -509,7 +509,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A native mobile OS', 'A framework for building mobile apps using React', 'A mobile browser', 'A mobile testing tool'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'React Native was created by Facebook and open-sourced in 2015.',
+      fun_fact: 'React Native was created by Facebook and open-sourced in 2015.',
       category: 'mobile-dev',
       subcategory: 'React Native'
     },
@@ -519,7 +519,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Facebook', 'Apple', 'Google', 'Microsoft'],
       correct_answer: 2,
       difficulty: 'beginner',
-      funFact: 'Flutter uses Dart programming language, also developed by Google.',
+      fun_fact: 'Flutter uses Dart programming language, also developed by Google.',
       category: 'mobile-dev',
       subcategory: 'Flutter'
     },
@@ -529,7 +529,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Apple Package Kit', 'Android Package Kit', 'Application Programming Kit', 'Advanced Package Kit'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'APK files contain all the components needed to run an Android app.',
+      fun_fact: 'APK files contain all the components needed to run an Android app.',
       category: 'mobile-dev',
       subcategory: 'Android'
     },
@@ -539,7 +539,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Xcode', 'Android Studio', 'Visual Studio', 'Eclipse'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Android Studio is based on IntelliJ IDEA and is the official IDE for Android.',
+      fun_fact: 'Android Studio is based on IntelliJ IDEA and is the official IDE for Android.',
       category: 'mobile-dev',
       subcategory: 'Android'
     },
@@ -551,7 +551,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'React Native uses JavaScript, native uses platform-specific languages', 'React Native is faster', 'Native is web-based'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'React Native allows code sharing between iOS and Android platforms.',
+      fun_fact: 'React Native allows code sharing between iOS and Android platforms.',
       category: 'mobile-dev',
       subcategory: 'React Native'
     },
@@ -561,7 +561,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Background thread', 'UI thread', 'Network thread', 'Database thread'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Blocking the main thread can cause ANR (Application Not Responding) errors.',
+      fun_fact: 'Blocking the main thread can cause ANR (Application Not Responding) errors.',
       category: 'mobile-dev',
       subcategory: 'Performance'
     },
@@ -571,7 +571,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Automatic app updates', 'A constraint-based layout system', 'Automatic testing', 'A design pattern'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Auto Layout helps create interfaces that adapt to different screen sizes.',
+      fun_fact: 'Auto Layout helps create interfaces that adapt to different screen sizes.',
       category: 'mobile-dev',
       subcategory: 'iOS'
     }
@@ -585,7 +585,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Structured Query Language', 'Simple Query Language', 'Standard Query Language', 'Sequential Query Language'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'SQL was initially developed by IBM in the early 1970s.',
+      fun_fact: 'SQL was initially developed by IBM in the early 1970s.',
       category: 'data-science',
       subcategory: 'SQL'
     },
@@ -595,7 +595,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Pandas was created by Wes McKinney in 2008.',
+      fun_fact: 'Pandas was created by Wes McKinney in 2008.',
       category: 'data-science',
       subcategory: 'Python'
     },
@@ -605,7 +605,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A type of chart', 'A 2D labeled data structure', 'A machine learning model', 'A database'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'DataFrames are similar to tables in a database or Excel spreadsheet.',
+      fun_fact: 'DataFrames are similar to tables in a database or Excel spreadsheet.',
       category: 'data-science',
       subcategory: 'Pandas'
     },
@@ -615,7 +615,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Mean', 'Median', 'Mode', 'All of the above'],
       correct_answer: 3,
       difficulty: 'beginner',
-      funFact: 'Mean, median, and mode each provide different insights into data distribution.',
+      fun_fact: 'Mean, median, and mode each provide different insights into data distribution.',
       category: 'data-science',
       subcategory: 'Statistics'
     },
@@ -625,7 +625,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Computer Separated Values', 'Comma Separated Values', 'Column Separated Values', 'Cell Separated Values'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'CSV is one of the most common formats for data exchange.',
+      fun_fact: 'CSV is one of the most common formats for data exchange.',
       category: 'data-science',
       subcategory: 'Data Formats'
     },
@@ -637,7 +637,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'Correlation implies relationship, causation implies cause-effect', 'Causation is stronger correlation', 'Correlation is for numbers only'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Correlation does not imply causation is a fundamental principle in statistics.',
+      fun_fact: 'Correlation does not imply causation is a fundamental principle in statistics.',
       category: 'data-science',
       subcategory: 'Statistics'
     },
@@ -647,7 +647,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Removing duplicates', 'Scaling data to a standard range', 'Sorting data', 'Converting data types'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Normalization helps algorithms that are sensitive to feature scales.',
+      fun_fact: 'Normalization helps algorithms that are sensitive to feature scales.',
       category: 'data-science',
       subcategory: 'Preprocessing'
     },
@@ -657,7 +657,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Probability of the hypothesis being true', 'Probability of observing results given null hypothesis is true', 'Power of the test', 'Prediction value'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'A p-value less than 0.05 is often considered statistically significant.',
+      fun_fact: 'A p-value less than 0.05 is often considered statistically significant.',
       category: 'data-science',
       subcategory: 'Statistics'
     }
@@ -671,7 +671,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['HyperText Transfer Protocol Secure', 'HyperText Transfer Protocol System', 'HyperText Transfer Protocol Standard', 'HyperText Transfer Protocol Safe'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'HTTPS uses SSL/TLS to encrypt communication between browser and server.',
+      fun_fact: 'HTTPS uses SSL/TLS to encrypt communication between browser and server.',
       category: 'cybersecurity',
       subcategory: 'Web Security'
     },
@@ -681,7 +681,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Catching fish online', 'A type of malware', 'Fraudulent attempt to obtain sensitive information', 'A programming technique'],
       correct_answer: 2,
       difficulty: 'beginner',
-      funFact: 'Phishing attacks often use fake emails that appear to be from legitimate sources.',
+      fun_fact: 'Phishing attacks often use fake emails that appear to be from legitimate sources.',
       category: 'cybersecurity',
       subcategory: 'Social Engineering'
     },
@@ -691,7 +691,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A physical wall that prevents fires', 'A network security device that monitors traffic', 'A type of virus', 'A programming language'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Firewalls can be hardware-based, software-based, or both.',
+      fun_fact: 'Firewalls can be hardware-based, software-based, or both.',
       category: 'cybersecurity',
       subcategory: 'Network Security'
     },
@@ -701,7 +701,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Virtual Private Network', 'Very Private Network', 'Verified Private Network', 'Visual Private Network'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'VPNs create encrypted tunnels for secure data transmission.',
+      fun_fact: 'VPNs create encrypted tunnels for secure data transmission.',
       category: 'cybersecurity',
       subcategory: 'Network Security'
     },
@@ -711,7 +711,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Software for males', 'Malicious software', 'Mail software', 'Marketing software'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Malware includes viruses, worms, trojans, ransomware, and spyware.',
+      fun_fact: 'Malware includes viruses, worms, trojans, ransomware, and spyware.',
       category: 'cybersecurity',
       subcategory: 'Malware'
     },
@@ -723,7 +723,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A medical procedure', 'A type of cyberattack targeting databases', 'A database optimization technique', 'A programming method'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'SQL injection was first documented in 1998 and remains a top web vulnerability.',
+      fun_fact: 'SQL injection was first documented in 1998 and remains a top web vulnerability.',
       category: 'cybersecurity',
       subcategory: 'Web Security'
     },
@@ -733,7 +733,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Using two passwords', 'Authentication requiring two different verification methods', 'Logging in twice', 'Using two devices'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: '2FA significantly reduces the risk of unauthorized access even if passwords are compromised.',
+      fun_fact: '2FA significantly reduces the risk of unauthorized access even if passwords are compromised.',
       category: 'cybersecurity',
       subcategory: 'Authentication'
     },
@@ -743,7 +743,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Distributed Denial of Service', 'Direct Denial of Service', 'Distributed Data of Service', 'Dynamic Denial of Service'],
       correct_answer: 0,
       difficulty: 'intermediate',
-      funFact: 'DDoS attacks use multiple compromised computers to flood a target with traffic.',
+      fun_fact: 'DDoS attacks use multiple compromised computers to flood a target with traffic.',
       category: 'cybersecurity',
       subcategory: 'Network Security'
     }
@@ -757,7 +757,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Amazon Web Services', 'Amazon Web Systems', 'Advanced Web Services', 'Amazon Web Solutions'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'AWS was launched in 2006 and is the largest cloud provider by market share.',
+      fun_fact: 'AWS was launched in 2006 and is the largest cloud provider by market share.',
       category: 'cloud',
       subcategory: 'AWS'
     },
@@ -767,7 +767,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Computing in the sky', 'Delivery of computing services over the internet', 'A type of weather prediction', 'Computing with clouds'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Cloud computing enables on-demand access to computing resources.',
+      fun_fact: 'Cloud computing enables on-demand access to computing resources.',
       category: 'cloud',
       subcategory: 'Fundamentals'
     },
@@ -777,7 +777,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['SaaS', 'PaaS', 'IaaS', 'All of the above'],
       correct_answer: 3,
       difficulty: 'beginner',
-      funFact: 'SaaS, PaaS, and IaaS represent different levels of cloud service abstraction.',
+      fun_fact: 'SaaS, PaaS, and IaaS represent different levels of cloud service abstraction.',
       category: 'cloud',
       subcategory: 'Service Models'
     },
@@ -787,7 +787,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Simple Storage Service', 'Secure Storage Service', 'Standard Storage Service', 'Smart Storage Service'],
       correct_answer: 0,
       difficulty: 'beginner',
-      funFact: 'S3 was one of the first services launched by AWS in 2006.',
+      fun_fact: 'S3 was one of the first services launched by AWS in 2006.',
       category: 'cloud',
       subcategory: 'AWS'
     },
@@ -797,7 +797,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A cloud provider', 'A containerization platform', 'A programming language', 'A database'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Docker was first released in 2013 and revolutionized application deployment.',
+      fun_fact: 'Docker was first released in 2013 and revolutionized application deployment.',
       category: 'cloud',
       subcategory: 'Docker'
     },
@@ -809,7 +809,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'Horizontal adds more machines, vertical adds more power to existing machines', 'Vertical is cheaper', 'Horizontal is for databases only'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Horizontal scaling is often preferred for cloud applications due to flexibility.',
+      fun_fact: 'Horizontal scaling is often preferred for cloud applications due to flexibility.',
       category: 'cloud',
       subcategory: 'Scaling'
     },
@@ -819,7 +819,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A cloud provider', 'A container orchestration platform', 'A programming language', 'A monitoring tool'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Kubernetes was originally developed by Google and is now maintained by CNCF.',
+      fun_fact: 'Kubernetes was originally developed by Google and is now maintained by CNCF.',
       category: 'cloud',
       subcategory: 'Kubernetes'
     },
@@ -829,7 +829,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Computing without servers', 'Computing where servers are managed by cloud provider', 'A type of database', 'Computing in space'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Serverless computing allows developers to focus on code without managing infrastructure.',
+      fun_fact: 'Serverless computing allows developers to focus on code without managing infrastructure.',
       category: 'cloud',
       subcategory: 'Serverless'
     }
@@ -843,7 +843,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A physical coin', 'A digital cryptocurrency', 'A company', 'A programming language'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Bitcoin was created by the pseudonymous Satoshi Nakamoto in 2009.',
+      fun_fact: 'Bitcoin was created by the pseudonymous Satoshi Nakamoto in 2009.',
       category: 'blockchain',
       subcategory: 'Bitcoin'
     },
@@ -853,7 +853,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A chain of blocks', 'A distributed ledger technology', 'A type of database', 'A mining tool'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Blockchain technology ensures transparency and immutability of records.',
+      fun_fact: 'Blockchain technology ensures transparency and immutability of records.',
       category: 'blockchain',
       subcategory: 'Fundamentals'
     },
@@ -863,7 +863,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A type of Bitcoin', 'A blockchain platform for smart contracts', 'A mining hardware', 'A wallet'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Ethereum was proposed by Vitalik Buterin in 2013 when he was 19 years old.',
+      fun_fact: 'Ethereum was proposed by Vitalik Buterin in 2013 when he was 19 years old.',
       category: 'blockchain',
       subcategory: 'Ethereum'
     },
@@ -873,7 +873,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Digging for physical coins', 'Process of validating transactions and adding them to blockchain', 'Creating new cryptocurrencies', 'Stealing cryptocurrencies'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Mining requires significant computational power and energy consumption.',
+      fun_fact: 'Mining requires significant computational power and energy consumption.',
       category: 'blockchain',
       subcategory: 'Mining'
     },
@@ -883,7 +883,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A legal document', 'Self-executing contract with terms in code', 'A type of cryptocurrency', 'A mining algorithm'],
       correct_answer: 1,
       difficulty: 'beginner',
-      funFact: 'Smart contracts automatically execute when predetermined conditions are met.',
+      fun_fact: 'Smart contracts automatically execute when predetermined conditions are met.',
       category: 'blockchain',
       subcategory: 'Smart Contracts'
     },
@@ -895,7 +895,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Defiant Finance', 'Decentralized Finance', 'Defined Finance', 'Delayed Finance'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'DeFi aims to recreate traditional financial systems using blockchain technology.',
+      fun_fact: 'DeFi aims to recreate traditional financial systems using blockchain technology.',
       category: 'blockchain',
       subcategory: 'DeFi'
     },
@@ -905,7 +905,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['No difference', 'Bitcoin is for payments, Ethereum is a platform for dApps', 'Ethereum is newer', 'Bitcoin is faster'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      funFact: 'Ethereum\'s virtual machine enables complex programmable transactions.',
+      fun_fact: 'Ethereum\'s virtual machine enables complex programmable transactions.',
       category: 'blockchain',
       subcategory: 'Platforms'
     },
@@ -915,7 +915,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['Decentralized Autonomous Organization', 'Distributed Application Object', 'Digital Asset Organization', 'Data Access Object'],
       correct_answer: 0,
       difficulty: 'intermediate',
-      funFact: 'DAOs are governed by smart contracts and community voting rather than traditional management.',
+      fun_fact: 'DAOs are governed by smart contracts and community voting rather than traditional management.',
       category: 'blockchain',
       subcategory: 'DAO'
     }
