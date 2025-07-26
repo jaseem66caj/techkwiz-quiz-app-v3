@@ -221,33 +221,36 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="glass-effect p-6 sm:p-8 rounded-2xl text-center w-full max-w-lg mx-auto"
+                className="glass-effect p-4 sm:p-6 rounded-xl text-center w-full max-w-md mx-auto"
               >
-                <div className="text-4xl sm:text-5xl mb-4">🎉</div>
-                <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-4">
+                <div className="text-3xl sm:text-4xl mb-3">🎉</div>
+                <h2 className="text-white text-lg sm:text-xl font-bold mb-3">
                   Quick Start Complete!
                 </h2>
-                <p className="text-blue-200 text-base sm:text-lg mb-2">
+                <p className="text-blue-200 text-sm sm:text-base mb-2">
                   You scored {score} out of {quickStartQuiz.length}
                 </p>
-                <p className="text-orange-400 text-lg sm:text-xl font-semibold mb-6">
+                <p className="text-orange-400 text-base sm:text-lg font-semibold mb-4">
                   Earned: {score * 100} coins
                 </p>
-                <div className="text-blue-200 text-sm sm:text-base mb-6">
+                <div className="text-blue-200 text-xs sm:text-sm mb-4">
                   Redirecting to categories...
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <button
                     onClick={() => router.push('/start')}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 text-base sm:text-lg rounded-lg transition-colors"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 text-sm sm:text-base rounded-lg transition-colors"
                   >
                     Continue to Categories
                   </button>
                   <button
                     onClick={resetQuiz}
-                    className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-4 text-base sm:text-lg rounded-lg transition-colors"
+                    className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 text-sm sm:text-base rounded-lg transition-colors"
                   >
                     Play Again
+                  </button>
+                </div>
+              </motion.div>
                   </button>
                 </div>
               </motion.div>
