@@ -17,11 +17,9 @@ database = client[os.environ['DB_NAME']]
 async def populate_ad_slots():
     """Populate database with quizwinz.com ad slot structure."""
     try:
-        # Check if ad slots already exist
-        existing_slots = await database.ad_slots.count_documents({})
-        if existing_slots > 0:
-            print(f"Ad slots already exist ({existing_slots}). Skipping population.")
-            return
+        # Clear existing ad slots
+        await database.ad_slots.delete_many({})
+        print("Cleared existing ad slots")
 
         # Insert all quizwinz ad slots
         if QUIZWINZ_AD_SLOTS:
