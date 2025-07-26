@@ -27,10 +27,14 @@ export default function HomePage() {
   // Quick start quiz data
   const quickStartQuiz = [
     {
+      id: 'quick-0',
       question: "Which programming language is known as the 'language of the web'?",
       options: ["JavaScript", "Python", "Java", "C++"],
-      correctAnswer: 0,
-      funFact: "JavaScript was created in just 10 days by Brendan Eich at Netscape in 1995."
+      correct_answer: 0,
+      difficulty: 'beginner' as const,
+      fun_fact: "JavaScript was created in just 10 days by Brendan Eich at Netscape in 1995.",
+      category: 'programming',
+      subcategory: 'Languages'
     },
     {
       id: 'quick-1',
