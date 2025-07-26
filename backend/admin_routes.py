@@ -12,6 +12,7 @@ from models import (
     ScriptInjection, ScriptInjectionCreate, ScriptInjectionUpdate,
     AdSlot, AdSlotCreate, AdSlotUpdate,
     RewardedPopupConfig, RewardedPopupConfigUpdate,
+    SiteConfig, SiteConfigUpdate,
     QuizDataExport
 )
 from auth import hash_password, verify_password, create_access_token, verify_token, ACCESS_TOKEN_EXPIRE_MINUTES
