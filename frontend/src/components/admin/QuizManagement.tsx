@@ -268,56 +268,70 @@ export default function QuizManagement() {
 
       {/* Categories Tab */}
       {activeSubTab === 'categories' && (
-        <div>
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Quiz Categories</h3>
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h3 className="text-xl font-semibold text-gray-900">📋 Quiz Categories</h3>
             <button
               onClick={() => setShowAddCategory(true)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center"
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 py-3 rounded-lg flex items-center font-medium shadow-lg"
             >
-              <span className="mr-2">+</span>
-              Add Category
+              <span className="mr-2">✨</span>
+              Add New Category
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {categories.map((category) => (
               <motion.div
                 key={category.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:border-purple-300"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center">
-                    <span className="text-3xl mr-3">{category.icon}</span>
+                    <span className="text-4xl mr-4">{category.icon}</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{category.name}</h4>
-                      <p className="text-sm text-gray-600">{category.description}</p>
+                      <h4 className="font-bold text-gray-900 text-lg">{category.name}</h4>
+                      <p className="text-sm text-gray-600 mt-1">{category.description}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => handleDeleteCategory(category.id)}
-                    className="text-red-500 hover:text-red-700 text-sm"
+                    className="text-red-500 hover:text-red-700 text-sm bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
                   >
-                    Delete
+                    🗑️ Delete
                   </button>
                 </div>
                 
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Entry Fee:</span>
-                    <span className="font-medium">{category.entry_fee} coins</span>
+                <div className="space-y-3">
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">💰 Entry Fee:</span>
+                        <span className="font-semibold text-green-600">{category.entry_fee} coins</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">🏆 Prize Pool:</span>
+                        <span className="font-semibold text-blue-600">{category.prize_pool} coins</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Prize Pool:</span>
-                    <span className="font-medium">{category.prize_pool} coins</span>
+                  
+                  <div className="bg-purple-50 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-700 font-medium text-sm">📊 Questions:</span>
+                      <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        {getQuestionCount(category.id)}
+                      </span>
+                    </div>
                   </div>
+                  
                   <div>
-                    <span className="text-gray-600">Subcategories:</span>
-                    <div className="flex flex-wrap gap-1 mt-1">
+                    <span className="text-gray-700 font-medium text-sm">🏷️ Topics:</span>
+                    <div className="flex flex-wrap gap-1 mt-2">
                       {category.subcategories.map((sub, idx) => (
-                        <span key={idx} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                        <span key={idx} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">
                           {sub}
                         </span>
                       ))}
