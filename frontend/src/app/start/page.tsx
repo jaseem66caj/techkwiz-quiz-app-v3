@@ -387,7 +387,10 @@ export default function StartPage() {
             <p className="text-blue-200 text-sm mb-4">
               Challenge your friends to beat your scores!
             </p>
-            <CategoryShare categoryName="TechKwiz Platform" />
+            <SocialShare 
+              title="🚀 Join me on TechKwiz - Test Your Tech Knowledge!"
+              hashtags={['TechKwiz', 'Programming', 'TechSkills', 'Quiz']}
+            />
           </motion.div>
 
           {/* Stats Widget */}
