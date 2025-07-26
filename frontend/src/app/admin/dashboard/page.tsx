@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 // Import dashboard components
 import QuizManagement from '../../../components/admin/QuizManagement';
 import ScriptManagement from '../../../components/admin/ScriptManagement';
+import SiteConfiguration from '../../../components/admin/SiteConfiguration';
 import AdSlotManagement from '../../../components/admin/AdSlotManagement';
 import RewardedPopupConfig from '../../../components/admin/RewardedPopupConfig';
 import DataExport from '../../../components/admin/DataExport';
