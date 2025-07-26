@@ -195,7 +195,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'prog_009',
       question: 'What is the difference between == and === in JavaScript?',
       options: ['No difference', '== checks type, === checks value', '=== checks both type and value', '== is deprecated'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'intermediate',
       funFact: '=== is called strict equality operator and performs no type conversion.',
       category: 'programming',
