@@ -179,7 +179,7 @@ class BackendTester:
                 # Root should serve HTML (frontend), API should serve JSON
                 if (root_response.status_code == 200 and 
                     'text/html' in root_response.headers.get('content-type', '') and
-                    api_data.get('message') == 'Hello World'):
+                    api_data.get('message') == 'TechKwiz API is running'):
                     
                     self.log_result("API Route Prefix", True, "API routes properly prefixed - frontend at /, API at /api")
                     return True
