@@ -245,9 +245,10 @@ export default function QuizPage({ params }: QuizPageProps) {
     setQuestionsAnsweredCount(0)
   }
 
+  // Loading state
   if (loading || !categoryInfo) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
