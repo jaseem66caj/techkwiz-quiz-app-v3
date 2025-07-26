@@ -108,7 +108,7 @@ export default function StartPage() {
       // Wait for state update then check coins
       setTimeout(() => {
         const currentCoins = 500 // We know guest starts with 500
-        if (currentCoins >= category.entryFee) {
+        if (currentCoins >= category.entry_fee) {
           router.push(`/quiz/${categoryId}`)
         } else {
           setSelectedCategoryForReward(categoryId)
