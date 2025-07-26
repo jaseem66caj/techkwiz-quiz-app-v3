@@ -76,7 +76,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   // API functions
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`);
       
       if (response.ok) {
@@ -96,7 +96,7 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchQuestions = async (catId: string, count: number = 10) => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/quiz/questions/${catId}?count=${count}`);
       
       if (response.ok) {
