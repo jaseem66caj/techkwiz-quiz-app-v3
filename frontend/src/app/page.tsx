@@ -189,7 +189,7 @@ export default function HomePage() {
                 </motion.div>
                 
                 <div className="w-full mx-auto">
-                  <FunFact fact={quickStartQuiz[currentQuestion]?.funFact} />
+                  <FunFact fact={quickStartQuiz[currentQuestion]?.fun_fact} />
                 </div>
                 
                 {/* Mobile Quick Actions */}
