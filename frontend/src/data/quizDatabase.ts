@@ -185,7 +185,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'prog_008',
       question: 'Which design pattern ensures a class has only one instance?',
       options: ['Factory', 'Observer', 'Singleton', 'Strategy'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'intermediate',
       funFact: 'The Singleton pattern is useful for logging, driver objects, caching, and thread pools.',
       category: 'programming',
