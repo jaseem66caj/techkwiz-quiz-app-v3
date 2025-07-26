@@ -167,6 +167,31 @@ export default function QuizPage({ params }: QuizPageProps) {
     }, 1500)
   }
 
+  const handleClaimReward = () => {
+    // Double the coins
+    dispatch({ type: 'UPDATE_COINS', payload: lastEarnedCoins })
+    
+    // Proceed to next question
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+      setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
+    } else {
+      setQuizCompleted(true)
+    }
+  }
+
+  const handleSkipReward = () => {
+    // Proceed without doubling coins
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+      setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
+    } else {
+      setQuizCompleted(true)
+    }
+  }
+
   const handlePlayAgain = () => {
     setCurrentQuestion(0)
     setSelectedAnswer(null)
@@ -177,6 +202,9 @@ export default function QuizPage({ params }: QuizPageProps) {
     setStreak(0)
     setMaxStreak(0)
     setTimeLeft(30)
+    setShowRewardPopup(false)
+    setLastEarnedCoins(0)
+    setQuestionsAnsweredCount(0)
   }
 
   if (loading || !categoryInfo) {
