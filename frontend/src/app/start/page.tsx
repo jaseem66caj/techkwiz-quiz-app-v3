@@ -9,6 +9,7 @@ import { AdBanner } from '../../components/AdBanner'
 import { QUIZ_CATEGORIES } from '../../data/quizDatabase'
 import { AuthModal } from '../../components/AuthModal'
 import { NewsSection } from '../../components/NewsSection'
+import { RewardPopup } from '../../components/RewardPopup'
 import { Metadata } from 'next'
 import { seoConfig } from '../../utils/seo'
 
