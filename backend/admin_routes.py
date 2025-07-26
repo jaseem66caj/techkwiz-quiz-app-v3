@@ -6,7 +6,7 @@ from typing import List, Optional
 import os
 
 from models import (
-    AdminUser, AdminLogin, AdminToken,
+    AdminUser, AdminLogin, AdminToken, AdminPasswordReset, AdminPasswordUpdate, AdminProfileUpdate,
     QuizQuestion, QuizQuestionCreate, QuizQuestionUpdate,
     QuizCategory, QuizCategoryCreate, QuizCategoryUpdate,
     ScriptInjection, ScriptInjectionCreate, ScriptInjectionUpdate,
@@ -16,6 +16,7 @@ from models import (
     QuizDataExport
 )
 from auth import hash_password, verify_password, create_access_token, verify_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from email_service import EmailService, generate_reset_token, hash_reset_token
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
 security = HTTPBearer()
