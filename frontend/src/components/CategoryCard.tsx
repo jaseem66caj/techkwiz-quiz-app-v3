@@ -20,7 +20,7 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category, onSelect, userCoins }: CategoryCardProps) {
-  const canAfford = userCoins >= category.entryFee
+  const canAfford = userCoins >= category.entry_fee
   
   return (
     <motion.div
