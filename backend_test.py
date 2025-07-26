@@ -280,36 +280,45 @@ class BackendTester:
             return False
     
     def test_admin_authentication(self):
-        """Test admin authentication flow"""
+        """Test admin authentication flow with specific credentials"""
         try:
-            # Try the test admin credentials we created
-            test_credentials = {
-                "username": "testadmin",
-                "password": "testpass123"
+            # First, try to setup admin user if it doesn't exist
+            setup_credentials = {
+                "username": "admin",
+                "password": "TechKwiz2025!"
             }
             
+            setup_response = requests.post(
+                f"{self.api_base}/admin/setup",
+                json=setup_credentials,
+                timeout=10
+            )
+            
+            # Setup might fail if admin already exists, that's okay
+            if setup_response.status_code == 200:
+                self.log_result("Admin Setup", True, "Admin user created successfully")
+            
+            # Now try to login with the specific credentials requested
             login_response = requests.post(
                 f"{self.api_base}/admin/login",
-                json=test_credentials,
+                json=setup_credentials,
                 timeout=10
             )
             
             if login_response.status_code == 200:
                 token_data = login_response.json()
                 if 'access_token' in token_data:
-                    self.log_result("Admin Authentication", True, f"Admin login successful with {test_credentials['username']}")
+                    self.log_result("Admin Authentication", True, f"Admin login successful with username=admin, password=TechKwiz2025!")
                     return True, token_data['access_token']
             
-            # If test credentials don't work, try common admin credentials
-            common_credentials = [
+            # If specific credentials don't work, try fallback credentials
+            fallback_credentials = [
+                {"username": "testadmin", "password": "testpass123"},
                 {"username": "admin", "password": "admin123"},
                 {"username": "techkwiz_admin", "password": "admin123456"},
-                {"username": "admin", "password": "password123"},
-                {"username": "admin", "password": "admin"},
             ]
             
-            # Try to login with existing credentials
-            for creds in common_credentials:
+            for creds in fallback_credentials:
                 login_response = requests.post(
                     f"{self.api_base}/admin/login",
                     json=creds,
@@ -319,7 +328,7 @@ class BackendTester:
                 if login_response.status_code == 200:
                     token_data = login_response.json()
                     if 'access_token' in token_data:
-                        self.log_result("Admin Authentication", True, f"Admin login successful with {creds['username']}")
+                        self.log_result("Admin Authentication", True, f"Admin login successful with fallback credentials: {creds['username']}")
                         return True, token_data['access_token']
             
             self.log_result("Admin Authentication", False, "Could not authenticate with any credentials")
