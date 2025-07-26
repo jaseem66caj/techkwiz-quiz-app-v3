@@ -9,7 +9,7 @@ interface Category {
   color: string
   description: string
   subcategories: string[]
-  entryFee: number
+  entry_fee: number
   prizePool: number
 }
 
