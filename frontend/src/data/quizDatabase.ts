@@ -20,7 +20,7 @@ export interface QuizCategory {
   description: string
   subcategories: string[]
   entry_fee: number
-  prizePool: number
+  prize_pool: number
 }
 
 export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
