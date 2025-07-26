@@ -108,6 +108,11 @@ export default function AdminLogin() {
         </form>
 
         <div className="mt-8 pt-6 border-t border-white/20">
+          <p className="text-center text-sm text-blue-200 mb-4">
+            <Link href="/admin/forgot-password" className="hover:text-white transition-colors underline">
+              Forgot your password?
+            </Link>
+          </p>
           <p className="text-center text-sm text-blue-200">
             Need help? Contact your administrator
           </p>
