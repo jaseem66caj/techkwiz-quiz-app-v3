@@ -125,33 +125,25 @@ export function AdBanner({
     }
   }
 
-  // Development mode placeholder
+  // Development mode placeholder - completely hidden to avoid white spaces
   if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
     return (
       <div 
-        className={`relative rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm overflow-hidden ${className}`}
+        className={`relative ${className}`}
         style={{
           ...getAdStyles(),
           background: 'transparent',
-          border: '1px solid rgba(59, 130, 246, 0.1)',
-          minHeight: getAdStyles().minHeight,
-          position: 'relative'
+          border: 'none',
+          opacity: 0,
+          height: '0px',
+          minHeight: '0px',
+          maxHeight: '0px',
+          margin: '0px',
+          padding: '0px',
+          overflow: 'hidden'
         }}
       >
-        {/* Subtle background overlay */}
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 50%, rgba(29, 78, 216, 0.1) 100%)'
-          }}
-        />
-        
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full">
-          <div className="text-base mb-1 text-blue-400/60">📢</div>
-          <div className="font-medium text-white/50 text-xs">Advertisement</div>
-          <div className="text-xs opacity-40 text-blue-300/40 mt-1">{adType.toUpperCase()}</div>
-        </div>
+        {/* Completely hidden - no visual impact */}
       </div>
     )
   }
