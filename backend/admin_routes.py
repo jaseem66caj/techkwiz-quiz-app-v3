@@ -362,3 +362,36 @@ async def import_quiz_data(data: QuizDataExport, current_admin: AdminUser = Depe
         await database.quiz_questions.insert_many([q.dict() for q in data.questions])
     
     return {"message": "Quiz data imported successfully"}
+
+# Site Configuration Management
+@admin_router.get("/site-config", response_model=SiteConfig)
+async def get_site_config(current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Get site configuration."""
+    database = get_db()
+    config = await database.site_config.find_one()
+    
+    if not config:
+        # Create default config if none exists
+        default_config = SiteConfig()
+        await database.site_config.insert_one(default_config.dict())
+        return default_config
+    
+    return SiteConfig(**config)
+
+@admin_router.put("/site-config", response_model=SiteConfig)
+async def update_site_config(config_data: SiteConfigUpdate, current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Update site configuration."""
+    database = get_db()
+    
+    update_data = {k: v for k, v in config_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    # Upsert the configuration
+    await database.site_config.update_one(
+        {},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    updated_config = await database.site_config.find_one()
+    return SiteConfig(**updated_config)
