@@ -2,56 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-
-interface NewsArticle {
-  id: string
-  title: string
-  excerpt: string
-  link: string
-  publishDate: string
-  featuredImage?: string
-  category: string
-}
-
-// Mock data for demonstration - this will be replaced with actual WordPress API calls
-const mockNewsData: NewsArticle[] = [
-  {
-    id: '1',
-    title: 'The Future of Artificial Intelligence: What 2025 Brings',
-    excerpt: 'Exploring the latest developments in AI technology and their impact on software development...',
-    link: 'https://techkwiz.com/future-of-ai-2025',
-    publishDate: '2025-01-15T10:30:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=AI+Future',
-    category: 'Artificial Intelligence'
-  },
-  {
-    id: '2',
-    title: 'React 19: Revolutionary Features Every Developer Should Know',
-    excerpt: 'A comprehensive guide to the groundbreaking features introduced in React 19...',
-    link: 'https://techkwiz.com/react-19-features',
-    publishDate: '2025-01-12T14:15:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/61DAFB/000000?text=React+19',
-    category: 'Web Development'
-  },
-  {
-    id: '3',
-    title: 'Cybersecurity Best Practices for Modern Applications',
-    excerpt: 'Essential security measures every developer needs to implement in 2025...',
-    link: 'https://techkwiz.com/cybersecurity-best-practices',
-    publishDate: '2025-01-10T09:45:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/EF4444/FFFFFF?text=Security',
-    category: 'Cybersecurity'
-  },
-  {
-    id: '4',
-    title: 'Cloud Computing Trends: Multi-Cloud Strategies',
-    excerpt: 'How enterprises are leveraging multi-cloud architectures for better performance...',
-    link: 'https://techkwiz.com/multi-cloud-strategies',
-    publishDate: '2025-01-08T16:20:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/10B981/FFFFFF?text=Cloud',
-    category: 'Cloud Computing'
-  }
-]
+import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '../utils/wordpress'
 
 interface NewsSectionProps {
   className?: string
