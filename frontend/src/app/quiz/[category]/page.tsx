@@ -440,7 +440,7 @@ export default function QuizPage({ params }: QuizPageProps) {
                 />
               </motion.div>
               
-              <FunFact fact={quizData[currentQuestion]?.funFact} />
+              <FunFact fact={quizData[currentQuestion]?.fun_fact} />
             </>
           ) : (
             <QuizResult
