@@ -52,6 +52,11 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [questionsAnsweredCount, setQuestionsAnsweredCount] = useState(0)
   const [showAuthModal, setShowAuthModal] = useState(false)
 
+  const handleLogin = (user: any) => {
+    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
+    setShowAuthModal(false)
+  }
+
   // Handle async params
   useEffect(() => {
     const resolveParams = async () => {
