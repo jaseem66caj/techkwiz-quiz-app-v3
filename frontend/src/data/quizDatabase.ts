@@ -133,7 +133,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'prog_003',
       question: 'Which symbol is used for single-line comments in Python?',
       options: ['//', '#', '/*', '--'],
-      correctAnswer: 1,
+      correct_answer: 1,
       difficulty: 'beginner',
       funFact: 'Python uses # for single-line comments and triple quotes for multi-line comments.',
       category: 'programming',
