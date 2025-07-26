@@ -209,11 +209,36 @@ export function QuizResult({
         </motion.div>
       )}
 
-      {/* Action Buttons */}
+      {/* Advertisement Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+        className="my-6"
+      >
+        <QuizResultBannerAd className="mb-4" />
+      </motion.div>
+
+      {/* Social Sharing */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.7 }}
+        className="mb-6"
+      >
+        <QuizResultShare 
+          score={score}
+          totalQuestions={totalQuestions}
+          category={category}
+          className="mb-4"
+        />
+      </motion.div>
+
+      {/* Action Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
         className="space-y-3"
       >
         <button
@@ -233,21 +258,15 @@ export function QuizResult({
         </button>
       </motion.div>
 
-      {/* Share Button */}
+      {/* Bottom Ad */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
+        transition={{ duration: 0.6, delay: 0.9 }}
         className="mt-6 pt-4 border-t border-white/10"
       >
-        <button
-          onClick={() => {
-            const text = `I just scored ${score}/${totalQuestions} (${percentage}%) in ${category} ${difficulty} quiz on TechKwiz! 🎯 Earned ${coinsEarned} coins with a ${maxStreak} question streak! 🔥`
-            if (navigator.share) {
-              navigator.share({ text })
-            } else {
-              navigator.clipboard.writeText(text)
-              alert('Result copied to clipboard!')
+        <ResponsiveAd adSlot="quiz-result-bottom" className="mb-4" />
+      </motion.div>
             }
           }}
           className="text-blue-300 hover:text-blue-100 transition-colors text-sm flex items-center space-x-1 mx-auto hover:scale-105 transition-transform"
