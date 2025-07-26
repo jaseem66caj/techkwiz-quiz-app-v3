@@ -62,7 +62,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'iOS and Android development',
     subcategories: ['React Native', 'Flutter', 'Swift', 'Kotlin'],
     entry_fee: 120,
-    prizePool: 2200,
+    prize_pool: 2200,
   },
   'data-science': {
     id: 'data-science',
