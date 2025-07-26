@@ -171,8 +171,8 @@ export default function QuizPage({ params }: QuizPageProps) {
         
         dispatch({ type: 'UPDATE_COINS', payload: totalCoins })
         
-        // Show reward popup after every 3 questions (but not on the last question)
-        if (answeredCount % 3 === 0 && currentQuestion < quizData.length - 1) {
+        // Show reward popup after every 5 questions (but not on the last question)
+        if (answeredCount % 5 === 0 && currentQuestion < quizData.length - 1) {
           setShowRewardPopup(true)
           return // Don't proceed to next question yet
         }
