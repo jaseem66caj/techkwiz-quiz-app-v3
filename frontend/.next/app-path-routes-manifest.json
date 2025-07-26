@@ -1,12 +1,12 @@
 {
+  "/sitemap.xml/route": "/sitemap.xml",
   "/_not-found/page": "/_not-found",
   "/robots.txt/route": "/robots.txt",
-  "/sitemap.xml/route": "/sitemap.xml",
-  "/about/page": "/about",
-  "/leaderboard/page": "/leaderboard",
   "/page": "/",
-  "/privacy/page": "/privacy",
-  "/profile/page": "/profile",
+  "/leaderboard/page": "/leaderboard",
   "/quiz/[category]/page": "/quiz/[category]",
+  "/profile/page": "/profile",
+  "/about/page": "/about",
+  "/privacy/page": "/privacy",
   "/start/page": "/start"
 }
