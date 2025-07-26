@@ -17,7 +17,7 @@ export default function DataExport() {
   const handleExportData = async () => {
     setExporting(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/export/quiz-data`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/export/quiz-data`, {
         headers: getAuthHeaders()
       });
 
@@ -51,7 +51,7 @@ export default function DataExport() {
       const fileContent = await file.text();
       const data = JSON.parse(fileContent);
 
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/import/quiz-data`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/import/quiz-data`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(data)

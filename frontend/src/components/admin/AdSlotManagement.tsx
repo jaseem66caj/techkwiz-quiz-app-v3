@@ -42,7 +42,7 @@ export default function AdSlotManagement() {
 
   const fetchAdSlots = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/ad-slots`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/ad-slots`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -59,7 +59,7 @@ export default function AdSlotManagement() {
   const handleAddSlot = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/ad-slots`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/ad-slots`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newSlot)
@@ -84,7 +84,7 @@ export default function AdSlotManagement() {
 
   const handleUpdateSlot = async (slotId: string, updates: Partial<AdSlot>) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/ad-slots/${slotId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/ad-slots/${slotId}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(updates)
@@ -102,7 +102,7 @@ export default function AdSlotManagement() {
   const handleDeleteSlot = async (slotId: string) => {
     if (confirm('Are you sure you want to delete this ad slot?')) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/ad-slots/${slotId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/ad-slots/${slotId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });

@@ -33,7 +33,7 @@ export default function RewardedPopupConfig() {
 
   const fetchConfig = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/rewarded-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/rewarded-config`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -53,7 +53,7 @@ export default function RewardedPopupConfig() {
     
     setSaving(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/rewarded-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com"}/api/admin/rewarded-config`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(tempConfig)
