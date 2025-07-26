@@ -324,7 +324,7 @@ export default function StartPage() {
                           : 'bg-purple-600 hover:bg-purple-700 text-white'
                       }`}
                     >
-                      {(state.user?.coins || 0) >= category.entryFee 
+                      {(state.user?.coins || 0) >= category.entry_fee 
                         ? 'PLAY' 
                         : 'WATCH AD'}
                     </button>
