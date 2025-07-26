@@ -72,7 +72,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Analytics and data processing',
     subcategories: ['Statistics', 'Python', 'R', 'SQL', 'Visualization'],
     entry_fee: 130,
-    prizePool: 2300,
+    prize_pool: 2300,
   },
   cybersecurity: {
     id: 'cybersecurity',
