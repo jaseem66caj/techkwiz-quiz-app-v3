@@ -129,13 +129,13 @@ export function AdBanner({
   if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
     return (
       <div 
-        className={`bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex flex-col items-center justify-center text-gray-600 text-sm border-2 border-dashed border-blue-200 ${className}`}
+        className={`bg-gradient-to-br from-gray-900/80 via-blue-900/60 to-purple-900/80 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm border border-white/10 ${className}`}
         style={getAdStyles()}
       >
-        <div className="text-lg mb-2">📢</div>
-        <div className="font-semibold">Advertisement</div>
-        <div className="text-xs opacity-60">{adType.toUpperCase()} - {adFormat}</div>
-        <div className="text-xs opacity-40">Slot: {adSlot}</div>
+        <div className="text-lg mb-2 text-yellow-400">📢</div>
+        <div className="font-semibold text-white">Advertisement</div>
+        <div className="text-xs opacity-70 text-blue-300">{adType.toUpperCase()} - {adFormat}</div>
+        <div className="text-xs opacity-50 text-gray-400">Slot: {adSlot}</div>
       </div>
     )
   }
