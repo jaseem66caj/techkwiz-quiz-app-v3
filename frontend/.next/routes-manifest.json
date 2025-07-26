@@ -66,6 +66,24 @@
       "namedRegex": "^/admin/dashboard(?:/)?$"
     },
     {
+      "page": "/admin/direct",
+      "regex": "^/admin/direct(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/direct(?:/)?$"
+    },
+    {
+      "page": "/admin/forgot-password",
+      "regex": "^/admin/forgot\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/forgot\\-password(?:/)?$"
+    },
+    {
+      "page": "/admin/reset-password",
+      "regex": "^/admin/reset\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/reset\\-password(?:/)?$"
+    },
+    {
       "page": "/admin/setup",
       "regex": "^/admin/setup(?:/)?$",
       "routeKeys": {},
