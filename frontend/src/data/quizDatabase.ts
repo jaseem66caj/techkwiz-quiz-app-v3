@@ -42,7 +42,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Explore AI concepts and technologies',
     subcategories: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'NLP'],
     entry_fee: 150,
-    prizePool: 2500,
+    prize_pool: 2500,
   },
   'web-dev': {
     id: 'web-dev',
