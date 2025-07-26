@@ -37,6 +37,7 @@ export default function AdminDashboard() {
 
   const tabs = [
     { id: 'quizzes', name: 'Quiz Management', icon: '📝' },
+    { id: 'site-config', name: 'Site Configuration', icon: '⚙️' },
     { id: 'scripts', name: 'Scripts & Tracking', icon: '📊' },
     { id: 'ads', name: 'Ad Management', icon: '💰' },
     { id: 'rewards', name: 'Rewarded Popups', icon: '🎁' },
