@@ -11,13 +11,35 @@ import { AdBanner } from '../../../components/AdBanner'
 import { QuizResult } from '../../../components/QuizResult'
 import { AuthModal } from '../../../components/AuthModal'
 import { RewardPopup } from '../../../components/RewardPopup'
-import { 
-  getQuestionsForCategory, 
-  getCategoryInfo, 
-  DIFFICULTY_CONFIG,
-  type QuizQuestion 
-} from '../../../data/quizDatabase'
 import { seoConfig, generateStructuredData } from '../../../utils/seo'
+
+interface QuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correct_answer: number;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  fun_fact: string;
+  category: string;
+  subcategory: string;
+}
+
+interface QuizCategory {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  description: string;
+  subcategories: string[];
+  entry_fee: number;
+  prize_pool: number;
+}
+
+const DIFFICULTY_CONFIG = {
+  beginner: { label: 'Beginner', coins: 10 },
+  intermediate: { label: 'Intermediate', coins: 20 },
+  advanced: { label: 'Advanced', coins: 30 }
+}
 
 interface QuizPageProps {
   params: Promise<{
