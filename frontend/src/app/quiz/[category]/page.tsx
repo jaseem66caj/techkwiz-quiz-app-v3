@@ -156,12 +156,18 @@ export default function QuizPage({ params }: QuizPageProps) {
     setShowAuthModal(false)
   }
 
-  // Handle async params
+  // Handle async params and load data from API
   useEffect(() => {
     const resolveParams = async () => {
       const resolvedParams = await params
-      setCategoryId(resolvedParams.category)
-      setCategoryInfo(getCategoryInfo(resolvedParams.category))
+      const catId = resolvedParams.category
+      setCategoryId(catId)
+      
+      // Fetch category info and questions from database
+      const categoryData = await fetchCategoryInfo(catId)
+      if (categoryData) {
+        await fetchQuestions(catId, 10) // Get 10 questions
+      }
       setLoading(false)
     }
     resolveParams()
@@ -169,26 +175,22 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   // Auto-start quiz when category is loaded (skip difficulty selection)
   useEffect(() => {
-    if (categoryInfo && categoryId && !quizStarted && !loading) {
+    if (categoryInfo && categoryId && !quizStarted && !loading && quizData.length > 0) {
       // Auto-set to beginner difficulty and start quiz
       setDifficulty('beginner')
       
       // Deduct entry fee first
-      const entryFee = categoryInfo.entryFee
+      const entryFee = categoryInfo.entry_fee
       if (state.user && state.user.coins >= entryFee) {
         dispatch({ type: 'UPDATE_COINS', payload: -entryFee })
-        
-        const config = DIFFICULTY_CONFIG['beginner']
-        const questions = getQuestionsForCategory(categoryId, 'beginner', config.questions)
-        setQuizData(questions)
-        setTimeLeft(config.timeLimit)
+        setTimeLeft(30) // Set default time
         setQuizStarted(true)
       } else {
         // Redirect back to categories if insufficient coins
         router.push('/start')
       }
     }
-  }, [categoryInfo, categoryId, quizStarted, loading, state.user, dispatch, router])
+  }, [categoryInfo, categoryId, quizStarted, loading, quizData.length, state.user, dispatch, router])
 
   // Timer logic
   useEffect(() => {
