@@ -864,6 +864,247 @@ class BackendTester:
             self.log_result("Backend Integration Protection", False, f"Protection test failed: {str(e)}")
             return False
     
+    def test_quiz_categories_api(self):
+        """Test the quiz categories API that frontend uses to display categories"""
+        try:
+            # Test GET /api/quiz/categories (the main API frontend uses)
+            response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            
+            if response.status_code != 200:
+                self.log_result("Quiz Categories API", False, f"Categories API failed: HTTP {response.status_code}")
+                return False
+            
+            categories = response.json()
+            
+            # Verify response structure
+            if not isinstance(categories, list):
+                self.log_result("Quiz Categories API", False, f"Expected list, got {type(categories)}")
+                return False
+            
+            if len(categories) == 0:
+                self.log_result("Quiz Categories API", False, "No categories found - data synchronization issue")
+                return False
+            
+            # Verify each category has required fields for frontend
+            required_fields = ['id', 'name', 'description', 'icon', 'color']
+            for i, category in enumerate(categories):
+                missing_fields = [field for field in required_fields if field not in category]
+                if missing_fields:
+                    self.log_result("Quiz Categories Structure", False, f"Category {i} missing fields: {missing_fields}")
+                    return False
+            
+            # Check for expected categories (programming, AI, web development, etc.)
+            category_names = [cat.get('name', '').lower() for cat in categories]
+            expected_categories = ['programming', 'ai', 'web development', 'javascript', 'python']
+            found_expected = [cat for cat in expected_categories if any(cat in name for name in category_names)]
+            
+            self.log_result("Quiz Categories API", True, f"Categories API working correctly - {len(categories)} categories found including: {', '.join([cat['name'] for cat in categories[:5]])}")
+            return True, categories
+            
+        except Exception as e:
+            self.log_result("Quiz Categories API", False, f"Categories API test failed: {str(e)}")
+            return False, []
+    
+    def test_quiz_questions_api(self, categories):
+        """Test quiz questions API for data synchronization"""
+        if not categories:
+            self.log_result("Quiz Questions API", False, "No categories available for testing")
+            return False
+            
+        try:
+            # Test questions for first category
+            test_category = categories[0]
+            category_id = test_category['id']
+            
+            response = requests.get(f"{self.api_base}/quiz/questions/{category_id}", timeout=10)
+            
+            if response.status_code != 200:
+                self.log_result("Quiz Questions API", False, f"Questions API failed: HTTP {response.status_code}")
+                return False
+            
+            questions = response.json()
+            
+            if not isinstance(questions, list):
+                self.log_result("Quiz Questions API", False, f"Expected list, got {type(questions)}")
+                return False
+            
+            if len(questions) == 0:
+                self.log_result("Quiz Questions API", False, f"No questions found for category '{test_category['name']}' - data sync issue")
+                return False
+            
+            # Verify question structure
+            required_fields = ['id', 'question', 'options', 'correct_answer', 'category']
+            for i, question in enumerate(questions):
+                missing_fields = [field for field in required_fields if field not in question]
+                if missing_fields:
+                    self.log_result("Quiz Questions Structure", False, f"Question {i} missing fields: {missing_fields}")
+                    return False
+                
+                # Verify options structure
+                if not isinstance(question.get('options'), list) or len(question.get('options', [])) < 2:
+                    self.log_result("Quiz Questions Structure", False, f"Question {i} has invalid options structure")
+                    return False
+            
+            self.log_result("Quiz Questions API", True, f"Questions API working - {len(questions)} questions found for category '{test_category['name']}'")
+            return True
+            
+        except Exception as e:
+            self.log_result("Quiz Questions API", False, f"Questions API test failed: {str(e)}")
+            return False
+    
+    def test_database_data_verification(self):
+        """Verify that migrated data is accessible and properly structured"""
+        try:
+            # Test categories data
+            categories_response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            if categories_response.status_code != 200:
+                self.log_result("Database Data Verification", False, "Cannot access categories data")
+                return False
+            
+            categories = categories_response.json()
+            
+            # Verify we have expected programming-related categories
+            category_names = [cat.get('name', '') for cat in categories]
+            programming_categories = [name for name in category_names if any(keyword in name.lower() for keyword in ['programming', 'javascript', 'python', 'web', 'ai', 'tech'])]
+            
+            if len(programming_categories) == 0:
+                self.log_result("Database Data Verification", False, "No programming-related categories found - migration issue")
+                return False
+            
+            # Test that each category has associated questions
+            categories_with_questions = 0
+            for category in categories[:3]:  # Test first 3 categories
+                questions_response = requests.get(f"{self.api_base}/quiz/questions/{category['id']}", timeout=10)
+                if questions_response.status_code == 200:
+                    questions = questions_response.json()
+                    if len(questions) > 0:
+                        categories_with_questions += 1
+            
+            if categories_with_questions == 0:
+                self.log_result("Database Data Verification", False, "No categories have associated questions - data sync issue")
+                return False
+            
+            self.log_result("Database Data Verification", True, f"Database data properly migrated - {len(categories)} categories, {categories_with_questions} categories with questions")
+            return True
+            
+        except Exception as e:
+            self.log_result("Database Data Verification", False, f"Database verification failed: {str(e)}")
+            return False
+    
+    def test_frontend_backend_integration_format(self):
+        """Test that API responses are in correct format for frontend consumption"""
+        try:
+            # Test categories format
+            categories_response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            if categories_response.status_code != 200:
+                self.log_result("Frontend Integration Format", False, "Categories API not accessible")
+                return False
+            
+            categories = categories_response.json()
+            
+            # Verify JSON serialization (no ObjectId issues)
+            try:
+                json.dumps(categories)
+            except TypeError as e:
+                self.log_result("Frontend Integration Format", False, f"Categories not JSON serializable: {str(e)}")
+                return False
+            
+            # Test questions format
+            if categories:
+                questions_response = requests.get(f"{self.api_base}/quiz/questions/{categories[0]['id']}", timeout=10)
+                if questions_response.status_code == 200:
+                    questions = questions_response.json()
+                    try:
+                        json.dumps(questions)
+                    except TypeError as e:
+                        self.log_result("Frontend Integration Format", False, f"Questions not JSON serializable: {str(e)}")
+                        return False
+            
+            # Test rewarded config format
+            config_response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if config_response.status_code == 200:
+                config = config_response.json()
+                try:
+                    json.dumps(config)
+                except TypeError as e:
+                    self.log_result("Frontend Integration Format", False, f"Rewarded config not JSON serializable: {str(e)}")
+                    return False
+            
+            self.log_result("Frontend Integration Format", True, "All API responses properly formatted for frontend consumption")
+            return True
+            
+        except Exception as e:
+            self.log_result("Frontend Integration Format", False, f"Integration format test failed: {str(e)}")
+            return False
+    
+    def run_data_sync_tests(self):
+        """Run focused tests on backend API connectivity and data synchronization"""
+        print(f"🎯 Starting Backend API Connectivity and Data Synchronization Tests")
+        print(f"Backend URL: {self.backend_url}")
+        print(f"API Base: {self.api_base}")
+        print("=" * 70)
+        
+        tests = [
+            # Core connectivity
+            self.test_backend_health,
+            self.test_mongodb_connection,
+            
+            # Data synchronization tests (main focus)
+            self.test_quiz_categories_api,
+            self.test_database_data_verification,
+            self.test_frontend_backend_integration_format,
+        ]
+        
+        passed = 0
+        failed = 0
+        categories = []
+        
+        for test in tests:
+            try:
+                if test == self.test_quiz_categories_api:
+                    result, categories = test()
+                elif test == self.test_quiz_questions_api:
+                    result = test(categories)
+                else:
+                    result = test()
+                    
+                if result:
+                    passed += 1
+                else:
+                    failed += 1
+            except Exception as e:
+                print(f"❌ FAIL: {test.__name__} - Exception: {str(e)}")
+                failed += 1
+            
+            print("-" * 40)
+        
+        # Test questions API after we have categories
+        if categories:
+            try:
+                result = self.test_quiz_questions_api(categories)
+                if result:
+                    passed += 1
+                else:
+                    failed += 1
+            except Exception as e:
+                print(f"❌ FAIL: test_quiz_questions_api - Exception: {str(e)}")
+                failed += 1
+            print("-" * 40)
+        
+        print(f"\n📊 Data Synchronization Test Summary:")
+        print(f"✅ Passed: {passed}")
+        print(f"❌ Failed: {failed}")
+        print(f"📈 Success Rate: {passed/(passed+failed)*100:.1f}%")
+        
+        if failed == 0:
+            print(f"\n🎉 DATA SYNCHRONIZATION TESTS PASSED!")
+            print(f"   ✅ Quiz categories API (/api/quiz/categories) working correctly")
+            print(f"   ✅ Database contains properly migrated data")
+            print(f"   ✅ API responses formatted correctly for frontend")
+            print(f"   ✅ Backend-frontend integration ready")
+        
+        return passed, failed, self.results
+
     def run_all_tests(self):
         """Run comprehensive admin system tests including forgot password and profile management"""
         print(f"🚀 Starting Comprehensive Admin System Tests")
