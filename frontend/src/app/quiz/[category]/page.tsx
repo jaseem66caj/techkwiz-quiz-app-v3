@@ -255,15 +255,20 @@ export default function QuizPage({ params }: QuizPageProps) {
     setQuestionsAnsweredCount(0)
   }
 
-  // Loading state
-  if (loading || !categoryInfo) {
+  // Loading state - show until quiz is fully ready
+  if (loading || !categoryInfo || !quizStarted || quizData.length === 0) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">Loading quiz...</p>
+            <p className="text-white">
+              {loading ? 'Loading quiz...' : 
+               !categoryInfo ? 'Loading category...' :
+               !quizStarted ? 'Starting quiz...' :
+               'Preparing questions...'}
+            </p>
           </div>
         </main>
       </div>
