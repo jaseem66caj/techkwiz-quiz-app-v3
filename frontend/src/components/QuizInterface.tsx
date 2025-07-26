@@ -67,7 +67,7 @@ export function QuizInterface({
               onClick={() => onAnswerSelect(index)}
               disabled={selectedAnswer !== null}
               className={`quiz-option text-lg sm:text-xl py-6 px-6 ${selectedAnswer === index ? 'selected' : ''} ${
-                selectedAnswer !== null && index === questionData.correctAnswer ? 'correct' : ''
+                selectedAnswer !== null && index === questionData.correct_answer ? 'correct' : ''
               } ${
                 selectedAnswer !== null && selectedAnswer === index && index !== questionData.correctAnswer ? 'incorrect' : ''
               }`}
