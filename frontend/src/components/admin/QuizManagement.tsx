@@ -218,33 +218,52 @@ export default function QuizManagement() {
   }
 
   return (
-    <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Quiz Management</h2>
-        
-        {/* Sub-navigation */}
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
-          <button
-            onClick={() => setActiveSubTab('categories')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeSubTab === 'categories'
-                ? 'bg-white text-purple-700 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Categories ({categories.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('questions')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeSubTab === 'questions'
-                ? 'bg-white text-purple-700 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Questions ({questions.length})
-          </button>
+    <div className="space-y-6">
+      {/* Header with Quick Stats */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 text-white">
+        <h2 className="text-2xl font-bold mb-4">📚 Quiz Management Dashboard</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white/20 rounded-lg p-4">
+            <div className="text-2xl font-bold">{categories.length}</div>
+            <div className="text-sm opacity-90">Total Categories</div>
+          </div>
+          <div className="bg-white/20 rounded-lg p-4">
+            <div className="text-2xl font-bold">{questions.length}</div>
+            <div className="text-sm opacity-90">Total Questions</div>
+          </div>
+          <div className="bg-white/20 rounded-lg p-4">
+            <div className="text-2xl font-bold">{questions.filter(q => q.difficulty === 'beginner').length}</div>
+            <div className="text-sm opacity-90">Beginner Questions</div>
+          </div>
+          <div className="bg-white/20 rounded-lg p-4">
+            <div className="text-2xl font-bold">{questions.filter(q => q.difficulty === 'advanced').length}</div>
+            <div className="text-sm opacity-90">Advanced Questions</div>
+          </div>
         </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
+        <button
+          onClick={() => setActiveSubTab('categories')}
+          className={`px-6 py-3 rounded-md font-medium transition-colors ${
+            activeSubTab === 'categories'
+              ? 'bg-white text-purple-700 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          🏷️ Categories ({categories.length})
+        </button>
+        <button
+          onClick={() => setActiveSubTab('questions')}
+          className={`px-6 py-3 rounded-md font-medium transition-colors ${
+            activeSubTab === 'questions'
+              ? 'bg-white text-purple-700 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          ❓ Questions ({questions.length})
+        </button>
       </div>
 
       {/* Categories Tab */}
