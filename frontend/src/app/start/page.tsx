@@ -56,6 +56,8 @@ export default function StartPage() {
   };
 
   useEffect(() => {
+    fetchCategories();
+    
     // Set page title and meta description for SEO
     document.title = seoConfig.categories.title
     
