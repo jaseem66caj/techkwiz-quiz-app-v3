@@ -156,9 +156,9 @@ a {
 /* Mobile-specific improvements for larger screens */
 @media (max-width: 640px) {
   .quiz-option {
-    padding: 20px 16px;
-    min-height: 72px;
-    font-size: 18px;
+    padding: 16px 12px;
+    min-height: 60px;
+    font-size: 16px;
     border-radius: 20px;
     font-weight: 800;
   }
