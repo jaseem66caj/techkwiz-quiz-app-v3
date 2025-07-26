@@ -1,18 +1,24 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { useApp } from './providers'
-import { QuizInterface } from '../components/QuizInterface'
-import { FunFact } from '../components/FunFact'
-import { Features } from '../components/Features'
-import { AdBanner } from '../components/AdBanner'
-import { Navigation } from '../components/Navigation'
-import { AuthModal } from '../components/AuthModal'
-import { RewardPopup } from '../components/RewardPopup'
+import { Metadata } from 'next'
+import { seoConfig, generateStructuredData } from '../utils/seo'
+import Home from './HomeClient'
 
-export default function Home() {
+export const metadata: Metadata = seoConfig.homepage
+
+export default function HomePage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData.quiz("Technology", 50))
+        }}
+      />
+      <Home />
+    </>
+  )
+}
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [currentQuestion, setCurrentQuestion] = useState(0)
