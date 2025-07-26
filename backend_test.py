@@ -52,7 +52,7 @@ class BackendTester:
             response = requests.get(f"{self.api_base}/", timeout=10)
             if response.status_code == 200:
                 data = response.json()
-                if data.get('message') == 'Hello World':
+                if data.get('message') == 'TechKwiz API is running':
                     self.log_result("Backend Health Check", True, "Backend API is responding correctly")
                     return True
                 else:
