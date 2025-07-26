@@ -165,7 +165,7 @@ export default function HomePage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
-        <main className="flex-1 flex flex-col justify-center p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
+        <main className="flex-1 flex flex-col justify-center p-4 sm:p-6 w-full max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto">
           <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
             {!quizCompleted ? (
               <>
