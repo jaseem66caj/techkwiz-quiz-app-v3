@@ -10,7 +10,7 @@ interface Category {
   description: string
   subcategories: string[]
   entry_fee: number
-  prizePool: number
+  prize_pool: number
 }
 
 interface CategoryCardProps {
