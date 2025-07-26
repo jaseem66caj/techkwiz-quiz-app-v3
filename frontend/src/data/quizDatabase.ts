@@ -123,7 +123,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'prog_002',
       question: 'What does HTML stand for?',
       options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyperlink and Text Markup Language'],
-      correctAnswer: 0,
+      correct_answer: 0,
       difficulty: 'beginner',
       funFact: 'HTML was first developed by Tim Berners-Lee in 1990 at CERN.',
       category: 'programming',
