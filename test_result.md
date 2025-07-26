@@ -574,7 +574,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Quiz Answer Option Box Size Optimization"
+    - "0 Coins Implementation Backend Support"
     - "Admin Authentication Context"
     - "Admin Login Page"
     - "Admin Dashboard Layout"
@@ -583,7 +583,8 @@ test_plan:
     - "Ad Slot Management Interface"
     - "Rewarded Popup Configuration"
     - "Data Export/Import Interface"
-  stuck_tasks: []
+  stuck_tasks:
+    - "0 Coins Implementation Backend Support"
   test_all: false
   test_priority: "high_first"
 
