@@ -50,6 +50,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [questionsAnsweredCount, setQuestionsAnsweredCount] = useState(0)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Handle async params
   useEffect(() => {
