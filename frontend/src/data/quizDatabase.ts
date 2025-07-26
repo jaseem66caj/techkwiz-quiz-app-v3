@@ -5,9 +5,9 @@ export interface QuizQuestion {
   id: string
   question: string
   options: string[]
-  correctAnswer: number
+  correct_answer: number
   difficulty: 'beginner' | 'intermediate' | 'advanced'
-  funFact: string
+  fun_fact: string
   category: string
   subcategory: string
 }
