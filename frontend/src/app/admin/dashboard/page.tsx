@@ -43,6 +43,7 @@ export default function AdminDashboard() {
     { id: 'ads', name: 'Ad Management', icon: '💰' },
     { id: 'rewards', name: 'Rewarded Popups', icon: '🎁' },
     { id: 'export', name: 'Data Export', icon: '💾' },
+    { id: 'profile', name: 'Profile Settings', icon: '👤' },
   ];
 
   const renderActiveTab = () => {
