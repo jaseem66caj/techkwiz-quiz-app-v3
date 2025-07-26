@@ -167,9 +167,9 @@ a {
 /* For very large mobile screens like OnePlus */
 @media (max-width: 640px) and (min-width: 400px) {
   .quiz-option {
-    padding: 32px 24px;
-    min-height: 96px;
-    font-size: 22px;
+    padding: 24px 20px;
+    min-height: 80px;
+    font-size: 20px;
   }
 }
 
