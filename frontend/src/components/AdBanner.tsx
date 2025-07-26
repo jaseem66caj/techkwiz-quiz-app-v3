@@ -4,20 +4,26 @@ import { useEffect, useRef } from 'react'
 
 interface AdSenseProps {
   adSlot: string
-  adFormat?: 'auto' | 'rectangle' | 'leaderboard' | 'vertical' | 'horizontal'
+  adFormat?: 'auto' | 'rectangle' | 'leaderboard' | 'vertical' | 'horizontal' | 'square'
   adLayout?: string
   adLayoutKey?: string
   className?: string
   style?: React.CSSProperties
   responsive?: boolean
   fullWidthResponsive?: boolean
+  adType?: 'adsense' | 'adx' | 'prebid'
 }
 
 declare global {
   interface Window {
     adsbygoogle: any[]
+    googletag: any
   }
 }
+
+// Placeholder Publisher IDs for testing
+const ADSENSE_PUBLISHER_ID = "ca-pub-1234567890123456" // Placeholder - replace with real ID
+const ADX_PUBLISHER_ID = "ca-pub-9876543210987654" // Placeholder - replace with real ID
 
 export function AdBanner({
   adSlot,
@@ -27,7 +33,8 @@ export function AdBanner({
   className = '',
   style = {},
   responsive = true,
-  fullWidthResponsive = true
+  fullWidthResponsive = true,
+  adType = 'adsense'
 }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null)
 
@@ -50,6 +57,9 @@ export function AdBanner({
       display: 'block',
       margin: '20px auto',
       textAlign: 'center' as const,
+      borderRadius: '8px',
+      backgroundColor: '#f8f9fa',
+      border: '1px solid #e9ecef',
       ...style
     }
 
@@ -59,42 +69,73 @@ export function AdBanner({
           ...baseStyles,
           minHeight: '90px',
           maxWidth: '728px',
-          width: '100%'
+          width: '100%',
+          height: '90px'
         }
       case 'rectangle':
         return {
           ...baseStyles,
           minHeight: '250px',
           maxWidth: '300px',
-          width: '100%'
+          width: '300px',
+          height: '250px'
+        }
+      case 'square':
+        return {
+          ...baseStyles,
+          minHeight: '250px',
+          maxWidth: '250px',
+          width: '250px',
+          height: '250px'
         }
       case 'vertical':
         return {
           ...baseStyles,
           minHeight: '600px',
           maxWidth: '160px',
-          width: '100%'
+          width: '160px',
+          height: '600px'
         }
       case 'horizontal':
         return {
           ...baseStyles,
           minHeight: '280px',
           maxWidth: '336px',
-          width: '100%'
+          width: '336px',
+          height: '280px'
         }
       default:
-        return baseStyles
+        return {
+          ...baseStyles,
+          minHeight: '90px',
+          width: '100%'
+        }
     }
   }
 
-  // Don't render ads if AdSense isn't available (development mode)
-  if (typeof window === 'undefined') {
+  // Get publisher ID based on ad type
+  const getPublisherId = () => {
+    switch (adType) {
+      case 'adx':
+        return ADX_PUBLISHER_ID
+      case 'prebid':
+        return ADSENSE_PUBLISHER_ID // Prebid still uses AdSense
+      default:
+        return ADSENSE_PUBLISHER_ID
+    }
+  }
+
+  // Development mode placeholder
+  if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
     return (
       <div 
-        className={`bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 text-sm ${className}`}
+        className={`bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex flex-col items-center justify-center text-gray-600 text-sm border-2 border-dashed border-blue-200 ${className}`}
         style={getAdStyles()}
       >
-        <span>Ad Space</span>
+        <div className="text-lg mb-2">📢</div>
+        <div className="font-semibold">Advertisement</div>
+        <div className="text-xs opacity-60">{adType.toUpperCase()} - {adFormat}</div>
+        <div className="text-xs opacity-40">Slot: {adSlot}</div>
       </div>
     )
   }
@@ -105,7 +146,7 @@ export function AdBanner({
         ref={adRef}
         className="adsbygoogle"
         style={getAdStyles()}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+        data-ad-client={getPublisherId()}
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-ad-layout={adLayout}
@@ -130,53 +171,133 @@ export function AdBanner({
   )
 }
 
-// Specialized ad components for different placements
-export function HeaderAd({ className }: { className?: string }) {
+// Specialized ad components for different placements matching QuizWinz structure
+export function HeaderBannerAd({ className }: { className?: string }) {
   return (
     <AdBanner
       adSlot="1111111111"
       adFormat="leaderboard"
-      className={`header-ad ${className}`}
+      className={`header-banner-ad ${className}`}
       style={{ marginBottom: '20px' }}
+      adType="adsense"
     />
   )
 }
 
-export function SidebarAd({ className }: { className?: string }) {
+export function SidebarRightAd({ className }: { className?: string }) {
   return (
     <AdBanner
       adSlot="2222222222"
-      adFormat="vertical"
-      className={`sidebar-ad ${className}`}
+      adFormat="rectangle"
+      className={`sidebar-right-ad ${className}`}
       style={{ margin: '10px 0' }}
+      adType="adsense"
     />
   )
 }
 
-export function ContentAd({ className }: { className?: string }) {
+export function BetweenQuestionsAd1({ className }: { className?: string }) {
   return (
     <AdBanner
       adSlot="3333333333"
       adFormat="rectangle"
-      className={`content-ad ${className}`}
+      className={`between-questions-1-ad ${className}`}
       style={{ margin: '30px auto' }}
+      adType="adx"
     />
   )
 }
 
-export function FooterAd({ className }: { className?: string }) {
+export function BetweenQuestionsAd2({ className }: { className?: string }) {
   return (
     <AdBanner
       adSlot="4444444444"
+      adFormat="square"
+      className={`between-questions-2-ad ${className}`}
+      style={{ margin: '30px auto' }}
+      adType="adx"
+    />
+  )
+}
+
+export function BetweenQuestionsAd3({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="5555555555"
       adFormat="horizontal"
-      className={`footer-ad ${className}`}
+      className={`between-questions-3-ad ${className}`}
+      style={{ margin: '30px auto' }}
+      adType="prebid"
+    />
+  )
+}
+
+export function FooterBannerAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="6666666666"
+      adFormat="leaderboard"
+      className={`footer-banner-ad ${className}`}
       style={{ marginTop: '30px' }}
+      adType="adsense"
+    />
+  )
+}
+
+export function PopupInterstitialAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="7777777777"
+      adFormat="rectangle"
+      className={`popup-interstitial-ad ${className}`}
+      style={{ margin: '20px auto' }}
+      adType="adx"
+    />
+  )
+}
+
+export function QuizResultBannerAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="8888888888"
+      adFormat="leaderboard"
+      className={`quiz-result-banner-ad ${className}`}
+      style={{ margin: '20px auto' }}
+      adType="adsense"
+    />
+  )
+}
+
+export function CategoryPageTopAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="9999999999"
+      adFormat="leaderboard"
+      className={`category-page-top-ad ${className}`}
+      style={{ marginBottom: '20px' }}
+      adType="prebid"
+    />
+  )
+}
+
+export function CategoryPageBottomAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="0000000000"
+      adFormat="rectangle"
+      className={`category-page-bottom-ad ${className}`}
+      style={{ marginTop: '30px' }}
+      adType="adx"
     />
   )
 }
 
 // Responsive ad that adjusts to screen size
-export function ResponsiveAd({ adSlot, className }: { adSlot: string, className?: string }) {
+export function ResponsiveAd({ adSlot, className, adType = 'adsense' }: { 
+  adSlot: string, 
+  className?: string,
+  adType?: 'adsense' | 'adx' | 'prebid'
+}) {
   return (
     <AdBanner
       adSlot={adSlot}
@@ -184,6 +305,32 @@ export function ResponsiveAd({ adSlot, className }: { adSlot: string, className?
       className={`responsive-ad ${className}`}
       responsive={true}
       fullWidthResponsive={true}
+      adType={adType}
     />
+  )
+}
+
+// Smart ad component that chooses format based on screen size
+export function SmartAd({ adSlot, className }: { adSlot: string, className?: string }) {
+  return (
+    <div className={className}>
+      {/* Desktop/Tablet: Leaderboard */}
+      <div className="hidden md:block">
+        <AdBanner
+          adSlot={adSlot}
+          adFormat="leaderboard"
+          adType="adsense"
+        />
+      </div>
+      
+      {/* Mobile: Rectangle */}
+      <div className="block md:hidden">
+        <AdBanner
+          adSlot={adSlot}
+          adFormat="rectangle"
+          adType="adsense"
+        />
+      </div>
+    </div>
   )
 }
