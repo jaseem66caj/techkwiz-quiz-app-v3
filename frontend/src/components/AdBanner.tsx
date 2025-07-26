@@ -125,27 +125,9 @@ export function AdBanner({
     }
   }
 
-  // Development mode placeholder - completely hidden to avoid white spaces
+  // Development mode - don't render anything to avoid white spaces
   if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
-    return (
-      <div 
-        className={`relative ${className}`}
-        style={{
-          ...getAdStyles(),
-          background: 'transparent',
-          border: 'none',
-          opacity: 0,
-          height: '0px',
-          minHeight: '0px',
-          maxHeight: '0px',
-          margin: '0px',
-          padding: '0px',
-          overflow: 'hidden'
-        }}
-      >
-        {/* Completely hidden - no visual impact */}
-      </div>
-    )
+    return null
   }
 
   return (
