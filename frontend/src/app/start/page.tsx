@@ -8,6 +8,7 @@ import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
 import { QUIZ_CATEGORIES } from '../../data/quizDatabase'
 import { AuthModal } from '../../components/AuthModal'
+import { NewsSection } from '../../components/NewsSection'
 
 export default function StartPage() {
   const router = useRouter()
