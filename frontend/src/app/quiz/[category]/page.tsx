@@ -17,6 +17,7 @@ import {
   DIFFICULTY_CONFIG,
   type QuizQuestion 
 } from '../../../data/quizDatabase'
+import { seoConfig, generateStructuredData } from '../../../utils/seo'
 
 interface QuizPageProps {
   params: Promise<{
