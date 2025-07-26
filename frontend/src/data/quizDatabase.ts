@@ -81,7 +81,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-red-500 to-orange-600',
     description: 'Security concepts and practices',
     subcategories: ['Network Security', 'Ethical Hacking', 'Cryptography'],
-    entryFee: 140,
+    entry_fee: 140,
     prizePool: 2400,
   },
   cloud: {
