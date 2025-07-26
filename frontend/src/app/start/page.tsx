@@ -6,15 +6,22 @@ import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
-import { QUIZ_CATEGORIES } from '../../data/quizDatabase'
 import { AuthModal } from '../../components/AuthModal'
 import { NewsSection } from '../../components/NewsSection'
 import { RewardPopup } from '../../components/RewardPopup'
 import { Metadata } from 'next'
 import { seoConfig } from '../../utils/seo'
 
-// This would be for the metadata, but since it's a client component, we'll handle SEO via useEffect
-// export const metadata: Metadata = seoConfig.categories
+interface QuizCategory {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  description: string;
+  subcategories: string[];
+  entry_fee: number;
+  prize_pool: number;
+}
 
 export default function StartPage() {
   const router = useRouter()
@@ -23,9 +30,30 @@ export default function StartPage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [selectedCategoryForReward, setSelectedCategoryForReward] = useState<string | null>(null)
+  const [categories, setCategories] = useState<QuizCategory[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  // Convert the categories object to array
-  const categories = Object.values(QUIZ_CATEGORIES)
+  // Fetch categories from database
+  const fetchCategories = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const response = await fetch(`${backendUrl}/api/quiz/categories`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      } else {
+        console.error('Failed to fetch categories');
+        setError('Failed to load quiz categories');
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setError('Failed to load quiz categories');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Set page title and meta description for SEO
