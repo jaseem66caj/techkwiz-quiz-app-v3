@@ -170,7 +170,7 @@ export default function StartPage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
-        <main className="flex-1 p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
+        <main className="flex-1 p-3 sm:p-4 w-full mx-auto">
           {/* Mobile-First Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -178,13 +178,13 @@ export default function StartPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-4 sm:mb-6 px-2"
           >
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
               Choose Category
             </h1>
-            <p className="text-blue-200 text-sm sm:text-base md:text-lg mb-2">
+            <p className="text-base sm:text-lg md:text-xl text-blue-200 mb-2">
               Select a category to start your quiz journey
             </p>
-            <p className="text-blue-300 text-xs sm:text-sm md:text-base">
+            <p className="text-sm sm:text-base md:text-lg text-blue-300">
               {categories.length} categories • 50+ questions • Multiple levels
             </p>
           </motion.div>
