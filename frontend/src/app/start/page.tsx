@@ -256,17 +256,15 @@ export default function StartPage() {
                   {/* Right Section - Play Button */}
                   <div className="flex-shrink-0">
                     <button
-                      className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all ${
-                        state.isAuthenticated && state.user && state.user.coins >= category.entryFee
+                      className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base transition-all ${
+                        (state.user?.coins || 0) >= category.entryFee
                           ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                          : 'bg-gray-600 text-gray-400'
+                          : 'bg-purple-600 hover:bg-purple-700 text-white'
                       }`}
                     >
-                      {!state.isAuthenticated 
-                        ? 'LOGIN' 
-                        : state.user && state.user.coins >= category.entryFee 
-                          ? 'PLAY' 
-                          : 'COINS'}
+                      {(state.user?.coins || 0) >= category.entryFee 
+                        ? 'PLAY' 
+                        : 'WATCH AD'}
                     </button>
                   </div>
                 </div>
