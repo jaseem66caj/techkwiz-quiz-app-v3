@@ -125,40 +125,8 @@ export function AdBanner({
     }
   }
 
-  // Development mode - don't render anything to avoid white spaces
-  if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
-    return null
-  }
-
-  return (
-    <div className={`ad-container ${className}`} style={{ textAlign: 'center' }}>
-      <ins
-        ref={adRef}
-        className="adsbygoogle"
-        style={getAdStyles()}
-        data-ad-client={getPublisherId()}
-        data-ad-slot={adSlot}
-        data-ad-format={adFormat}
-        data-ad-layout={adLayout}
-        data-ad-layout-key={adLayoutKey}
-        data-full-width-responsive={fullWidthResponsive.toString()}
-        data-adtest={'on'}
-      />
-      
-      {/* AdSense compliance: Ad label */}
-      <div 
-        style={{ 
-          fontSize: '10px', 
-          color: '#666', 
-          textAlign: 'center',
-          marginTop: '5px',
-          fontFamily: 'Arial, sans-serif'
-        }}
-      >
-        Advertisement
-      </div>
-    </div>
-  )
+  // Always return null to completely remove ads in development
+  return null
 }
 
 // Specialized ad components for different placements matching QuizWinz structure
