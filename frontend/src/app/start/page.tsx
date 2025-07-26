@@ -110,6 +110,7 @@ export default function StartPage() {
       // Wait for state update then check coins
       setTimeout(() => {
         const currentCoins = 0 // Guests start with 0 coins
+        console.log(`Guest user: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
         if (currentCoins >= category.entry_fee) {
           router.push(`/quiz/${categoryId}`)
         } else {
@@ -120,6 +121,7 @@ export default function StartPage() {
     } else {
       // Check if user has enough coins
       const userCoins = state.user?.coins || 0
+      console.log(`Authenticated user: coins=${userCoins}, entry_fee=${category.entry_fee}`)
       if (userCoins >= category.entry_fee) {
         // User has enough coins, proceed directly to quiz
         router.push(`/quiz/${categoryId}`)
