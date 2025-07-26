@@ -222,7 +222,7 @@ export default function QuizPage({ params }: QuizPageProps) {
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
-      const isCorrect = answerIndex === quizData[currentQuestion].correctAnswer
+      const isCorrect = answerIndex === quizData[currentQuestion].correct_answer
       const config = DIFFICULTY_CONFIG[difficulty]
       const answeredCount = questionsAnsweredCount + 1
       setQuestionsAnsweredCount(answeredCount)
