@@ -201,15 +201,15 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="w-full mx-auto mt-6"
+                  className="w-full mx-auto mt-4"
                 >
-                  <div className="glass-effect p-6 rounded-2xl">
-                    <h3 className="text-white font-bold text-center mb-4 text-xl">
+                  <div className="glass-effect p-4 rounded-xl">
+                    <h3 className="text-white font-bold text-center mb-3 text-lg">
                       🚀 Ready for More?
                     </h3>
                     <button
                       onClick={() => router.push('/start')}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-5 text-xl rounded-2xl transition-colors"
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 text-base rounded-xl transition-colors"
                     >
                       Explore All Categories
                     </button>
