@@ -105,6 +105,121 @@ async def verify_admin_token(current_admin: AdminUser = Depends(get_current_admi
     """Verify admin token is valid."""
     return {"valid": True, "username": current_admin.username}
 
+# Password Reset Endpoints
+@admin_router.post("/forgot-password")
+async def forgot_password(reset_data: AdminPasswordReset):
+    """Send password reset email to admin."""
+    database = get_db()
+    
+    # Find admin user by email
+    admin_user = await database.admin_users.find_one({"email": reset_data.email})
+    if not admin_user:
+        # Don't reveal if email exists or not for security
+        return {"message": "If an account with that email exists, a password reset link has been sent."}
+    
+    # Generate reset token
+    reset_token = generate_reset_token()
+    token_hash = hash_reset_token(reset_token)
+    expires_at = datetime.utcnow() + timedelta(hours=1)  # Token expires in 1 hour
+    
+    # Update user with reset token
+    await database.admin_users.update_one(
+        {"email": reset_data.email},
+        {"$set": {
+            "reset_token": token_hash,
+            "reset_token_expires": expires_at
+        }}
+    )
+    
+    # Send reset email
+    email_service = EmailService()
+    await email_service.send_password_reset_email(
+        to_email=reset_data.email,
+        reset_token=reset_token,
+        admin_username=admin_user["username"]
+    )
+    
+    return {"message": "If an account with that email exists, a password reset link has been sent."}
+
+@admin_router.post("/reset-password")
+async def reset_password(reset_data: AdminPasswordUpdate):
+    """Reset admin password using reset token."""
+    database = get_db()
+    
+    # Hash the provided token to match stored hash
+    token_hash = hash_reset_token(reset_data.token)
+    
+    # Find admin user with valid reset token
+    admin_user = await database.admin_users.find_one({
+        "reset_token": token_hash,
+        "reset_token_expires": {"$gt": datetime.utcnow()}
+    })
+    
+    if not admin_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+    
+    # Update password and clear reset token
+    new_password_hash = hash_password(reset_data.new_password)
+    await database.admin_users.update_one(
+        {"_id": admin_user["_id"]},
+        {"$set": {
+            "password_hash": new_password_hash
+        }, "$unset": {
+            "reset_token": "",
+            "reset_token_expires": ""
+        }}
+    )
+    
+    return {"message": "Password has been successfully reset"}
+
+@admin_router.put("/profile", response_model=AdminUser)
+async def update_admin_profile(profile_data: AdminProfileUpdate, current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Update admin profile including username, email, and password."""
+    database = get_db()
+    
+    # Verify current password
+    admin_user = await database.admin_users.find_one({"username": current_admin.username})
+    if not admin_user or not verify_password(profile_data.current_password, admin_user["password_hash"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Current password is incorrect"
+        )
+    
+    # Prepare update data
+    update_data = {"updated_at": datetime.utcnow()}
+    
+    if profile_data.username:
+        # Check if new username is already taken
+        existing_user = await database.admin_users.find_one({
+            "username": profile_data.username,
+            "_id": {"$ne": admin_user["_id"]}
+        })
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username is already taken"
+            )
+        update_data["username"] = profile_data.username
+    
+    if profile_data.email:
+        update_data["email"] = profile_data.email
+    
+    if profile_data.new_password:
+        update_data["password_hash"] = hash_password(profile_data.new_password)
+    
+    # Update admin user
+    await database.admin_users.update_one(
+        {"_id": admin_user["_id"]},
+        {"$set": update_data}
+    )
+    
+    # Return updated user data
+    updated_admin = await database.admin_users.find_one({"_id": admin_user["_id"]})
+    return AdminUser(**updated_admin)
+
 # Quiz Category Management
 @admin_router.get("/categories", response_model=List[QuizCategory])
 async def get_categories(current_admin: AdminUser = Depends(get_current_admin_user)):
