@@ -154,9 +154,9 @@ export function FortuneCookie({ className }: { className?: string }) {
 
   return (
     <>
-      {/* Fortune Cookie Button */}
+      {/* Fortune Cookie Button - Engaging but Small */}
       <motion.div
-        className={`fixed right-4 bottom-4 z-50 ${className}`}
+        className={`fixed right-3 bottom-3 z-50 ${className}`}
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ 
@@ -170,13 +170,13 @@ export function FortuneCookie({ className }: { className?: string }) {
           onClick={handleFortuneClick}
           disabled={isAnimating}
           className={`relative group transition-all duration-300 ${
-            isAnimating ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-110'
+            isAnimating ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-105'
           }`}
-          whileHover={{ scale: isAnimating ? 1 : 1.1, rotate: 5 }}
+          whileHover={{ scale: isAnimating ? 1 : 1.05 }}
           whileTap={{ scale: isAnimating ? 1 : 0.95 }}
           animate={{
-            y: [0, -8, 0],
-            rotate: isAnimating ? [0, 360] : [0, -2, 2, 0]
+            y: [0, -4, 0],
+            rotate: isAnimating ? [0, 360] : [0, -1, 1, 0]
           }}
           transition={{
             y: {
@@ -189,41 +189,40 @@ export function FortuneCookie({ className }: { className?: string }) {
               repeat: Infinity,
               ease: "linear"
             } : {
-              duration: 3,
+              duration: 4,
               repeat: Infinity,
               ease: "easeInOut"
             }
           }}
         >
-          {/* 3D Fortune Cookie Design inspired by Qureka */}
-          <div className="relative w-16 h-16">
+          {/* Compact Fortune Cookie Design */}
+          <div className="relative w-12 h-12">
             {/* Cookie Shadow */}
-            <div className="absolute top-2 left-2 w-full h-full bg-black opacity-20 rounded-full blur-sm"></div>
+            <div className="absolute top-1 left-1 w-full h-full bg-black opacity-15 rounded-full blur-sm"></div>
             
             {/* Cookie Base */}
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 via-yellow-300 to-amber-400 rounded-full shadow-2xl border-2 border-yellow-400"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 via-yellow-300 to-amber-400 rounded-full shadow-lg border border-yellow-400"></div>
             
             {/* Cookie Highlight */}
-            <div className="absolute top-1 left-1 w-4 h-4 bg-gradient-to-br from-white to-yellow-100 rounded-full opacity-60"></div>
+            <div className="absolute top-0.5 left-0.5 w-3 h-3 bg-gradient-to-br from-white to-yellow-100 rounded-full opacity-60"></div>
             
-            {/* Cookie Crack/Opening */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-1 bg-gradient-to-r from-amber-600 to-amber-700 rounded-full"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-1 w-4 h-0.5 bg-gradient-to-r from-amber-600 to-amber-700 rounded-full opacity-60"></div>
+            {/* Cookie Crack */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-amber-700 rounded-full opacity-80"></div>
             
             {/* Fortune Paper Peek */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-0.5 bg-white rounded-sm opacity-90"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-0.5 bg-white rounded-sm opacity-90"></div>
             
             {/* Cookie Emoji Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center text-2xl">
+            <div className="absolute inset-0 flex items-center justify-center text-lg">
               🥠
             </div>
           </div>
           
-          {/* Magical Sparkles */}
+          {/* Small Sparkle */}
           <motion.div
-            className="absolute -top-2 -right-2 text-yellow-400"
+            className="absolute -top-1 -right-1 text-yellow-400 text-sm"
             animate={{
-              scale: [1, 1.3, 1],
+              scale: [1, 1.2, 1],
               opacity: [0.7, 1, 0.7],
               rotate: [0, 180, 360]
             }}
@@ -236,35 +235,17 @@ export function FortuneCookie({ className }: { className?: string }) {
             ✨
           </motion.div>
           
-          <motion.div
-            className="absolute -bottom-2 -left-2 text-amber-400"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.5, 0.8, 0.5],
-              rotate: [360, 180, 0]
-            }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.5
-            }}
-          >
-            💫
-          </motion.div>
-          
-          {/* Glow Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-amber-300 rounded-full opacity-20 blur-lg scale-125 group-hover:scale-150 transition-transform duration-300"></div>
-          
-          {/* Interactive Tooltip */}
-          <div className="absolute bottom-full right-0 mb-4 px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-105 shadow-lg whitespace-nowrap">
+          {/* Engaging Tooltip */}
+          <div className="absolute bottom-full right-0 mb-3 px-2 py-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-105 shadow-lg whitespace-nowrap">
             <div className="flex items-center space-x-1">
               <span>🔮</span>
-              <span>Get Fortune!</span>
-              <span className="text-yellow-300">({clickCount})</span>
+              <span>Lucky Fortune!</span>
+            </div>
+            <div className="text-center text-yellow-300 text-xs mt-0.5">
+              {clickCount > 0 ? `${clickCount} fortunes read` : 'Tap for wisdom'}
             </div>
             {/* Tooltip Arrow */}
-            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-purple-600"></div>
+            <div className="absolute top-full right-3 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-purple-600"></div>
           </div>
         </motion.button>
       </motion.div>
