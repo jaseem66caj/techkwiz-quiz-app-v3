@@ -159,20 +159,13 @@ export default function HomePage() {
     return null // Will re-render as authenticated
   }
 
-  // Authenticated user quiz interface
+  // Authenticated user quiz interface - Direct quiz like quizwinz.com
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
         <main className="flex-1 flex flex-col justify-center p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
-          {/* AdSense Banner - Mobile Optimized */}
-          <AdBanner 
-            adSlot="1234567890"
-            adFormat="auto"
-            className="mb-3 sm:mb-4 md:mb-6 mx-2"
-          />
-          
           <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
             {!quizCompleted ? (
               <>
