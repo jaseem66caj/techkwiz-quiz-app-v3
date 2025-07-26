@@ -300,28 +300,28 @@ export default function StartPage() {
                         <div className="flex-1 min-w-0">
                           {/* Category Name with Live Badge */}
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-white font-bold text-lg sm:text-xl truncate">
-                              {category.name.length > 15 ? category.name.substring(0, 15) + '...' : category.name}
+                            <h3 className="text-white font-bold text-base sm:text-lg md:text-xl leading-tight">
+                              {category.name}
                             </h3>
-                            <span className="bg-green-500 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full font-semibold flex-shrink-0">
+                            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0">
                               Live
                             </span>
                           </div>
                           
                           {/* Prize and Entry Fee */}
-                          <div className="flex items-center space-x-4 text-sm sm:text-base">
+                          <div className="flex items-center space-x-3 text-sm">
                             <div className="text-yellow-400 font-bold flex items-center">
-                              <span className="mr-1 text-lg">🏆</span>
-                              <span className="text-lg sm:text-xl">{category.prize_pool}</span>
+                              <span className="mr-1 text-base">🏆</span>
+                              <span className="text-base sm:text-lg">{category.prize_pool}</span>
                             </div>
                             
-                            <div className="text-blue-200 text-sm">
+                            <div className="text-blue-200 text-xs sm:text-sm">
                               Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
                             </div>
                           </div>
                           
                           {/* Winner Announcement */}
-                          <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                          <div className="text-gray-400 text-xs mt-1">
                             Winner announcement: 00:00:00
                           </div>
                         </div>
