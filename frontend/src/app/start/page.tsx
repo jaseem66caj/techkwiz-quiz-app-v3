@@ -60,11 +60,53 @@ export default function StartPage() {
   ]
 
   const handleCategorySelect = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId)
+    if (!category) return
+
+    // Auto-login if not authenticated (guest user)
     if (!state.isAuthenticated) {
-      setShowAuthModal(true)
-      return
+      const guestUser = {
+        name: 'Guest User',
+        email: 'guest@techkwiz.com',
+        coins: 500,
+        quizHistory: [],
+        achievements: [],
+        joinDate: new Date().toISOString()
+      }
+      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     }
-    router.push(`/quiz/${categoryId}`)
+
+    // Check if user has enough coins
+    const userCoins = state.user?.coins || 0
+    if (userCoins >= category.entryFee) {
+      // User has enough coins, proceed to quiz
+      router.push(`/quiz/${categoryId}`)
+    } else {
+      // Show rewarded ad popup to earn coins
+      setSelectedCategoryForReward(categoryId)
+      setShowRewardPopup(true)
+    }
+  }
+
+  const handleClaimReward = () => {
+    // Give user coins (simulate watching ad)
+    const coinsEarned = 200 // Give 200 coins for watching ad
+    dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+    setShowRewardPopup(false)
+    
+    // Now check if they can afford the category
+    if (selectedCategoryForReward) {
+      const category = categories.find(cat => cat.id === selectedCategoryForReward)
+      if (category && (state.user?.coins || 0) + coinsEarned >= category.entryFee) {
+        router.push(`/quiz/${selectedCategoryForReward}`)
+      }
+    }
+    setSelectedCategoryForReward(null)
+  }
+
+  const handleSkipReward = () => {
+    setShowRewardPopup(false)
+    setSelectedCategoryForReward(null)
   }
 
   const handleLogin = (user: any) => {
