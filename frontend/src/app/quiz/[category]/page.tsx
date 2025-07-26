@@ -455,6 +455,22 @@ export default function QuizPage({ params }: QuizPageProps) {
           className="mt-8"
         />
       </main>
+      
+      {/* Reward Popup */}
+      <RewardPopup
+        isOpen={showRewardPopup}
+        onClose={() => setShowRewardPopup(false)}
+        coinsEarned={lastEarnedCoins}
+        onClaimReward={handleClaimReward}
+        onSkipReward={handleSkipReward}
+      />
+      
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleLogin}
+      />
     </div>
   )
 }
