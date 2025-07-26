@@ -9,7 +9,8 @@ import { CategoryPageTopAd, CategoryPageBottomAd, HeaderBannerAd, SidebarRightAd
 import { AuthModal } from '../../components/AuthModal'
 import { NewsSection } from '../../components/NewsSection'
 import { RewardPopup } from '../../components/RewardPopup'
-import { CategoryShare, FloatingSocialShare } from '../../components/SocialShare'
+import { CategoryShare, SocialShare } from '../../components/SocialShare'
+import { FortuneCookie } from '../../components/FortuneCookie'
 import { Metadata } from 'next'
 import { seoConfig } from '../../utils/seo'
 
