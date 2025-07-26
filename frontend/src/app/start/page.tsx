@@ -328,9 +328,9 @@ export default function StartPage() {
                       </div>
 
                       {/* Right Section - Action Button */}
-                      <div className="flex-shrink-0 ml-4">
+                      <div className="flex-shrink-0 ml-3">
                         <button
-                          className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-sm sm:text-base transition-all ${
+                          className={`px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                             (state.user?.coins || 0) >= category.entry_fee
                               ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg'
                               : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg'
