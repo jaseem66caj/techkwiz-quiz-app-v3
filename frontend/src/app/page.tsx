@@ -143,103 +143,20 @@ export default function HomePage() {
     )
   }
 
-  // Guest welcome screen
+  // For guests, show quiz directly (no welcome screen needed)
+  // Auto-login guest users for seamless experience
   if (!state.isAuthenticated) {
-    return (
-      <>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-          <Navigation />
-          
-          <main className="flex-1 flex flex-col justify-center p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
-            {/* Welcome Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-6 sm:mb-8"
-            >
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">🚀</div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 px-2">
-                Welcome to <span className="text-orange-400">Tech</span>Kwiz
-              </h1>
-              <p className="text-blue-200 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 px-2">
-                Test your tech knowledge, earn coins, and compete with others!
-              </p>
-              
-              <div className="space-y-3 sm:space-y-4 px-2">
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-base sm:text-lg transition-colors"
-                >
-                  🎯 Start Your Quiz Journey
-                </button>
-                
-                <p className="text-blue-300 text-xs sm:text-sm">
-                  💡 Demo Mode: Use any email and password to get started
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Features Preview */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 px-2"
-            >
-              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
-                <div className="text-2xl sm:text-3xl mb-2">📚</div>
-                <h3 className="text-white font-semibold text-sm">8 Categories</h3>
-                <p className="text-blue-200 text-xs">Programming, AI, Web Dev & more</p>
-              </div>
-              
-              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
-                <div className="text-2xl sm:text-3xl mb-2">🪙</div>
-                <h3 className="text-white font-semibold text-sm">Earn Coins</h3>
-                <p className="text-blue-200 text-xs">500 starting coins for new users</p>
-              </div>
-              
-              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
-                <div className="text-2xl sm:text-3xl mb-2">🏆</div>
-                <h3 className="text-white font-semibold text-sm">Compete</h3>
-                <p className="text-blue-200 text-xs">Leaderboards & achievements</p>
-              </div>
-            </motion.div>
-
-            {/* Sample Question Preview */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="glass-effect p-4 sm:p-6 rounded-xl mb-4 sm:mb-6 mx-2"
-            >
-              <h3 className="text-white font-semibold text-center mb-3 sm:mb-4">
-                📝 Sample Question
-              </h3>
-              <QuizInterface
-                questionData={quickStartQuiz[0]}
-                currentQuestion={0}
-                totalQuestions={2}
-                selectedAnswer={null}
-                onAnswerSelect={handleAnswerSelect}
-              />
-            </motion.div>
-
-            <AdBanner 
-              adSlot="9876543210"
-              adFormat="rectangle"
-              className="mt-4 sm:mt-6 mx-2"
-            />
-          </main>
-        </div>
-
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onSuccess={handleLogin}
-        />
-      </>
-    )
+    // Auto-login as guest user
+    const guestUser = {
+      name: 'Guest User',
+      email: 'guest@techkwiz.com',
+      coins: 500,
+      quizHistory: [],
+      achievements: [],
+      joinDate: new Date().toISOString()
+    }
+    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+    return null // Will re-render as authenticated
   }
 
   // Authenticated user quiz interface
