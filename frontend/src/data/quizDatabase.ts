@@ -102,7 +102,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Cryptocurrency and blockchain tech',
     subcategories: ['Bitcoin', 'Ethereum', 'Smart Contracts', 'DeFi'],
     entry_fee: 160,
-    prizePool: 2600,
+    prize_pool: 2600,
   },
 }
 
