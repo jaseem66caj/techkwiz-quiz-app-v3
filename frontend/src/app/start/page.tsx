@@ -220,8 +220,8 @@ export default function StartPage() {
 
   return (
     <>
-      {/* Floating Social Share */}
-      <FloatingSocialShare />
+      {/* Fortune Cookie Feature */}
+      <FortuneCookie />
       
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
