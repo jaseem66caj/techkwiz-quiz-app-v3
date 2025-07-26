@@ -196,20 +196,20 @@ export default function StartPage() {
             className="mb-4 sm:mb-6 mx-2"
           />
 
-          {/* Category Tabs - Better Mobile Touch Targets */}
-          <div className="flex overflow-x-auto gap-2 sm:gap-3 mb-4 sm:mb-6 pb-2 scrollbar-hide px-2">
+          {/* Category Tabs - Full Width Mobile Design */}
+          <div className="flex overflow-x-auto gap-3 mb-6 pb-2 scrollbar-hide px-2">
             {categoryTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setSelectedCategory(tab.id)}
-                className={`flex-shrink-0 px-4 sm:px-6 py-3 sm:py-3 rounded-full font-semibold text-base sm:text-lg transition-all min-w-fit ${
+                className={`flex-shrink-0 px-6 py-4 rounded-2xl font-bold text-lg transition-all min-w-fit ${
                   selectedCategory === tab.id
                     ? 'bg-orange-500 text-white'
                     : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
                 {tab.name}
-                <span className="ml-2 text-sm opacity-70">({tab.count})</span>
+                <span className="ml-2 text-base opacity-70">({tab.count})</span>
               </button>
             ))}
           </div>
