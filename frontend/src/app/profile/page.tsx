@@ -15,6 +15,24 @@ export default function ProfilePage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [activeTab, setActiveTab] = useState('stats')
 
+  // SEO optimization
+  useEffect(() => {
+    document.title = seoConfig.profile.title
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', seoConfig.profile.description)
+    }
+    
+    let metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta')
+      metaKeywords.setAttribute('name', 'keywords')
+      document.head.appendChild(metaKeywords)
+    }
+    metaKeywords.setAttribute('content', seoConfig.profile.keywords)
+  }, [])
+
   const handleLogin = (user: any) => {
     dispatch({ type: 'LOGIN_SUCCESS', payload: user })
     setShowAuthModal(false)
