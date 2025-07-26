@@ -20,6 +20,8 @@ export default function StartPage() {
   const { state, dispatch } = useApp()
   const [selectedCategory, setSelectedCategory] = useState('ALL')
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showRewardPopup, setShowRewardPopup] = useState(false)
+  const [selectedCategoryForReward, setSelectedCategoryForReward] = useState<string | null>(null)
 
   // Convert the categories object to array
   const categories = Object.values(QUIZ_CATEGORIES)
