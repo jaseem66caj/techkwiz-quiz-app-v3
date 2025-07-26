@@ -60,6 +60,8 @@ export default function AdminDashboard() {
         return <RewardedPopupConfig />;
       case 'export':
         return <DataExport />;
+      case 'profile':
+        return <ProfileSettings />;
       default:
         return <QuizManagement />;
     }
