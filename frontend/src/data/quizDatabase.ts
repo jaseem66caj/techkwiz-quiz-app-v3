@@ -71,7 +71,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-indigo-500 to-blue-600',
     description: 'Analytics and data processing',
     subcategories: ['Statistics', 'Python', 'R', 'SQL', 'Visualization'],
-    entryFee: 130,
+    entry_fee: 130,
     prizePool: 2300,
   },
   cybersecurity: {
