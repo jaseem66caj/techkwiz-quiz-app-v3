@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import { seoConfig, generateStructuredData } from '../utils/seo'
+import Script from 'next/script'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -48,6 +49,51 @@ export const metadata: Metadata = {
   creator: 'TechKwiz Team',
   publisher: 'TechKwiz',
   formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
+  },
+  // Enhanced Open Graph for better social sharing
+  openGraph: {
+    title: 'TechKwiz - Master Technology Through Interactive Quizzes',
+    description: 'Join thousands of developers testing their skills on TechKwiz. Free quizzes covering Programming, AI, Web Dev, Mobile, Data Science, Cybersecurity, Cloud, and Blockchain.',
+    url: 'https://techkwiz.com',
+    siteName: 'TechKwiz',
+    images: [
+      {
+        url: 'https://techkwiz.com/og-image-homepage.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'TechKwiz - Free Tech Quiz Platform',
+      },
+      {
+        url: 'https://techkwiz.com/og-image-square.jpg',
+        width: 1080,
+        height: 1080,
+        alt: 'TechKwiz - Tech Knowledge Testing',
+      }
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  // Enhanced Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TechKwiz - Free Online Tech Quiz Platform',
+    description: 'Test your programming and tech skills with interactive quizzes. Earn coins, compete globally, and master technology concepts.',
+    site: '@TechKwiz',
+    creator: '@TechKwiz',
+    images: ['https://techkwiz.com/og-image-homepage.jpg'],
+  },
+  // App-specific metadata
+  applicationName: 'TechKwiz',
+  appleWebApp: {
+    title: 'TechKwiz',
+    statusBarStyle: 'default',
+    capable: true,
+  },
+  manifest: '/manifest.json',
+}
     email: false,
     address: false,
     telephone: false,
