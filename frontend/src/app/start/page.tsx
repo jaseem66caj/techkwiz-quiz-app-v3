@@ -290,9 +290,9 @@ export default function StartPage() {
                   >
                     <div className="flex items-center justify-between">
                       {/* Left Section - Icon and Basic Info */}
-                      <div className="flex items-center space-x-4 flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 flex-1 min-w-0">
                         {/* Category Icon */}
-                        <div className="text-4xl sm:text-5xl flex-shrink-0">
+                        <div className="text-3xl sm:text-4xl flex-shrink-0">
                           {category.icon}
                         </div>
                         
