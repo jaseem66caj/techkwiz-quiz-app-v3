@@ -16,7 +16,9 @@ def get_backend_url():
     try:
         with open('/app/frontend/.env', 'r') as f:
             for line in f:
-                if line.startswith('REACT_APP_BACKEND_URL='):
+                if line.startswith('NEXT_PUBLIC_BACKEND_URL='):
+                    return line.split('=', 1)[1].strip()
+                elif line.startswith('REACT_APP_BACKEND_URL='):
                     return line.split('=', 1)[1].strip()
     except Exception as e:
         print(f"Error reading frontend .env: {e}")
