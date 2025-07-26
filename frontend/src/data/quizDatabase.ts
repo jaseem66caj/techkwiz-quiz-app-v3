@@ -271,7 +271,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'ai_004',
       question: 'Which company developed ChatGPT?',
       options: ['Google', 'Microsoft', 'OpenAI', 'Meta'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'beginner',
       funFact: 'OpenAI was founded in 2015 by Sam Altman, Elon Musk, and others.',
       category: 'ai',
