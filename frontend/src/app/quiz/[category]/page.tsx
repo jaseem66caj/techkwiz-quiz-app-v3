@@ -53,7 +53,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   
   // Category state
   const [categoryId, setCategoryId] = useState<string>('')
-  const [categoryInfo, setCategoryInfo] = useState<any>(null)
+  const [categoryInfo, setCategoryInfo] = useState<QuizCategory | null>(null)
   
   // Quiz state
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -63,6 +63,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [timeLeft, setTimeLeft] = useState(30)
   const [quizData, setQuizData] = useState<QuizQuestion[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   
   // New features
   const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
@@ -71,6 +72,47 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [streak, setStreak] = useState(0)
   const [maxStreak, setMaxStreak] = useState(0)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
+
+  // API functions
+  const fetchCategoryInfo = async (catId: string) => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setCategoryInfo(data);
+        return data;
+      } else {
+        setError('Category not found');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching category:', error);
+      setError('Failed to load category information');
+      return null;
+    }
+  };
+
+  const fetchQuestions = async (catId: string, count: number = 10) => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const response = await fetch(`${backendUrl}/api/quiz/questions/${catId}?count=${count}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setQuizData(data);
+        return data;
+      } else {
+        setError('No questions available for this category');
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      setError('Failed to load quiz questions');
+      return [];
+    }
+  };
 
   // SEO optimization
   useEffect(() => {
