@@ -48,6 +48,8 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case 'quizzes':
         return <QuizManagement />;
+      case 'site-config':
+        return <SiteConfiguration />;
       case 'scripts':
         return <ScriptManagement />;
       case 'ads':
