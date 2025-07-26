@@ -69,7 +69,7 @@ export function QuizInterface({
               className={`quiz-option text-lg sm:text-xl py-6 px-6 ${selectedAnswer === index ? 'selected' : ''} ${
                 selectedAnswer !== null && index === questionData.correct_answer ? 'correct' : ''
               } ${
-                selectedAnswer !== null && selectedAnswer === index && index !== questionData.correctAnswer ? 'incorrect' : ''
+                selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer ? 'incorrect' : ''
               }`}
             >
               {option}
