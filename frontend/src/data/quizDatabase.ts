@@ -32,7 +32,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Test your coding knowledge',
     subcategories: ['JavaScript', 'Python', 'Java', 'C++', 'React', 'Node.js'],
     entry_fee: 100,
-    prizePool: 2000,
+    prize_pool: 2000,
   },
   ai: {
     id: 'ai',
