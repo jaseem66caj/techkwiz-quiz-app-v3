@@ -1,6 +1,17 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+interface AdSenseProps {
+  adSlot: string
+  adFormat?: 'auto' | 'rectangle' | 'leaderboard' | 'vertical' | 'horizontal'
+  adLayout?: string
+  adLayoutKey?: string
+  className?: string
+  style?: React.CSSProperties
+  responsive?: boolean
+  fullWidthResponsive?: boolean
+}
 
 declare global {
   interface Window {
@@ -8,16 +19,24 @@ declare global {
   }
 }
 
-interface AdBannerProps {
-  adSlot: string
-  adFormat: 'auto' | 'rectangle' | 'leaderboard' | 'banner'
-  className?: string
-}
+export function AdBanner({
+  adSlot,
+  adFormat = 'auto',
+  adLayout,
+  adLayoutKey,
+  className = '',
+  style = {},
+  responsive = true,
+  fullWidthResponsive = true
+}: AdSenseProps) {
+  const adRef = useRef<HTMLModElement>(null)
 
-export function AdBanner({ adSlot, adFormat, className = '' }: AdBannerProps) {
   useEffect(() => {
     try {
+      // Ensure AdSense script is loaded
       if (typeof window !== 'undefined' && window.adsbygoogle) {
+        // Push ad to AdSense queue
+        window.adsbygoogle = window.adsbygoogle || []
         window.adsbygoogle.push({})
       }
     } catch (error) {
@@ -25,47 +44,146 @@ export function AdBanner({ adSlot, adFormat, className = '' }: AdBannerProps) {
     }
   }, [])
 
-  const getAdStyle = () => {
+  // Ad format specific styles for better user experience
+  const getAdStyles = () => {
+    const baseStyles: React.CSSProperties = {
+      display: 'block',
+      margin: '20px auto',
+      textAlign: 'center' as const,
+      ...style
+    }
+
     switch (adFormat) {
       case 'leaderboard':
-        return { width: '728px', height: '90px' }
+        return {
+          ...baseStyles,
+          minHeight: '90px',
+          maxWidth: '728px',
+          width: '100%'
+        }
       case 'rectangle':
-        return { width: '300px', height: '250px' }
-      case 'banner':
-        return { width: '468px', height: '60px' }
+        return {
+          ...baseStyles,
+          minHeight: '250px',
+          maxWidth: '300px',
+          width: '100%'
+        }
+      case 'vertical':
+        return {
+          ...baseStyles,
+          minHeight: '600px',
+          maxWidth: '160px',
+          width: '100%'
+        }
+      case 'horizontal':
+        return {
+          ...baseStyles,
+          minHeight: '280px',
+          maxWidth: '336px',
+          width: '100%'
+        }
       default:
-        return { width: '100%', height: 'auto' }
+        return baseStyles
     }
   }
 
-  return (
-    <div className={`ad-container ${className}`}>
-      <div className="text-center mb-2">
-        <span className="text-xs text-blue-300 opacity-70">Advertisement</span>
+  // Don't render ads if AdSense isn't available (development mode)
+  if (typeof window === 'undefined') {
+    return (
+      <div 
+        className={`bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 text-sm ${className}`}
+        style={getAdStyles()}
+      >
+        <span>Ad Space</span>
       </div>
-      
-      {/* AdSense Ad */}
+    )
+  }
+
+  return (
+    <div className={`ad-container ${className}`} style={{ textAlign: 'center' }}>
       <ins
+        ref={adRef}
         className="adsbygoogle"
-        style={{
-          display: 'block',
-          ...getAdStyle(),
-        }}
-        data-ad-client="ca-pub-YOUR-ADSENSE-ID"
+        style={getAdStyles()}
+        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
-        data-full-width-responsive="true"
+        data-ad-layout={adLayout}
+        data-ad-layout-key={adLayoutKey}
+        data-full-width-responsive={fullWidthResponsive.toString()}
+        data-adtest={process.env.NODE_ENV === 'development' ? 'on' : 'off'}
       />
       
-      {/* Fallback/Demo Ad */}
-      <div className="glass-effect p-4 rounded-xl text-center border-2 border-dashed border-blue-400/30">
-        <div className="text-blue-300 text-sm mb-2">
-          📢 Advertisement Space
-        </div>
-        <div className="text-blue-200 text-xs">
-          Your ad could be here! Contact us for advertising opportunities.
-        </div>
+      {/* AdSense compliance: Ad label */}
+      <div 
+        style={{ 
+          fontSize: '10px', 
+          color: '#666', 
+          textAlign: 'center',
+          marginTop: '5px',
+          fontFamily: 'Arial, sans-serif'
+        }}
+      >
+        Advertisement
       </div>
     </div>
+  )
+}
+
+// Specialized ad components for different placements
+export function HeaderAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="1111111111"
+      adFormat="leaderboard"
+      className={`header-ad ${className}`}
+      style={{ marginBottom: '20px' }}
+    />
+  )
+}
+
+export function SidebarAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="2222222222"
+      adFormat="vertical"
+      className={`sidebar-ad ${className}`}
+      style={{ margin: '10px 0' }}
+    />
+  )
+}
+
+export function ContentAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="3333333333"
+      adFormat="rectangle"
+      className={`content-ad ${className}`}
+      style={{ margin: '30px auto' }}
+    />
+  )
+}
+
+export function FooterAd({ className }: { className?: string }) {
+  return (
+    <AdBanner
+      adSlot="4444444444"
+      adFormat="horizontal"
+      className={`footer-ad ${className}`}
+      style={{ marginTop: '30px' }}
+    />
+  )
+}
+
+// Responsive ad that adjusts to screen size
+export function ResponsiveAd({ adSlot, className }: { adSlot: string, className?: string }) {
+  return (
+    <AdBanner
+      adSlot={adSlot}
+      adFormat="auto"
+      className={`responsive-ad ${className}`}
+      responsive={true}
+      fullWidthResponsive={true}
+    />
   )
 }
