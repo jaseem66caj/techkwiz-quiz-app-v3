@@ -32,7 +32,39 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [categoryId, setCategoryId] = useState<string>('')
   const [categoryInfo, setCategoryInfo] = useState<any>(null)
   
-  // Quiz state
+  // SEO optimization
+  useEffect(() => {
+    if (categoryInfo && categoryId) {
+      const seoData = seoConfig.quiz(categoryId, categoryInfo.name)
+      document.title = seoData.title
+      
+      // Update meta description
+      const metaDescription = document.querySelector('meta[name="description"]')
+      if (metaDescription) {
+        metaDescription.setAttribute('content', seoData.description)
+      }
+      
+      // Add keywords
+      let metaKeywords = document.querySelector('meta[name="keywords"]')
+      if (!metaKeywords) {
+        metaKeywords = document.createElement('meta')
+        metaKeywords.setAttribute('name', 'keywords')
+        document.head.appendChild(metaKeywords)
+      }
+      metaKeywords.setAttribute('content', seoData.keywords)
+      
+      // Add structured data for quiz
+      const structuredData = generateStructuredData.quiz(categoryInfo.name, quizData.length)
+      let scriptTag = document.querySelector('script[type="application/ld+json"][data-quiz]')
+      if (!scriptTag) {
+        scriptTag = document.createElement('script')
+        scriptTag.setAttribute('type', 'application/ld+json')
+        scriptTag.setAttribute('data-quiz', 'true')
+        document.head.appendChild(scriptTag)
+      }
+      scriptTag.textContent = JSON.stringify(structuredData)
+    }
+  }, [categoryInfo, categoryId, quizData])
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
