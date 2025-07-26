@@ -99,7 +99,7 @@ export function CategoryCard({ category, onSelect, userCoins }: CategoryCardProp
       {/* Insufficient Coins Message */}
       {!canAfford && (
         <p className="text-red-400 text-xs text-center mt-2">
-          You need {category.entryFee - userCoins} more coins to play
+          You need {category.entry_fee - userCoins} more coins to play
         </p>
       )}
     </motion.div>
