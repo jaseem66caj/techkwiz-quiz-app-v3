@@ -279,12 +279,334 @@ class BackendTester:
             self.log_result("Environment Config", False, f"Environment check failed: {str(e)}")
             return False
     
+    def test_admin_authentication(self):
+        """Test admin authentication flow"""
+        try:
+            # First, try to setup admin (might fail if already exists)
+            setup_data = {
+                "username": "testadmin",
+                "password": "testpassword123"
+            }
+            
+            setup_response = requests.post(
+                f"{self.api_base}/admin/setup",
+                json=setup_data,
+                timeout=10
+            )
+            
+            # Setup might fail if admin already exists, that's okay
+            if setup_response.status_code not in [200, 400]:
+                self.log_result("Admin Authentication Setup", False, f"Unexpected setup response: {setup_response.status_code}")
+                return False, None
+            
+            # Now try to login
+            login_response = requests.post(
+                f"{self.api_base}/admin/login",
+                json=setup_data,
+                timeout=10
+            )
+            
+            if login_response.status_code == 200:
+                token_data = login_response.json()
+                if 'access_token' in token_data:
+                    self.log_result("Admin Authentication", True, "Admin login successful, token received")
+                    return True, token_data['access_token']
+                else:
+                    self.log_result("Admin Authentication", False, "Login response missing access_token")
+                    return False, None
+            else:
+                self.log_result("Admin Authentication", False, f"Login failed: {login_response.status_code}")
+                return False, None
+                
+        except Exception as e:
+            self.log_result("Admin Authentication", False, f"Authentication test failed: {str(e)}")
+            return False, None
+    
+    def test_site_config_management(self, token):
+        """Test Site Configuration Management endpoints"""
+        if not token:
+            self.log_result("Site Config Management", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # Test GET /api/admin/site-config (should return/create default config)
+            get_response = requests.get(
+                f"{self.api_base}/admin/site-config",
+                headers=headers,
+                timeout=10
+            )
+            
+            if get_response.status_code != 200:
+                self.log_result("Site Config GET", False, f"GET site-config failed: {get_response.status_code}")
+                return False
+            
+            config_data = get_response.json()
+            
+            # Verify default config structure
+            expected_fields = [
+                'id', 'google_analytics_id', 'google_search_console_id', 
+                'facebook_pixel_id', 'google_tag_manager_id', 'twitter_pixel_id',
+                'linkedin_pixel_id', 'tiktok_pixel_id', 'snapchat_pixel_id',
+                'ads_txt_content', 'robots_txt_content', 'created_at', 'updated_at'
+            ]
+            
+            missing_fields = [field for field in expected_fields if field not in config_data]
+            if missing_fields:
+                self.log_result("Site Config Structure", False, f"Missing fields: {missing_fields}")
+                return False
+            
+            # Test PUT /api/admin/site-config (should update tracking codes)
+            update_data = {
+                "google_analytics_id": "GA-TEST-123456",
+                "facebook_pixel_id": "FB-PIXEL-789012",
+                "google_tag_manager_id": "GTM-TEST-345",
+                "ads_txt_content": "google.com, pub-123456789, DIRECT, f08c47fec0942fa0",
+                "robots_txt_content": "User-agent: *\nDisallow: /admin/"
+            }
+            
+            put_response = requests.put(
+                f"{self.api_base}/admin/site-config",
+                json=update_data,
+                headers=headers,
+                timeout=10
+            )
+            
+            if put_response.status_code != 200:
+                self.log_result("Site Config PUT", False, f"PUT site-config failed: {put_response.status_code}")
+                return False
+            
+            updated_config = put_response.json()
+            
+            # Verify updates were applied
+            for key, value in update_data.items():
+                if updated_config.get(key) != value:
+                    self.log_result("Site Config Update", False, f"Field {key} not updated correctly")
+                    return False
+            
+            self.log_result("Site Config Management", True, "Site configuration GET/PUT working correctly with all tracking fields")
+            return True
+            
+        except Exception as e:
+            self.log_result("Site Config Management", False, f"Site config test failed: {str(e)}")
+            return False
+    
+    def test_enhanced_ad_slot_system(self, token):
+        """Test Enhanced Ad Slot System with quizwinz.com-style slots"""
+        if not token:
+            self.log_result("Enhanced Ad Slot System", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # Expected quizwinz.com-style ad slots (10 total)
+            expected_ad_slots = [
+                {"name": "Header Banner", "placement": "header-banner"},
+                {"name": "Sidebar Right", "placement": "sidebar-right"},
+                {"name": "Between Questions 1", "placement": "between-questions-1"},
+                {"name": "Between Questions 2", "placement": "between-questions-2"},
+                {"name": "Between Questions 3", "placement": "between-questions-3"},
+                {"name": "Footer Banner", "placement": "footer-banner"},
+                {"name": "Popup Interstitial", "placement": "popup-interstitial"},
+                {"name": "Quiz Result Banner", "placement": "quiz-result-banner"},
+                {"name": "Category Page Top", "placement": "category-page-top"},
+                {"name": "Category Page Bottom", "placement": "category-page-bottom"}
+            ]
+            
+            # First, create the expected ad slots if they don't exist
+            for slot_data in expected_ad_slots:
+                create_data = {
+                    "name": slot_data["name"],
+                    "ad_unit_id": f"ca-pub-123456789/{slot_data['placement']}-001",
+                    "ad_code": f"<div id='{slot_data['placement']}-ad'>Ad Code Placeholder</div>",
+                    "placement": slot_data["placement"],
+                    "ad_type": "adsense",
+                    "is_active": True
+                }
+                
+                # Try to create (might already exist)
+                requests.post(
+                    f"{self.api_base}/admin/ad-slots",
+                    json=create_data,
+                    headers=headers,
+                    timeout=10
+                )
+            
+            # Test GET /api/admin/ad-slots
+            get_response = requests.get(
+                f"{self.api_base}/admin/ad-slots",
+                headers=headers,
+                timeout=10
+            )
+            
+            if get_response.status_code != 200:
+                self.log_result("Ad Slots GET", False, f"GET ad-slots failed: {get_response.status_code}")
+                return False
+            
+            ad_slots = get_response.json()
+            
+            # Verify we have the expected placements
+            found_placements = [slot.get('placement') for slot in ad_slots]
+            expected_placements = [slot['placement'] for slot in expected_ad_slots]
+            
+            missing_placements = [p for p in expected_placements if p not in found_placements]
+            if missing_placements:
+                self.log_result("Ad Slots Structure", False, f"Missing expected placements: {missing_placements}")
+                return False
+            
+            # Verify each ad slot has required fields
+            for slot in ad_slots:
+                required_fields = ['id', 'name', 'ad_unit_id', 'ad_code', 'placement', 'ad_type', 'is_active']
+                missing_fields = [field for field in required_fields if field not in slot]
+                if missing_fields:
+                    self.log_result("Ad Slot Fields", False, f"Ad slot missing fields: {missing_fields}")
+                    return False
+            
+            # Test CRUD operations on a specific ad slot
+            test_slot = ad_slots[0] if ad_slots else None
+            if test_slot:
+                slot_id = test_slot['id']
+                
+                # Test UPDATE
+                update_data = {
+                    "ad_code": "<div>Updated Ad Code</div>",
+                    "is_active": False
+                }
+                
+                put_response = requests.put(
+                    f"{self.api_base}/admin/ad-slots/{slot_id}",
+                    json=update_data,
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if put_response.status_code != 200:
+                    self.log_result("Ad Slot CRUD", False, f"Ad slot update failed: {put_response.status_code}")
+                    return False
+                
+                updated_slot = put_response.json()
+                if updated_slot.get('ad_code') != update_data['ad_code']:
+                    self.log_result("Ad Slot CRUD", False, "Ad slot update not applied correctly")
+                    return False
+            
+            self.log_result("Enhanced Ad Slot System", True, f"Found {len(ad_slots)} ad slots with quizwinz.com structure, CRUD operations working")
+            return True
+            
+        except Exception as e:
+            self.log_result("Enhanced Ad Slot System", False, f"Ad slot system test failed: {str(e)}")
+            return False
+    
+    def test_updated_models_integration(self, token):
+        """Test that updated models work correctly with database operations"""
+        if not token:
+            self.log_result("Updated Models Integration", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # Test SiteConfig model through API
+            site_config_response = requests.get(
+                f"{self.api_base}/admin/site-config",
+                headers=headers,
+                timeout=10
+            )
+            
+            if site_config_response.status_code != 200:
+                self.log_result("SiteConfig Model", False, "SiteConfig model not accessible")
+                return False
+            
+            # Test AdSlot model through API
+            ad_slots_response = requests.get(
+                f"{self.api_base}/admin/ad-slots",
+                headers=headers,
+                timeout=10
+            )
+            
+            if ad_slots_response.status_code != 200:
+                self.log_result("AdSlot Model", False, "AdSlot model not accessible")
+                return False
+            
+            # Test RewardedPopupConfig model
+            rewarded_config_response = requests.get(
+                f"{self.api_base}/admin/rewarded-config",
+                headers=headers,
+                timeout=10
+            )
+            
+            if rewarded_config_response.status_code != 200:
+                self.log_result("RewardedPopupConfig Model", False, "RewardedPopupConfig model not accessible")
+                return False
+            
+            # Test that tracking pixel fields are properly handled
+            site_config = site_config_response.json()
+            tracking_fields = [
+                'google_analytics_id', 'facebook_pixel_id', 'google_tag_manager_id',
+                'twitter_pixel_id', 'linkedin_pixel_id', 'tiktok_pixel_id', 'snapchat_pixel_id'
+            ]
+            
+            for field in tracking_fields:
+                if field not in site_config:
+                    self.log_result("Tracking Fields", False, f"Missing tracking field: {field}")
+                    return False
+            
+            # Test ads.txt and robots.txt content management
+            content_fields = ['ads_txt_content', 'robots_txt_content']
+            for field in content_fields:
+                if field not in site_config:
+                    self.log_result("Content Management", False, f"Missing content field: {field}")
+                    return False
+            
+            self.log_result("Updated Models Integration", True, "All updated models working correctly with proper field handling")
+            return True
+            
+        except Exception as e:
+            self.log_result("Updated Models Integration", False, f"Models integration test failed: {str(e)}")
+            return False
+    
+    def test_backend_integration_protection(self, token):
+        """Test that new endpoints are properly protected with admin authentication"""
+        try:
+            # Test endpoints without authentication (should fail)
+            protected_endpoints = [
+                "/admin/site-config",
+                "/admin/ad-slots",
+                "/admin/rewarded-config"
+            ]
+            
+            for endpoint in protected_endpoints:
+                response = requests.get(f"{self.api_base}{endpoint}", timeout=10)
+                if response.status_code != 401:
+                    self.log_result("Authentication Protection", False, f"Endpoint {endpoint} not properly protected")
+                    return False
+            
+            # Test endpoints with valid authentication (should succeed)
+            if token:
+                headers = {'Authorization': f'Bearer {token}'}
+                for endpoint in protected_endpoints:
+                    response = requests.get(f"{self.api_base}{endpoint}", headers=headers, timeout=10)
+                    if response.status_code != 200:
+                        self.log_result("Authenticated Access", False, f"Endpoint {endpoint} not accessible with valid token")
+                        return False
+            
+            self.log_result("Backend Integration Protection", True, "All new endpoints properly protected with admin authentication")
+            return True
+            
+        except Exception as e:
+            self.log_result("Backend Integration Protection", False, f"Protection test failed: {str(e)}")
+            return False
+    
     def run_all_tests(self):
-        """Run all backend tests"""
-        print(f"🚀 Starting Backend Tests for Frontend Support")
+        """Run all backend tests including enhanced admin dashboard features"""
+        print(f"🚀 Starting Enhanced Admin Dashboard Backend Tests")
         print(f"Backend URL: {self.backend_url}")
         print(f"API Base: {self.api_base}")
         print("=" * 60)
+        
+        # Get admin token first
+        auth_success, admin_token = self.test_admin_authentication()
         
         tests = [
             self.test_environment_configuration,
@@ -294,6 +616,10 @@ class BackendTester:
             self.test_status_api_post,
             self.test_status_api_get,
             self.test_mongodb_connection,
+            lambda: self.test_site_config_management(admin_token),
+            lambda: self.test_enhanced_ad_slot_system(admin_token),
+            lambda: self.test_updated_models_integration(admin_token),
+            lambda: self.test_backend_integration_protection(admin_token),
         ]
         
         passed = 0
@@ -312,7 +638,7 @@ class BackendTester:
             
             print("-" * 40)
         
-        print(f"\n📊 Test Summary:")
+        print(f"\n📊 Enhanced Admin Dashboard Test Summary:")
         print(f"✅ Passed: {passed}")
         print(f"❌ Failed: {failed}")
         print(f"📈 Success Rate: {passed/(passed+failed)*100:.1f}%")
