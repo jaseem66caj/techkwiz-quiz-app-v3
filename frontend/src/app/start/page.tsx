@@ -181,7 +181,7 @@ export default function StartPage() {
       })
 
   // Show loading state
-  if (state.loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
@@ -189,6 +189,27 @@ export default function StartPage() {
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
             <p className="text-white">Loading categories...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <Navigation />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="glass-effect p-8 rounded-2xl text-center">
+            <div className="text-red-400 text-xl mb-4">⚠️</div>
+            <p className="text-white mb-4">{error}</p>
+            <button
+              onClick={fetchCategories}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Retry
+            </button>
           </div>
         </main>
       </div>
