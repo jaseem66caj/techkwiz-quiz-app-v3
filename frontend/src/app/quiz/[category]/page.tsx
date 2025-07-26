@@ -328,13 +328,28 @@ export default function QuizPage({ params }: QuizPageProps) {
         <Navigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">
-              {loading ? 'Loading quiz...' : 
-               !categoryInfo ? 'Loading category...' :
-               !quizStarted ? 'Starting quiz...' :
-               'Preparing questions...'}
-            </p>
+            {error ? (
+              <>
+                <div className="text-red-400 text-xl mb-4">⚠️</div>
+                <p className="text-white mb-4">{error}</p>
+                <button
+                  onClick={() => router.push('/start')}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                  Back to Categories
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+                <p className="text-white">
+                  {loading ? 'Loading quiz...' : 
+                   !categoryInfo ? 'Loading category...' :
+                   !quizStarted ? 'Starting quiz...' :
+                   'Preparing questions...'}
+                </p>
+              </>
+            )}
           </div>
         </main>
       </div>
