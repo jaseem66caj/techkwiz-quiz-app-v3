@@ -52,7 +52,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Frontend and backend technologies',
     subcategories: ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'APIs'],
     entry_fee: 100,
-    prizePool: 2000,
+    prize_pool: 2000,
   },
   'mobile-dev': {
     id: 'mobile-dev',
