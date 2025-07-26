@@ -307,77 +307,195 @@ export function FortuneCookie({ className }: { className?: string }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-70 z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-gradient-to-br from-purple-900/90 via-blue-900/90 to-indigo-900/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
             onClick={closeFortune}
           >
             <motion.div
-              initial={{ scale: 0.5, y: 100, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.5, y: -100, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 rounded-3xl p-8 max-w-md w-full shadow-2xl border-4 border-yellow-400"
+              initial={{ scale: 0.3, y: -100, opacity: 0, rotateX: -90 }}
+              animate={{ scale: 1, y: 0, opacity: 1, rotateX: 0 }}
+              exit={{ scale: 0.3, y: 100, opacity: 0, rotateX: 90 }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 300, 
+                damping: 25,
+                duration: 0.6
+              }}
+              className="relative bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 rounded-3xl p-8 max-w-md w-full shadow-2xl border-4 border-gradient-to-r from-yellow-400 to-amber-500"
               onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 25%, #fed7aa 50%, #fbbf24 100%)',
+                boxShadow: '0 25px 50px -12px rgba(251, 191, 36, 0.4), 0 0 0 1px rgba(251, 191, 36, 0.1)',
+                border: '3px solid',
+                borderImage: 'linear-gradient(135deg, #f59e0b, #d97706, #92400e) 1'
+              }}
             >
+              {/* Animated Background Pattern */}
+              <div className="absolute inset-0 opacity-10 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-200 to-orange-200 animate-pulse"></div>
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-8 h-8 bg-yellow-300 rounded-full opacity-20"
+                    style={{
+                      top: `${Math.random() * 100}%`,
+                      left: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [0, -20, 0],
+                      x: [0, 10, 0],
+                      scale: [1, 1.2, 1],
+                      opacity: [0.2, 0.4, 0.2]
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2
+                    }}
+                  />
+                ))}
+              </div>
+
               {/* Fortune Cookie Header */}
-              <div className="text-center mb-6">
+              <div className="text-center mb-6 relative z-10">
                 <motion.div
-                  className="text-6xl mb-2"
-                  animate={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-7xl mb-3 drop-shadow-lg"
+                  animate={{ 
+                    rotate: [0, -10, 10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 >
                   🥠
                 </motion.div>
-                <h2 className="text-2xl font-bold text-orange-800 mb-2">Fortune Cookie</h2>
-                <div className="w-20 h-1 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full mx-auto"></div>
+                <motion.h2 
+                  className="text-3xl font-bold bg-gradient-to-r from-orange-700 via-amber-600 to-yellow-600 bg-clip-text text-transparent mb-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  Your Fortune Awaits!
+                </motion.h2>
+                <motion.div 
+                  className="w-24 h-2 bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-500 rounded-full mx-auto"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                ></motion.div>
               </div>
 
               {/* Fortune Message */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-center mb-6"
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="text-center mb-8 relative z-10"
               >
-                <p className="text-gray-800 text-lg leading-relaxed font-medium mb-4">
-                  {currentFortune.message}
-                </p>
-                
-                {/* Category Badge */}
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
-                  currentFortune.category === 'motivation' ? 'bg-red-100 text-red-800' :
-                  currentFortune.category === 'success' ? 'bg-green-100 text-green-800' :
-                  currentFortune.category === 'learning' ? 'bg-blue-100 text-blue-800' :
-                  currentFortune.category === 'friendship' ? 'bg-purple-100 text-purple-800' :
-                  currentFortune.category === 'happiness' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {currentFortune.category}
-                </span>
+                <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-yellow-200">
+                  <p className="text-gray-800 text-lg leading-relaxed font-medium mb-4 min-h-[3rem]">
+                    {currentFortune.message}
+                  </p>
+                  
+                  {/* Category Badge */}
+                  <motion.span 
+                    className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg ${
+                      currentFortune.category === 'motivation' ? 'bg-gradient-to-r from-red-400 to-red-600 text-white' :
+                      currentFortune.category === 'success' ? 'bg-gradient-to-r from-green-400 to-green-600 text-white' :
+                      currentFortune.category === 'learning' ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white' :
+                      currentFortune.category === 'friendship' ? 'bg-gradient-to-r from-purple-400 to-purple-600 text-white' :
+                      currentFortune.category === 'happiness' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-800' :
+                      'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                    }`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.8, type: "spring", stiffness: 500 }}
+                  >
+                    <span className="mr-2">
+                      {currentFortune.category === 'motivation' ? '🚀' :
+                       currentFortune.category === 'success' ? '🏆' :
+                       currentFortune.category === 'learning' ? '📚' :
+                       currentFortune.category === 'friendship' ? '🤗' :
+                       currentFortune.category === 'happiness' ? '😊' : '🌟'}
+                    </span>
+                    {currentFortune.category}
+                  </motion.span>
+                </div>
               </motion.div>
 
-              {/* Close Button */}
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.3 }}
+                className="space-y-3 relative z-10"
+              >
+                <motion.button
+                  onClick={closeFortune}
+                  className="w-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 hover:from-amber-500 hover:via-orange-500 hover:to-yellow-600 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 shadow-xl text-lg border-2 border-orange-300"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="flex items-center justify-center space-x-2">
+                    <span>✨</span>
+                    <span>Amazing! Thanks</span>
+                    <span>🙏</span>
+                  </span>
+                </motion.button>
+
+                <motion.button
+                  onClick={() => {
+                    closeFortune()
+                    setTimeout(() => handleFortuneClick(), 100)
+                  }}
+                  className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-2xl transition-all duration-200 shadow-lg border border-purple-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="flex items-center justify-center space-x-2">
+                    <span>🔮</span>
+                    <span>Get Another Fortune</span>
+                  </span>
+                </motion.button>
+              </motion.div>
+
+              {/* Floating Decorative Elements */}
+              {[
+                { emoji: '✨', position: 'top-6 left-6', delay: 0 },
+                { emoji: '🌟', position: 'top-8 right-8', delay: 0.5 },
+                { emoji: '💫', position: 'bottom-8 left-8', delay: 1 },
+                { emoji: '⭐', position: 'bottom-6 right-6', delay: 1.5 }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className={`absolute ${item.position} text-2xl opacity-60`}
+                  animate={{
+                    y: [0, -10, 0],
+                    rotate: [0, 180, 360],
+                    scale: [1, 1.2, 1]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: item.delay,
+                    ease: "easeInOut"
+                  }}
+                >
+                  {item.emoji}
+                </motion.div>
+              ))}
+
+              {/* Close X Button */}
               <motion.button
                 onClick={closeFortune}
-                className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 shadow-lg"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Thank You! 🙏
-              </motion.button>
-
-              {/* Decorative Elements */}
-              <div className="absolute top-4 left-4 text-yellow-400 opacity-60">✨</div>
-              <div className="absolute top-6 right-6 text-orange-400 opacity-60">⭐</div>
-              <div className="absolute bottom-4 left-6 text-yellow-500 opacity-60">💫</div>
-              <div className="absolute bottom-6 right-4 text-orange-500 opacity-60">🌟</div>
-
-              {/* X Close Button */}
-              <button
-                onClick={closeFortune}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl w-6 h-6 flex items-center justify-center"
+                className="absolute top-4 right-4 w-10 h-10 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg transition-all duration-200"
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
               >
                 ×
-              </button>
+              </motion.button>
             </motion.div>
           </motion.div>
         )}
