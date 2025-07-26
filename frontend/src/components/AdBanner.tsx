@@ -58,8 +58,8 @@ export function AdBanner({
       margin: '20px auto',
       textAlign: 'center' as const,
       borderRadius: '8px',
-      backgroundColor: '#f8f9fa',
-      border: '1px solid #e9ecef',
+      backgroundColor: 'transparent',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
       ...style
     }
 
