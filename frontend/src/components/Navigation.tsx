@@ -81,9 +81,9 @@ export function Navigation() {
               {state.isAuthenticated ? (
                 <>
                   {/* Coins Display */}
-                  <div className="glass-effect px-3 py-1 md:px-4 md:py-2 rounded-full flex items-center space-x-2">
-                    <span className="text-lg md:text-xl">🪙</span>
-                    <span className="text-white font-semibold text-sm md:text-base">
+                  <div className="glass-effect px-3 py-2 sm:px-4 sm:py-2 rounded-full flex items-center space-x-2">
+                    <span className="text-xl sm:text-xl md:text-xl">🪙</span>
+                    <span className="text-white font-semibold text-base sm:text-base md:text-base">
                       {state.user?.coins || 0}
                     </span>
                   </div>
