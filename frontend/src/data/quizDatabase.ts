@@ -92,7 +92,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'AWS, Azure, and Google Cloud',
     subcategories: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes'],
     entry_fee: 110,
-    prizePool: 2100,
+    prize_pool: 2100,
   },
   blockchain: {
     id: 'blockchain',
