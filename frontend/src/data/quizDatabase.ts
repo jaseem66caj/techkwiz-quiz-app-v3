@@ -355,7 +355,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'ai_012',
       question: 'What is the difference between GANs and VAEs?',
       options: ['No difference', 'GANs are generative, VAEs are discriminative', 'GANs use adversarial training, VAEs use variational inference', 'VAEs are newer than GANs'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'advanced',
       funFact: 'Both are generative models but use different approaches to learn data distributions.',
       category: 'ai',
