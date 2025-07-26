@@ -192,6 +192,22 @@ export default function QuizManagement() {
     }
   };
 
+  // Filter questions based on search and filters
+  const filteredQuestions = questions.filter(question => {
+    const matchesSearch = question.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         question.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         question.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || question.category === selectedCategory;
+    const matchesDifficulty = selectedDifficulty === 'all' || question.difficulty === selectedDifficulty;
+    
+    return matchesSearch && matchesCategory && matchesDifficulty;
+  });
+
+  // Get questions count per category
+  const getQuestionCount = (categoryId: string) => {
+    return questions.filter(q => q.category === categoryId).length;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
