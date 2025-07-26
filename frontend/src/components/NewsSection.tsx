@@ -9,39 +9,10 @@ interface NewsSectionProps {
 }
 
 export function NewsSection({ className = '' }: NewsSectionProps) {
-  const [articles, setArticles] = useState<NewsArticle[]>([])
+  const [articles, setArticles] = useState<WordPressPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  // Function to fetch articles from WordPress API
-  const fetchWordPressArticles = async (): Promise<NewsArticle[]> => {
-    try {
-      // Try WordPress REST API first
-      const response = await fetch('https://techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed')
-      
-      if (response.ok) {
-        const posts = await response.json()
-        return posts.map((post: any) => ({
-          id: post.id.toString(),
-          title: post.title.rendered,
-          excerpt: post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
-          link: post.link,
-          publishDate: post.date,
-          featuredImage: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
-                        `https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=${encodeURIComponent(post.title.rendered.substring(0, 20))}`,
-          category: post._embedded?.['wp:term']?.[0]?.[0]?.name || 'Technology'
-        }))
-      } else {
-        throw new Error('WordPress API not accessible')
-      }
-    } catch (apiError) {
-      console.warn('WordPress API failed, trying RSS feed...')
-      
-      // Fallback to mock data if API fails
-      // In a production environment, you would implement RSS parsing here
-      return mockNewsData
-    }
-  }
+  const [dataSource, setDataSource] = useState<'live' | 'mock'>('mock')
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -49,20 +20,47 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
       setError(null)
       
       try {
-        const fetchedArticles = await fetchWordPressArticles()
-        setArticles(fetchedArticles)
-      } catch (err) {
-        console.error('Failed to fetch articles:', err)
-        setError('Failed to load news articles')
-        // Use mock data as fallback
-        setArticles(mockNewsData)
+        // First, try to fetch from WordPress REST API
+        console.log('Attempting to fetch from WordPress REST API...')
+        const wpPosts = await fetchWordPressPosts('https://techkwiz.com', 6)
+        setArticles(wpPosts)
+        setDataSource('live')
+        console.log('✅ Successfully fetched from WordPress REST API')
+        
+      } catch (restApiError) {
+        console.log('WordPress REST API failed, trying RSS feed...')
+        
+        try {
+          // Fallback to RSS feed
+          const rssPosts = await fetchWordPressRSS('https://techkwiz.com/feed/')
+          setArticles(rssPosts)
+          setDataSource('live')
+          console.log('✅ Successfully fetched from RSS feed')
+          
+        } catch (rssError) {
+          console.log('RSS feed also failed, using mock data...')
+          
+          // Final fallback to mock data
+          setArticles(mockWordPressPosts)
+          setDataSource('mock')
+          setError('Live news feed temporarily unavailable')
+        }
       } finally {
         setLoading(false)
       }
     }
 
     loadArticles()
-  }, [])
+    
+    // Set up auto-refresh every 10 minutes for live data
+    const refreshInterval = setInterval(() => {
+      if (dataSource === 'live') {
+        loadArticles()
+      }
+    }, 10 * 60 * 1000) // 10 minutes
+
+    return () => clearInterval(refreshInterval)
+  }, [dataSource])
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
