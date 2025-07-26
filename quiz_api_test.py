@@ -227,8 +227,8 @@ class QuizAPITester:
             
             # Verify required configuration fields
             required_fields = [
-                'id', 'trigger_after_questions', 'coin_reward', 'show_on_correct_answer',
-                'show_on_wrong_answer', 'show_on_quiz_completion', 'is_active'
+                'id', 'trigger_after_questions', 'coin_reward', 'is_active',
+                'show_on_insufficient_coins', 'show_during_quiz'
             ]
             missing_fields = [field for field in required_fields if field not in config]
             if missing_fields:
