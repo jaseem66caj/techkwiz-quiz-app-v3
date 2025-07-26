@@ -559,6 +559,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Quiz Answer Option Box Size Optimization"
     - "Admin Authentication Context"
     - "Admin Login Page"
     - "Admin Dashboard Layout"
@@ -568,8 +569,8 @@ test_plan:
     - "Rewarded Popup Configuration"
     - "Data Export/Import Interface"
   stuck_tasks: []
-  test_all: true
-  test_priority: "resolved"
+  test_all: false
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
