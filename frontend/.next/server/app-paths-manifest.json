@@ -12,7 +12,7 @@
   "/leaderboard/page": "app/leaderboard/page.js",
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",
-  "/quiz/[category]/page": "app/quiz/[category]/page.js",
   "/profile/page": "app/profile/page.js",
+  "/quiz/[category]/page": "app/quiz/[category]/page.js",
   "/start/page": "app/start/page.js"
 }
