@@ -272,93 +272,102 @@ export default function StartPage() {
                 ))}
               </div>
 
-              {/* Categories - Full Width Mobile Cards */}
+              {/* Categories - Qureka Style Compact Cards */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8 }}
-                className="space-y-4 px-2"
+                className="space-y-3 px-2"
               >
-            {filteredCategories.map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="glass-effect rounded-2xl p-5 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
-                onClick={() => handleCategorySelect(category.id)}
-              >
-                <div className="flex items-center justify-between">
-                  {/* Left Section - Icon and Info */}
-                  <div className="flex items-center space-x-4 flex-1 min-w-0">
-                    <div className="text-5xl flex-shrink-0">
-                      {category.icon}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-white font-bold text-xl truncate">
-                          {category.name}
-                        </h3>
-                        <span className="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex-shrink-0 font-semibold">
-                          Live
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-4 text-base mb-2">
-                        <div className="text-yellow-400 font-bold flex items-center">
-                          <span className="mr-2 text-xl">🏆</span>
-                          <span className="text-2xl">{category.prize_pool}</span>
+                {filteredCategories.map((category, index) => (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="glass-effect rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
+                    onClick={() => handleCategorySelect(category.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      {/* Left Section - Icon and Basic Info */}
+                      <div className="flex items-center space-x-4 flex-1 min-w-0">
+                        {/* Category Icon */}
+                        <div className="text-4xl sm:text-5xl flex-shrink-0">
+                          {category.icon}
                         </div>
                         
-                        <div className="text-blue-200 text-base">
-                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
+                        {/* Category Details */}
+                        <div className="flex-1 min-w-0">
+                          {/* Category Name with Live Badge */}
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-white font-bold text-lg sm:text-xl truncate">
+                              {category.name.length > 15 ? category.name.substring(0, 15) + '...' : category.name}
+                            </h3>
+                            <span className="bg-green-500 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full font-semibold flex-shrink-0">
+                              Live
+                            </span>
+                          </div>
+                          
+                          {/* Prize and Entry Fee */}
+                          <div className="flex items-center space-x-4 text-sm sm:text-base">
+                            <div className="text-yellow-400 font-bold flex items-center">
+                              <span className="mr-1 text-lg">🏆</span>
+                              <span className="text-lg sm:text-xl">{category.prize_pool}</span>
+                            </div>
+                            
+                            <div className="text-blue-200 text-sm">
+                              Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
+                            </div>
+                          </div>
+                          
+                          {/* Winner Announcement */}
+                          <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                            Winner announcement: 00:00:00
+                          </div>
                         </div>
                       </div>
-                      
-                      <div className="text-gray-400 text-sm">
-                        Winner announcement: 00:00:00
+
+                      {/* Right Section - Action Button */}
+                      <div className="flex-shrink-0 ml-4">
+                        <button
+                          className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-sm sm:text-base transition-all ${
+                            (state.user?.coins || 0) >= category.entry_fee
+                              ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg'
+                              : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg'
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleCategorySelect(category.id)
+                          }}
+                        >
+                          {(state.user?.coins || 0) >= category.entry_fee 
+                            ? 'PLAY' 
+                            : 'WATCH AD'}
+                        </button>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Right Section - Play Button */}
-                  <div className="flex-shrink-0">
-                    <button
-                      className={`px-6 py-4 rounded-2xl font-bold text-lg transition-all ${
-                        (state.user?.coins || 0) >= category.entry_fee
-                          ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                          : 'bg-purple-600 hover:bg-purple-700 text-white'
-                      }`}
-                    >
-                      {(state.user?.coins || 0) >= category.entry_fee 
-                        ? 'PLAY' 
-                        : 'WATCH AD'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Topics - Desktop Only */}
-                <div className="hidden md:block mt-4 pt-4 border-t border-white/10">
-                  <div className="flex flex-wrap gap-2">
-                    {category.subcategories.slice(0, 4).map((topic, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-white/10 text-blue-200 px-3 py-2 rounded text-sm"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                    {category.subcategories.length > 4 && (
-                      <span className="bg-white/10 text-blue-200 px-3 py-2 rounded text-sm">
-                        +{category.subcategories.length - 4} more
-                      </span>
-                    )}
-                  </div>
-                </div>
+                    {/* Topics - Only show on larger screens and collapse for mobile */}
+                    <div className="hidden sm:block mt-3 pt-3 border-t border-white/10">
+                      <div className="flex flex-wrap gap-2">
+                        {category.subcategories.slice(0, 3).map((topic, idx) => (
+                          <span
+                            key={idx}
+                            className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs"
+                          >
+                            {topic}
+                          </span>
+                        ))}
+                        {category.subcategories.length > 3 && (
+                          <span className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs">
+                            +{category.subcategories.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
 
           {/* Bottom Category Page Ad */}
           <CategoryPageBottomAd className="mt-6" />
