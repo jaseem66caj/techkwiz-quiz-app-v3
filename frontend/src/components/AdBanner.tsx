@@ -152,7 +152,7 @@ export function AdBanner({
         data-ad-layout={adLayout}
         data-ad-layout-key={adLayoutKey}
         data-full-width-responsive={fullWidthResponsive.toString()}
-        data-adtest={process.env.NODE_ENV === 'development' ? 'on' : 'off'}
+        data-adtest={'on'}
       />
       
       {/* AdSense compliance: Ad label */}
