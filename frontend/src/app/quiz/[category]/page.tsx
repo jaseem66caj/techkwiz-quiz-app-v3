@@ -33,6 +33,23 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [categoryId, setCategoryId] = useState<string>('')
   const [categoryInfo, setCategoryInfo] = useState<any>(null)
   
+  // Quiz state
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [score, setScore] = useState(0)
+  const [quizCompleted, setQuizCompleted] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(30)
+  const [quizData, setQuizData] = useState<QuizQuestion[]>([])
+  const [loading, setLoading] = useState(true)
+  
+  // New features
+  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
+  const [quizStarted, setQuizStarted] = useState(false)
+  const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
+  const [streak, setStreak] = useState(0)
+  const [maxStreak, setMaxStreak] = useState(0)
+  const [showRewardPopup, setShowRewardPopup] = useState(false)
+
   // SEO optimization
   useEffect(() => {
     if (categoryInfo && categoryId) {
@@ -66,21 +83,6 @@ export default function QuizPage({ params }: QuizPageProps) {
       scriptTag.textContent = JSON.stringify(structuredData)
     }
   }, [categoryInfo, categoryId, quizData])
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [score, setScore] = useState(0)
-  const [quizCompleted, setQuizCompleted] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(30)
-  const [quizData, setQuizData] = useState<QuizQuestion[]>([])
-  const [loading, setLoading] = useState(true)
-  
-  // New features
-  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
-  const [quizStarted, setQuizStarted] = useState(false)
-  const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [maxStreak, setMaxStreak] = useState(0)
-  const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [questionsAnsweredCount, setQuestionsAnsweredCount] = useState(0)
   const [showAuthModal, setShowAuthModal] = useState(false)
