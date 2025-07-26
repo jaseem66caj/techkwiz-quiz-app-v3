@@ -251,9 +251,6 @@ export default function HomePage() {
                   </button>
                 </div>
               </motion.div>
-                  </button>
-                </div>
-              </motion.div>
             )}
           </div>
 
