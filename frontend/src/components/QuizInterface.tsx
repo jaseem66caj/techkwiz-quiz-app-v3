@@ -52,17 +52,17 @@ export function QuizInterface({
           </span>
         </div>
         
-        <h3 className="text-xl font-semibold text-white mb-8 leading-relaxed">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white mb-6 sm:mb-8 leading-relaxed px-2">
           {questionData.question}
         </h3>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:gap-4">
           {questionData.options.map((option, index) => (
             <button
               key={index}
               onClick={() => onAnswerSelect(index)}
               disabled={selectedAnswer !== null}
-              className={`quiz-option ${selectedAnswer === index ? 'selected' : ''} ${
+              className={`quiz-option text-base sm:text-lg py-4 sm:py-5 px-4 sm:px-6 ${selectedAnswer === index ? 'selected' : ''} ${
                 selectedAnswer !== null && index === questionData.correctAnswer ? 'correct' : ''
               } ${
                 selectedAnswer !== null && selectedAnswer === index && index !== questionData.correctAnswer ? 'incorrect' : ''
