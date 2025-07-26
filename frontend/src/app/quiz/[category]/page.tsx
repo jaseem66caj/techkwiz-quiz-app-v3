@@ -103,15 +103,18 @@ export default function QuizPage({ params }: QuizPageProps) {
     resolveParams()
   }, [params])
 
-  // Initialize quiz data based on difficulty
+  // Auto-start quiz when category is loaded (skip difficulty selection)
   useEffect(() => {
-    if (quizStarted && categoryId) {
-      const config = DIFFICULTY_CONFIG[difficulty]
-      const questions = getQuestionsForCategory(categoryId, difficulty, config.questions)
+    if (categoryInfo && categoryId && !quizStarted && !loading) {
+      // Auto-set to beginner difficulty and start quiz
+      setDifficulty('beginner')
+      const config = DIFFICULTY_CONFIG['beginner']
+      const questions = getQuestionsForCategory(categoryId, 'beginner', config.questions)
       setQuizData(questions)
       setTimeLeft(config.timeLimit)
+      setQuizStarted(true)
     }
-  }, [categoryId, difficulty, quizStarted])
+  }, [categoryInfo, categoryId, quizStarted, loading])
 
   // Timer logic
   useEffect(() => {
