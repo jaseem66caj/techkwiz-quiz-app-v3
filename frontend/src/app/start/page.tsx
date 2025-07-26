@@ -226,7 +226,7 @@ export default function StartPage() {
           <AdBanner 
             adSlot="2222222222"
             adFormat="rectangle"
-            className="mt-6"
+            className="mt-4 sm:mt-6 mx-2"
           />
         </main>
         
