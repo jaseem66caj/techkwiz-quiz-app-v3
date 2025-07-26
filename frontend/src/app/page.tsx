@@ -165,15 +165,15 @@ export default function HomePage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
-        <main className="flex-1 flex flex-col justify-center p-4 sm:p-6 w-full mx-auto">
-          <div className="flex flex-col items-center space-y-4 sm:space-y-6">
+        <main className="flex-1 flex flex-col justify-center p-4 w-full mx-auto">
+          <div className="flex flex-col items-center space-y-6">
             {!quizCompleted ? (
               <>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="w-full max-w-lg mx-auto"
+                  className="w-full mx-auto"
                 >
                   <QuizInterface
                     questionData={quickStartQuiz[currentQuestion]}
@@ -184,7 +184,7 @@ export default function HomePage() {
                   />
                 </motion.div>
                 
-                <div className="w-full max-w-lg mx-auto">
+                <div className="w-full mx-auto">
                   <FunFact fact={quickStartQuiz[currentQuestion]?.funFact} />
                 </div>
                 
@@ -193,15 +193,15 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="w-full max-w-lg mx-auto mt-4 sm:mt-6"
+                  className="w-full mx-auto mt-6"
                 >
-                  <div className="glass-effect p-4 sm:p-5 rounded-xl">
-                    <h3 className="text-white font-semibold text-center mb-3 text-base sm:text-lg">
+                  <div className="glass-effect p-6 rounded-2xl">
+                    <h3 className="text-white font-bold text-center mb-4 text-xl">
                       🚀 Ready for More?
                     </h3>
                     <button
                       onClick={() => router.push('/start')}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 text-base sm:text-lg rounded-lg transition-colors"
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-5 text-xl rounded-2xl transition-colors"
                     >
                       Explore All Categories
                     </button>
