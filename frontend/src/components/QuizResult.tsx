@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { QuizResultShare } from './SocialShare'
+import { QuizResultBannerAd, ResponsiveAd } from './AdBanner'
 
 interface QuizResultProps {
   score: number
