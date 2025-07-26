@@ -262,11 +262,12 @@ export default function QuizPage({ params }: QuizPageProps) {
 
 
 
+  // Quiz interface - direct start
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <Navigation />
       
-      <main className="flex-1 p-4 max-w-4xl mx-auto">
+      <main className="flex-1 p-4 w-full max-w-lg mx-auto">
         {/* Quiz Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
