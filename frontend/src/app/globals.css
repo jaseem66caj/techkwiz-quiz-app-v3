@@ -136,28 +136,40 @@ a {
 .quiz-option {
   background: rgba(42, 82, 152, 0.8);
   border: 2px solid transparent;
-  border-radius: 12px;
+  border-radius: 16px;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  padding: 16px 20px;
+  padding: 24px 20px;
   text-align: center;
-  min-height: 60px;
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.4;
+  width: 100%;
 }
 
-/* Mobile-specific improvements */
+/* Mobile-specific improvements for larger screens */
 @media (max-width: 640px) {
   .quiz-option {
-    padding: 20px 16px;
-    min-height: 64px;
-    font-size: 18px;
+    padding: 28px 20px;
+    min-height: 88px;
+    font-size: 20px;
+    border-radius: 20px;
+    font-weight: 800;
+  }
+}
+
+/* For very large mobile screens like OnePlus */
+@media (max-width: 640px) and (min-width: 400px) {
+  .quiz-option {
+    padding: 32px 24px;
+    min-height: 96px;
+    font-size: 22px;
   }
 }
 
