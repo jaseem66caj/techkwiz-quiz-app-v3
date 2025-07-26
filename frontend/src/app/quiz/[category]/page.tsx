@@ -110,6 +110,8 @@ export default function QuizPage({ params }: QuizPageProps) {
     setTimeout(() => {
       const isCorrect = answerIndex === quizData[currentQuestion].correctAnswer
       const config = DIFFICULTY_CONFIG[difficulty]
+      const answeredCount = questionsAnsweredCount + 1
+      setQuestionsAnsweredCount(answeredCount)
       
       if (isCorrect) {
         const newScore = score + 1
@@ -122,6 +124,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         const totalCoins = baseCoins + streakBonus + timeBonus
         
         setTotalCoinsEarned(prev => prev + totalCoins)
+        setLastEarnedCoins(totalCoins)
         setStreak(prev => {
           const newStreak = prev + 1
           setMaxStreak(Math.max(maxStreak, newStreak))
@@ -129,6 +132,12 @@ export default function QuizPage({ params }: QuizPageProps) {
         })
         
         dispatch({ type: 'UPDATE_COINS', payload: totalCoins })
+        
+        // Show reward popup after every 3 questions (but not on the last question)
+        if (answeredCount % 3 === 0 && currentQuestion < quizData.length - 1) {
+          setShowRewardPopup(true)
+          return // Don't proceed to next question yet
+        }
       } else {
         setStreak(0)
       }
