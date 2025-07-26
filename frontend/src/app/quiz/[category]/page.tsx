@@ -9,6 +9,8 @@ import { QuizInterface } from '../../../components/QuizInterface'
 import { FunFact } from '../../../components/FunFact'
 import { AdBanner } from '../../../components/AdBanner'
 import { QuizResult } from '../../../components/QuizResult'
+import { AuthModal } from '../../../components/AuthModal'
+import { RewardPopup } from '../../../components/RewardPopup'
 import { 
   getQuestionsForCategory, 
   getCategoryInfo, 
