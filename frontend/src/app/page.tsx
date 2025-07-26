@@ -58,14 +58,15 @@ export default function HomePage() {
     
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
-      const coinsEarned = 100
+      const coinsEarned = 0 // Changed to 0 - users should earn coins only from rewarded ads
       
       if (isCorrect) {
         setScore(score + 1)
         setLastEarnedCoins(coinsEarned)
-        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+        // Don't give coins for homepage quiz - users must watch ads to earn coins
+        // dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         
-        // Show reward popup after first correct answer
+        // Show reward popup after first correct answer - but without coin reward
         if (currentQuestion === 0) {
           setShowRewardPopup(true)
           return // Don't proceed to next question yet
