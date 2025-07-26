@@ -305,7 +305,7 @@ export default function StartPage() {
                         </div>
                         
                         <div className="text-blue-200 text-base">
-                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entryFee}</span>
+                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
                         </div>
                       </div>
                       
