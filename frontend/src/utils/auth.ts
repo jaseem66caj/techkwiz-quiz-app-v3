@@ -34,7 +34,7 @@ export const createUserProfile = (email: string, password: string): User => {
     id: generateUserId(),
     email: email.toLowerCase(),
     name: getNameFromEmail(email),
-    coins: 500, // Starting coins for new users
+    coins: 0, // Users start with 0 coins to trigger rewarded ads
     level: 1,
     totalQuizzes: 0,
     correctAnswers: 0,
