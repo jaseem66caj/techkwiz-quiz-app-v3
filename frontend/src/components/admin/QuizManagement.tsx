@@ -34,6 +34,9 @@ export default function QuizManagement() {
   const [loading, setLoading] = useState(true);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddQuestion, setShowAddQuestion] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
 
   const [newCategory, setNewCategory] = useState({
     name: '',
