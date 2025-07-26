@@ -713,7 +713,118 @@ class BackendTester:
         except Exception as e:
             self.log_result("Profile Management", False, f"Profile management test failed: {str(e)}")
             return False
-        """Test that new endpoints are properly protected with admin authentication"""
+    
+    def test_complete_admin_dashboard_apis(self, token):
+        """Test all admin dashboard APIs comprehensively"""
+        if not token:
+            self.log_result("Complete Admin Dashboard", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # Test Quiz Management APIs
+            categories_response = requests.get(f"{self.api_base}/admin/categories", headers=headers, timeout=10)
+            questions_response = requests.get(f"{self.api_base}/admin/questions", headers=headers, timeout=10)
+            
+            if categories_response.status_code != 200 or questions_response.status_code != 200:
+                self.log_result("Quiz Management APIs", False, "Quiz management endpoints not accessible")
+                return False
+            
+            # Test Script Management APIs
+            scripts_response = requests.get(f"{self.api_base}/admin/scripts", headers=headers, timeout=10)
+            if scripts_response.status_code != 200:
+                self.log_result("Script Management APIs", False, "Script management endpoints not accessible")
+                return False
+            
+            # Test Ad Slot Management APIs (all 10 QuizWinz slots)
+            ad_slots_response = requests.get(f"{self.api_base}/admin/ad-slots", headers=headers, timeout=10)
+            if ad_slots_response.status_code != 200:
+                self.log_result("Ad Slot Management APIs", False, "Ad slot management endpoints not accessible")
+                return False
+            
+            ad_slots = ad_slots_response.json()
+            expected_slots = [
+                "header-banner", "sidebar-right", "between-questions-1", "between-questions-2", 
+                "between-questions-3", "footer-banner", "popup-interstitial", "quiz-result-banner",
+                "category-page-top", "category-page-bottom"
+            ]
+            
+            found_placements = [slot.get('placement') for slot in ad_slots]
+            missing_slots = [slot for slot in expected_slots if slot not in found_placements]
+            
+            if missing_slots:
+                self.log_result("QuizWinz Ad Slots", False, f"Missing expected ad slots: {missing_slots}")
+                return False
+            
+            # Test Rewarded Popup Configuration
+            rewarded_config_response = requests.get(f"{self.api_base}/admin/rewarded-config", headers=headers, timeout=10)
+            if rewarded_config_response.status_code != 200:
+                self.log_result("Rewarded Popup Config", False, "Rewarded popup config not accessible")
+                return False
+            
+            # Test Data Export/Import
+            export_response = requests.get(f"{self.api_base}/admin/export/quiz-data", headers=headers, timeout=10)
+            if export_response.status_code != 200:
+                self.log_result("Data Export/Import", False, "Data export functionality not accessible")
+                return False
+            
+            export_data = export_response.json()
+            if 'categories' not in export_data or 'questions' not in export_data:
+                self.log_result("Data Export Structure", False, "Export data missing required fields")
+                return False
+            
+            self.log_result("Complete Admin Dashboard APIs", True, f"All admin dashboard APIs working - {len(ad_slots)} ad slots, quiz management, scripts, rewarded config, and data export all functional")
+            return True
+            
+        except Exception as e:
+            self.log_result("Complete Admin Dashboard APIs", False, f"Admin dashboard test failed: {str(e)}")
+            return False
+    
+    def test_security_features(self, token):
+        """Test security features of the admin system"""
+        try:
+            # Test 1: Endpoints without authentication should be blocked
+            protected_endpoints = [
+                "/admin/categories", "/admin/questions", "/admin/scripts", 
+                "/admin/ad-slots", "/admin/rewarded-config", "/admin/site-config",
+                "/admin/export/quiz-data", "/admin/profile"
+            ]
+            
+            for endpoint in protected_endpoints:
+                response = requests.get(f"{self.api_base}{endpoint}", timeout=10)
+                if response.status_code not in [401, 403]:
+                    self.log_result("Security - Endpoint Protection", False, f"Endpoint {endpoint} not properly protected")
+                    return False
+            
+            # Test 2: Invalid token should be rejected
+            invalid_headers = {'Authorization': 'Bearer invalid_token_12345'}
+            response = requests.get(f"{self.api_base}/admin/categories", headers=invalid_headers, timeout=10)
+            if response.status_code not in [401, 403]:
+                self.log_result("Security - Invalid Token", False, "Invalid tokens not properly rejected")
+                return False
+            
+            # Test 3: Token verification endpoint
+            if token:
+                valid_headers = {'Authorization': f'Bearer {token}'}
+                verify_response = requests.get(f"{self.api_base}/admin/verify", headers=valid_headers, timeout=10)
+                if verify_response.status_code != 200:
+                    self.log_result("Security - Token Verification", False, "Token verification endpoint not working")
+                    return False
+                
+                verify_data = verify_response.json()
+                if not verify_data.get('valid'):
+                    self.log_result("Security - Token Verification", False, "Valid token not recognized")
+                    return False
+            
+            self.log_result("Security Features", True, "All security features working - endpoint protection, invalid token rejection, and token verification")
+            return True
+            
+        except Exception as e:
+            self.log_result("Security Features", False, f"Security test failed: {str(e)}")
+            return False
+    
+    def test_backend_integration_protection(self, token):
         try:
             # Test endpoints without authentication (should fail with 401 or 403)
             protected_endpoints = [
