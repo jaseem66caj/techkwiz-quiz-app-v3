@@ -87,6 +87,33 @@ class QuizCategoryUpdate(BaseModel):
     prize_pool: Optional[int] = None
 
 # Site Configuration Models
+class SiteConfig(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    google_analytics_id: Optional[str] = None
+    google_search_console_id: Optional[str] = None
+    facebook_pixel_id: Optional[str] = None
+    google_tag_manager_id: Optional[str] = None
+    twitter_pixel_id: Optional[str] = None
+    linkedin_pixel_id: Optional[str] = None
+    tiktok_pixel_id: Optional[str] = None
+    snapchat_pixel_id: Optional[str] = None
+    ads_txt_content: Optional[str] = None
+    robots_txt_content: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SiteConfigUpdate(BaseModel):
+    google_analytics_id: Optional[str] = None
+    google_search_console_id: Optional[str] = None
+    facebook_pixel_id: Optional[str] = None
+    google_tag_manager_id: Optional[str] = None
+    twitter_pixel_id: Optional[str] = None
+    linkedin_pixel_id: Optional[str] = None
+    tiktok_pixel_id: Optional[str] = None
+    snapchat_pixel_id: Optional[str] = None
+    ads_txt_content: Optional[str] = None
+    robots_txt_content: Optional[str] = None
+
 class ScriptInjection(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
