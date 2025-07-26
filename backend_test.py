@@ -1173,7 +1173,9 @@ class BackendTester:
 def main():
     try:
         tester = BackendTester()
-        passed, failed, results = tester.run_all_tests()
+        
+        # Run focused data synchronization tests as requested
+        passed, failed, results = tester.run_data_sync_tests()
         
         # Return appropriate exit code
         sys.exit(0 if failed == 0 else 1)
