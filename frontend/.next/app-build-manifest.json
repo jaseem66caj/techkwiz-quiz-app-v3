@@ -12,7 +12,7 @@
       "static/chunks/4bd1b696-2385f465b218746f.js",
       "static/chunks/964-e0ba4b8b29a30c80.js",
       "static/chunks/main-app-a6eb918725b8032c.js",
-      "static/css/b7550bd1bc3b2654.css",
+      "static/css/e31ae009409eacf5.css",
       "static/chunks/app/layout-a258cbf5ed893f9d.js"
     ],
     "/robots.txt/route": [
@@ -97,7 +97,7 @@
       "static/chunks/463-2b50bffd44d0f786.js",
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/506-3febc54fac5656a1.js",
-      "static/chunks/664-30cfd4cf20301784.js",
+      "static/chunks/664-9ebef30242c7e450.js",
       "static/chunks/app/leaderboard/page-e5930e7b617423b8.js"
     ],
     "/page": [
@@ -109,7 +109,7 @@
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/506-3febc54fac5656a1.js",
       "static/chunks/586-4f74bcb0c8befaac.js",
-      "static/chunks/app/page-b9a6aef5bca430ba.js"
+      "static/chunks/app/page-3ae9bf4be31bf013.js"
     ],
     "/privacy/page": [
       "static/chunks/webpack-787aa585fbd14230.js",
@@ -129,7 +129,7 @@
       "static/chunks/463-2b50bffd44d0f786.js",
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/506-3febc54fac5656a1.js",
-      "static/chunks/664-30cfd4cf20301784.js",
+      "static/chunks/664-9ebef30242c7e450.js",
       "static/chunks/app/profile/page-e3596ed99946d78e.js"
     ],
     "/quiz/[category]/page": [
@@ -140,7 +140,7 @@
       "static/chunks/463-2b50bffd44d0f786.js",
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/506-3febc54fac5656a1.js",
-      "static/chunks/664-30cfd4cf20301784.js",
+      "static/chunks/664-9ebef30242c7e450.js",
       "static/chunks/586-4f74bcb0c8befaac.js",
       "static/chunks/app/quiz/[category]/page-7a6ff1b4817355e3.js"
     ],
@@ -153,7 +153,7 @@
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/919-e78c4583584928de.js",
       "static/chunks/506-3febc54fac5656a1.js",
-      "static/chunks/664-30cfd4cf20301784.js",
+      "static/chunks/664-9ebef30242c7e450.js",
       "static/chunks/app/start/page-5cac5445a986bb6f.js"
     ]
   }
