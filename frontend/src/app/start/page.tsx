@@ -252,7 +252,11 @@ export default function StartPage() {
                 
                 {/* Social Sharing for Categories */}
                 <div className="mt-4">
-                  <CategoryShare categoryName="All Categories" className="inline-block" />
+                  <SocialShare 
+                    title="🚀 Explore amazing tech quizzes on TechKwiz!"
+                    hashtags={['TechKwiz', 'Programming', 'Learning', 'TechSkills']}
+                    className="inline-block"
+                  />
                 </div>
               </motion.div>
 
