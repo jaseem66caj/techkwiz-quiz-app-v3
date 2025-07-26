@@ -679,7 +679,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'sec_002',
       question: 'What is phishing?',
       options: ['Catching fish online', 'A type of malware', 'Fraudulent attempt to obtain sensitive information', 'A programming technique'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'beginner',
       funFact: 'Phishing attacks often use fake emails that appear to be from legitimate sources.',
       category: 'cybersecurity',
