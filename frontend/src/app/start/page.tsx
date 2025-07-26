@@ -9,6 +9,11 @@ import { AdBanner } from '../../components/AdBanner'
 import { QUIZ_CATEGORIES } from '../../data/quizDatabase'
 import { AuthModal } from '../../components/AuthModal'
 import { NewsSection } from '../../components/NewsSection'
+import { Metadata } from 'next'
+import { seoConfig } from '../../utils/seo'
+
+// This would be for the metadata, but since it's a client component, we'll handle SEO via useEffect
+// export const metadata: Metadata = seoConfig.categories
 
 export default function StartPage() {
   const router = useRouter()
