@@ -517,7 +517,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'mob_003',
       question: 'Which company developed Flutter?',
       options: ['Facebook', 'Apple', 'Google', 'Microsoft'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'beginner',
       funFact: 'Flutter uses Dart programming language, also developed by Google.',
       category: 'mobile-dev',
