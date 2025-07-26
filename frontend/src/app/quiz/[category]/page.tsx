@@ -108,13 +108,23 @@ export default function QuizPage({ params }: QuizPageProps) {
     if (categoryInfo && categoryId && !quizStarted && !loading) {
       // Auto-set to beginner difficulty and start quiz
       setDifficulty('beginner')
-      const config = DIFFICULTY_CONFIG['beginner']
-      const questions = getQuestionsForCategory(categoryId, 'beginner', config.questions)
-      setQuizData(questions)
-      setTimeLeft(config.timeLimit)
-      setQuizStarted(true)
+      
+      // Deduct entry fee first
+      const entryFee = categoryInfo.entryFee
+      if (state.user && state.user.coins >= entryFee) {
+        dispatch({ type: 'UPDATE_COINS', payload: -entryFee })
+        
+        const config = DIFFICULTY_CONFIG['beginner']
+        const questions = getQuestionsForCategory(categoryId, 'beginner', config.questions)
+        setQuizData(questions)
+        setTimeLeft(config.timeLimit)
+        setQuizStarted(true)
+      } else {
+        // Redirect back to categories if insufficient coins
+        router.push('/start')
+      }
     }
-  }, [categoryInfo, categoryId, quizStarted, loading])
+  }, [categoryInfo, categoryId, quizStarted, loading, state.user, dispatch, router])
 
   // Timer logic
   useEffect(() => {
