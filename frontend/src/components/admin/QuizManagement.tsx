@@ -346,65 +346,126 @@ export default function QuizManagement() {
 
       {/* Questions Tab */}
       {activeSubTab === 'questions' && (
-        <div>
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Quiz Questions</h3>
+        <div className="space-y-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <h3 className="text-xl font-semibold text-gray-900">❓ Quiz Questions</h3>
             <button
               onClick={() => setShowAddQuestion(true)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center"
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg flex items-center font-medium shadow-lg"
             >
-              <span className="mr-2">+</span>
-              Add Question
+              <span className="mr-2">➕</span>
+              Add New Question
             </button>
           </div>
 
+          {/* Filters */}
+          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">🔍 Search Questions</label>
+                <input
+                  type="text"
+                  placeholder="Search by question, category, or topic..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">📂 Filter by Category</label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">⚡ Filter by Difficulty</label>
+                <select
+                  value={selectedDifficulty}
+                  onChange={(e) => setSelectedDifficulty(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="all">All Difficulties</option>
+                  <option value="beginner">🟢 Beginner</option>
+                  <option value="intermediate">🟡 Intermediate</option>
+                  <option value="advanced">🔴 Advanced</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Questions List */}
           <div className="space-y-4">
-            {questions.map((question) => (
+            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+              📊 Showing {filteredQuestions.length} of {questions.length} questions
+            </div>
+            
+            {filteredQuestions.map((question, index) => (
               <motion.div
                 key={question.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 mb-2">{question.question}</h4>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">{question.category}</span>
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded">{question.difficulty}</span>
-                      <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">{question.subcategory}</span>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        question.difficulty === 'beginner' ? 'bg-green-100 text-green-800' :
+                        question.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {question.difficulty === 'beginner' ? '🟢' : question.difficulty === 'intermediate' ? '🟡' : '🔴'} {question.difficulty.toUpperCase()}
+                      </span>
+                      <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-bold">
+                        {categories.find(c => c.id === question.category)?.name || question.category}
+                      </span>
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">
+                        {question.subcategory}
+                      </span>
                     </div>
+                    <h4 className="font-semibold text-gray-900 text-lg mb-3">{question.question}</h4>
                   </div>
                   <button
                     onClick={() => handleDeleteQuestion(question.id)}
-                    className="text-red-500 hover:text-red-700 text-sm ml-4"
+                    className="text-red-500 hover:text-red-700 text-sm bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors ml-4"
                   >
-                    Delete
+                    🗑️ Delete
                   </button>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                   {question.options.map((option, idx) => (
                     <div
                       key={idx}
-                      className={`p-3 rounded-lg border ${
+                      className={`p-3 rounded-lg border-2 ${
                         idx === question.correct_answer
-                          ? 'bg-green-50 border-green-200 text-green-800'
-                          : 'bg-gray-50 border-gray-200'
+                          ? 'bg-green-50 border-green-300 text-green-800'
+                          : 'bg-gray-50 border-gray-200 text-gray-700'
                       }`}
                     >
-                      <span className="text-sm font-medium mr-2">{String.fromCharCode(65 + idx)}.</span>
-                      {option}
-                      {idx === question.correct_answer && (
-                        <span className="ml-2 text-green-600">✓</span>
-                      )}
+                      <span className="font-medium">
+                        {String.fromCharCode(65 + idx)}. {option}
+                        {idx === question.correct_answer && ' ✅'}
+                      </span>
                     </div>
                   ))}
                 </div>
                 
-                <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-                  <strong>Fun Fact:</strong> {question.fun_fact}
-                </div>
+                {question.fun_fact && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <span className="text-blue-800 text-sm">
+                      💡 <strong>Fun Fact:</strong> {question.fun_fact}
+                    </span>
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
