@@ -1,0 +1,68 @@
+exports.id=883,exports.ids=[883],exports.modules={1135:()=>{},1741:(a,b,c)=>{"use strict";c.d(b,{Providers:()=>j,n:()=>k});var d=c(687),e=c(3210),f=c(9197);let g={user:null,isAuthenticated:!1,currentQuiz:null,quizHistory:[],loading:!0},h=(0,e.createContext)(void 0);function i(a,b){switch(b.type){case"SET_LOADING":return{...a,loading:b.payload};case"LOGIN_SUCCESS":return{...a,user:b.payload,isAuthenticated:!0,loading:!1};case"LOGOUT":return{...a,user:null,isAuthenticated:!1,currentQuiz:null,quizHistory:[]};case"UPDATE_COINS":if(!a.user)return a;let c=Math.max(0,a.user.coins+b.payload),d={...a.user,coins:c};return(0,f.R1)(d),(0,f.z0)(d.id,c),{...a,user:d};case"START_QUIZ":return{...a,currentQuiz:b.payload};case"END_QUIZ":if(!a.user)return a;let e=b.payload,h={...a.user,totalQuizzes:a.user.totalQuizzes+1,correctAnswers:a.user.correctAnswers+e.correctAnswers},i=Math.floor(h.totalQuizzes/5)+1;return h.level=i,(0,f.Go)(a.user.id,e),(0,f.R1)(h),{...a,user:h,currentQuiz:null,quizHistory:[...a.quizHistory,e]};case"RESET_USER":return{...a,user:g.user};default:return a}}function j({children:a}){let[b,c]=(0,e.useReducer)(i,g);return(0,d.jsx)(h.Provider,{value:{state:b,dispatch:c},children:a})}function k(){let a=(0,e.useContext)(h);if(void 0===a)throw Error("useApp must be used within a Providers");return a}},5562:(a,b,c)=>{Promise.resolve().then(c.bind(c,9519))},6062:(a,b,c)=>{Promise.resolve().then(c.t.bind(c,6133,23)),Promise.resolve().then(c.t.bind(c,6444,23)),Promise.resolve().then(c.t.bind(c,6042,23)),Promise.resolve().then(c.t.bind(c,9477,23)),Promise.resolve().then(c.t.bind(c,9345,23)),Promise.resolve().then(c.t.bind(c,2089,23)),Promise.resolve().then(c.t.bind(c,6577,23)),Promise.resolve().then(c.t.bind(c,1307,23)),Promise.resolve().then(c.t.bind(c,4817,23))},7814:(a,b,c)=>{Promise.resolve().then(c.t.bind(c,5227,23)),Promise.resolve().then(c.t.bind(c,6346,23)),Promise.resolve().then(c.t.bind(c,7924,23)),Promise.resolve().then(c.t.bind(c,99,23)),Promise.resolve().then(c.t.bind(c,8243,23)),Promise.resolve().then(c.t.bind(c,8827,23)),Promise.resolve().then(c.t.bind(c,2763,23)),Promise.resolve().then(c.t.bind(c,7173,23)),Promise.resolve().then(c.bind(c,5587))},8610:(a,b,c)=>{Promise.resolve().then(c.bind(c,1741))},9031:(a,b,c)=>{"use strict";c.r(b),c.d(b,{default:()=>k,metadata:()=>j,viewport:()=>i});var d=c(7413),e=c(9763),f=c.n(e);c(1135);var g=c(9519);let h={website:()=>({"@context":"https://schema.org","@type":"WebSite",name:"TechKwiz",alternateName:"Tech Quiz Platform",url:"https://techkwiz.com",description:"Free online technology quiz platform for developers and tech enthusiasts",potentialAction:{"@type":"SearchAction",target:"https://techkwiz.com/search?q={search_term_string}","query-input":"required name=search_term_string"},sameAs:["https://twitter.com/techkwiz","https://facebook.com/techkwiz","https://linkedin.com/company/techkwiz"]}),organization:()=>({"@context":"https://schema.org","@type":"Organization",name:"TechKwiz",url:"https://techkwiz.com",logo:"https://techkwiz.com/logo.png",description:"Leading online platform for technology education through interactive quizzes",foundingDate:"2024",contactPoint:{"@type":"ContactPoint",contactType:"customer service",email:"support@techkwiz.com"}}),faq:()=>({"@context":"https://schema.org","@type":"FAQPage",mainEntity:[{"@type":"Question",name:"What is TechKwiz?",acceptedAnswer:{"@type":"Answer",text:"TechKwiz is a free online quiz platform designed for developers, students, and tech enthusiasts to test and improve their technology knowledge across 8 categories including Programming, AI, Web Development, and more."}},{"@type":"Question",name:"How many quiz categories are available?",acceptedAnswer:{"@type":"Answer",text:"TechKwiz offers 8 comprehensive categories: Programming (JavaScript, Python, Java), AI & Machine Learning, Web Development, Mobile Development, Data Science, Cybersecurity, Cloud Computing, and Blockchain."}},{"@type":"Question",name:"Is TechKwiz free to use?",acceptedAnswer:{"@type":"Answer",text:"Yes, TechKwiz is completely free to use. You can take quizzes, earn coins, track your progress, and compete on leaderboards without any cost."}},{"@type":"Question",name:"What difficulty levels are available?",acceptedAnswer:{"@type":"Answer",text:"Each quiz category offers three difficulty levels: Beginner (suitable for newcomers), Intermediate (for those with some experience), and Advanced (for experts and professionals)."}}]})},i={width:"device-width",initialScale:1,maximumScale:5,userScalable:!0,themeColor:"#1e40af",colorScheme:"dark"},j={...{title:"TechKwiz - Free Online Tech Quiz Platform | Test Your Programming Knowledge",description:"Test your programming, AI, web development, and tech skills with TechKwiz's free online quizzes. Earn coins, compete on leaderboards, and master technology concepts with 50+ expert-created questions.",keywords:"programming quiz, tech quiz online, javascript quiz, python quiz, AI quiz, web development quiz, coding test, programming test, tech knowledge test, free online quiz, computer science quiz",openGraph:{title:"TechKwiz - Master Technology Through Interactive Quizzes",description:"Join thousands of developers testing their skills on TechKwiz. Free quizzes covering Programming, AI, Web Dev, Mobile, Data Science, Cybersecurity, Cloud, and Blockchain.",type:"website",siteName:"TechKwiz",images:[{url:"/og-image-homepage.jpg",width:1200,height:630,alt:"TechKwiz - Free Tech Quiz Platform"}]},twitter:{card:"summary_large_image",title:"TechKwiz - Free Online Tech Quiz Platform",description:"Test your programming and tech skills with interactive quizzes. Earn coins, compete globally, and master technology concepts.",images:["/og-image-homepage.jpg"]}},metadataBase:new URL("https://techkwiz.com"),alternates:{canonical:"https://techkwiz.com"},verification:{google:"your-google-site-verification-code",other:{"msvalidate.01":"your-bing-verification-code"}},robots:{index:!0,follow:!0,googleBot:{index:!0,follow:!0,"max-video-preview":-1,"max-image-preview":"large","max-snippet":-1}},category:"education",classification:"Educational Technology Platform",creator:"TechKwiz Team",publisher:"TechKwiz",formatDetection:{email:!1,address:!1,telephone:!1},referrer:"origin-when-cross-origin"};function k({children:a}){let b=h.website(),c=h.organization(),e=h.faq();return(0,d.jsxs)("html",{lang:"en",className:"dark",children:[(0,d.jsxs)("head",{children:[(0,d.jsx)("link",{rel:"preconnect",href:"https://fonts.googleapis.com"}),(0,d.jsx)("link",{rel:"preconnect",href:"https://fonts.gstatic.com",crossOrigin:"anonymous"}),(0,d.jsx)("link",{rel:"preconnect",href:"https://pagead2.googlesyndication.com"}),(0,d.jsx)("link",{rel:"preconnect",href:"https://googletagmanager.com"}),(0,d.jsx)("link",{rel:"preconnect",href:"https://www.google-analytics.com"}),(0,d.jsx)("link",{rel:"dns-prefetch",href:"//securepubads.g.doubleclick.net"}),(0,d.jsx)("link",{rel:"dns-prefetch",href:"//tpc.googlesyndication.com"}),(0,d.jsx)("link",{rel:"dns-prefetch",href:"//pagead2.googlesyndication.com"}),(0,d.jsx)("link",{rel:"icon",type:"image/x-icon",href:"/favicon.ico"}),(0,d.jsx)("link",{rel:"icon",type:"image/png",sizes:"32x32",href:"/favicon-32x32.png"}),(0,d.jsx)("link",{rel:"icon",type:"image/png",sizes:"16x16",href:"/favicon-16x16.png"}),(0,d.jsx)("link",{rel:"apple-touch-icon",sizes:"180x180",href:"/apple-touch-icon.png"}),(0,d.jsx)("link",{rel:"manifest",href:"/site.webmanifest"}),(0,d.jsx)("script",{type:"application/ld+json",dangerouslySetInnerHTML:{__html:JSON.stringify(b)}}),(0,d.jsx)("script",{type:"application/ld+json",dangerouslySetInnerHTML:{__html:JSON.stringify(c)}}),(0,d.jsx)("script",{type:"application/ld+json",dangerouslySetInnerHTML:{__html:JSON.stringify(e)}}),(0,d.jsx)("script",{async:!0,src:"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX",crossOrigin:"anonymous"}),(0,d.jsx)("script",{dangerouslySetInnerHTML:{__html:`
+              (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-XXXXXXXXXXXXXXXXX",
+                enable_page_level_ads: true,
+                overlays: {bottom: true}
+              });
+            `}}),(0,d.jsx)("script",{async:!0,src:"https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"}),(0,d.jsx)("script",{dangerouslySetInnerHTML:{__html:`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX', {
+                page_title: document.title,
+                page_location: window.location.href,
+                content_group1: 'Education',
+                content_group2: 'Tech Quiz',
+                send_page_view: true,
+                allow_google_signals: true,
+                allow_ad_personalization_signals: true
+              });
+            `}}),(0,d.jsx)("script",{dangerouslySetInnerHTML:{__html:`
+              var pbjs = pbjs || {};
+              pbjs.que = pbjs.que || [];
+              
+              // Prebid configuration
+              pbjs.que.push(function() {
+                pbjs.setConfig({
+                  priceGranularity: "medium",
+                  cache: {
+                    url: 'https://prebid.adnxs.com/pbc/v1/cache'
+                  },
+                  bidderTimeout: 2000,
+                  enableSendAllBids: true,
+                  userSync: {
+                    userIds: [{
+                      name: "id5Id",
+                      params: {
+                        partner: 173
+                      }
+                    }],
+                    auctionDelay: 50
+                  }
+                });
+              });
+            `}}),(0,d.jsx)("script",{dangerouslySetInnerHTML:{__html:`
+              function sendToAnalytics(metric) {
+                gtag('event', metric.name, {
+                  event_category: 'Web Vitals',
+                  event_label: metric.id,
+                  value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+                  non_interaction: true,
+                });
+              }
+              
+              // Load Web Vitals library
+              import('https://unpkg.com/web-vitals?module').then(({getCLS, getFID, getFCP, getLCP, getTTFB}) => {
+                getCLS(sendToAnalytics);
+                getFID(sendToAnalytics);
+                getFCP(sendToAnalytics);
+                getLCP(sendToAnalytics);
+                getTTFB(sendToAnalytics);
+              });
+            `}})]}),(0,d.jsxs)("body",{className:`${f().className} antialiased bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 min-h-screen`,children:[(0,d.jsx)(g.Providers,{children:a}),(0,d.jsx)("script",{dangerouslySetInnerHTML:{__html:`
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `}})]})]})}},9197:(a,b,c)=>{"use strict";c.d(b,{$5:()=>g,Go:()=>o,HW:()=>j,R1:()=>k,iD:()=>f,ri:()=>h,wR:()=>i,z0:()=>n});let d={USER:"techkwiz_user",AUTH_TOKEN:"techkwiz_auth"},e=(a,b)=>({id:"user_"+Math.random().toString(36).substr(2,9),email:a.toLowerCase(),name:a.split("@")[0].replace(/[^a-zA-Z0-9]/g," ").trim()||"Tech Enthusiast",coins:500,level:1,totalQuizzes:0,correctAnswers:0,joinDate:new Date().toISOString(),quizHistory:[]}),f=(a,b)=>{let c=l(a);if(c)return localStorage.setItem(d.AUTH_TOKEN,"dummy_token_"+c.id),c;{let c=e(a,b);return k(c),localStorage.setItem(d.AUTH_TOKEN,"dummy_token_"+c.id),c}},g=(a,b,c)=>{let f=e(a,b);return c&&(f.name=c),k(f),localStorage.setItem(d.AUTH_TOKEN,"dummy_token_"+f.id),f},h=()=>{localStorage.removeItem(d.AUTH_TOKEN)},i=()=>!!localStorage.getItem(d.AUTH_TOKEN),j=()=>{let a=localStorage.getItem(d.AUTH_TOKEN);if(!a)return null;let b=a.replace("dummy_token_","");return m().find(a=>a.id===b)||null},k=a=>{let b=m(),c=b.findIndex(b=>b.id===a.id||b.email===a.email);c>=0?b[c]=a:b.push(a),localStorage.setItem(d.USER,JSON.stringify(b))},l=a=>m().find(b=>b.email===a.toLowerCase())||null,m=()=>{try{let a=localStorage.getItem(d.USER);return a?JSON.parse(a):[]}catch(a){return console.error("Error parsing stored users:",a),[]}},n=(a,b)=>{let c=m(),e=c.findIndex(b=>b.id===a);e>=0&&(c[e].coins=b,localStorage.setItem(d.USER,JSON.stringify(c)))},o=(a,b)=>{let c=m(),e=c.findIndex(b=>b.id===a);if(e>=0){c[e].quizHistory.push(b),c[e].totalQuizzes+=1,c[e].correctAnswers+=b.correctAnswers||0;let a=Math.floor(c[e].totalQuizzes/5)+1;c[e].level=a,localStorage.setItem(d.USER,JSON.stringify(c))}}},9519:(a,b,c)=>{"use strict";c.d(b,{Providers:()=>e});var d=c(1369);let e=(0,d.registerClientReference)(function(){throw Error("Attempted to call Providers() from the server but Providers is on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.")},"/app/frontend/src/app/providers.tsx","Providers");(0,d.registerClientReference)(function(){throw Error("Attempted to call useApp() from the server but useApp is on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.")},"/app/frontend/src/app/providers.tsx","useApp")}};

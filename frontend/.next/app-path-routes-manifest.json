@@ -1,8 +1,0 @@
-{
-  "/_not-found/page": "/_not-found",
-  "/page": "/",
-  "/quiz/[category]/page": "/quiz/[category]",
-  "/leaderboard/page": "/leaderboard",
-  "/start/page": "/start",
-  "/profile/page": "/profile"
-}
