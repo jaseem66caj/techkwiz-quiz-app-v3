@@ -36,9 +36,9 @@ interface QuizCategory {
 }
 
 const DIFFICULTY_CONFIG = {
-  beginner: { label: 'Beginner', coins: 10 },
-  intermediate: { label: 'Intermediate', coins: 20 },
-  advanced: { label: 'Advanced', coins: 30 }
+  beginner: { label: 'Beginner', coins: 10, coinsPerCorrect: 50, timeLimit: 30, questions: 10 },
+  intermediate: { label: 'Intermediate', coins: 20, coinsPerCorrect: 75, timeLimit: 25, questions: 12 },
+  advanced: { label: 'Advanced', coins: 30, coinsPerCorrect: 100, timeLimit: 20, questions: 15 }
 }
 
 interface QuizPageProps {
