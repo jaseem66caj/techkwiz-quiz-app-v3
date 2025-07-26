@@ -113,7 +113,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'prog_001',
       question: 'Which of the following is NOT a JavaScript data type?',
       options: ['String', 'Boolean', 'Float', 'Number'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'beginner',
       funFact: 'JavaScript has 7 primitive data types: string, number, boolean, null, undefined, symbol, and bigint.',
       category: 'programming',
