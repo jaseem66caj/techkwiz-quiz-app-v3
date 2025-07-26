@@ -94,12 +94,6 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
 }
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  referrer: 'origin-when-cross-origin'
-}
 
 export default function RootLayout({
   children,
