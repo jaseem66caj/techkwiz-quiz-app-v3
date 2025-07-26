@@ -586,7 +586,7 @@ class BackendTester:
     def test_backend_integration_protection(self, token):
         """Test that new endpoints are properly protected with admin authentication"""
         try:
-            # Test endpoints without authentication (should fail)
+            # Test endpoints without authentication (should fail with 401 or 403)
             protected_endpoints = [
                 "/admin/site-config",
                 "/admin/ad-slots",
@@ -595,8 +595,8 @@ class BackendTester:
             
             for endpoint in protected_endpoints:
                 response = requests.get(f"{self.api_base}{endpoint}", timeout=10)
-                if response.status_code != 401:
-                    self.log_result("Authentication Protection", False, f"Endpoint {endpoint} not properly protected")
+                if response.status_code not in [401, 403]:
+                    self.log_result("Authentication Protection", False, f"Endpoint {endpoint} not properly protected (got {response.status_code})")
                     return False
             
             # Test endpoints with valid authentication (should succeed)
@@ -605,8 +605,11 @@ class BackendTester:
                 for endpoint in protected_endpoints:
                     response = requests.get(f"{self.api_base}{endpoint}", headers=headers, timeout=10)
                     if response.status_code != 200:
-                        self.log_result("Authenticated Access", False, f"Endpoint {endpoint} not accessible with valid token")
+                        self.log_result("Authenticated Access", False, f"Endpoint {endpoint} not accessible with valid token (got {response.status_code})")
                         return False
+            else:
+                self.log_result("Backend Integration Protection", False, "No admin token available for authenticated access test")
+                return False
             
             self.log_result("Backend Integration Protection", True, "All new endpoints properly protected with admin authentication")
             return True
