@@ -43,6 +43,8 @@ export default function StartPage() {
     }
     metaKeywords.setAttribute('content', seoConfig.categories.keywords)
   }, [])
+
+  const categoryTabs = [
     { id: 'ALL', name: 'All', count: categories.length },
     { id: 'PROGRAMMING', name: 'Programming', count: 2 },
     { id: 'AI', name: 'AI & ML', count: 1 },
