@@ -859,8 +859,8 @@ class BackendTester:
             return False
     
     def run_all_tests(self):
-        """Run all backend tests including enhanced admin dashboard features"""
-        print(f"🚀 Starting Enhanced Admin Dashboard Backend Tests")
+        """Run comprehensive admin system tests including forgot password and profile management"""
+        print(f"🚀 Starting Comprehensive Admin System Tests")
         print(f"Backend URL: {self.backend_url}")
         print(f"API Base: {self.api_base}")
         print("=" * 60)
@@ -869,6 +869,7 @@ class BackendTester:
         auth_success, admin_token = self.test_admin_authentication()
         
         tests = [
+            # Core Infrastructure Tests
             self.test_environment_configuration,
             self.test_backend_health,
             self.test_cors_configuration,
@@ -876,6 +877,14 @@ class BackendTester:
             self.test_status_api_post,
             self.test_status_api_get,
             self.test_mongodb_connection,
+            
+            # New Admin System Tests (as requested)
+            self.test_forgot_password_system,
+            lambda: self.test_profile_management(admin_token),
+            lambda: self.test_complete_admin_dashboard_apis(admin_token),
+            lambda: self.test_security_features(admin_token),
+            
+            # Existing Enhanced Admin Tests
             lambda: self.test_site_config_management(admin_token),
             lambda: self.test_enhanced_ad_slot_system(admin_token),
             lambda: self.test_updated_models_integration(admin_token),
