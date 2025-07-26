@@ -319,7 +319,7 @@ export default function StartPage() {
                   <div className="flex-shrink-0">
                     <button
                       className={`px-6 py-4 rounded-2xl font-bold text-lg transition-all ${
-                        (state.user?.coins || 0) >= category.entryFee
+                        (state.user?.coins || 0) >= category.entry_fee
                           ? 'bg-orange-500 hover:bg-orange-600 text-white'
                           : 'bg-purple-600 hover:bg-purple-700 text-white'
                       }`}
