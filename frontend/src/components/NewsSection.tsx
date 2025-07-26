@@ -97,6 +97,9 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
         <div className="flex items-center space-x-2">
           <span className="text-2xl">📰</span>
           <h2 className="text-white font-bold text-lg sm:text-xl">Latest Tech News</h2>
+          {dataSource === 'live' && (
+            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Live</span>
+          )}
         </div>
         <a
           href="https://techkwiz.com"
@@ -109,8 +112,9 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
       </div>
 
       {error && (
-        <div className="text-yellow-400 text-sm mb-4 p-3 bg-yellow-400/10 rounded-lg">
-          ⚠️ {error} - Showing cached content
+        <div className="text-yellow-400 text-sm mb-4 p-3 bg-yellow-400/10 rounded-lg flex items-center space-x-2">
+          <span>⚠️</span>
+          <span>{error} - Showing latest cached content</span>
         </div>
       )}
 
