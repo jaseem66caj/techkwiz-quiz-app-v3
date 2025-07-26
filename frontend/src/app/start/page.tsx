@@ -336,21 +336,15 @@ export default function StartPage() {
                           Live
                         </span>
                         
-                        {/* Action Button */}
+                        {/* Action Button - Always PLAY */}
                         <button
-                          className={`px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
-                            (state.user?.coins || 0) >= category.entry_fee
-                              ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg'
-                              : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg'
-                          }`}
+                          className="px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleCategorySelect(category.id)
                           }}
                         >
-                          {(state.user?.coins || 0) >= category.entry_fee 
-                            ? 'PLAY' 
-                            : 'WATCH AD'}
+                          PLAY
                         </button>
                       </div>
                     </div>
