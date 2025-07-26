@@ -129,13 +129,18 @@ export function AdBanner({
   if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
     return (
       <div 
-        className={`bg-gradient-to-br from-gray-900/80 via-blue-900/60 to-purple-900/80 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm border border-white/10 ${className}`}
-        style={getAdStyles()}
+        className={`bg-gradient-to-br from-gray-900/40 via-blue-900/30 to-purple-900/40 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm border border-white/5 shadow-lg ${className}`}
+        style={{
+          ...getAdStyles(),
+          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.4) 0%, rgba(30, 58, 138, 0.3) 50%, rgba(88, 28, 135, 0.4) 100%)',
+          backdropFilter: 'blur(10px)',
+          borderColor: 'rgba(255, 255, 255, 0.05)'
+        }}
       >
-        <div className="text-lg mb-2 text-yellow-400">📢</div>
-        <div className="font-semibold text-white">Advertisement</div>
-        <div className="text-xs opacity-70 text-blue-300">{adType.toUpperCase()} - {adFormat}</div>
-        <div className="text-xs opacity-50 text-gray-400">Slot: {adSlot}</div>
+        <div className="text-lg mb-1 text-yellow-400/80">📢</div>
+        <div className="font-semibold text-white/90 text-xs">Advertisement</div>
+        <div className="text-xs opacity-60 text-blue-300/70">{adType.toUpperCase()}</div>
+        <div className="text-xs opacity-40 text-gray-400/60">Slot: {adSlot}</div>
       </div>
     )
   }
