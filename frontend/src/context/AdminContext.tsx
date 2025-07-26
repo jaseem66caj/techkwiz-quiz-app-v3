@@ -64,7 +64,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://8f4a280c-d2c9-4a65-867d-01ac6b4a7cf8.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/admin/login`, {
         method: 'POST',
         headers: {
