@@ -13,6 +13,24 @@ export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState('all-time')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
+  // SEO optimization
+  useEffect(() => {
+    document.title = seoConfig.leaderboard.title
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', seoConfig.leaderboard.description)
+    }
+    
+    let metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta')
+      metaKeywords.setAttribute('name', 'keywords')
+      document.head.appendChild(metaKeywords)
+    }
+    metaKeywords.setAttribute('content', seoConfig.leaderboard.keywords)
+  }, [])
+
   const handleLogin = (user: any) => {
     dispatch({ type: 'LOGIN_SUCCESS', payload: user })
     setShowAuthModal(false)
