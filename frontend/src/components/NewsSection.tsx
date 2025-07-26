@@ -198,20 +198,3 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
     </div>
   )
 }
-
-// CSS for line clamp (add to globals.css or use Tailwind line-clamp plugin)
-const styles = `
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-`
-
-// Inject styles
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement("style")
-  styleSheet.innerText = styles
-  document.head.appendChild(styleSheet)
-}
