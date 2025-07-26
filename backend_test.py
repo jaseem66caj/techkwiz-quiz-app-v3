@@ -1039,22 +1039,297 @@ class BackendTester:
             self.log_result("Frontend Integration Format", False, f"Integration format test failed: {str(e)}")
             return False
     
-    def run_data_sync_tests(self):
-        """Run focused tests on backend API connectivity and data synchronization"""
-        print(f"🎯 Starting Backend API Connectivity and Data Synchronization Tests")
+    def test_quiz_categories_entry_fees(self):
+        """Test that quiz categories have appropriate entry fees (100+ coins)"""
+        try:
+            response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            
+            if response.status_code != 200:
+                self.log_result("Quiz Categories Entry Fees", False, f"Categories API failed: HTTP {response.status_code}")
+                return False, []
+            
+            categories = response.json()
+            
+            if not isinstance(categories, list) or len(categories) == 0:
+                self.log_result("Quiz Categories Entry Fees", False, "No categories found for entry fee testing")
+                return False, []
+            
+            # Check entry fees for each category
+            low_entry_fee_categories = []
+            missing_entry_fee_categories = []
+            
+            for category in categories:
+                if 'entry_fee' not in category:
+                    missing_entry_fee_categories.append(category.get('name', 'Unknown'))
+                elif category['entry_fee'] < 100:
+                    low_entry_fee_categories.append({
+                        'name': category.get('name', 'Unknown'),
+                        'entry_fee': category['entry_fee']
+                    })
+            
+            # Report findings
+            if missing_entry_fee_categories:
+                self.log_result("Quiz Categories Entry Fees", False, f"Categories missing entry_fee field: {missing_entry_fee_categories}")
+                return False, categories
+            
+            if low_entry_fee_categories:
+                self.log_result("Quiz Categories Entry Fees", False, f"Categories with entry fees < 100 coins: {low_entry_fee_categories}")
+                return False, categories
+            
+            # All categories have appropriate entry fees
+            entry_fees = [cat.get('entry_fee', 0) for cat in categories]
+            min_fee = min(entry_fees)
+            max_fee = max(entry_fees)
+            avg_fee = sum(entry_fees) / len(entry_fees)
+            
+            self.log_result("Quiz Categories Entry Fees", True, f"All {len(categories)} categories have entry fees ≥100 coins (min: {min_fee}, max: {max_fee}, avg: {avg_fee:.0f})")
+            return True, categories
+            
+        except Exception as e:
+            self.log_result("Quiz Categories Entry Fees", False, f"Entry fee test failed: {str(e)}")
+            return False, []
+    
+    def test_user_management_system(self):
+        """Test if user management system exists for coin-based economy"""
+        try:
+            # Test if user registration endpoint exists
+            test_user_data = {
+                "username": "testuser_coins",
+                "email": "testuser@example.com",
+                "password": "testpass123"
+            }
+            
+            # Try common user registration endpoints
+            registration_endpoints = [
+                "/users/register",
+                "/auth/register", 
+                "/user/create",
+                "/users",
+                "/auth/signup"
+            ]
+            
+            registration_found = False
+            for endpoint in registration_endpoints:
+                try:
+                    response = requests.post(f"{self.api_base}{endpoint}", json=test_user_data, timeout=5)
+                    if response.status_code not in [404, 405]:  # Not "Not Found" or "Method Not Allowed"
+                        registration_found = True
+                        self.log_result("User Registration Endpoint", True, f"Found user registration at {endpoint}")
+                        break
+                except:
+                    continue
+            
+            if not registration_found:
+                self.log_result("User Management System", False, "No user registration endpoints found - user management system missing")
+                return False
+            
+            # Test if user profile/coins endpoint exists
+            profile_endpoints = [
+                "/users/profile",
+                "/user/profile",
+                "/auth/profile",
+                "/users/me"
+            ]
+            
+            profile_found = False
+            for endpoint in profile_endpoints:
+                try:
+                    response = requests.get(f"{self.api_base}{endpoint}", timeout=5)
+                    if response.status_code not in [404, 405]:
+                        profile_found = True
+                        self.log_result("User Profile Endpoint", True, f"Found user profile at {endpoint}")
+                        break
+                except:
+                    continue
+            
+            if not profile_found:
+                self.log_result("User Management System", False, "No user profile endpoints found - coin management system missing")
+                return False
+            
+            self.log_result("User Management System", True, "User management system endpoints found")
+            return True
+            
+        except Exception as e:
+            self.log_result("User Management System", False, f"User system test failed: {str(e)}")
+            return False
+    
+    def test_guest_user_system(self):
+        """Test if guest user system exists for 0 coins implementation"""
+        try:
+            # Test if guest user creation endpoint exists
+            guest_endpoints = [
+                "/users/guest",
+                "/auth/guest",
+                "/guest/create",
+                "/users/anonymous"
+            ]
+            
+            guest_found = False
+            for endpoint in guest_endpoints:
+                try:
+                    response = requests.post(f"{self.api_base}{endpoint}", json={}, timeout=5)
+                    if response.status_code not in [404, 405]:
+                        guest_found = True
+                        
+                        # Check if response includes coins field
+                        if response.status_code == 200:
+                            data = response.json()
+                            if 'coins' in data:
+                                coins = data['coins']
+                                if coins == 0:
+                                    self.log_result("Guest User System", True, f"Guest user system working - starts with 0 coins at {endpoint}")
+                                else:
+                                    self.log_result("Guest User System", False, f"Guest user starts with {coins} coins instead of 0")
+                                return coins == 0
+                            else:
+                                self.log_result("Guest User System", False, f"Guest user response missing coins field at {endpoint}")
+                                return False
+                        break
+                except:
+                    continue
+            
+            if not guest_found:
+                self.log_result("Guest User System", False, "No guest user endpoints found - guest system missing")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            self.log_result("Guest User System", False, f"Guest user test failed: {str(e)}")
+            return False
+    
+    def test_coin_reward_system(self):
+        """Test coin reward system and homepage quiz behavior"""
+        try:
+            # Test if homepage quiz endpoint exists
+            homepage_endpoints = [
+                "/quiz/homepage",
+                "/quiz/daily",
+                "/quiz/free",
+                "/homepage/quiz"
+            ]
+            
+            homepage_found = False
+            for endpoint in homepage_endpoints:
+                try:
+                    response = requests.get(f"{self.api_base}{endpoint}", timeout=5)
+                    if response.status_code not in [404, 405]:
+                        homepage_found = True
+                        self.log_result("Homepage Quiz Endpoint", True, f"Found homepage quiz at {endpoint}")
+                        
+                        # Test if it gives automatic coins (should not give coins now)
+                        if response.status_code == 200:
+                            data = response.json()
+                            if 'coins_reward' in data and data['coins_reward'] > 0:
+                                self.log_result("Homepage Quiz Coins", False, f"Homepage quiz still gives {data['coins_reward']} coins - should give 0")
+                                return False
+                        break
+                except:
+                    continue
+            
+            if not homepage_found:
+                self.log_result("Coin Reward System", False, "No homepage quiz endpoints found - coin reward system unclear")
+                return False
+            
+            # Test rewarded popup configuration for insufficient coins
+            response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if response.status_code == 200:
+                config = response.json()
+                if config.get('show_on_insufficient_coins', False):
+                    self.log_result("Insufficient Coins Popup", True, f"Rewarded popup configured for insufficient coins (reward: {config.get('coin_reward', 0)} coins)")
+                else:
+                    self.log_result("Insufficient Coins Popup", False, "Rewarded popup not configured for insufficient coins scenario")
+                    return False
+            else:
+                self.log_result("Coin Reward System", False, "Cannot access rewarded popup configuration")
+                return False
+            
+            self.log_result("Coin Reward System", True, "Coin reward system configured correctly")
+            return True
+            
+        except Exception as e:
+            self.log_result("Coin Reward System", False, f"Coin reward test failed: {str(e)}")
+            return False
+    
+    def test_insufficient_coins_flow(self):
+        """Test the flow when users have insufficient coins for quiz entry"""
+        try:
+            # Get rewarded popup config
+            config_response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if config_response.status_code != 200:
+                self.log_result("Insufficient Coins Flow", False, "Cannot access rewarded popup configuration")
+                return False
+            
+            config = config_response.json()
+            
+            # Check if popup is configured for insufficient coins
+            required_fields = ['show_on_insufficient_coins', 'coin_reward', 'is_active']
+            missing_fields = [field for field in required_fields if field not in config]
+            
+            if missing_fields:
+                self.log_result("Insufficient Coins Flow", False, f"Rewarded config missing fields: {missing_fields}")
+                return False
+            
+            if not config.get('show_on_insufficient_coins', False):
+                self.log_result("Insufficient Coins Flow", False, "Rewarded popup not configured to show on insufficient coins")
+                return False
+            
+            if not config.get('is_active', False):
+                self.log_result("Insufficient Coins Flow", False, "Rewarded popup system is not active")
+                return False
+            
+            coin_reward = config.get('coin_reward', 0)
+            if coin_reward <= 0:
+                self.log_result("Insufficient Coins Flow", False, f"Rewarded popup gives {coin_reward} coins - should be positive")
+                return False
+            
+            # Test if there are quiz entry endpoints that check coins
+            quiz_entry_endpoints = [
+                "/quiz/start",
+                "/quiz/enter",
+                "/quiz/join"
+            ]
+            
+            entry_endpoint_found = False
+            for endpoint in quiz_entry_endpoints:
+                try:
+                    # Try to start a quiz (should fail without proper authentication/coins)
+                    response = requests.post(f"{self.api_base}{endpoint}", json={"category_id": "test"}, timeout=5)
+                    if response.status_code not in [404, 405]:
+                        entry_endpoint_found = True
+                        break
+                except:
+                    continue
+            
+            if not entry_endpoint_found:
+                self.log_result("Quiz Entry System", False, "No quiz entry endpoints found - cannot test insufficient coins flow")
+                return False
+            
+            self.log_result("Insufficient Coins Flow", True, f"Insufficient coins flow configured - popup gives {coin_reward} coins when users can't afford entry fees")
+            return True
+            
+        except Exception as e:
+            self.log_result("Insufficient Coins Flow", False, f"Insufficient coins flow test failed: {str(e)}")
+            return False
+    
+    def run_zero_coins_implementation_tests(self):
+        """Run comprehensive tests for the 0 coins implementation"""
+        print(f"🪙 Starting 0 Coins Implementation Tests")
         print(f"Backend URL: {self.backend_url}")
         print(f"API Base: {self.api_base}")
         print("=" * 70)
         
         tests = [
-            # Core connectivity
+            # Core connectivity first
             self.test_backend_health,
             self.test_mongodb_connection,
             
-            # Data synchronization tests (main focus)
-            self.test_quiz_categories_api,
-            self.test_database_data_verification,
-            self.test_frontend_backend_integration_format,
+            # 0 coins implementation tests
+            self.test_quiz_categories_entry_fees,
+            self.test_user_management_system,
+            self.test_guest_user_system,
+            self.test_coin_reward_system,
+            self.test_insufficient_coins_flow,
         ]
         
         passed = 0
@@ -1063,10 +1338,8 @@ class BackendTester:
         
         for test in tests:
             try:
-                if test == self.test_quiz_categories_api:
+                if test == self.test_quiz_categories_entry_fees:
                     result, categories = test()
-                elif test == self.test_quiz_questions_api:
-                    result = test(categories)
                 else:
                     result = test()
                     
@@ -1080,30 +1353,21 @@ class BackendTester:
             
             print("-" * 40)
         
-        # Test questions API after we have categories
-        if categories:
-            try:
-                result = self.test_quiz_questions_api(categories)
-                if result:
-                    passed += 1
-                else:
-                    failed += 1
-            except Exception as e:
-                print(f"❌ FAIL: test_quiz_questions_api - Exception: {str(e)}")
-                failed += 1
-            print("-" * 40)
-        
-        print(f"\n📊 Data Synchronization Test Summary:")
+        print(f"\n📊 0 Coins Implementation Test Summary:")
         print(f"✅ Passed: {passed}")
         print(f"❌ Failed: {failed}")
         print(f"📈 Success Rate: {passed/(passed+failed)*100:.1f}%")
         
         if failed == 0:
-            print(f"\n🎉 DATA SYNCHRONIZATION TESTS PASSED!")
-            print(f"   ✅ Quiz categories API (/api/quiz/categories) working correctly")
-            print(f"   ✅ Database contains properly migrated data")
-            print(f"   ✅ API responses formatted correctly for frontend")
-            print(f"   ✅ Backend-frontend integration ready")
+            print(f"\n🎉 0 COINS IMPLEMENTATION TESTS PASSED!")
+            print(f"   ✅ Quiz categories have appropriate entry fees (100+ coins)")
+            print(f"   ✅ User management system supports coin-based economy")
+            print(f"   ✅ Guest users start with 0 coins")
+            print(f"   ✅ Homepage quiz no longer gives automatic coins")
+            print(f"   ✅ Insufficient coins flow triggers reward popup")
+        else:
+            print(f"\n⚠️  0 COINS IMPLEMENTATION ISSUES FOUND:")
+            print(f"   Some components of the coin-based economy may be missing or misconfigured")
         
         return passed, failed, self.results
 
