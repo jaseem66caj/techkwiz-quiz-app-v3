@@ -13,6 +13,6 @@
   "/page": "/",
   "/privacy/page": "/privacy",
   "/profile/page": "/profile",
-  "/start/page": "/start",
-  "/quiz/[category]/page": "/quiz/[category]"
+  "/quiz/[category]/page": "/quiz/[category]",
+  "/start/page": "/start"
 }
