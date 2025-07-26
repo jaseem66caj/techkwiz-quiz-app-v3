@@ -1,24 +1,18 @@
 'use client'
 
-import { Metadata } from 'next'
-import { seoConfig, generateStructuredData } from '../utils/seo'
-import Home from './HomeClient'
-
-export const metadata: Metadata = seoConfig.homepage
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { useApp } from './providers'
+import { Navigation } from '../components/Navigation'
+import { AdBanner } from '../components/AdBanner'
+import { QuizInterface } from '../components/QuizInterface'
+import { FunFact } from '../components/FunFact'
+import { Features } from '../components/Features'
+import { AuthModal } from '../components/AuthModal'
+import { RewardPopup } from '../components/RewardPopup'
 
 export default function HomePage() {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData.quiz("Technology", 50))
-        }}
-      />
-      <Home />
-    </>
-  )
-}
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -156,31 +150,31 @@ export default function HomePage() {
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
           <Navigation />
           
-          <main className="flex-1 flex flex-col justify-center p-4 w-full max-w-sm sm:max-w-md lg:max-w-4xl mx-auto">
+          <main className="flex-1 flex flex-col justify-center p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
             {/* Welcome Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-8"
+              className="text-center mb-6 sm:mb-8"
             >
-              <div className="text-6xl mb-6">🚀</div>
-              <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
+              <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">🚀</div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 px-2">
                 Welcome to <span className="text-orange-400">Tech</span>Kwiz
               </h1>
-              <p className="text-blue-200 text-lg md:text-xl mb-6">
+              <p className="text-blue-200 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 px-2">
                 Test your tech knowledge, earn coins, and compete with others!
               </p>
               
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4 px-2">
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-xl text-lg transition-colors"
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-base sm:text-lg transition-colors"
                 >
                   🎯 Start Your Quiz Journey
                 </button>
                 
-                <p className="text-blue-300 text-sm">
+                <p className="text-blue-300 text-xs sm:text-sm">
                   💡 Demo Mode: Use any email and password to get started
                 </p>
               </div>
@@ -191,22 +185,22 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 px-2"
             >
-              <div className="glass-effect p-4 rounded-xl text-center">
-                <div className="text-3xl mb-2">📚</div>
+              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
+                <div className="text-2xl sm:text-3xl mb-2">📚</div>
                 <h3 className="text-white font-semibold text-sm">8 Categories</h3>
                 <p className="text-blue-200 text-xs">Programming, AI, Web Dev & more</p>
               </div>
               
-              <div className="glass-effect p-4 rounded-xl text-center">
-                <div className="text-3xl mb-2">🪙</div>
+              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
+                <div className="text-2xl sm:text-3xl mb-2">🪙</div>
                 <h3 className="text-white font-semibold text-sm">Earn Coins</h3>
                 <p className="text-blue-200 text-xs">500 starting coins for new users</p>
               </div>
               
-              <div className="glass-effect p-4 rounded-xl text-center">
-                <div className="text-3xl mb-2">🏆</div>
+              <div className="glass-effect p-3 sm:p-4 rounded-xl text-center">
+                <div className="text-2xl sm:text-3xl mb-2">🏆</div>
                 <h3 className="text-white font-semibold text-sm">Compete</h3>
                 <p className="text-blue-200 text-xs">Leaderboards & achievements</p>
               </div>
@@ -217,9 +211,9 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="glass-effect p-6 rounded-xl mb-6"
+              className="glass-effect p-4 sm:p-6 rounded-xl mb-4 sm:mb-6 mx-2"
             >
-              <h3 className="text-white font-semibold text-center mb-4">
+              <h3 className="text-white font-semibold text-center mb-3 sm:mb-4">
                 📝 Sample Question
               </h3>
               <QuizInterface
@@ -234,7 +228,7 @@ export default function HomePage() {
             <AdBanner 
               adSlot="9876543210"
               adFormat="rectangle"
-              className="mt-6"
+              className="mt-4 sm:mt-6 mx-2"
             />
           </main>
         </div>
@@ -254,22 +248,22 @@ export default function HomePage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
-        <main className="flex-1 flex flex-col justify-center p-4 w-full max-w-sm sm:max-w-md lg:max-w-4xl mx-auto">
+        <main className="flex-1 flex flex-col justify-center p-3 sm:p-4 w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-4xl mx-auto">
           {/* AdSense Banner - Mobile Optimized */}
           <AdBanner 
             adSlot="1234567890"
             adFormat="auto"
-            className="mb-4 md:mb-6"
+            className="mb-3 sm:mb-4 md:mb-6 mx-2"
           />
           
-          <div className="flex flex-col items-center space-y-4 md:space-y-6">
+          <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
             {!quizCompleted ? (
               <>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="w-full"
+                  className="w-full px-2"
                 >
                   <QuizInterface
                     questionData={quickStartQuiz[currentQuestion]}
@@ -287,10 +281,10 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="w-full mt-6"
+                  className="w-full mt-4 sm:mt-6 px-2"
                 >
-                  <div className="glass-effect p-4 rounded-xl">
-                    <h3 className="text-white font-semibold text-center mb-3 text-sm">
+                  <div className="glass-effect p-3 sm:p-4 rounded-xl">
+                    <h3 className="text-white font-semibold text-center mb-2 sm:mb-3 text-sm">
                       🚀 Ready for More?
                     </h3>
                     <button
@@ -307,16 +301,16 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="glass-effect p-6 md:p-8 rounded-2xl text-center w-full"
+                className="glass-effect p-4 sm:p-6 md:p-8 rounded-2xl text-center w-full mx-2"
               >
-                <div className="text-4xl mb-4">🎉</div>
-                <h2 className="text-white text-xl md:text-2xl font-bold mb-4">
+                <div className="text-3xl sm:text-4xl mb-4">🎉</div>
+                <h2 className="text-white text-lg sm:text-xl md:text-2xl font-bold mb-4">
                   Quick Start Complete!
                 </h2>
                 <p className="text-blue-200 mb-2">
                   You scored {score} out of {quickStartQuiz.length}
                 </p>
-                <p className="text-orange-400 text-lg font-semibold mb-4">
+                <p className="text-orange-400 text-base sm:text-lg font-semibold mb-4">
                   Earned: {score * 100} coins
                 </p>
                 <div className="text-blue-200 text-sm mb-4">
@@ -345,7 +339,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-8 md:mt-12"
+            className="mt-6 sm:mt-8 md:mt-12 px-2"
           >
             <Features />
           </motion.div>
@@ -354,7 +348,7 @@ export default function HomePage() {
           <AdBanner 
             adSlot="9876543210"
             adFormat="rectangle"
-            className="mt-6 md:mt-8"
+            className="mt-4 sm:mt-6 md:mt-8 mx-2"
           />
         </main>
       </div>
@@ -369,4 +363,5 @@ export default function HomePage() {
       />
     </>
   )
+}
 }
