@@ -1,11 +1,11 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/robots.txt/route": "app/robots.txt/route.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
   "/about/page": "app/about/page.js",
   "/admin/page": "app/admin/page.js",
-  "/admin/setup/page": "app/admin/setup/page.js",
   "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/setup/page": "app/admin/setup/page.js",
   "/leaderboard/page": "app/leaderboard/page.js",
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",

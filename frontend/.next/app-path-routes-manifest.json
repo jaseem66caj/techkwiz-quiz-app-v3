@@ -1,0 +1,15 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/about/page": "/about",
+  "/admin/page": "/admin",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/admin/setup/page": "/admin/setup",
+  "/leaderboard/page": "/leaderboard",
+  "/page": "/",
+  "/privacy/page": "/privacy",
+  "/profile/page": "/profile",
+  "/quiz/[category]/page": "/quiz/[category]",
+  "/start/page": "/start"
+}
