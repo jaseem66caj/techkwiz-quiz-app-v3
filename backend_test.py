@@ -282,10 +282,27 @@ class BackendTester:
     def test_admin_authentication(self):
         """Test admin authentication flow"""
         try:
-            # Try common admin credentials first
+            # Try the test admin credentials we created
+            test_credentials = {
+                "username": "testadmin",
+                "password": "testpass123"
+            }
+            
+            login_response = requests.post(
+                f"{self.api_base}/admin/login",
+                json=test_credentials,
+                timeout=10
+            )
+            
+            if login_response.status_code == 200:
+                token_data = login_response.json()
+                if 'access_token' in token_data:
+                    self.log_result("Admin Authentication", True, f"Admin login successful with {test_credentials['username']}")
+                    return True, token_data['access_token']
+            
+            # If test credentials don't work, try common admin credentials
             common_credentials = [
                 {"username": "admin", "password": "admin123"},
-                {"username": "testadmin", "password": "testpassword123"},
                 {"username": "techkwiz_admin", "password": "admin123456"},
                 {"username": "admin", "password": "password123"},
                 {"username": "admin", "password": "admin"},
@@ -305,34 +322,7 @@ class BackendTester:
                         self.log_result("Admin Authentication", True, f"Admin login successful with {creds['username']}")
                         return True, token_data['access_token']
             
-            # If no existing credentials work, try to setup a new admin
-            # (This will fail if admin already exists, but we'll try anyway)
-            setup_data = {
-                "username": "test_admin_new",
-                "password": "test_password_123"
-            }
-            
-            setup_response = requests.post(
-                f"{self.api_base}/admin/setup",
-                json=setup_data,
-                timeout=10
-            )
-            
-            if setup_response.status_code == 200:
-                # Now try to login with the new credentials
-                login_response = requests.post(
-                    f"{self.api_base}/admin/login",
-                    json=setup_data,
-                    timeout=10
-                )
-                
-                if login_response.status_code == 200:
-                    token_data = login_response.json()
-                    if 'access_token' in token_data:
-                        self.log_result("Admin Authentication", True, "New admin setup and login successful")
-                        return True, token_data['access_token']
-            
-            self.log_result("Admin Authentication", False, "Could not authenticate with any credentials or setup new admin")
+            self.log_result("Admin Authentication", False, "Could not authenticate with any credentials")
             return False, None
                 
         except Exception as e:
