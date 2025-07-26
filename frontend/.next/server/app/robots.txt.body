@@ -1,0 +1,21 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /admin/
+Disallow: /*?*
+
+User-Agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /admin/
+
+User-Agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /admin/
+
+Host: https://techkwiz.com
+Sitemap: https://techkwiz.com/sitemap.xml
