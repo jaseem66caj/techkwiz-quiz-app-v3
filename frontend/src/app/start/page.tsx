@@ -301,7 +301,7 @@ export default function StartPage() {
                       <div className="flex items-center space-x-4 text-base mb-2">
                         <div className="text-yellow-400 font-bold flex items-center">
                           <span className="mr-2 text-xl">🏆</span>
-                          <span className="text-2xl">{category.prizePool}</span>
+                          <span className="text-2xl">{category.prize_pool}</span>
                         </div>
                         
                         <div className="text-blue-200 text-base">
