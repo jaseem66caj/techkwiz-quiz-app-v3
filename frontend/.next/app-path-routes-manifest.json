@@ -6,7 +6,7 @@
   "/leaderboard/page": "/leaderboard",
   "/page": "/",
   "/privacy/page": "/privacy",
-  "/quiz/[category]/page": "/quiz/[category]",
   "/profile/page": "/profile",
+  "/quiz/[category]/page": "/quiz/[category]",
   "/start/page": "/start"
 }
