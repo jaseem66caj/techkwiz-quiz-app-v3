@@ -5,10 +5,14 @@ import { motion } from 'framer-motion'
 
 interface QuizInterfaceProps {
   questionData: {
-    question: string
-    options: string[]
-    correctAnswer: number
-    funFact: string
+    id: string;
+    question: string;
+    options: string[];
+    correct_answer: number;
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    fun_fact: string;
+    category: string;
+    subcategory: string;
   }
   currentQuestion: number
   totalQuestions: number
