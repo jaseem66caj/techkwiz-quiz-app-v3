@@ -249,15 +249,6 @@ export default function StartPage() {
                 <p className="text-sm sm:text-base md:text-lg text-blue-300">
                   {categories.length} categories • 50+ questions • Multiple levels
                 </p>
-                
-                {/* Social Sharing for Categories */}
-                <div className="mt-4">
-                  <SocialShare 
-                    title="🚀 Explore amazing tech quizzes on TechKwiz!"
-                    hashtags={['TechKwiz', 'Programming', 'Learning', 'TechSkills']}
-                    className="inline-block"
-                  />
-                </div>
               </motion.div>
 
               {/* Top Category Page Ad */}
