@@ -129,18 +129,29 @@ export function AdBanner({
   if (typeof window === 'undefined' || process.env.NODE_ENV === 'development') {
     return (
       <div 
-        className={`bg-gradient-to-br from-gray-900/40 via-blue-900/30 to-purple-900/40 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm border border-white/5 shadow-lg ${className}`}
+        className={`relative rounded-lg flex flex-col items-center justify-center text-blue-200 text-sm overflow-hidden ${className}`}
         style={{
           ...getAdStyles(),
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.4) 0%, rgba(30, 58, 138, 0.3) 50%, rgba(88, 28, 135, 0.4) 100%)',
-          backdropFilter: 'blur(10px)',
-          borderColor: 'rgba(255, 255, 255, 0.05)'
+          background: 'transparent',
+          border: '1px solid rgba(59, 130, 246, 0.1)',
+          minHeight: getAdStyles().minHeight,
+          position: 'relative'
         }}
       >
-        <div className="text-lg mb-1 text-yellow-400/80">📢</div>
-        <div className="font-semibold text-white/90 text-xs">Advertisement</div>
-        <div className="text-xs opacity-60 text-blue-300/70">{adType.toUpperCase()}</div>
-        <div className="text-xs opacity-40 text-gray-400/60">Slot: {adSlot}</div>
+        {/* Subtle background overlay */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 50%, rgba(29, 78, 216, 0.1) 100%)'
+          }}
+        />
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full">
+          <div className="text-base mb-1 text-blue-400/60">📢</div>
+          <div className="font-medium text-white/50 text-xs">Advertisement</div>
+          <div className="text-xs opacity-40 text-blue-300/40 mt-1">{adType.toUpperCase()}</div>
+        </div>
       </div>
     )
   }
