@@ -82,7 +82,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Security concepts and practices',
     subcategories: ['Network Security', 'Ethical Hacking', 'Cryptography'],
     entry_fee: 140,
-    prizePool: 2400,
+    prize_pool: 2400,
   },
   cloud: {
     id: 'cloud',
