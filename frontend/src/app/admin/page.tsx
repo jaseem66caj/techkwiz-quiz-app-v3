@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function AdminLogin() {
   const { login, isAuthenticated } = useAdmin();
