@@ -117,7 +117,7 @@ export default function ScriptManagement() {
   const commonScriptTemplates = [
     {
       name: 'Google Analytics 4',
-      placement: 'header' as const,
+      placement: 'header' as 'header' | 'footer',
       code: `<!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
 <script>
@@ -129,7 +129,7 @@ export default function ScriptManagement() {
     },
     {
       name: 'Facebook Pixel',
-      placement: 'header' as const,
+      placement: 'header' as 'header' | 'footer',
       code: `<!-- Facebook Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -149,7 +149,7 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
     },
     {
       name: 'Google Tag Manager',
-      placement: 'header' as const,
+      placement: 'header' as 'header' | 'footer',
       code: `<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
