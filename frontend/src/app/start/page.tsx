@@ -272,12 +272,12 @@ export default function StartPage() {
                 ))}
               </div>
 
-              {/* Categories - Qureka Style Compact Cards */}
+              {/* Categories - Compact Qureka Style Cards */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8 }}
-                className="space-y-3 px-2"
+                className="space-y-2 px-2"
               >
                 {filteredCategories.map((category, index) => (
                   <motion.div
@@ -285,41 +285,41 @@ export default function StartPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="glass-effect rounded-2xl p-4 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
+                    className="glass-effect rounded-xl p-3 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
                     onClick={() => handleCategorySelect(category.id)}
                   >
                     <div className="flex items-center justify-between">
                       {/* Left Section - Icon and Basic Info */}
                       <div className="flex items-center space-x-3 flex-1 min-w-0">
                         {/* Category Icon */}
-                        <div className="text-3xl sm:text-4xl flex-shrink-0">
+                        <div className="text-2xl sm:text-3xl flex-shrink-0">
                           {category.icon}
                         </div>
                         
                         {/* Category Details */}
                         <div className="flex-1 min-w-0">
                           {/* Category Name */}
-                          <div className="mb-2">
-                            <h3 className="text-white font-bold text-base sm:text-lg md:text-xl leading-tight">
+                          <div className="mb-1">
+                            <h3 className="text-white font-bold text-sm sm:text-base leading-tight">
                               {category.name}
                             </h3>
                           </div>
                           
                           {/* Prize and Entry Fee */}
-                          <div className="flex items-center space-x-3 text-sm">
+                          <div className="flex items-center space-x-2 text-xs sm:text-sm">
                             <div className="text-yellow-400 font-bold flex items-center">
-                              <span className="mr-1 text-base">🏆</span>
-                              <span className="text-base sm:text-lg">{category.prize_pool}</span>
+                              <span className="mr-1 text-sm">🏆</span>
+                              <span className="text-sm">{category.prize_pool}</span>
                             </div>
                             
-                            <div className="text-blue-200 text-xs sm:text-sm">
+                            <div className="text-blue-200 text-xs">
                               Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
                             </div>
                           </div>
                           
                           {/* Winner Announcement with Random Timer */}
                           <div className="text-gray-400 text-xs mt-1">
-                            Winner announcement: {(() => {
+                            Winner: {(() => {
                               // Generate random timer for each category
                               const timers = ['01:23:45', '02:15:30', '00:45:12', '03:22:18', '01:55:42', '00:28:36', '02:33:29', '01:08:54', '00:52:17'];
                               const randomIndex = Math.abs(category.name.length + category.id.length) % timers.length;
@@ -330,15 +330,15 @@ export default function StartPage() {
                       </div>
 
                       {/* Right Section - Live Badge and Action Button */}
-                      <div className="flex-shrink-0 ml-3 flex flex-col items-end space-y-2">
+                      <div className="flex-shrink-0 ml-2 flex flex-col items-end space-y-1">
                         {/* Live Badge - Static on Right */}
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                        <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
                           Live
                         </span>
                         
                         {/* Action Button - Always PLAY */}
                         <button
-                          className="px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                          className="px-2 sm:px-3 py-1.5 rounded-lg font-bold text-xs transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleCategorySelect(category.id)
@@ -350,18 +350,18 @@ export default function StartPage() {
                     </div>
 
                     {/* Topics - Only show on larger screens and collapse for mobile */}
-                    <div className="hidden sm:block mt-3 pt-3 border-t border-white/10">
-                      <div className="flex flex-wrap gap-2">
+                    <div className="hidden sm:block mt-2 pt-2 border-t border-white/10">
+                      <div className="flex flex-wrap gap-1">
                         {category.subcategories.slice(0, 3).map((topic, idx) => (
                           <span
                             key={idx}
-                            className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs"
+                            className="bg-white/10 text-blue-200 px-2 py-0.5 rounded text-xs"
                           >
                             {topic}
                           </span>
                         ))}
                         {category.subcategories.length > 3 && (
-                          <span className="bg-white/10 text-blue-200 px-2 py-1 rounded text-xs">
+                          <span className="bg-white/10 text-blue-200 px-2 py-0.5 rounded text-xs">
                             +{category.subcategories.length - 3} more
                           </span>
                         )}
