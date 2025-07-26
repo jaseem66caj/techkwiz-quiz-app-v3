@@ -298,14 +298,11 @@ export default function StartPage() {
                         
                         {/* Category Details */}
                         <div className="flex-1 min-w-0">
-                          {/* Category Name with Live Badge */}
-                          <div className="flex items-center space-x-3 mb-2">
+                          {/* Category Name */}
+                          <div className="mb-2">
                             <h3 className="text-white font-bold text-base sm:text-lg md:text-xl leading-tight">
                               {category.name}
                             </h3>
-                            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0">
-                              Live
-                            </span>
                           </div>
                           
                           {/* Prize and Entry Fee */}
@@ -320,15 +317,26 @@ export default function StartPage() {
                             </div>
                           </div>
                           
-                          {/* Winner Announcement */}
+                          {/* Winner Announcement with Random Timer */}
                           <div className="text-gray-400 text-xs mt-1">
-                            Winner announcement: 00:00:00
+                            Winner announcement: {(() => {
+                              // Generate random timer for each category
+                              const timers = ['01:23:45', '02:15:30', '00:45:12', '03:22:18', '01:55:42', '00:28:36', '02:33:29', '01:08:54', '00:52:17'];
+                              const randomIndex = Math.abs(category.name.length + category.id.length) % timers.length;
+                              return timers[randomIndex];
+                            })()}
                           </div>
                         </div>
                       </div>
 
-                      {/* Right Section - Action Button */}
-                      <div className="flex-shrink-0 ml-3">
+                      {/* Right Section - Live Badge and Action Button */}
+                      <div className="flex-shrink-0 ml-3 flex flex-col items-end space-y-2">
+                        {/* Live Badge - Static on Right */}
+                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                          Live
+                        </span>
+                        
+                        {/* Action Button */}
                         <button
                           className={`px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                             (state.user?.coins || 0) >= category.entry_fee
