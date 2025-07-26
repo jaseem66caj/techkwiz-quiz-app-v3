@@ -63,9 +63,10 @@ async def setup_admin_user(admin_data: AdminLogin):
             detail="Admin user already exists"
         )
     
-    # Create the admin user
+    # Create the admin user with default email
     admin_user = AdminUser(
         username=admin_data.username,
+        email="jaseem@adops.in",  # Default admin email
         password_hash=hash_password(admin_data.password)
     )
     
