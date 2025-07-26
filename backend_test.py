@@ -167,20 +167,24 @@ class BackendTester:
     def test_api_route_prefix(self):
         """Test that API routes are properly prefixed with /api"""
         try:
-            # Test that root without /api prefix returns 404 or different response
-            response = requests.get(f"{self.backend_url}/", timeout=10)
+            # Test that root serves frontend (Next.js)
+            root_response = requests.get(f"{self.backend_url}/", timeout=10)
             
-            # The root should either be 404 or different from /api/
+            # Test that /api/ serves backend API
             api_response = requests.get(f"{self.api_base}/", timeout=10)
             
             if api_response.status_code == 200:
                 api_data = api_response.json()
                 
-                if response.status_code == 404 or (response.status_code == 200 and response.json() != api_data):
-                    self.log_result("API Route Prefix", True, "API routes properly prefixed with /api")
+                # Root should serve HTML (frontend), API should serve JSON
+                if (root_response.status_code == 200 and 
+                    'text/html' in root_response.headers.get('content-type', '') and
+                    api_data.get('message') == 'Hello World'):
+                    
+                    self.log_result("API Route Prefix", True, "API routes properly prefixed - frontend at /, API at /api")
                     return True
                 else:
-                    self.log_result("API Route Prefix", False, "API routes not properly isolated to /api prefix")
+                    self.log_result("API Route Prefix", False, "Route separation not working correctly")
                     return False
             else:
                 self.log_result("API Route Prefix", False, "API endpoint not responding")
