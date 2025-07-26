@@ -8,13 +8,29 @@ from enum import Enum
 class AdminUser(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
+    email: str = "jaseem@adops.in"  # Default admin email
     password_hash: str
+    reset_token: Optional[str] = None
+    reset_token_expires: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     last_login: Optional[datetime] = None
 
 class AdminLogin(BaseModel):
     username: str
     password: str
+
+class AdminPasswordReset(BaseModel):
+    email: str
+
+class AdminPasswordUpdate(BaseModel):
+    token: str
+    new_password: str
+
+class AdminProfileUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    current_password: str
+    new_password: Optional[str] = None
 
 class AdminToken(BaseModel):
     access_token: str
