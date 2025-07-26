@@ -100,7 +100,7 @@ export default function StartPage() {
       const guestUser = {
         name: 'Guest User',
         email: 'guest@techkwiz.com',
-        coins: 500,
+        coins: 0, // Guests start with 0 coins to trigger rewarded ads
         quizHistory: [],
         achievements: [],
         joinDate: new Date().toISOString()
@@ -109,7 +109,7 @@ export default function StartPage() {
       
       // Wait for state update then check coins
       setTimeout(() => {
-        const currentCoins = 500 // We know guest starts with 500
+        const currentCoins = 0 // Guests start with 0 coins
         if (currentCoins >= category.entry_fee) {
           router.push(`/quiz/${categoryId}`)
         } else {
