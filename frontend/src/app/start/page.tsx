@@ -24,7 +24,25 @@ export default function StartPage() {
   // Convert the categories object to array
   const categories = Object.values(QUIZ_CATEGORIES)
 
-  const categoryTabs = [
+  useEffect(() => {
+    // Set page title and meta description for SEO
+    document.title = seoConfig.categories.title
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', seoConfig.categories.description)
+    }
+    
+    // Add keywords meta tag
+    let metaKeywords = document.querySelector('meta[name="keywords"]')
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta')
+      metaKeywords.setAttribute('name', 'keywords')
+      document.head.appendChild(metaKeywords)
+    }
+    metaKeywords.setAttribute('content', seoConfig.categories.keywords)
+  }, [])
     { id: 'ALL', name: 'All', count: categories.length },
     { id: 'PROGRAMMING', name: 'Programming', count: 2 },
     { id: 'AI', name: 'AI & ML', count: 1 },
