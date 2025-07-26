@@ -17,6 +17,14 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Ensure smooth scrolling and proper mobile viewport handling */
+@media screen and (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}
+
 body {
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   background-attachment: fixed;
