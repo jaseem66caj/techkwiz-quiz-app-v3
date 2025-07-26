@@ -7,6 +7,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '375px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+      },
       colors: {
         primary: {
           50: '#eff6ff',
@@ -29,6 +37,12 @@ module.exports = {
         'fade-in': 'fadeIn 0.5s ease-in',
         'slide-up': 'slideUp 0.3s ease-out',
         'bounce-in': 'bounceIn 0.6s ease-out',
+      },
+      maxWidth: {
+        'xs': '320px',
+        'sm': '384px',
+        'md': '448px',
+        'lg': '512px',
       },
     },
   },
