@@ -76,7 +76,7 @@ export function CategoryCard({ category, onSelect, userCoins }: CategoryCardProp
           <span className="text-blue-200 text-sm">Prize Pool:</span>
           <span className="text-green-400 font-semibold flex items-center">
             <span className="text-lg mr-1">🏆</span>
-            {category.prizePool}
+            {category.prize_pool}
           </span>
         </div>
       </div>
