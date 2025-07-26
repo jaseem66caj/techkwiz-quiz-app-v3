@@ -52,10 +52,10 @@ export function Navigation() {
     <>
       <nav className="glass-effect border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 md:h-16">
+          <div className="flex items-center justify-between h-16 sm:h-16 md:h-18">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="text-lg md:text-2xl font-bold text-white">
+              <div className="text-xl sm:text-2xl md:text-2xl font-bold text-white">
                 <span className="text-orange-400">Tech</span>Kwiz
               </div>
             </Link>
