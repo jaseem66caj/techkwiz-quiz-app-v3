@@ -33,10 +33,14 @@ export default function HomePage() {
       funFact: "JavaScript was created in just 10 days by Brendan Eich at Netscape in 1995."
     },
     {
+      id: 'quick-1',
       question: "What does 'AI' stand for in technology?",
       options: ["Advanced Intelligence", "Artificial Intelligence", "Automated Intelligence", "Algorithmic Intelligence"],
-      correctAnswer: 1,
-      funFact: "The term 'Artificial Intelligence' was coined by John McCarthy in 1956 at the Dartmouth Conference."
+      correct_answer: 1,
+      difficulty: 'beginner' as const,
+      fun_fact: "The term 'Artificial Intelligence' was coined by John McCarthy in 1956 at the Dartmouth Conference.",
+      category: 'ai',
+      subcategory: 'Fundamentals'
     }
   ]
 
