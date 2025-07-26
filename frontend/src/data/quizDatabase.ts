@@ -31,7 +31,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-blue-500 to-purple-600',
     description: 'Test your coding knowledge',
     subcategories: ['JavaScript', 'Python', 'Java', 'C++', 'React', 'Node.js'],
-    entryFee: 100,
+    entry_fee: 100,
     prizePool: 2000,
   },
   ai: {
