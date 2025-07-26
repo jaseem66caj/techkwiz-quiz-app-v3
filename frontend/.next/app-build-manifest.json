@@ -39,13 +39,6 @@
       "static/chunks/506-8f7aca5c729851fc.js",
       "static/chunks/app/about/page-9678c3b78b19d631.js"
     ],
-    "/admin/direct/page": [
-      "static/chunks/webpack-787aa585fbd14230.js",
-      "static/chunks/4bd1b696-2385f465b218746f.js",
-      "static/chunks/964-e0ba4b8b29a30c80.js",
-      "static/chunks/main-app-a6eb918725b8032c.js",
-      "static/chunks/app/admin/direct/page-1deb9f6550de6f77.js"
-    ],
     "/admin/dashboard/page": [
       "static/chunks/webpack-787aa585fbd14230.js",
       "static/chunks/4bd1b696-2385f465b218746f.js",
@@ -53,6 +46,13 @@
       "static/chunks/main-app-a6eb918725b8032c.js",
       "static/chunks/463-2b50bffd44d0f786.js",
       "static/chunks/app/admin/dashboard/page-9873341f1d78d707.js"
+    ],
+    "/admin/direct/page": [
+      "static/chunks/webpack-787aa585fbd14230.js",
+      "static/chunks/4bd1b696-2385f465b218746f.js",
+      "static/chunks/964-e0ba4b8b29a30c80.js",
+      "static/chunks/main-app-a6eb918725b8032c.js",
+      "static/chunks/app/admin/direct/page-1deb9f6550de6f77.js"
     ],
     "/admin/forgot-password/page": [
       "static/chunks/webpack-787aa585fbd14230.js",
@@ -81,6 +81,14 @@
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/app/admin/reset-password/page-0f518326465dc8ac.js"
     ],
+    "/admin/setup/page": [
+      "static/chunks/webpack-787aa585fbd14230.js",
+      "static/chunks/4bd1b696-2385f465b218746f.js",
+      "static/chunks/964-e0ba4b8b29a30c80.js",
+      "static/chunks/main-app-a6eb918725b8032c.js",
+      "static/chunks/463-2b50bffd44d0f786.js",
+      "static/chunks/app/admin/setup/page-11d61afd59adfa7c.js"
+    ],
     "/leaderboard/page": [
       "static/chunks/webpack-787aa585fbd14230.js",
       "static/chunks/4bd1b696-2385f465b218746f.js",
@@ -90,14 +98,6 @@
       "static/chunks/874-437a265a67d6cfee.js",
       "static/chunks/506-8f7aca5c729851fc.js",
       "static/chunks/app/leaderboard/page-f7029a3189138655.js"
-    ],
-    "/admin/setup/page": [
-      "static/chunks/webpack-787aa585fbd14230.js",
-      "static/chunks/4bd1b696-2385f465b218746f.js",
-      "static/chunks/964-e0ba4b8b29a30c80.js",
-      "static/chunks/main-app-a6eb918725b8032c.js",
-      "static/chunks/463-2b50bffd44d0f786.js",
-      "static/chunks/app/admin/setup/page-11d61afd59adfa7c.js"
     ],
     "/page": [
       "static/chunks/webpack-787aa585fbd14230.js",
