@@ -26,6 +26,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+    
     if (storedToken && storedUsername) {
       // Verify token with backend
       verifyToken(storedToken, storedUsername);
@@ -36,7 +38,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const verifyToken = async (token: string, username: string) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/verify`, {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'https://e1fa722c-59e7-417e-8da9-1b5ce19cb430.preview.emergentagent.com';
+      const response = await fetch(`${backendUrl}/api/admin/verify`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
