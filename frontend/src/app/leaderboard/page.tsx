@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
 import { AuthModal } from '../../components/AuthModal'
+import { seoConfig } from '../../utils/seo'
 
 export default function LeaderboardPage() {
   const { state, dispatch } = useApp()
