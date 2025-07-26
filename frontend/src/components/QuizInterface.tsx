@@ -60,13 +60,13 @@ export function QuizInterface({
           {questionData.question}
         </h3>
         
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {questionData.options.map((option, index) => (
             <button
               key={index}
               onClick={() => onAnswerSelect(index)}
               disabled={selectedAnswer !== null}
-              className={`quiz-option text-sm sm:text-base py-4 px-4 ${selectedAnswer === index ? 'selected' : ''} ${
+              className={`quiz-option text-sm sm:text-base py-3 px-4 ${selectedAnswer === index ? 'selected' : ''} ${
                 selectedAnswer !== null && index === questionData.correct_answer ? 'correct' : ''
               } ${
                 selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer ? 'incorrect' : ''
