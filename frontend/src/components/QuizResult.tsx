@@ -267,14 +267,6 @@ export function QuizResult({
       >
         <ResponsiveAd adSlot="quiz-result-bottom" className="mb-4" />
       </motion.div>
-            }
-          }}
-          className="text-blue-300 hover:text-blue-100 transition-colors text-sm flex items-center space-x-1 mx-auto hover:scale-105 transition-transform"
-        >
-          <span>📤</span>
-          <span>Share Result</span>
-        </button>
-      </motion.div>
     </motion.div>
   )
 }
