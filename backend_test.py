@@ -582,7 +582,137 @@ class BackendTester:
             self.log_result("Updated Models Integration", False, f"Models integration test failed: {str(e)}")
             return False
     
-    def test_backend_integration_protection(self, token):
+    def test_forgot_password_system(self):
+        """Test forgot password functionality with jaseem@adops.in"""
+        try:
+            # Test POST /api/admin/forgot-password
+            reset_request = {
+                "email": "jaseem@adops.in"
+            }
+            
+            response = requests.post(
+                f"{self.api_base}/admin/forgot-password",
+                json=reset_request,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                expected_message = "If an account with that email exists, a password reset link has been sent."
+                
+                if response_data.get("message") == expected_message:
+                    self.log_result("Forgot Password Request", True, "Password reset request processed correctly for jaseem@adops.in")
+                    return True
+                else:
+                    self.log_result("Forgot Password Request", False, f"Unexpected response message: {response_data}")
+                    return False
+            else:
+                self.log_result("Forgot Password Request", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_result("Forgot Password Request", False, f"Forgot password test failed: {str(e)}")
+            return False
+    
+    def test_profile_management(self, token):
+        """Test admin profile management functionality"""
+        if not token:
+            self.log_result("Profile Management", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # Test profile update with current password verification
+            profile_update = {
+                "username": "admin_updated",
+                "email": "jaseem@adops.in",
+                "current_password": "TechKwiz2025!",
+                "new_password": "NewTechKwiz2025!"
+            }
+            
+            response = requests.put(
+                f"{self.api_base}/admin/profile",
+                json=profile_update,
+                headers=headers,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                updated_profile = response.json()
+                
+                # Verify updates were applied
+                if (updated_profile.get("username") == profile_update["username"] and 
+                    updated_profile.get("email") == profile_update["email"]):
+                    
+                    # Test login with new credentials to verify password change
+                    new_login_data = {
+                        "username": "admin_updated",
+                        "password": "NewTechKwiz2025!"
+                    }
+                    
+                    login_response = requests.post(
+                        f"{self.api_base}/admin/login",
+                        json=new_login_data,
+                        timeout=10
+                    )
+                    
+                    if login_response.status_code == 200:
+                        self.log_result("Profile Management", True, "Profile update successful - username, email, and password updated correctly")
+                        
+                        # Revert changes for other tests
+                        revert_update = {
+                            "username": "admin",
+                            "email": "jaseem@adops.in", 
+                            "current_password": "NewTechKwiz2025!",
+                            "new_password": "TechKwiz2025!"
+                        }
+                        
+                        new_token = login_response.json().get('access_token')
+                        new_headers = {'Authorization': f'Bearer {new_token}'}
+                        
+                        requests.put(
+                            f"{self.api_base}/admin/profile",
+                            json=revert_update,
+                            headers=new_headers,
+                            timeout=10
+                        )
+                        
+                        return True
+                    else:
+                        self.log_result("Profile Management", False, "Password update verification failed")
+                        return False
+                else:
+                    self.log_result("Profile Management", False, "Profile fields not updated correctly")
+                    return False
+            
+            elif response.status_code == 401:
+                # Test with wrong current password to verify security
+                wrong_password_update = {
+                    "username": "admin_test",
+                    "current_password": "wrong_password"
+                }
+                
+                wrong_response = requests.put(
+                    f"{self.api_base}/admin/profile",
+                    json=wrong_password_update,
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if wrong_response.status_code == 401:
+                    self.log_result("Profile Management", True, "Current password verification working correctly - unauthorized access blocked")
+                    return True
+                else:
+                    self.log_result("Profile Management", False, "Current password verification not working properly")
+                    return False
+            else:
+                self.log_result("Profile Management", False, f"Profile update failed: HTTP {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_result("Profile Management", False, f"Profile management test failed: {str(e)}")
+            return False
         """Test that new endpoints are properly protected with admin authentication"""
         try:
             # Test endpoints without authentication (should fail with 401 or 403)
