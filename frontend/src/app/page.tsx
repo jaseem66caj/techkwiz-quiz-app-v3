@@ -53,7 +53,7 @@ export default function HomePage() {
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
-      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correctAnswer
+      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
       const coinsEarned = 100
       
       if (isCorrect) {
