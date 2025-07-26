@@ -51,7 +51,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-green-500 to-teal-600',
     description: 'Frontend and backend technologies',
     subcategories: ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'APIs'],
-    entryFee: 100,
+    entry_fee: 100,
     prizePool: 2000,
   },
   'mobile-dev': {
