@@ -74,17 +74,28 @@ export default function StartPage() {
         joinDate: new Date().toISOString()
       }
       dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-    }
-
-    // Check if user has enough coins
-    const userCoins = state.user?.coins || 0
-    if (userCoins >= category.entryFee) {
-      // User has enough coins, proceed to quiz
-      router.push(`/quiz/${categoryId}`)
+      
+      // Wait for state update then check coins
+      setTimeout(() => {
+        const currentCoins = 500 // We know guest starts with 500
+        if (currentCoins >= category.entryFee) {
+          router.push(`/quiz/${categoryId}`)
+        } else {
+          setSelectedCategoryForReward(categoryId)
+          setShowRewardPopup(true)
+        }
+      }, 100)
     } else {
-      // Show rewarded ad popup to earn coins
-      setSelectedCategoryForReward(categoryId)
-      setShowRewardPopup(true)
+      // Check if user has enough coins
+      const userCoins = state.user?.coins || 0
+      if (userCoins >= category.entryFee) {
+        // User has enough coins, proceed directly to quiz
+        router.push(`/quiz/${categoryId}`)
+      } else {
+        // Show rewarded ad popup to earn coins
+        setSelectedCategoryForReward(categoryId)
+        setShowRewardPopup(true)
+      }
     }
   }
 
