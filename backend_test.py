@@ -788,7 +788,7 @@ class BackendTester:
             protected_endpoints = [
                 "/admin/categories", "/admin/questions", "/admin/scripts", 
                 "/admin/ad-slots", "/admin/rewarded-config", "/admin/site-config",
-                "/admin/export/quiz-data", "/admin/profile"
+                "/admin/export/quiz-data"
             ]
             
             for endpoint in protected_endpoints:
@@ -796,6 +796,12 @@ class BackendTester:
                 if response.status_code not in [401, 403]:
                     self.log_result("Security - Endpoint Protection", False, f"Endpoint {endpoint} not properly protected")
                     return False
+            
+            # Test profile endpoint specifically (PUT only)
+            profile_response = requests.put(f"{self.api_base}/admin/profile", json={"current_password": "test"}, timeout=10)
+            if profile_response.status_code not in [401, 403]:
+                self.log_result("Security - Profile Endpoint", False, "Profile endpoint not properly protected")
+                return False
             
             # Test 2: Invalid token should be rejected
             invalid_headers = {'Authorization': 'Bearer invalid_token_12345'}
