@@ -23,7 +23,7 @@ export default function ScriptManagement() {
   const [newScript, setNewScript] = useState({
     name: '',
     script_code: '',
-    placement: 'header' as const,
+    placement: 'header' as 'header' | 'footer',
     is_active: true
   });
 
