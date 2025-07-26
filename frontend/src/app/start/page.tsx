@@ -118,7 +118,7 @@ export default function StartPage() {
     } else {
       // Check if user has enough coins
       const userCoins = state.user?.coins || 0
-      if (userCoins >= category.entryFee) {
+      if (userCoins >= category.entry_fee) {
         // User has enough coins, proceed directly to quiz
         router.push(`/quiz/${categoryId}`)
       } else {
@@ -138,7 +138,7 @@ export default function StartPage() {
     // Now check if they can afford the category
     if (selectedCategoryForReward) {
       const category = categories.find(cat => cat.id === selectedCategoryForReward)
-      if (category && (state.user?.coins || 0) + coinsEarned >= category.entryFee) {
+      if (category && (state.user?.coins || 0) + coinsEarned >= category.entry_fee) {
         router.push(`/quiz/${selectedCategoryForReward}`)
       }
     }
