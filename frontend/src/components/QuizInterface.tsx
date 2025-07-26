@@ -76,7 +76,7 @@ export function QuizInterface({
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   )
 }
