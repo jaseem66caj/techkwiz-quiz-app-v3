@@ -410,6 +410,18 @@ backend:
         agent: "main"
         comment: "✅ FURTHER SIZE OPTIMIZATION COMPLETED: User requested answer boxes to be 'slightly more smaller' after initial optimization. Made additional reductions: Desktop: padding 16px→12px, min-height 64px→52px, font-size 16px→15px. Mobile (≤640px): padding 20px→16px, min-height 72px→60px, font-size 18px→16px. Large mobile (400px+): padding 24px→20px, min-height 80px→68px, font-size 20px→18px. Final testing shows: Desktop boxes now measure 430px × 52px (further reduced height). Mobile boxes measure 293px × 60px (further reduced from previous 72px). Answer boxes are now significantly more compact while maintaining excellent readability and touch-friendly interactions. All quiz functionality preserved perfectly. User's request for smaller boxes fully satisfied."
 
+  - task: "0 Coins Implementation Backend Support"
+    implemented: false
+    working: false
+    file: "backend/server.py, backend/models.py, backend/user_routes.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "🚨 CRITICAL BACKEND GAPS IDENTIFIED: Testing reveals that while quiz categories have appropriate entry fees (100-160 coins) and rewarded popup is configured correctly (150 coin reward, show_on_insufficient_coins: true), the core user/coin management system is completely missing from backend. Missing components: 1) User Model with coins field, 2) User registration/authentication endpoints, 3) Guest user creation system, 4) Homepage quiz endpoints, 5) Quiz entry validation that checks user coins vs entry fees, 6) Coin transaction/reward system. Current backend only supports admin dashboard and quiz data management but cannot handle the 0 coins economy flow. Users cannot be created, coins cannot be tracked, and quiz entry cannot be validated. This is a fundamental architecture gap that prevents the 0 coins implementation from functioning."
+
 frontend:
   - task: "Admin Authentication Context"
     implemented: true
