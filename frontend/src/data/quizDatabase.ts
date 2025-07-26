@@ -379,7 +379,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       id: 'web_002',
       question: 'Which HTTP status code indicates success?',
       options: ['404', '500', '200', '302'],
-      correctAnswer: 2,
+      correct_answer: 2,
       difficulty: 'beginner',
       funFact: 'HTTP status codes starting with 2xx indicate success.',
       category: 'web-dev',
