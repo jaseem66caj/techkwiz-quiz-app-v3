@@ -328,6 +328,13 @@ export default function StartPage() {
         onClose={() => setShowAuthModal(false)}
         onSuccess={handleLogin}
       />
+
+      <RewardPopup
+        isOpen={showRewardPopup}
+        onClaim={handleClaimReward}
+        onSkip={handleSkipReward}
+        coinsToEarn={200}
+      />
     </>
   )
 }
