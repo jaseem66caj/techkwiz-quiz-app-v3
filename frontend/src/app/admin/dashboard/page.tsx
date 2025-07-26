@@ -11,6 +11,7 @@ import SiteConfiguration from '../../../components/admin/SiteConfiguration';
 import AdSlotManagement from '../../../components/admin/AdSlotManagement';
 import RewardedPopupConfig from '../../../components/admin/RewardedPopupConfig';
 import DataExport from '../../../components/admin/DataExport';
+import ProfileSettings from '../../../components/admin/ProfileSettings';
 
 export default function AdminDashboard() {
   const { adminUser, logout, loading } = useAdmin();
