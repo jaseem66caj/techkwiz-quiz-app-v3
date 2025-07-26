@@ -1,4 +1,4 @@
-// Test comment to verify services
+// Comprehensive Quiz Database with Original Content
 // 50+ questions across 8 categories with multiple difficulty levels
 
 export interface QuizQuestion {
