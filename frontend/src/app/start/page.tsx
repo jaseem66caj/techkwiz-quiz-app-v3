@@ -88,7 +88,7 @@ export default function StartPage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
         
-        <main className="flex-1 p-4 max-w-md mx-auto md:max-w-4xl">
+        <main className="flex-1 p-4 w-full max-w-sm sm:max-w-md lg:max-w-4xl mx-auto">
           {/* Mobile-First Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
