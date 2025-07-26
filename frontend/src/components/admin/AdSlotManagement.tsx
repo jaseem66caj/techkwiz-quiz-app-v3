@@ -127,13 +127,14 @@ export default function AdSlotManagement() {
   };
 
   const commonAdPlacements = [
-    { id: 'header', name: 'Header Banner' },
-    { id: 'footer', name: 'Footer Banner' },
-    { id: 'sidebar', name: 'Sidebar' },
-    { id: 'between-questions', name: 'Between Quiz Questions' },
-    { id: 'quiz-result', name: 'After Quiz Result' },
-    { id: 'category-page', name: 'Category Page' },
-    { id: 'leaderboard', name: 'Leaderboard Page' }
+    { id: 'header', name: 'Header Banner - Top of the page' },
+    { id: 'sidebar', name: 'Sidebar Right - Right side of the page' },
+    { id: 'between-questions', name: 'Between Questions - Between quiz questions' },
+    { id: 'footer', name: 'Footer Banner - Bottom of the page' },
+    { id: 'popup', name: 'Popup Interstitial - In-game pop-ups' },
+    { id: 'quiz-result', name: 'Quiz Result - After quiz completion' },
+    { id: 'category-top', name: 'Category Page Top - Top of category page' },
+    { id: 'category-bottom', name: 'Category Page Bottom - Bottom of category page' }
   ];
 
   const adTypeExamples = {
