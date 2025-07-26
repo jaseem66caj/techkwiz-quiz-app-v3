@@ -206,7 +206,7 @@ export default function QuizPage({ params }: QuizPageProps) {
     if (!categoryInfo) return
     
     const config = DIFFICULTY_CONFIG[selectedDifficulty]
-    const requiredCoins = categoryInfo.entryFee * (selectedDifficulty === 'advanced' ? 2 : selectedDifficulty === 'intermediate' ? 1.5 : 1)
+    const requiredCoins = categoryInfo.entry_fee * (selectedDifficulty === 'advanced' ? 2 : selectedDifficulty === 'intermediate' ? 1.5 : 1)
     
     if (state.user.coins >= requiredCoins) {
       setDifficulty(selectedDifficulty)
