@@ -233,51 +233,45 @@ export default function StartPage() {
       {/* Fortune Cookie Feature */}
       <FortuneCookie />
       
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      <div className="min-h-screen bg-transparent">
         <Navigation />
         
-        {/* Header Banner Ad */}
-        <HeaderBannerAd className="mt-4" />
-        
-        <main className="flex-1 p-3 sm:p-4 w-full mx-auto">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Main Content */}
-            <div className="flex-1">
-              {/* Mobile-First Header */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-4 px-2"
+        <main className="px-4 py-4">
+          {/* Mobile-web Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6"
+          >
+            <h1 className="text-2xl font-bold text-white mb-2">
+              Choose Category
+            </h1>
+            <p className="text-blue-200 text-sm mb-1">
+              Select a category to start your quiz journey
+            </p>
+            <p className="text-blue-300 text-xs">
+              {categories.length} categories • 50+ questions • Multiple levels
+            </p>
+          </motion.div>
+
+          {/* Category Tabs - Mobile-web style */}
+          <div className="flex overflow-x-auto gap-2 mb-4 pb-2 scrollbar-hide">
+            {categoryTabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedCategory(tab.id)}
+                className={`flex-shrink-0 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all min-w-fit ${
+                  selectedCategory === tab.id
+                    ? 'bg-orange-500 text-white shadow-lg'
+                    : 'bg-gray-700/50 text-white hover:bg-gray-600/50'
+                }`}
               >
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
-                  Choose Category
-                </h1>
-                <p className="text-sm sm:text-base text-blue-200 mb-1">
-                  Select a category to start your quiz journey
-                </p>
-                <p className="text-xs sm:text-sm text-blue-300">
-                  {categories.length} categories • 50+ questions • Multiple levels
-                </p>
-              </motion.div>
-
-              {/* Top Category Page Ad */}
-              <CategoryPageTopAd className="mb-3" />
-
-              {/* Category Tabs - Compact Mobile Design */}
-              <div className="flex overflow-x-auto gap-2 mb-4 pb-2 scrollbar-hide px-2">
-                {categoryTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setSelectedCategory(tab.id)}
-                    className={`flex-shrink-0 px-4 py-2 rounded-xl font-bold text-sm transition-all min-w-fit ${
-                      selectedCategory === tab.id
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
-                  >
-                    {tab.name}
-                    <span className="ml-1 text-xs opacity-70">({tab.count})</span>
+                {tab.name}
+                <span className="ml-1 text-xs opacity-70">({tab.count})</span>
+              </button>
+            ))}
+          </div>
                   </button>
                 ))}
               </div>
