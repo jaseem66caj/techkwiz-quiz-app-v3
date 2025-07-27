@@ -353,84 +353,16 @@ export default function StartPage() {
             ))}
           </motion.div>
 
-          {/* Bottom Category Page Ad */}
-          <CategoryPageBottomAd className="mt-6" />
-        </div>
-
-        {/* Sidebar */}
-        <div className="hidden lg:block lg:w-80 space-y-6">
-          <SidebarRightAd />
-          
-          {/* Social Sharing Widget */}
+          {/* News Section - Mobile-web style */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="glass-effect p-6 rounded-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-6"
           >
-            <h3 className="text-white font-bold text-lg mb-4 flex items-center">
-              <span className="mr-2">🚀</span>
-              Share TechKwiz
-            </h3>
-            <p className="text-blue-200 text-sm mb-4">
-              Challenge your friends to beat your scores!
-            </p>
-            <SocialShare 
-              title="🚀 Join me on TechKwiz - Test Your Tech Knowledge!"
-              hashtags={['TechKwiz', 'Programming', 'TechSkills', 'Quiz']}
-            />
+            <NewsSection />
           </motion.div>
-
-          {/* Stats Widget */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
-            className="glass-effect p-6 rounded-2xl"
-          >
-            <h3 className="text-white font-bold text-lg mb-4 flex items-center">
-              <span className="mr-2">📊</span>
-              Platform Stats
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-blue-200">Total Quizzes:</span>
-                <span className="text-white font-semibold">{categories.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-blue-200">Questions:</span>
-                <span className="text-white font-semibold">50+</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-blue-200">Difficulty Levels:</span>
-                <span className="text-white font-semibold">3</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Tech News Section - Full Width */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="mt-6 sm:mt-8 px-2"
-      >
-        <NewsSection />
-      </motion.div>
-    </main>
-        
-        {/* Custom Scrollbar Styles */}
-        <style jsx global>{`
-          .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
+        </main>
       </div>
 
       <AuthModal
