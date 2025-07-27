@@ -272,9 +272,6 @@ export default function StartPage() {
               </button>
             ))}
           </div>
-                  </button>
-                ))}
-              </div>
 
           {/* Categories Grid - Mobile-web style */}
           <motion.div
