@@ -200,9 +200,10 @@ export const addQuizResult = (userId: string, quizResult: any): void => {
   }
 }
 
-// Clear all user data (for testing)
+// Clear all user data (including session coins)
 export const clearUserData = (): void => {
   localStorage.removeItem(STORAGE_KEYS.USER)
   localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
   localStorage.removeItem(STORAGE_KEYS.QUIZ_HISTORY)
+  clearSessionCoins()
 }
