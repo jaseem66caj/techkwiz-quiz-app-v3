@@ -33,7 +33,7 @@ export default function RewardedPopupConfig() {
 
   const fetchConfig = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/rewarded-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/rewarded-config`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -53,7 +53,7 @@ export default function RewardedPopupConfig() {
     
     setSaving(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/rewarded-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/rewarded-config`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(tempConfig)

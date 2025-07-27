@@ -70,7 +70,7 @@ export default function QuizManagement() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/categories`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/categories`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -86,7 +86,7 @@ export default function QuizManagement() {
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/questions`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/questions`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -106,7 +106,7 @@ export default function QuizManagement() {
         subcategories: newCategory.subcategories.split(',').map(s => s.trim())
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/categories`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/categories`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(categoryData)
@@ -133,7 +133,7 @@ export default function QuizManagement() {
   const handleAddQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/questions`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/questions`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newQuestion)
@@ -160,7 +160,7 @@ export default function QuizManagement() {
   const handleDeleteCategory = async (categoryId: string) => {
     if (confirm('Are you sure you want to delete this category? This will also delete all questions in this category.')) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/categories/${categoryId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/categories/${categoryId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });
@@ -178,7 +178,7 @@ export default function QuizManagement() {
   const handleDeleteQuestion = async (questionId: string) => {
     if (confirm('Are you sure you want to delete this question?')) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com"}/api/admin/questions/${questionId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/questions/${questionId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });

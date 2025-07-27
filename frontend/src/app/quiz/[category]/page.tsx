@@ -76,7 +76,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   // API functions
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`);
       
       if (response.ok) {
@@ -96,7 +96,7 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchQuestions = async (catId: string, count: number = 10) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://c55faa32-b8b8-4d69-a850-28e031d21be6.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/quiz/questions/${catId}?count=${count}`);
       
       if (response.ok) {
