@@ -398,14 +398,14 @@ backend:
   - task: "0 Coins Implementation for Users"
     implemented: "partial"
     working: false
-    file: "utils/auth.ts, app/start/page.tsx, app/page.tsx"
-    stuck_count: 1
-    priority: "high"
+    file: "utils/auth.ts, app/start/page.tsx, app/page.tsx, app/layout.tsx, app/providers.tsx"
+    stuck_count: 2
+    priority: "critical"
     needs_retesting: true
     status_history:
       - working: false
         agent: "main"
-        comment: "PARTIAL IMPLEMENTATION - Modified 3 areas to ensure users start with 0 coins: 1) auth.ts createUserProfile() changed from 500 to 0 coins for new registrations. 2) start/page.tsx guest user creation changed from 500 to 0 coins. 3) page.tsx homepage quiz changed from giving 100 coins to 0 coins. However, testing shows users still receive 400 coins somehow and can access quizzes directly instead of seeing reward popup. Issue likely: existing localStorage data or another coin-giving mechanism not yet identified. Entry fees are correctly set at 100+ coins. NEEDS: Investigation of why users still get 400 coins despite 0-coin configuration."
+        comment: "COMPREHENSIVE IMPLEMENTATION ATTEMPTED - Made extensive changes across 5 files: 1) auth.ts: createUserProfile() changed to 0 coins, added resetAllUsersTo0Coins(). 2) start/page.tsx: Guest user creation with 0 coins, PLAY button forced to show reward popup. 3) page.tsx: Homepage quiz changed to give 0 coins. 4) layout.tsx: Global localStorage clearing on every page load. 5) providers.tsx: UPDATE_COINS reducer modified to enforce 0 coins economy, user initialization clears localStorage. ISSUE IDENTIFIED: Users are navigating to homepage first (getting 400 coins from unknown source) before reaching /start page. Screenshots show user starting on homepage quiz with 400 coins, then navigating to categories page already authenticated. Direct PLAY button override to force reward popup still results in quiz redirect. ROOT CAUSE: Coin assignment happens at homepage level before 0-coin enforcement can take effect. NEEDS: Investigation of homepage coin source and complete flow restructuring."
   - task: "Admin Authentication Context"
     implemented: true
     working: "needs_testing"
