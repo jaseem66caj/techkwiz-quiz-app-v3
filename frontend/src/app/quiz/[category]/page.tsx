@@ -242,7 +242,7 @@ export default function QuizPage({ params }: QuizPageProps) {
           return newStreak
         })
         
-        dispatch({ type: 'UPDATE_COINS', payload: totalCoins })
+        dispatch({ type: 'UPDATE_COINS', payload: coinsPerAnswer })
         
         // Show reward popup after every 5 questions (but not on the last question)
         if (answeredCount % 5 === 0 && currentQuestion < quizData.length - 1) {
