@@ -351,10 +351,7 @@ export default function StartPage() {
                           className="px-2 sm:px-3 py-1.5 rounded-lg font-bold text-xs transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                           onClick={(e) => {
                             e.stopPropagation()
-                            // FORCE 0 COINS ECONOMY: Always show reward popup regardless of user state
-                            console.log('🎮 PLAY clicked - forcing reward popup for 0 coins economy')
-                            setSelectedCategoryForReward(category.id)
-                            setShowRewardPopup(true)
+                            handleCategorySelect(category.id)
                           }}
                         >
                           PLAY
