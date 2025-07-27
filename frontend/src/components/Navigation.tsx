@@ -50,59 +50,44 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="glass-effect border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-16 md:h-18">
+      <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="text-xl sm:text-2xl md:text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 <span className="text-orange-400">Tech</span>Kwiz
               </div>
             </Link>
 
-            {/* Desktop Navigation - Only show if authenticated */}
-            {state.isAuthenticated && (
-              <div className="hidden md:flex items-center space-x-6">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-white hover:text-orange-400 transition-colors duration-200 flex items-center space-x-1 text-sm"
-                  >
-                    <span className="text-xs">{item.icon}</span>
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-
             {/* Right Side */}
-            <div className="flex items-center space-x-2 md:space-x-4">
+            <div className="flex items-center space-x-3">
               {state.isAuthenticated ? (
                 <>
                   {/* Coins Display */}
-                  <div className="glass-effect px-3 py-2 sm:px-4 sm:py-2 rounded-full flex items-center space-x-2">
-                    <span className="text-xl sm:text-xl md:text-xl">🪙</span>
-                    <span className="text-white font-semibold text-base sm:text-base md:text-base">
+                  <div className="bg-gray-700 px-3 py-1.5 rounded-full flex items-center space-x-2">
+                    <span className="text-lg">🪙</span>
+                    <span className="text-white font-semibold text-sm">
                       {state.user?.coins || 0}
                     </span>
                   </div>
 
-                  {/* User Menu */}
-                  <div className="hidden md:flex items-center space-x-2">
-                    <span className="text-white text-sm">
-                      Hi, {state.user?.name}!
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </div>
+                  {/* Menu Button */}
+                  <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 rounded-lg text-white hover:bg-gray-700 transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} 
+                      />
+                    </svg>
+                  </button>
                 </>
               ) : (
-                /* Login Button */
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors"
@@ -110,14 +95,51 @@ export function Navigation() {
                   Login
                 </button>
               )}
-
-              {/* Mobile Menu Button - Only show if authenticated */}
-              {state.isAuthenticated && (
+            </div>
+          </div>
+          
+          {/* User info bar - mobile-web style */}
+          {state.isAuthenticated && (
+            <div className="mt-2 pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300 text-sm">
+                  Hi, {state.user?.name}!
+                </span>
                 <button
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="md:hidden p-2 rounded-md text-white hover:text-orange-400 transition-colors"
+                  onClick={handleLogout}
+                  className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Mobile Menu - Full width dropdown */}
+      {isMobileMenuOpen && state.isAuthenticated && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="bg-gray-800/95 backdrop-blur-sm border-b border-white/10 sticky top-[73px] z-40"
+        >
+          <div className="px-4 py-3 space-y-1">
+            {navigationItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center space-x-3 px-3 py-3 rounded-lg text-white hover:bg-gray-700/50 transition-colors"
+              >
+                <span className="text-lg">{item.icon}</span>
+                <span className="font-medium">{item.name}</span>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
                     {isMobileMenuOpen ? (
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     ) : (
