@@ -347,13 +347,11 @@ export default function StartPage() {
                     >
                       PLAY
                     </button>
-                      </div>
-                    </div>
-
-
-                  </motion.div>
-                ))}
+                  </div>
+                </div>
               </motion.div>
+            ))}
+          </motion.div>
 
           {/* Bottom Category Page Ad */}
           <CategoryPageBottomAd className="mt-6" />
