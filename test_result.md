@@ -620,17 +620,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "0 Coins Implementation Backend Support"
-    - "Admin Authentication Context"
-    - "Admin Login Page"
-    - "Admin Dashboard Layout"
-    - "Quiz Management Interface"
-    - "Script Management Interface"
-    - "Ad Slot Management Interface"
-    - "Rewarded Popup Configuration"
-    - "Data Export/Import Interface"
-  stuck_tasks:
-    - "0 Coins Implementation Backend Support"
+    - "Session-Based Coin Storage System"  
+    - "Fixed Homepage Guest User Creation"
+    - "Updated Providers Coin Logic"
+    - "Fixed Start Page Category Selection"
+    - "Updated Category Quiz Coin Rewards"
+    - "Enhanced RewardPopup Component"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
