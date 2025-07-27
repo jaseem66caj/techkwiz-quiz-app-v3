@@ -144,9 +144,15 @@ export function RewardPopup({
                 <p className="text-white text-xl mb-3">
                   You won <span className="text-yellow-400 font-bold">{coinsEarned} coins</span>
                 </p>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  You have a chance to double your coins by watching an ad.
-                </p>
+                {!hasWatchedOnce ? (
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    Watch an ad to earn <span className="text-yellow-400 font-semibold">100 coins</span>!
+                  </p>
+                ) : (
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    You earned the coins! {canWatchAgain && 'Watch another ad for 100 more coins?'}
+                  </p>
+                )}
               </motion.div>
 
               {/* Action Buttons */}
