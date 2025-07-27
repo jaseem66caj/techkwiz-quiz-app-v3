@@ -95,42 +95,42 @@ export default function StartPage() {
     const category = categories.find(cat => cat.id === categoryId)
     if (!category) return
 
-    // COMPLETE LOCALSTORAGE RESET - Force clean slate
-    try {
-      const keysToRemove = [
-        'techkwiz_user', 'techkwiz_token', 'USER', 'AUTH_TOKEN',
-        'users', 'user_data', 'quiz_data', 'app_data'
-      ]
-      keysToRemove.forEach(key => localStorage.removeItem(key))
-    } catch (error) {
-      console.error('Error clearing localStorage:', error)
+    // Check if user is authenticated
+    if (!state.isAuthenticated) {
+      // Create guest user with 0 coins
+      const guestUser = {
+        id: `guest_${Date.now()}`,
+        name: 'Guest User',
+        email: `guest_${Date.now()}@techkwiz.com`,
+        coins: 0, // Always start with 0 coins
+        level: 1,
+        totalQuizzes: 0,
+        correctAnswers: 0,
+        joinDate: new Date().toISOString(),
+        quizHistory: [],
+        achievements: []
+      }
+      
+      console.log('🔄 Creating guest user with 0 coins:', guestUser)
+      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+      
+      // Show reward popup since user has 0 coins
+      setSelectedCategoryForReward(categoryId)
+      setShowRewardPopup(true)
+      return
     }
 
-    // Create fresh guest user with guaranteed 0 coins
-    const guestUser = {
-      id: `guest_${Date.now()}`,
-      name: 'Guest User',
-      email: `guest_${Date.now()}@techkwiz.com`,
-      coins: 0, // ALWAYS 0 coins
-      quizHistory: [],
-      achievements: [],
-      totalQuizzes: 0,
-      correctAnswers: 0,
-      level: 1,
-      joinDate: new Date().toISOString()
+    // Check if user can afford the category
+    const userCoins = state.user?.coins || 0
+    if (userCoins >= category.entry_fee) {
+      // User can afford, proceed to quiz
+      router.push(`/quiz/${categoryId}`)
+    } else {
+      // User can't afford, show reward popup
+      console.log(`💰 Insufficient coins: ${userCoins}/${category.entry_fee}`)
+      setSelectedCategoryForReward(categoryId)
+      setShowRewardPopup(true)
     }
-    
-    console.log('🔄 Creating guest user with ENFORCED 0 coins:', guestUser)
-    
-    // Force user into state with 0 coins
-    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-    
-    // ALWAYS show reward popup regardless of calculation
-    console.log(`🎯 Guest coins: ${guestUser.coins}, Entry fee: ${category.entry_fee}`)
-    console.log('🎉 FORCING reward popup for 0 coins policy')
-    
-    setSelectedCategoryForReward(categoryId)
-    setShowRewardPopup(true)
   }
 
   const handleClaimReward = () => {
