@@ -160,8 +160,7 @@ export default function HomePage() {
     )
   }
 
-  // For guests, show quiz directly (no welcome screen needed)
-  // Auto-login guest users for seamless experience
+  // Ensure user is authenticated - create guest user if needed
   if (!state.isAuthenticated) {
     // Auto-login as guest user with 0 coins (session-based)
     const guestUser = {
@@ -185,8 +184,8 @@ export default function HomePage() {
     allUsers.push({ ...guestUser, coins: 0 }) // Store without coins in localStorage
     localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
     
+    // Dispatch login success and continue rendering
     dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-    return null // Will re-render as authenticated
   }
 
   // Authenticated user quiz interface - Direct quiz like quizwinz.com
