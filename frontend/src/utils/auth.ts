@@ -140,15 +140,21 @@ export const getCurrentUser = (): User | null => {
   return user || null
 }
 
-// Save user data to localStorage
+// Save user data to localStorage (coins are handled separately in session storage)
 export const saveUserToStorage = (user: User): void => {
   const allUsers = getAllUsersFromStorage()
   const existingIndex = allUsers.findIndex(u => u.id === user.id || u.email === user.email)
   
+  // Store coins in session storage, not localStorage
+  setSessionCoins(user.id, user.coins)
+  
+  // Remove coins from user object before saving to localStorage
+  const userWithoutCoins = { ...user, coins: 0 }
+  
   if (existingIndex >= 0) {
-    allUsers[existingIndex] = user
+    allUsers[existingIndex] = userWithoutCoins
   } else {
-    allUsers.push(user)
+    allUsers.push(userWithoutCoins)
   }
   
   localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(allUsers))
