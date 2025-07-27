@@ -86,18 +86,40 @@ export const isAuthenticated = (): boolean => {
   return !!localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
 }
 
-// Reset all users to 0 coins (for implementing 0 coins economy)
-export const resetAllUsersTo0Coins = (): void => {
+// Session-based coin management
+export const getSessionCoins = (userId: string): number => {
   try {
-    const allUsers = getAllUsersFromStorage()
-    const resetUsers = allUsers.map(user => ({
-      ...user,
-      coins: 0 // Reset all users to 0 coins
-    }))
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(resetUsers))
-    console.log(`Reset ${resetUsers.length} users to 0 coins`)
+    const sessionCoins = sessionStorage.getItem(STORAGE_KEYS.SESSION_COINS)
+    if (!sessionCoins) return 0
+    
+    const coinsData = JSON.parse(sessionCoins)
+    return coinsData[userId] || 0
   } catch (error) {
-    console.error('Error resetting users to 0 coins:', error)
+    console.error('Error getting session coins:', error)
+    return 0
+  }
+}
+
+export const setSessionCoins = (userId: string, coins: number): void => {
+  try {
+    const sessionCoins = sessionStorage.getItem(STORAGE_KEYS.SESSION_COINS)
+    const coinsData = sessionCoins ? JSON.parse(sessionCoins) : {}
+    
+    coinsData[userId] = Math.max(0, coins) // Never go below 0
+    sessionStorage.setItem(STORAGE_KEYS.SESSION_COINS, JSON.stringify(coinsData))
+    
+    console.log(`💰 Session coins updated for ${userId}: ${coins}`)
+  } catch (error) {
+    console.error('Error setting session coins:', error)
+  }
+}
+
+export const clearSessionCoins = (): void => {
+  try {
+    sessionStorage.removeItem(STORAGE_KEYS.SESSION_COINS)
+    console.log('🧹 Session coins cleared')
+  } catch (error) {
+    console.error('Error clearing session coins:', error)
   }
 }
 
