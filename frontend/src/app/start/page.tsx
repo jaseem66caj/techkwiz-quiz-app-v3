@@ -142,14 +142,33 @@ export default function StartPage() {
         }
       }, 100)
     } else {
-      // Check if user has enough coins
-      const userCoins = state.user?.coins || 0
-      console.log(`Authenticated user: coins=${userCoins}, entry_fee=${category.entry_fee}`)
+      // Check if user has enough coins (force 0 coins check)
+      let userCoins = state.user?.coins || 0
+      
+      // FORCE 0 COINS: Ensure even authenticated users start with 0 coins  
+      if (userCoins > 0) {
+        console.log(`Resetting authenticated user coins from ${userCoins} to 0`)
+        userCoins = 0
+        const updatedUser = { ...state.user!, coins: 0 }
+        dispatch({ type: 'LOGIN_SUCCESS', payload: updatedUser })
+        
+        // Save to localStorage
+        try {
+          const { saveUserToStorage } = await import('../../utils/auth')
+          saveUserToStorage(updatedUser)
+        } catch (error) {
+          console.error('Error saving updated user:', error)
+        }
+      }
+      
+      console.log(`Authenticated user check: coins=${userCoins}, entry_fee=${category.entry_fee}`)
       if (userCoins >= category.entry_fee) {
         // User has enough coins, proceed directly to quiz
+        console.log(`User has sufficient coins - proceeding to quiz`)
         router.push(`/quiz/${categoryId}`)
       } else {
         // Show rewarded ad popup to earn coins
+        console.log(`User has insufficient coins - showing reward popup`)
         setSelectedCategoryForReward(categoryId)
         setShowRewardPopup(true)
       }
