@@ -395,34 +395,17 @@ backend:
         agent: "testing"
         comment: "✅ SECURITY VERIFIED: All new admin endpoints properly protected with JWT authentication. Tested endpoints without authentication return 403 Forbidden (proper security response). With valid admin token, all endpoints (/api/admin/site-config, /api/admin/ad-slots, /api/admin/rewarded-config) return 200 OK. Authentication system working correctly with existing admin user management. Token verification and admin user validation functioning properly."
 
-  - task: "Quiz Answer Option Box Size Optimization"
-    implemented: true
-    working: true
-    file: "src/components/QuizInterface.tsx, src/app/globals.css"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "needs_testing"
-        agent: "main"
-        comment: "Reduced size of quiz answer option boxes for better aesthetics. Removed conflicting Tailwind classes from QuizInterface component (py-3 px-4, text-sm sm:text-base) and updated CSS to make boxes more compact: Desktop: padding 24px→16px, min-height 80px→64px, font-size 18px→16px. Mobile (≤640px): padding 28px→20px, min-height 88px→72px, font-size 20px→18px. Large mobile (400px+): padding 32px→24px, min-height 96px→80px, font-size 22px→20px. Changes maintain readability and touch-friendly interactions while achieving more compact design."
-      - working: true
-        agent: "main"
-        comment: "✅ FURTHER SIZE OPTIMIZATION COMPLETED: User requested answer boxes to be 'slightly more smaller' after initial optimization. Made additional reductions: Desktop: padding 16px→12px, min-height 64px→52px, font-size 16px→15px. Mobile (≤640px): padding 20px→16px, min-height 72px→60px, font-size 18px→16px. Large mobile (400px+): padding 24px→20px, min-height 80px→68px, font-size 20px→18px. Final testing shows: Desktop boxes now measure 430px × 52px (further reduced height). Mobile boxes measure 293px × 60px (further reduced from previous 72px). Answer boxes are now significantly more compact while maintaining excellent readability and touch-friendly interactions. All quiz functionality preserved perfectly. User's request for smaller boxes fully satisfied."
-
-  - task: "0 Coins Implementation Backend Support"
-    implemented: false
+  - task: "0 Coins Implementation for Users"
+    implemented: "partial"
     working: false
-    file: "backend/server.py, backend/models.py, backend/user_routes.py"
+    file: "utils/auth.ts, app/start/page.tsx, app/page.tsx"
     stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
-        agent: "testing"
-        comment: "🚨 CRITICAL BACKEND GAPS IDENTIFIED: Testing reveals that while quiz categories have appropriate entry fees (100-160 coins) and rewarded popup is configured correctly (150 coin reward, show_on_insufficient_coins: true), the core user/coin management system is completely missing from backend. Missing components: 1) User Model with coins field, 2) User registration/authentication endpoints, 3) Guest user creation system, 4) Homepage quiz endpoints, 5) Quiz entry validation that checks user coins vs entry fees, 6) Coin transaction/reward system. Current backend only supports admin dashboard and quiz data management but cannot handle the 0 coins economy flow. Users cannot be created, coins cannot be tracked, and quiz entry cannot be validated. This is a fundamental architecture gap that prevents the 0 coins implementation from functioning."
-
-frontend:
+        agent: "main"
+        comment: "PARTIAL IMPLEMENTATION - Modified 3 areas to ensure users start with 0 coins: 1) auth.ts createUserProfile() changed from 500 to 0 coins for new registrations. 2) start/page.tsx guest user creation changed from 500 to 0 coins. 3) page.tsx homepage quiz changed from giving 100 coins to 0 coins. However, testing shows users still receive 400 coins somehow and can access quizzes directly instead of seeing reward popup. Issue likely: existing localStorage data or another coin-giving mechanism not yet identified. Entry fees are correctly set at 100+ coins. NEEDS: Investigation of why users still get 400 coins despite 0-coin configuration."
   - task: "Admin Authentication Context"
     implemented: true
     working: "needs_testing"
