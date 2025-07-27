@@ -95,8 +95,11 @@ export default function HomePage() {
   }
 
   const handleClaimReward = () => {
-    // Double the coins
-    dispatch({ type: 'UPDATE_COINS', payload: lastEarnedCoins })
+    // Give additional 100 coins for watching rewarded ad
+    const adRewardCoins = 100
+    dispatch({ type: 'UPDATE_COINS', payload: adRewardCoins })
+    
+    console.log(`📺 Watched ad! Earned ${adRewardCoins} coins`)
     
     // Proceed to next question or complete quiz
     if (currentQuestion < quickStartQuiz.length - 1) {
