@@ -35,10 +35,10 @@ export function Navigation() {
   // Show loading state
   if (state.loading) {
     return (
-      <nav className="glass-effect border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 md:h-16">
-            <div className="text-lg md:text-2xl font-bold text-white">
+      <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="text-xl font-bold text-white">
               <span className="text-orange-400">Tech</span>Kwiz
             </div>
             <div className="animate-pulse bg-white/10 rounded-full h-8 w-20"></div>
