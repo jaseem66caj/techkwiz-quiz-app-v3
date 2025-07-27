@@ -177,15 +177,9 @@ const getAllUsersFromStorage = (): User[] => {
   }
 }
 
-// Update user coins
+// Update user coins (session-based)
 export const updateUserCoins = (userId: string, coins: number): void => {
-  const allUsers = getAllUsersFromStorage()
-  const userIndex = allUsers.findIndex(user => user.id === userId)
-  
-  if (userIndex >= 0) {
-    allUsers[userIndex].coins = coins
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(allUsers))
-  }
+  setSessionCoins(userId, coins)
 }
 
 // Add quiz result to user history
