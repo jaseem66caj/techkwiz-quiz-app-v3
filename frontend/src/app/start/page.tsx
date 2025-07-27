@@ -134,16 +134,24 @@ export default function StartPage() {
   }
 
   const handleClaimReward = () => {
-    // Give user coins (simulate watching ad)
-    const coinsEarned = 200 // Give 200 coins for watching ad
+    // Give user 100 coins for watching rewarded ad
+    const coinsEarned = 100
     dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
     setShowRewardPopup(false)
     
-    // Now check if they can afford the category
+    console.log(`📺 Watched rewarded ad! Earned ${coinsEarned} coins`)
+    
+    // Check if they can now afford the category
     if (selectedCategoryForReward) {
       const category = categories.find(cat => cat.id === selectedCategoryForReward)
-      if (category && (state.user?.coins || 0) + coinsEarned >= category.entry_fee) {
+      const newCoinTotal = (state.user?.coins || 0) + coinsEarned
+      
+      if (category && newCoinTotal >= category.entry_fee) {
+        console.log(`✅ Can now afford ${category.name}! (${newCoinTotal}/${category.entry_fee})`)
         router.push(`/quiz/${selectedCategoryForReward}`)
+      } else if (category) {
+        console.log(`❌ Still can't afford ${category.name} (${newCoinTotal}/${category.entry_fee})`)
+        // Could show another reward popup or message here
       }
     }
     setSelectedCategoryForReward(null)
