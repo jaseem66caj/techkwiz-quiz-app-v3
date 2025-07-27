@@ -137,7 +137,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
   // Initialize user from localStorage on app start
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       if (isAuthenticated()) {
         const user = getCurrentUser()
         if (user) {
@@ -148,10 +148,10 @@ export function Providers({ children }: { children: ReactNode }) {
           }
           
           // Save the updated user back to localStorage
-          import('./../../utils/auth').then(({ saveUserToStorage }) => {
-            saveUserToStorage(userWith0Coins)
-          })
+          const { saveUserToStorage } = await import('./../../utils/auth')
+          saveUserToStorage(userWith0Coins)
           
+          console.log('User loaded and reset to 0 coins:', userWith0Coins)
           dispatch({ type: 'LOGIN_SUCCESS', payload: userWith0Coins })
         } else {
           dispatch({ type: 'SET_LOADING', payload: false })
