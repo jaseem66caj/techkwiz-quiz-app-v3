@@ -276,78 +276,75 @@ export default function StartPage() {
                 ))}
               </div>
 
-              {/* Categories - Compact Qureka Style Cards */}
+          {/* Categories Grid - Mobile-web style */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-3"
+          >
+            {filteredCategories.map((category, index) => (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                className="space-y-2 px-2"
+                key={category.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 hover:bg-gray-700/50 transition-all duration-300 cursor-pointer border border-white/10"
+                onClick={() => handleCategorySelect(category.id)}
               >
-                {filteredCategories.map((category, index) => (
-                  <motion.div
-                    key={category.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="glass-effect rounded-xl p-3 hover:scale-[1.02] transition-all duration-300 cursor-pointer w-full"
-                    onClick={() => handleCategorySelect(category.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      {/* Left Section - Icon and Basic Info */}
-                      <div className="flex items-center space-x-3 flex-1 min-w-0">
-                        {/* Category Icon */}
-                        <div className="text-2xl sm:text-3xl flex-shrink-0">
-                          {category.icon}
+                <div className="flex items-center justify-between">
+                  {/* Left Section - Icon and Info */}
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    {/* Category Icon */}
+                    <div className="text-3xl flex-shrink-0">
+                      {category.icon}
+                    </div>
+                    
+                    {/* Category Details */}
+                    <div className="flex-1 min-w-0">
+                      {/* Category Name */}
+                      <h3 className="text-white font-bold text-base leading-tight mb-1">
+                        {category.name}
+                      </h3>
+                      
+                      {/* Prize and Entry Fee */}
+                      <div className="flex items-center space-x-3 text-sm">
+                        <div className="text-yellow-400 font-semibold flex items-center">
+                          <span className="mr-1">🏆</span>
+                          <span>{category.prize_pool}</span>
                         </div>
                         
-                        {/* Category Details */}
-                        <div className="flex-1 min-w-0">
-                          {/* Category Name */}
-                          <div className="mb-1">
-                            <h3 className="text-white font-bold text-sm sm:text-base leading-tight">
-                              {category.name}
-                            </h3>
-                          </div>
-                          
-                          {/* Prize and Entry Fee */}
-                          <div className="flex items-center space-x-2 text-xs sm:text-sm">
-                            <div className="text-yellow-400 font-bold flex items-center">
-                              <span className="mr-1 text-sm">🏆</span>
-                              <span className="text-sm">{category.prize_pool}</span>
-                            </div>
-                            
-                            <div className="text-blue-200 text-xs">
-                              Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
-                            </div>
-                          </div>
-                          
-                          {/* Winner Announcement with Random Timer */}
-                          <div className="text-gray-400 text-xs mt-1">
-                            Winner: {(() => {
-                              // Generate random timer for each category
-                              const timers = ['01:23:45', '02:15:30', '00:45:12', '03:22:18', '01:55:42', '00:28:36', '02:33:29', '01:08:54', '00:52:17'];
-                              const randomIndex = Math.abs(category.name.length + category.id.length) % timers.length;
-                              return timers[randomIndex];
-                            })()}
-                          </div>
+                        <div className="text-blue-300">
+                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
                         </div>
                       </div>
+                      
+                      {/* Winner Timer */}
+                      <div className="text-gray-400 text-xs mt-1">
+                        Winner: {(() => {
+                          const timers = ['01:23:45', '02:15:30', '00:45:12', '03:22:18', '01:55:42', '00:28:36', '02:33:29', '01:08:54', '00:52:17'];
+                          const randomIndex = Math.abs(category.name.length + category.id.length) % timers.length;
+                          return timers[randomIndex];
+                        })()}
+                      </div>
+                    </div>
+                  </div>
 
-                      {/* Right Section - Live Badge and Action Button */}
-                      <div className="flex-shrink-0 ml-2 flex flex-col items-end space-y-1">
-                        {/* Live Badge - Static on Right */}
-                        <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
-                          Live
-                        </span>
-                        
-                        {/* Action Button - Always PLAY */}
-                        <button
-                          className="px-2 sm:px-3 py-1.5 rounded-lg font-bold text-xs transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleCategorySelect(category.id)
-                          }}
-                        >
+                  {/* Right Section - Live Badge and PLAY Button */}
+                  <div className="flex-shrink-0 flex flex-col items-end space-y-2">
+                    {/* Live Badge */}
+                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                      Live
+                    </span>
+                    
+                    {/* PLAY Button */}
+                    <button
+                      className="px-4 py-2 rounded-lg font-bold text-sm transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCategorySelect(category.id)
+                      }}
+                    >
                           PLAY
                         </button>
                       </div>
