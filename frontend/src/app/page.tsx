@@ -155,14 +155,18 @@ export default function HomePage() {
   // For guests, show quiz directly (no welcome screen needed)
   // Auto-login guest users for seamless experience
   if (!state.isAuthenticated) {
-    // Auto-login as guest user
+    // Auto-login as guest user with 0 coins (session-based)
     const guestUser = {
+      id: `guest_${Date.now()}`,
       name: 'Guest User',
-      email: 'guest@techkwiz.com',
-      coins: 500,
+      email: `guest_${Date.now()}@techkwiz.com`,
+      coins: 0, // Always start with 0 coins
+      level: 1,
+      totalQuizzes: 0,
+      correctAnswers: 0,
+      joinDate: new Date().toISOString(),
       quizHistory: [],
-      achievements: [],
-      joinDate: new Date().toISOString()
+      achievements: []
     }
     dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     return null // Will re-render as authenticated
