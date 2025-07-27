@@ -9,6 +9,8 @@ interface RewardPopupProps {
   coinsEarned: number
   onClaimReward: () => void
   onSkipReward: () => void
+  canWatchAgain?: boolean
+  onWatchAgain?: () => void
 }
 
 export function RewardPopup({ 
