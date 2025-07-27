@@ -127,7 +127,18 @@ export function Providers({ children }: { children: ReactNode }) {
       if (isAuthenticated()) {
         const user = getCurrentUser()
         if (user) {
-          dispatch({ type: 'LOGIN_SUCCESS', payload: user })
+          // FORCE 0 COINS: Ensure all users start with 0 coins for rewarded ads
+          const userWith0Coins = {
+            ...user,
+            coins: 0 // Force 0 coins for all existing and new users
+          }
+          
+          // Save the updated user back to localStorage
+          import('./../../utils/auth').then(({ saveUserToStorage }) => {
+            saveUserToStorage(userWith0Coins)
+          })
+          
+          dispatch({ type: 'LOGIN_SUCCESS', payload: userWith0Coins })
         } else {
           dispatch({ type: 'SET_LOADING', payload: false })
         }
