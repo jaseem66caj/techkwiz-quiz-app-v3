@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "User reported UI/UX issues with frontend elements being 'too big, not user-friendly' and critical data synchronization problems with 'data has not been synced with dashboard realtime' and 'not seeing the categories in the frontend website, in the backend dashboard'. Both issues have been successfully resolved through frontend environment variable fixes and application rebuild."
+user_problem_statement: "Fixed coin system: Users no longer get free coins, coins are session-based (reset when browser closes), earned only through quiz wins (50 coins per correct answer) and rewarded ads (100 coins each). Homepage quiz is free to play but awards coins. All coin data stored in browser sessionStorage for one session only."
 
 backend:
   - task: "Admin Forgot Password System"
