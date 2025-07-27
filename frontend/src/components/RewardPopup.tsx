@@ -18,9 +18,12 @@ export function RewardPopup({
   onClose, 
   coinsEarned, 
   onClaimReward, 
-  onSkipReward 
+  onSkipReward,
+  canWatchAgain = false,
+  onWatchAgain
 }: RewardPopupProps) {
   const [isWatchingAd, setIsWatchingAd] = useState(false)
+  const [hasWatchedOnce, setHasWatchedOnce] = useState(false)
 
   const handleClaimReward = () => {
     setIsWatchingAd(true)
