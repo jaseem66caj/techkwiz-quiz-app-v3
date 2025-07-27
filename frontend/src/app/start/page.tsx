@@ -470,7 +470,7 @@ export default function StartPage() {
       <RewardPopup
         isOpen={showRewardPopup}
         onClose={() => setShowRewardPopup(false)}
-        coinsEarned={200}
+        coinsEarned={100}
         onClaimReward={handleClaimReward}
         onSkipReward={handleSkipReward}
       />
