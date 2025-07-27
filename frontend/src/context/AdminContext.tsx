@@ -29,7 +29,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com';
     
     if (storedToken && storedUsername) {
-      // Verify token with backend
+      // Verify token with backend (but don't block main app)
       verifyToken(storedToken, storedUsername);
     } else {
       setLoading(false);
