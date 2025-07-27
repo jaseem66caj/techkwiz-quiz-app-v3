@@ -350,24 +350,7 @@ export default function StartPage() {
                       </div>
                     </div>
 
-                    {/* Topics - Only show on larger screens and collapse for mobile */}
-                    <div className="hidden sm:block mt-2 pt-2 border-t border-white/10">
-                      <div className="flex flex-wrap gap-1">
-                        {category.subcategories.slice(0, 3).map((topic, idx) => (
-                          <span
-                            key={idx}
-                            className="bg-white/10 text-blue-200 px-2 py-0.5 rounded text-xs"
-                          >
-                            {topic}
-                          </span>
-                        ))}
-                        {category.subcategories.length > 3 && (
-                          <span className="bg-white/10 text-blue-200 px-2 py-0.5 rounded text-xs">
-                            +{category.subcategories.length - 3} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
+
                   </motion.div>
                 ))}
               </motion.div>
