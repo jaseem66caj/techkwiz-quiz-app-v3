@@ -345,8 +345,8 @@ export default function StartPage() {
                         handleCategorySelect(category.id)
                       }}
                     >
-                          PLAY
-                        </button>
+                      PLAY
+                    </button>
                       </div>
                     </div>
 
