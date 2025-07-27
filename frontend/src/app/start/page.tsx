@@ -97,6 +97,10 @@ export default function StartPage() {
 
     // Auto-login if not authenticated (guest user)
     if (!state.isAuthenticated) {
+      // Clear any existing user data to ensure fresh guest experience
+      localStorage.removeItem('techkwiz_user')
+      localStorage.removeItem('techkwiz_token')
+      
       const guestUser = {
         name: 'Guest User',
         email: 'guest@techkwiz.com',
@@ -105,6 +109,8 @@ export default function StartPage() {
         achievements: [],
         joinDate: new Date().toISOString()
       }
+      
+      console.log('Creating fresh guest user with 0 coins:', guestUser)
       dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
       
       // Wait for state update then check coins
