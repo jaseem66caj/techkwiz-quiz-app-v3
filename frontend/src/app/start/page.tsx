@@ -109,11 +109,14 @@ export default function StartPage() {
       
       // Wait for state update then check coins
       setTimeout(() => {
-        const currentCoins = 0 // Guests start with 0 coins
-        console.log(`Guest user: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
+        // Get actual coins from the just-created guest user
+        const currentCoins = 0 // Guests should always start with 0 coins
+        console.log(`Guest user created: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
         if (currentCoins >= category.entry_fee) {
+          console.log(`Guest has enough coins (${currentCoins} >= ${category.entry_fee}) - proceeding to quiz`)
           router.push(`/quiz/${categoryId}`)
         } else {
+          console.log(`Guest has insufficient coins (${currentCoins} < ${category.entry_fee}) - showing reward popup`)
           setSelectedCategoryForReward(categoryId)
           setShowRewardPopup(true)
         }
