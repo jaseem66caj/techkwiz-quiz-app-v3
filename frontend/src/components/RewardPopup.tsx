@@ -31,9 +31,27 @@ export function RewardPopup({
     // Simulate watching ad for 5 seconds
     setTimeout(() => {
       setIsWatchingAd(false)
+      setHasWatchedOnce(true)
       onClaimReward()
-      onClose()
+      
+      // Don't close immediately if user can watch again
+      if (!canWatchAgain) {
+        onClose()
+      }
     }, 5000)
+  }
+
+  const handleWatchAgain = () => {
+    if (onWatchAgain) {
+      setIsWatchingAd(true)
+      
+      // Simulate watching another ad
+      setTimeout(() => {
+        setIsWatchingAd(false)
+        onWatchAgain()
+        onClose()
+      }, 5000)
+    }
   }
 
   const handleClose = () => {
