@@ -123,14 +123,21 @@ export const clearSessionCoins = (): void => {
   }
 }
 
-// Get current user from localStorage
+// Get current user from localStorage with session-based coins
 export const getCurrentUser = (): User | null => {
   const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
   if (!token) return null
   
   const userId = token.replace('dummy_token_', '')
   const allUsers = getAllUsersFromStorage()
-  return allUsers.find(user => user.id === userId) || null
+  const user = allUsers.find(user => user.id === userId)
+  
+  if (user) {
+    // Always get coins from session storage, never from localStorage
+    user.coins = getSessionCoins(userId)
+  }
+  
+  return user || null
 }
 
 // Save user data to localStorage
