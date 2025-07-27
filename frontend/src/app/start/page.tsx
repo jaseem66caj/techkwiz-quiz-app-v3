@@ -95,84 +95,42 @@ export default function StartPage() {
     const category = categories.find(cat => cat.id === categoryId)
     if (!category) return
 
-    // Auto-login if not authenticated (guest user)
-    if (!state.isAuthenticated) {
-      // AGGRESSIVE RESET: Force all existing users to have 0 coins
-      try {
-        const { resetAllUsersTo0Coins } = await import('../../utils/auth')
-        resetAllUsersTo0Coins()
-      } catch (error) {
-        console.error('Error resetting users:', error)
-      }
-      
-      // Clear any existing user/token data to ensure fresh start
-      localStorage.removeItem('techkwiz_user')
-      localStorage.removeItem('techkwiz_token')
-      localStorage.removeItem('USER')
-      localStorage.removeItem('AUTH_TOKEN')
-      
-      const guestUser = {
-        name: 'Guest User',
-        email: 'guest@techkwiz.com',
-        coins: 0, // Guests start with 0 coins to trigger rewarded ads
-        quizHistory: [],
-        achievements: [],
-        joinDate: new Date().toISOString()
-      }
-      
-      console.log('Creating fresh guest user with 0 coins:', guestUser)
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-      
-      // Wait for state update then check coins
-      setTimeout(() => {
-        // CRITICAL: Always check 0 coins for guests to trigger reward popup
-        const currentCoins = 0 // Guests should ALWAYS have 0 coins
-        console.log(`Guest user check: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
-        
-        // With 0 coins and entry fee of 100+, this should ALWAYS show reward popup
-        if (currentCoins >= category.entry_fee) {
-          console.error(`UNEXPECTED: Guest has enough coins (${currentCoins} >= ${category.entry_fee}) - this should not happen!`)
-          // Force reward popup even if coins seem sufficient
-          setSelectedCategoryForReward(categoryId)
-          setShowRewardPopup(true)
-        } else {
-          console.log(`✅ CORRECT: Guest has insufficient coins (${currentCoins} < ${category.entry_fee}) - showing reward popup`)
-          setSelectedCategoryForReward(categoryId)
-          setShowRewardPopup(true)
-        }
-      }, 100)
-    } else {
-      // Check if user has enough coins (force 0 coins check)
-      let userCoins = state.user?.coins || 0
-      
-      // FORCE 0 COINS: Ensure even authenticated users start with 0 coins  
-      if (userCoins > 0) {
-        console.log(`Resetting authenticated user coins from ${userCoins} to 0`)
-        userCoins = 0
-        const updatedUser = { ...state.user!, coins: 0 }
-        dispatch({ type: 'LOGIN_SUCCESS', payload: updatedUser })
-        
-        // Save to localStorage
-        try {
-          const { saveUserToStorage } = await import('../../utils/auth')
-          saveUserToStorage(updatedUser)
-        } catch (error) {
-          console.error('Error saving updated user:', error)
-        }
-      }
-      
-      console.log(`Authenticated user check: coins=${userCoins}, entry_fee=${category.entry_fee}`)
-      if (userCoins >= category.entry_fee) {
-        // User has enough coins, proceed directly to quiz
-        console.log(`User has sufficient coins - proceeding to quiz`)
-        router.push(`/quiz/${categoryId}`)
-      } else {
-        // Show rewarded ad popup to earn coins
-        console.log(`User has insufficient coins - showing reward popup`)
-        setSelectedCategoryForReward(categoryId)
-        setShowRewardPopup(true)
-      }
+    // COMPLETE LOCALSTORAGE RESET - Force clean slate
+    try {
+      const keysToRemove = [
+        'techkwiz_user', 'techkwiz_token', 'USER', 'AUTH_TOKEN',
+        'users', 'user_data', 'quiz_data', 'app_data'
+      ]
+      keysToRemove.forEach(key => localStorage.removeItem(key))
+    } catch (error) {
+      console.error('Error clearing localStorage:', error)
     }
+
+    // Create fresh guest user with guaranteed 0 coins
+    const guestUser = {
+      id: `guest_${Date.now()}`,
+      name: 'Guest User',
+      email: `guest_${Date.now()}@techkwiz.com`,
+      coins: 0, // ALWAYS 0 coins
+      quizHistory: [],
+      achievements: [],
+      totalQuizzes: 0,
+      correctAnswers: 0,
+      level: 1,
+      joinDate: new Date().toISOString()
+    }
+    
+    console.log('🔄 Creating guest user with ENFORCED 0 coins:', guestUser)
+    
+    // Force user into state with 0 coins
+    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+    
+    // ALWAYS show reward popup regardless of calculation
+    console.log(`🎯 Guest coins: ${guestUser.coins}, Entry fee: ${category.entry_fee}`)
+    console.log('🎉 FORCING reward popup for 0 coins policy')
+    
+    setSelectedCategoryForReward(categoryId)
+    setShowRewardPopup(true)
   }
 
   const handleClaimReward = () => {
