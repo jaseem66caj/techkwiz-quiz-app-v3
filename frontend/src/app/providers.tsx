@@ -63,12 +63,26 @@ function appReducer(state: AppState, action: any) {
     case 'UPDATE_COINS':
       if (!state.user) return state
       
-      const newCoins = Math.max(0, state.user.coins + action.payload)
+      // FORCE 0 COINS ECONOMY: Only allow earning coins through rewarded ads, cap at max needed for one quiz
+      let newCoins = 0 // Always enforce 0 coins unless it's a reward
+      
+      // Only allow positive coin additions from rewards (reward popup gives 200 coins)
+      if (action.payload > 0 && action.payload <= 200) {
+        // This is likely a reward, allow it but cap at 200
+        newCoins = Math.min(200, action.payload)
+      } else if (action.payload < 0) {
+        // This is a deduction (quiz entry fee), always allow to stay at 0
+        newCoins = 0
+      }
+      // All other cases: keep at 0
+      
       const updatedUser = { ...state.user, coins: newCoins }
       
       // Save to localStorage
       saveUserToStorage(updatedUser)
       updateUserCoins(updatedUser.id, newCoins)
+      
+      console.log(`COINS UPDATE: ${state.user.coins} -> ${newCoins} (payload: ${action.payload})`)
       
       return {
         ...state,
