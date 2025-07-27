@@ -56,20 +56,28 @@ export function QuizInterface({
           </span>
         </div>
         
-        <h3 className="text-lg sm:text-xl font-semibold text-white mb-6 leading-tight px-2">
+        <h3 className="text-lg font-semibold text-white mb-6 leading-tight">
           {questionData.question}
         </h3>
         
-        <div className="grid grid-cols-1 gap-2">
+        <div className="space-y-3">
           {questionData.options.map((option, index) => (
             <button
               key={index}
               onClick={() => onAnswerSelect(index)}
               disabled={selectedAnswer !== null}
-              className={`quiz-option ${selectedAnswer === index ? 'selected' : ''} ${
-                selectedAnswer !== null && index === questionData.correct_answer ? 'correct' : ''
+              className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
+                selectedAnswer === index 
+                  ? 'bg-blue-500 text-white border-blue-400' 
+                  : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
               } ${
-                selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer ? 'incorrect' : ''
+                selectedAnswer !== null && index === questionData.correct_answer 
+                  ? 'bg-green-500 border-green-400' 
+                  : ''
+              } ${
+                selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer 
+                  ? 'bg-red-500 border-red-400' 
+                  : ''
               }`}
             >
               {option}
