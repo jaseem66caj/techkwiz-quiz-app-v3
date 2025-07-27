@@ -27,24 +27,24 @@ export function Features() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="glass-effect p-8 rounded-2xl max-w-2xl mx-auto"
+      className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10"
     >
-      <h3 className="text-2xl font-bold text-white text-center mb-6">
+      <h3 className="text-xl font-bold text-white text-center mb-4">
         Play Quiz and Win Coins!
       </h3>
       
-      <div className="w-20 h-1 bg-gradient-to-r from-yellow-400 to-green-500 mx-auto mb-8 rounded-full"></div>
+      <div className="w-16 h-1 bg-gradient-to-r from-yellow-400 to-green-500 mx-auto mb-6 rounded-full"></div>
       
-      <div className="space-y-6">
+      <div className="space-y-4">
         {features.map((feature, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-            className="flex items-start space-x-4"
+            className="flex items-start space-x-3"
           >
-            <div className="text-2xl flex-shrink-0 mt-1">
+            <div className="text-xl flex-shrink-0 mt-0.5">
               {feature.icon}
             </div>
             <p className="text-blue-200 text-sm leading-relaxed">
