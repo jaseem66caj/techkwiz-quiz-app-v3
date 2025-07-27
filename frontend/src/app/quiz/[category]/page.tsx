@@ -231,14 +231,11 @@ export default function QuizPage({ params }: QuizPageProps) {
         const newScore = score + 1
         setScore(newScore)
         
-        // Calculate coins with streak bonus
-        const baseCoins = config.coinsPerCorrect
-        const streakBonus = Math.min(streak * 10, 100) // Max 100 bonus
-        const timeBonus = Math.floor(timeLeft / 5) * 5 // 5 coins per 5 seconds left
-        const totalCoins = baseCoins + streakBonus + timeBonus
+        // Award exactly 50 coins per correct answer (no bonuses)
+        const coinsPerAnswer = 50
         
-        setTotalCoinsEarned(prev => prev + totalCoins)
-        setLastEarnedCoins(totalCoins)
+        setTotalCoinsEarned(prev => prev + coinsPerAnswer)
+        setLastEarnedCoins(coinsPerAnswer)
         setStreak(prev => {
           const newStreak = prev + 1
           setMaxStreak(Math.max(maxStreak, newStreak))
