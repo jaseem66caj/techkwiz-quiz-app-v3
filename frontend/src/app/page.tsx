@@ -188,21 +188,21 @@ export default function HomePage() {
     dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
   }
 
-  // Authenticated user quiz interface - Direct quiz like quizwinz.com
+  // Authenticated user quiz interface - Mobile-web style
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      <div className="min-h-screen bg-transparent">
         <Navigation />
         
-        <main className="flex-1 flex flex-col justify-center p-4 w-full mx-auto">
-          <div className="flex flex-col items-center space-y-6">
+        <main className="px-4 py-6">
+          <div className="space-y-4">
             {!quizCompleted ? (
               <>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="w-full mx-auto"
+                  className="w-full"
                 >
                   <QuizInterface
                     questionData={quickStartQuiz[currentQuestion]}
@@ -213,11 +213,79 @@ export default function HomePage() {
                   />
                 </motion.div>
                 
-                <div className="w-full mx-auto">
+                <div className="w-full">
                   <FunFact fact={quickStartQuiz[currentQuestion]?.fun_fact} />
                 </div>
                 
-                {/* Mobile Quick Actions */}
+                {/* Mobile-web Quick Actions */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="w-full"
+                >
+                  <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-white/10">
+                    <h3 className="text-white font-bold text-center mb-3 text-lg">
+                      🚀 Ready for More?
+                    </h3>
+                    <button
+                      onClick={() => router.push('/start')}
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 text-base rounded-xl transition-colors"
+                    >
+                      Explore All Categories
+                    </button>
+                  </div>
+                </motion.div>
+              </>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl text-center border border-white/10"
+              >
+                <div className="text-4xl mb-4">🎉</div>
+                <h2 className="text-white text-xl font-bold mb-4">
+                  Quick Start Complete!
+                </h2>
+                <p className="text-blue-200 text-base mb-2">
+                  You scored {score} out of {quickStartQuiz.length}
+                </p>
+                <p className="text-orange-400 text-lg font-semibold mb-4">
+                  Earned: {score * 50} coins
+                </p>
+                <div className="text-blue-200 text-sm mb-4">
+                  Redirecting to categories...
+                </div>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => router.push('/start')}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 text-base rounded-lg transition-colors"
+                  >
+                    Continue to Categories
+                  </button>
+                  <button
+                    onClick={resetQuiz}
+                    className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 text-base rounded-lg transition-colors"
+                  >
+                    Play Again
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Mobile-web Features Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="mt-6"
+          >
+            <Features />
+          </motion.div>
+        </main>
+      </div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
