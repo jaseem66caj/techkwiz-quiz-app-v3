@@ -176,6 +176,15 @@ export default function HomePage() {
       quizHistory: [],
       achievements: []
     }
+    
+    // Set auth token to prevent infinite loop
+    localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
+    
+    // Save user to storage
+    const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
+    allUsers.push({ ...guestUser, coins: 0 }) // Store without coins in localStorage
+    localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
+    
     dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     return null // Will re-render as authenticated
   }
