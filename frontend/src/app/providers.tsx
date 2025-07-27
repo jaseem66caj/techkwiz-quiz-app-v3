@@ -138,27 +138,17 @@ export function Providers({ children }: { children: ReactNode }) {
   // Initialize user from localStorage on app start
   useEffect(() => {
     const initializeAuth = async () => {
-      if (isAuthenticated()) {
-        const user = getCurrentUser()
-        if (user) {
-          // FORCE 0 COINS: Ensure all users start with 0 coins for rewarded ads
-          const userWith0Coins = {
-            ...user,
-            coins: 0 // Force 0 coins for all existing and new users
-          }
-          
-          // Save the updated user back to localStorage
-          const { saveUserToStorage } = await import('./../../utils/auth')
-          saveUserToStorage(userWith0Coins)
-          
-          console.log('User loaded and reset to 0 coins:', userWith0Coins)
-          dispatch({ type: 'LOGIN_SUCCESS', payload: userWith0Coins })
-        } else {
-          dispatch({ type: 'SET_LOADING', payload: false })
-        }
-      } else {
-        dispatch({ type: 'SET_LOADING', payload: false })
+      // NUCLEAR OPTION: Clear all localStorage to enforce 0 coins policy
+      console.log('🧹 Clearing ALL localStorage for 0 coins enforcement')
+      try {
+        localStorage.clear()
+      } catch (error) {
+        console.error('Error clearing localStorage:', error)
       }
+      
+      // Since we cleared localStorage, no user should be authenticated
+      dispatch({ type: 'SET_LOADING', payload: false })
+      console.log('✅ Fresh start - no user authenticated, ready for 0 coins flow')
     }
 
     initializeAuth()
