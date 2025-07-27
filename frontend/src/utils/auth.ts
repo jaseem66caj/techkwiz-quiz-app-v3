@@ -15,7 +15,8 @@ export interface User {
 const STORAGE_KEYS = {
   USER: 'techkwiz_user',
   AUTH_TOKEN: 'techkwiz_auth',
-  QUIZ_HISTORY: 'techkwiz_quiz_history'
+  QUIZ_HISTORY: 'techkwiz_quiz_history',
+  SESSION_COINS: 'techkwiz_session_coins' // Session-only coin storage
 }
 
 // Generate a simple user ID
