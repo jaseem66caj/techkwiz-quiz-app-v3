@@ -40,13 +40,13 @@ export function QuizInterface({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className={`glass-effect p-6 rounded-2xl w-full ${animateIn ? 'animate-bounce-in' : ''}`}
+      className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-bounce-in' : ''}`}
     >
       <div className="text-center mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3">
+        <h2 className="text-xl font-bold text-white mb-3">
           Quick Start!
         </h2>
-        <p className="text-sm sm:text-base text-blue-200 mb-4">
+        <p className="text-sm text-blue-200 mb-4">
           Answer questions and win coins!
         </p>
         
