@@ -12,32 +12,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Global 0 coins enforcement on every page load
-  useEffect(() => {
-    console.log('🔧 Global coins system enforcement activated')
-    
-    // Force clear specific keys that might contain coin data
-    const coinDataKeys = [
-      'techkwiz_user', 'techkwiz_token', 'USER', 'AUTH_TOKEN', 
-      'users', 'user_data', 'quiz_data', 'app_data', 'coins'
-    ]
-    
-    coinDataKeys.forEach(key => {
-      try {
-        localStorage.removeItem(key)
-      } catch (error) {
-        // Ignore errors
-      }
-    })
-    
-    console.log('✅ Global coin data cleared on page load')
-  }, [])
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          {children}
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+            {/* Mobile-web container for desktop */}
+            <div className="mx-auto max-w-sm sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm 2xl:max-w-sm min-h-screen bg-gray-900/50 backdrop-blur-sm border-x border-white/10">
+              {children}
+            </div>
+          </div>
         </Providers>
       </body>
     </html>
