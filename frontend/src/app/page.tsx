@@ -244,7 +244,7 @@ export default function HomePage() {
                   You scored {score} out of {quickStartQuiz.length}
                 </p>
                 <p className="text-orange-400 text-base sm:text-lg font-semibold mb-4">
-                  Earned: {score * 100} coins
+                  Earned: {score * 50} coins
                 </p>
                 <div className="text-blue-200 text-xs sm:text-sm mb-4">
                   Redirecting to categories...
