@@ -97,9 +97,19 @@ export default function StartPage() {
 
     // Auto-login if not authenticated (guest user)
     if (!state.isAuthenticated) {
-      // Clear any existing user data to ensure fresh guest experience
+      // AGGRESSIVE RESET: Force all existing users to have 0 coins
+      try {
+        const { resetAllUsersTo0Coins } = await import('../../utils/auth')
+        resetAllUsersTo0Coins()
+      } catch (error) {
+        console.error('Error resetting users:', error)
+      }
+      
+      // Clear any existing user/token data to ensure fresh start
       localStorage.removeItem('techkwiz_user')
       localStorage.removeItem('techkwiz_token')
+      localStorage.removeItem('USER')
+      localStorage.removeItem('AUTH_TOKEN')
       
       const guestUser = {
         name: 'Guest User',
@@ -115,14 +125,18 @@ export default function StartPage() {
       
       // Wait for state update then check coins
       setTimeout(() => {
-        // Get actual coins from the just-created guest user
-        const currentCoins = 0 // Guests should always start with 0 coins
-        console.log(`Guest user created: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
+        // CRITICAL: Always check 0 coins for guests to trigger reward popup
+        const currentCoins = 0 // Guests should ALWAYS have 0 coins
+        console.log(`Guest user check: coins=${currentCoins}, entry_fee=${category.entry_fee}`)
+        
+        // With 0 coins and entry fee of 100+, this should ALWAYS show reward popup
         if (currentCoins >= category.entry_fee) {
-          console.log(`Guest has enough coins (${currentCoins} >= ${category.entry_fee}) - proceeding to quiz`)
-          router.push(`/quiz/${categoryId}`)
+          console.error(`UNEXPECTED: Guest has enough coins (${currentCoins} >= ${category.entry_fee}) - this should not happen!`)
+          // Force reward popup even if coins seem sufficient
+          setSelectedCategoryForReward(categoryId)
+          setShowRewardPopup(true)
         } else {
-          console.log(`Guest has insufficient coins (${currentCoins} < ${category.entry_fee}) - showing reward popup`)
+          console.log(`✅ CORRECT: Guest has insufficient coins (${currentCoins} < ${category.entry_fee}) - showing reward popup`)
           setSelectedCategoryForReward(categoryId)
           setShowRewardPopup(true)
         }
