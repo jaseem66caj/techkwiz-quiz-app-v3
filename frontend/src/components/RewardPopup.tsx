@@ -155,43 +155,69 @@ export function RewardPopup({
                 )}
               </motion.div>
 
-              {/* Action Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
                 className="space-y-4"
               >
-                {/* Claim Button */}
-                <button
-                  onClick={handleClaimReward}
-                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg relative overflow-hidden"
-                >
-                  <span className="relative z-10 flex items-center justify-center space-x-2">
-                    <span>Claim</span>
-                    <span className="bg-purple-800 px-2 py-1 rounded-md text-xs">Ad</span>
-                  </span>
-                  
-                  {/* Button shine effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{ x: [-100, 300] }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      repeatDelay: 3,
-                      ease: "easeInOut"
-                    }}
-                  />
-                </button>
+                {/* Show different buttons based on state */}
+                {!hasWatchedOnce ? (
+                  /* First time - show Claim Ad button */
+                  <button
+                    onClick={handleClaimReward}
+                    className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg relative overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center justify-center space-x-2">
+                      <span>Watch Ad</span>
+                      <span className="bg-purple-800 px-2 py-1 rounded-md text-xs">+100</span>
+                    </span>
+                    
+                    {/* Button shine effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: [-100, 300] }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity, 
+                        repeatDelay: 3,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </button>
+                ) : (
+                  /* After first ad - show Watch Again or Close */
+                  <>
+                    {canWatchAgain && onWatchAgain && (
+                      <button
+                        onClick={handleWatchAgain}
+                        className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      >
+                        <span className="flex items-center justify-center space-x-2">
+                          <span>Watch Again</span>
+                          <span className="bg-green-800 px-2 py-1 rounded-md text-xs">+100</span>
+                        </span>
+                      </button>
+                    )}
+                    
+                    <button
+                      onClick={() => onClose()}
+                      className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300"
+                    >
+                      Continue
+                    </button>
+                  </>
+                )}
 
-                {/* Close Button */}
-                <button
-                  onClick={handleClose}
-                  className="text-gray-400 hover:text-white transition-colors underline"
-                >
-                  Close
-                </button>
+                {/* Skip/Close Button - always available */}
+                {!hasWatchedOnce && (
+                  <button
+                    onClick={handleClose}
+                    className="text-gray-400 hover:text-white transition-colors underline"
+                  >
+                    Skip
+                  </button>
+                )}
               </motion.div>
             </>
           ) : (
