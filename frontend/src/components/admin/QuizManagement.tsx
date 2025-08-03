@@ -61,10 +61,35 @@ export default function QuizManagement() {
   });
 
   useEffect(() => {
-    if (adminUser?.token) {
-      fetchCategories();
-      fetchQuestions();
-    }
+    let isMounted = true;
+    
+    const loadData = async () => {
+      if (adminUser?.token && isMounted) {
+        console.log('🚀 QuizManagement: Starting data load');
+        
+        // Wait a moment for context to stabilize
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        if (isMounted) {
+          // Load categories first, then questions
+          await fetchCategories();
+          
+          if (isMounted) {
+            // Small delay between requests
+            await new Promise(resolve => setTimeout(resolve, 100));
+            await fetchQuestions();
+          }
+        }
+      } else if (!adminUser?.token) {
+        console.log('⚠️ QuizManagement: No admin token yet');
+      }
+    };
+
+    loadData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [adminUser]);
 
   const getAuthHeaders = () => ({
