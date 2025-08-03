@@ -65,7 +65,7 @@ export default function ProfileSettings() {
         updateData.new_password = formData.newPassword;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/profile`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(updateData)

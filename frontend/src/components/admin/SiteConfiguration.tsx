@@ -39,7 +39,7 @@ export default function SiteConfiguration() {
 
   const fetchSiteConfig = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/site-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/site-config`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -59,7 +59,7 @@ export default function SiteConfiguration() {
     
     setSaving(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6617dc70-8b2e-4e8f-97a1-db89d2a8d414.preview.emergentagent.com"}/api/admin/site-config`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/site-config`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(tempConfig)
