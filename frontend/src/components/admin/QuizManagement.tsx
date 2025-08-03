@@ -337,23 +337,23 @@ export default function QuizManagement() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 bg-gray-100 p-2 rounded-lg">
+      <div className="flex gap-4 bg-gray-100 p-3 rounded-xl">
         <button
           onClick={() => setActiveSubTab('categories')}
-          className={`px-6 py-3 rounded-md font-medium transition-colors ${
+          className={`px-8 py-4 rounded-xl font-semibold text-base transition-all ${
             activeSubTab === 'categories'
-              ? 'bg-white text-purple-700 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-purple-700 shadow-md'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
           }`}
         >
           🏷️ Categories ({categories.length})
         </button>
         <button
           onClick={() => setActiveSubTab('questions')}
-          className={`px-6 py-3 rounded-md font-medium transition-colors ${
+          className={`px-8 py-4 rounded-xl font-semibold text-base transition-all ${
             activeSubTab === 'questions'
-              ? 'bg-white text-purple-700 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-purple-700 shadow-md'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
           }`}
         >
           ❓ Questions ({questions.length})
