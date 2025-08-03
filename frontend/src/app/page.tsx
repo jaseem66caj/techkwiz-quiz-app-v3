@@ -23,6 +23,7 @@ export default function HomePage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
+  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(true)
 
   // Quick start quiz data
   const quickStartQuiz = [
