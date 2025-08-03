@@ -112,16 +112,32 @@ export default function QuizManagement() {
       console.log('❌ No admin token available for questions fetch');
       return;
     }
+    if (questionsLoading) {
+      console.log('⚠️ Questions already loading, skipping request');
+      return;
+    }
     try {
+      setQuestionsLoading(true);
+      console.log('❓ Fetching questions...');
+      
+      // Add delay to prevent request flooding
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions`, {
         headers: getAuthHeaders()
       });
+      
       if (response.ok) {
         const data = await response.json();
         setQuestions(data);
+        console.log(`✅ Loaded ${data.length} questions`);
+      } else {
+        console.error('❌ Questions fetch failed:', response.status);
       }
     } catch (error) {
-      console.error('Failed to fetch questions:', error);
+      console.error('❌ Questions fetch error:', error);
+    } finally {
+      setQuestionsLoading(false);
     }
   };
 
