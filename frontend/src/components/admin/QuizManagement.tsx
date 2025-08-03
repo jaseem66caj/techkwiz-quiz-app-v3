@@ -387,7 +387,12 @@ export default function QuizManagement() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 mb-12">
-            {categories.map((category) => (
+            {categories
+              .filter(category => 
+                category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                category.description.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((category) => (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
