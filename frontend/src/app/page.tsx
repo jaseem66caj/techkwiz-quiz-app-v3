@@ -282,7 +282,7 @@ export default function HomePage() {
       </div>
       
       {/* Reward Ad Popup */}
-      <RewardPopup
+      <NewRewardPopup
         isOpen={showRewardPopup}
         onClose={handlePopupClose}
         coinsEarned={lastEarnedCoins}
