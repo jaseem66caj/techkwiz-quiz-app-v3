@@ -106,7 +106,7 @@ export default function QuizManagement() {
         subcategories: newCategory.subcategories.split(',').map(s => s.trim())
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/categories`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/categories`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(categoryData)
