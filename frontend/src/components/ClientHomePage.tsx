@@ -246,11 +246,12 @@ export default function ClientHomePage() {
       
       {/* Reward Ad Popup */}
       <RewardPopup
-        isVisible={showRewardPopup}
+        isOpen={showRewardPopup}
         onClose={handlePopupClose}
-        onAdWatched={handleAdWatched}
-        isCorrectAnswer={isLastAnswerCorrect}
-        earnedCoins={lastEarnedCoins}
+        coinsEarned={lastEarnedCoins}
+        onClaimReward={handleAdWatched}
+        onSkipReward={handlePopupClose}
+        isCorrect={isLastAnswerCorrect}
         rewardCoins={100}
       />
     </>
