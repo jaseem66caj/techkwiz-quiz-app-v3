@@ -121,9 +121,20 @@ export default function HomePage() {
         console.log(`❌ Wrong answer, no coins earned`)
       }
       
-      // Show reward popup for both correct and wrong answers on first question
-      if (currentQuestion === 0) {
-        console.log('🔧 HomePage: Triggering reward popup on first question')
+      // Show reward popup based on configuration
+      const triggerAfterQuestions = rewardConfig?.trigger_after_questions || 1
+      const shouldShowPopup = rewardConfig?.is_active && 
+                              rewardConfig?.show_during_quiz && 
+                              (currentQuestion + 1) % triggerAfterQuestions === 0
+      
+      console.log('🔧 HomePage: Popup trigger check - currentQuestion:', currentQuestion, 
+                  'triggerAfterQuestions:', triggerAfterQuestions, 
+                  'shouldShowPopup:', shouldShowPopup,
+                  'is_active:', rewardConfig?.is_active,
+                  'show_during_quiz:', rewardConfig?.show_during_quiz)
+      
+      if (shouldShowPopup) {
+        console.log('🔧 HomePage: Triggering reward popup after', triggerAfterQuestions, 'questions')
         setShowRewardPopup(true)
         return // Don't proceed to next question yet
       }
