@@ -3,14 +3,59 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { useApp } from '../app/providers'
 import { QuizInterface } from './QuizInterface'
 import { Navigation } from './Navigation'
 import { RewardPopup } from './RewardPopup'
 
 export default function ClientHomePage() {
-  const { state, dispatch } = useApp()
   const router = useRouter()
+  
+  // Local component state
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [score, setScore] = useState(0)
+  const [showResult, setShowResult] = useState(false)
+  const [quizCompleted, setQuizCompleted] = useState(false)
+  const [showRewardPopup, setShowRewardPopup] = useState(false)
+  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
+  const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [appContext, setAppContext] = useState<any>(null)
+
+  // Initialize app context dynamically on client
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const { useApp } = await import('../app/providers')
+        const context = useApp()
+        setAppContext(context)
+        setIsLoaded(true)
+        
+        // Auto-create guest user if not authenticated
+        if (!context.state.isAuthenticated) {
+          const guestUser = {
+            id: `guest_${Date.now()}`,
+            name: 'Guest User', 
+            email: `guest_${Date.now()}@techkwiz.com`,
+            coins: 0,
+            level: 1,
+            totalQuizzes: 0,
+            correctAnswers: 0,
+            joinDate: new Date().toISOString(),
+            quizHistory: [],
+            achievements: []
+          }
+          
+          context.dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+        }
+      } catch (error) {
+        console.error('Failed to initialize app context:', error)
+        setIsLoaded(true) // Show app anyway
+      }
+    }
+    
+    initializeApp()
+  }, [])
   
   // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
