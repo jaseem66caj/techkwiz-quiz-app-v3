@@ -363,15 +363,27 @@ export default function QuizManagement() {
       {/* Categories Tab */}
       {activeSubTab === 'categories' && (
         <div className="space-y-8">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <h3 className="text-2xl font-bold text-gray-900">📋 Quiz Categories</h3>
-            <button
-              onClick={() => setShowAddCategory(true)}
-              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-4 rounded-xl flex items-center font-semibold shadow-lg text-base"
-            >
-              <span className="mr-3 text-xl">✨</span>
-              Add New Category
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search categories..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full sm:w-64"
+                />
+                <span className="absolute left-3 top-3.5 text-gray-400">🔍</span>
+              </div>
+              <button
+                onClick={() => setShowAddCategory(true)}
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-3 rounded-xl flex items-center font-semibold shadow-lg text-base whitespace-nowrap"
+              >
+                <span className="mr-3 text-xl">✨</span>
+                Add New Category
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 mb-12">
