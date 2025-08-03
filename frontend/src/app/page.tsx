@@ -61,19 +61,22 @@ export default function HomePage() {
     
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
-      const coinsEarned = isCorrect ? 50 : 0 // 50 coins per correct answer
+      // For personality questions (correct_answer = -1), all answers are "correct"
+      const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
+      const finalIsCorrect = isPersonalityQuestion || isCorrect
+      const coinsEarned = finalIsCorrect ? 25 : 0 // 25 coins per correct answer
       
       // Set states for popup
-      setIsLastAnswerCorrect(isCorrect)
+      setIsLastAnswerCorrect(finalIsCorrect)
       setLastEarnedCoins(coinsEarned)
       
-      if (isCorrect) {
+      if (finalIsCorrect) {
         setScore(score + 1)
         
         // Award coins for correct answers on homepage quiz
         dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         
-        console.log(`✅ Correct answer! Earned ${coinsEarned} coins`)
+        console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins`)
       } else {
         console.log(`❌ Wrong answer, no coins earned`)
       }
