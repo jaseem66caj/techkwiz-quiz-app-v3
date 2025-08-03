@@ -264,7 +264,10 @@ export function QuizInterface({
         {questionData.options.map((option, index) => (
           <button
             key={index}
-            onClick={() => onAnswerSelect(index)}
+            onClick={() => {
+              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
+              onAnswerSelect(index)
+            }}
             disabled={selectedAnswer !== null}
             className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
               selectedAnswer === index 
