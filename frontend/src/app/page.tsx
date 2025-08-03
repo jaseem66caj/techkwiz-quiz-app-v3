@@ -13,9 +13,7 @@ const ClientHomePage = dynamic(() => import('../components/ClientHomePage'), {
             <div className="text-xl font-bold text-white">
               <span className="text-orange-400">Tech</span>Kwiz
             </div>
-            <div className="bg-blue-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-blue-400/30">
-              <span className="text-sm font-bold text-blue-200">🪙 0</span>
-            </div>
+            {/* Hide header elements on home page loading state */}
           </div>
         </div>
       </nav>
