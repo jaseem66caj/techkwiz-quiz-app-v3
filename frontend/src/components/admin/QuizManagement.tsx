@@ -316,7 +316,7 @@ export default function QuizManagement() {
       {/* Header with Quick Stats */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
         <h2 className="text-3xl font-bold mb-8">📚 Quiz Management Dashboard</h2>
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="bg-white/20 rounded-xl p-6 text-center min-h-[100px] flex flex-col justify-center hover:bg-white/30 transition-all">
             <div className="text-4xl font-bold">{categories.length}</div>
             <div className="text-base opacity-90 mt-2">Total Categories</div>
