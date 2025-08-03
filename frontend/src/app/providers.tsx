@@ -162,11 +162,9 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AdminProvider>
-      <AppContext.Provider value={{ state, dispatch }}>
-        {children}
-      </AppContext.Provider>
-    </AdminProvider>
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
   )
 }
 
