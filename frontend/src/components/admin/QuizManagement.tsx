@@ -440,14 +440,14 @@ export default function QuizManagement() {
 
       {/* Questions Tab */}
       {activeSubTab === 'questions' && (
-        <div className="space-y-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <h3 className="text-xl font-semibold text-gray-900">❓ Quiz Questions</h3>
+        <div className="space-y-8">
+          <div className="flex justify-between items-center">
+            <h3 className="text-2xl font-bold text-gray-900">❓ Quiz Questions</h3>
             <button
               onClick={() => setShowAddQuestion(true)}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg flex items-center font-medium shadow-lg"
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl flex items-center font-semibold shadow-lg text-base"
             >
-              <span className="mr-2">➕</span>
+              <span className="mr-3 text-xl">➕</span>
               Add New Question
             </button>
           </div>
