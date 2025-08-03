@@ -164,113 +164,102 @@ export default function HomePage() {
     }
   }, [state.isAuthenticated, dispatch])
 
-  // Authenticated user quiz interface - Mobile-web style
-  return (
-    <>
-      <div className="min-h-screen bg-transparent">
+  // Show results
+  if (showResult && quizCompleted) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <Navigation />
-        
-        <main className="px-4 py-6">
-          <div className="space-y-4">
-            {!quizCompleted ? (
-              <>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full"
-                >
-                  <QuizInterface
-                    questionData={quickStartQuiz[currentQuestion]}
-                    currentQuestion={currentQuestion}
-                    totalQuestions={quickStartQuiz.length}
-                    selectedAnswer={selectedAnswer}
-                    onAnswerSelect={handleAnswerSelect}
-                  />
-                </motion.div>
-                
-                <div className="w-full">
-                  <FunFact fact={quickStartQuiz[currentQuestion]?.fun_fact} />
-                </div>
-                
-                {/* Mobile-web Quick Actions */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="w-full"
-                >
-                  <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                    <h3 className="text-white font-bold text-center mb-3 text-lg">
-                      🚀 Ready for More?
-                    </h3>
-                    <button
-                      onClick={() => router.push('/start')}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 text-base rounded-xl transition-colors"
-                    >
-                      Explore All Categories
-                    </button>
-                  </div>
-                </motion.div>
-              </>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl text-center border border-white/10"
-              >
-                <div className="text-4xl mb-4">🎉</div>
-                <h2 className="text-white text-xl font-bold mb-4">
-                  Quick Start Complete!
-                </h2>
-                <p className="text-blue-200 text-base mb-2">
-                  You scored {score} out of {quickStartQuiz.length}
-                </p>
-                <p className="text-orange-400 text-lg font-semibold mb-4">
-                  Earned: {score * 25} coins
-                </p>
-                <div className="text-blue-200 text-sm mb-4">
-                  Redirecting to categories...
-                </div>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => router.push('/start')}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 text-base rounded-lg transition-colors"
-                  >
-                    Continue to Categories
-                  </button>
-                  <button
-                    onClick={resetQuiz}
-                    className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 text-base rounded-lg transition-colors"
-                  >
-                    Play Again
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Mobile-web Features Section */}
+        <main className="flex-1 flex items-center justify-center p-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-effect p-8 rounded-2xl text-center max-w-md"
           >
-            <Features />
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Quiz Completed!
+            </h2>
+            <div className="space-y-3">
+              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-4 border border-green-400/30">
+                <p className="text-green-300 text-sm font-medium">Score</p>
+                <p className="text-white text-2xl font-bold">{score}/{quickStartQuiz.length}</p>
+              </div>
+              
+              <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-4 border border-orange-400/30">
+                <p className="text-orange-300 text-sm font-medium">Coins Earned</p>
+                <p className="text-white text-2xl font-bold">{score * 25}</p>
+              </div>
+            </div>
+            
+            <p className="text-blue-200 text-sm mt-6">
+              Redirecting to categories...
+            </p>
           </motion.div>
         </main>
       </div>
+    )
+  }
 
-      {/* Reward Popup */}
-      <RewardPopup
-        isOpen={showRewardPopup}
-        onClose={() => setShowRewardPopup(false)}
-        coinsEarned={lastEarnedCoins}
-        onClaimReward={handleClaimReward}
-        onSkipReward={handleSkipReward}
-        isCorrect={isLastAnswerCorrect}
+  // Main quiz interface
+  return (
+    <>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <Navigation />
+        
+        <main className="flex-1 p-4 flex flex-col items-center justify-center">
+          
+          {/* Welcome Message */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-6"
+          >
+            <h1 className="text-3xl font-bold text-white mb-2">
+              🎉 Welcome to <span className="text-orange-400">Youth Quiz Hub!</span>
+            </h1>
+            <p className="text-blue-200 text-base">
+              Level up with interactive quizzes designed for Gen Z!
+            </p>
+          </motion.div>
+          
+          {/* Quiz Interface */}
+          <div className="w-full max-w-md">
+            <QuizInterface
+              questionData={quickStartQuiz[currentQuestion]}
+              currentQuestion={currentQuestion}
+              totalQuestions={quickStartQuiz.length}
+              selectedAnswer={selectedAnswer}
+              onAnswerSelect={handleAnswerSelect}
+            />
+          </div>
+          
+          {/* Features teaser */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-8 text-center"
+          >
+            <div className="bg-gray-800/30 backdrop-blur-sm p-4 rounded-xl border border-white/10">
+              <p className="text-blue-200 text-sm mb-2">🚀 <strong>What's New:</strong></p>
+              <div className="text-xs text-blue-200 space-y-1">
+                <div>💰 Lower entry fees (20-45 coins)</div>
+                <div>🏆 25 coins per correct answer</div>
+                <div>🎯 Interactive formats & Gen Z vibes</div>
+              </div>
+            </div>
+          </motion.div>
+          
+        </main>
+      </div>
+      
+      {/* Rewarded Ad Popup */}
+      <RewardedAdPopup
+        isVisible={showRewardPopup}
+        onClose={handlePopupClose}
+        onAdWatched={handleAdWatched}
+        isCorrectAnswer={isLastAnswerCorrect}
+        earnedCoins={lastEarnedCoins}
         rewardCoins={100}
       />
     </>
