@@ -96,7 +96,7 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchQuestions = async (catId: string, count: number = 10) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
       const response = await fetch(`${backendUrl}/api/quiz/questions/${catId}?count=${count}`);
       
       if (response.ok) {
