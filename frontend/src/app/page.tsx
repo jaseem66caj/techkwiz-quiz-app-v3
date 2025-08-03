@@ -4,26 +4,29 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { Navigation } from '../components/Navigation'
-import { AdBanner } from '../components/AdBanner'
 import { QuizInterface } from '../components/QuizInterface'
-import { FunFact } from '../components/FunFact'
-import { Features } from '../components/Features'
-import { AuthModal } from '../components/AuthModal'
-import { RewardPopup } from '../components/RewardPopup'
+import { Navigation } from '../components/Navigation'
+import { RewardedAdPopup } from '../components/RewardedAdPopup'
 
 export default function HomePage() {
-  const router = useRouter()
   const { state, dispatch } = useApp()
+  const router = useRouter()
+  
+  // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
-  const [quizCompleted, setQuizCompleted] = useState(false)
   const [showResult, setShowResult] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [quizCompleted, setQuizCompleted] = useState(false)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
+  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
-  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(true)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   // Quick start quiz data - Youth-focused
   const quickStartQuiz = [
