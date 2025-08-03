@@ -36,6 +36,10 @@ api_router = APIRouter(prefix="/api")
 async def root():
     return {"message": "TechKwiz API is running"}
 
+@api_router.get("/health")
+async def health_check():
+    return {"status": "healthy", "message": "TechKwiz API is running"}
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
