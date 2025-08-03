@@ -142,6 +142,12 @@ export function NewRewardPopup({
     return null
   }
 
+  // Don't show popup during quiz if config disables it
+  if (!config?.show_during_quiz) {
+    console.log('🚫 NewRewardPopup: Popup blocked - config.show_during_quiz is false')
+    return null
+  }
+
   const effectiveRewardCoins = config?.coin_reward || rewardCoins
   console.log('🪙 NewRewardPopup: Using coin reward:', effectiveRewardCoins, 'from config:', config?.coin_reward, 'fallback:', rewardCoins)
 
