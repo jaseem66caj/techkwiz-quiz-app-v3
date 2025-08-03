@@ -298,6 +298,8 @@ export default function HomePage() {
         coinsEarned={lastEarnedCoins}
         onClaimReward={handleClaimReward}
         onSkipReward={handleSkipReward}
+        isCorrect={isLastAnswerCorrect}
+        rewardCoins={100}
       />
     </>
   )
