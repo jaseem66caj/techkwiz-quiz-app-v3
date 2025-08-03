@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-bold text-gray-900">TechKwiz Admin</h1>
@@ -101,16 +101,16 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full px-8 py-8">
         <div className="flex space-x-8">
           {/* Sidebar Navigation */}
-          <div className="w-64 flex-shrink-0">
+          <div className="w-80 flex-shrink-0">
             <nav className="space-y-1 sticky top-24">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center px-3 py-2 text-left rounded-md transition-colors text-sm font-medium ${
+                  className={`w-full flex items-center px-4 py-3 text-left rounded-md transition-colors text-sm font-medium ${
                     activeTab === tab.id
                       ? 'bg-indigo-100 text-indigo-700 border-l-4 border-indigo-500'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -123,9 +123,9 @@ export default function AdminDashboard() {
             </nav>
           </div>
 
-          {/* Main Content */}
+          {/* Main Content - Much Wider */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-lg shadow px-6 py-6">
+            <div className="bg-white rounded-lg shadow px-8 py-8 min-h-screen">
               {renderActiveTab()}
             </div>
           </div>
