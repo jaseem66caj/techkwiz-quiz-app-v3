@@ -89,6 +89,10 @@ export default function QuizManagement() {
   };
 
   const fetchQuestions = async () => {
+    if (!adminUser?.token) {
+      console.log('❌ No admin token available for questions fetch');
+      return;
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions`, {
         headers: getAuthHeaders()
