@@ -55,11 +55,7 @@ export default function HomePage() {
   ]
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (!state.isAuthenticated) {
-      setShowAuthModal(true)
-      return
-    }
-
+    if (selectedAnswer !== null) return
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
