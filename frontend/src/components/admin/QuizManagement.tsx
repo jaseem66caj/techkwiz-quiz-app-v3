@@ -64,11 +64,15 @@ export default function QuizManagement() {
   }, []);
 
   const getAuthHeaders = () => ({
-    'Authorization': `Bearer ${adminUser?.token}`,
+    'Authorization': `Bearer ${adminUser?.token || ''}`,
     'Content-Type': 'application/json'
   });
 
   const fetchCategories = async () => {
+    if (!adminUser?.token) {
+      console.log('❌ No admin token available for categories fetch');
+      return;
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/categories`, {
         headers: getAuthHeaders()
