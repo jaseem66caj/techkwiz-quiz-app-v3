@@ -2,9 +2,9 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/robots.txt/route": "app/robots.txt/route.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js",
   "/about/page": "app/about/page.js",
   "/admin/direct/page": "app/admin/direct/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
   "/admin/forgot-password/page": "app/admin/forgot-password/page.js",
   "/admin/page": "app/admin/page.js",
   "/admin/reset-password/page": "app/admin/reset-password/page.js",
@@ -13,6 +13,6 @@
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",
   "/profile/page": "app/profile/page.js",
-  "/start/page": "app/start/page.js",
-  "/quiz/[category]/page": "app/quiz/[category]/page.js"
+  "/quiz/[category]/page": "app/quiz/[category]/page.js",
+  "/start/page": "app/start/page.js"
 }
