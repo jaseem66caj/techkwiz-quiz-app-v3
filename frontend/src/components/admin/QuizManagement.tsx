@@ -374,25 +374,25 @@ export default function QuizManagement() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
             {categories.map((category) => (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:border-purple-300"
+                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:border-purple-300 min-h-[280px] flex flex-col"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center">
+                  <div className="flex items-center flex-1">
                     <span className="text-4xl mr-4">{category.icon}</span>
-                    <div>
-                      <h4 className="font-bold text-gray-900 text-lg">{category.name}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-gray-900 text-lg leading-tight">{category.name}</h4>
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{category.description}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => handleDeleteCategory(category.id)}
-                    className="text-red-500 hover:text-red-700 text-sm bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
+                    className="text-red-500 hover:text-red-700 text-sm bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors ml-2 flex-shrink-0"
                   >
                     🗑️ Delete
                   </button>
