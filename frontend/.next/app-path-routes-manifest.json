@@ -1,0 +1,18 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/about/page": "/about",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/admin/direct/page": "/admin/direct",
+  "/admin/forgot-password/page": "/admin/forgot-password",
+  "/admin/page": "/admin",
+  "/admin/reset-password/page": "/admin/reset-password",
+  "/admin/setup/page": "/admin/setup",
+  "/leaderboard/page": "/leaderboard",
+  "/page": "/",
+  "/profile/page": "/profile",
+  "/privacy/page": "/privacy",
+  "/quiz/[category]/page": "/quiz/[category]",
+  "/start/page": "/start"
+}
