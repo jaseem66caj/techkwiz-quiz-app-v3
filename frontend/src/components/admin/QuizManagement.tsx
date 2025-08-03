@@ -495,9 +495,11 @@ export default function QuizManagement() {
           </div>
 
           {/* Questions List */}
-          <div className="space-y-4">
-            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-              📊 Showing {filteredQuestions.length} of {questions.length} questions
+          <div className="space-y-6">
+            <div className="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500">
+              <span className="text-blue-800 font-semibold text-base">
+                📊 Showing {filteredQuestions.length} of {questions.length} questions
+              </span>
             </div>
             
             {filteredQuestions.map((question, index) => (
@@ -506,7 +508,7 @@ export default function QuizManagement() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 min-h-[200px]"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
