@@ -106,8 +106,8 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
             </div>
           </div>
           
-          {/* User info bar - mobile-web style */}
-          {state.isAuthenticated && (
+          {/* User info bar - mobile-web style - Hidden on home page */}
+          {state.isAuthenticated && !hideHeaderElements && (
             <div className="mt-2 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
                 <span className="text-gray-300 text-sm">
