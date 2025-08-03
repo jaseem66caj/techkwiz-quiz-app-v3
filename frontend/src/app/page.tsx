@@ -21,6 +21,11 @@ export default function HomePage() {
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
 
+  // Debug reward popup state
+  useEffect(() => {
+    console.log('🔧 HomePage: showRewardPopup state changed to:', showRewardPopup)
+  }, [showRewardPopup])
+
   // Auto-create guest user if not authenticated
   useEffect(() => {
     if (!state.isAuthenticated) {
