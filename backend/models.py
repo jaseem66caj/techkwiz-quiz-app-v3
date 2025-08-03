@@ -73,9 +73,15 @@ class QuizQuestionCreate(BaseModel):
     options: List[str]
     correct_answer: int
     difficulty: QuizDifficulty
+    question_type: QuestionType = QuestionType.multiple_choice
     fun_fact: str
     category: str
     subcategory: str
+    emoji_clue: Optional[str] = None
+    visual_options: Optional[List[str]] = None
+    personality_trait: Optional[str] = None
+    prediction_year: Optional[str] = None
+    youth_engagement_score: Optional[int] = None
 
 class QuizQuestionUpdate(BaseModel):
     question: Optional[str] = None
