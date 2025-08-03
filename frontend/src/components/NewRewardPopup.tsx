@@ -138,10 +138,12 @@ export function NewRewardPopup({
 
   // Don't show popup if config says it's not active
   if (!config?.is_active) {
+    console.log('🚫 NewRewardPopup: Popup blocked - config.is_active is false')
     return null
   }
 
   const effectiveRewardCoins = config?.coin_reward || rewardCoins
+  console.log('🪙 NewRewardPopup: Using coin reward:', effectiveRewardCoins, 'from config:', config?.coin_reward, 'fallback:', rewardCoins)
 
   return (
     <AnimatePresence>
