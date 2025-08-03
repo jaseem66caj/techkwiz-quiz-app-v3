@@ -25,27 +25,29 @@ export default function HomePage() {
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(true)
 
-  // Quick start quiz data
+  // Quick start quiz data - Youth-focused
   const quickStartQuiz = [
     {
       id: 'quick-0',
-      question: "Which programming language is known as the 'language of the web'?",
-      options: ["JavaScript", "Python", "Java", "C++"],
-      correct_answer: 0,
+      question: "Your vibe check: Pick your aesthetic",
+      options: ["Dark Academia ☕📚", "Soft Girl 🌸✨", "Y2K Cyber 💿🔮", "Cottagecore 🍄🌿"],
+      correct_answer: -1, // No correct answer for personality
       difficulty: 'beginner' as const,
-      fun_fact: "JavaScript was created in just 10 days by Brendan Eich at Netscape in 1995.",
-      category: 'programming',
-      subcategory: 'Languages'
+      question_type: 'this_or_that' as const,
+      fun_fact: "Your aesthetic choice reflects your inner personality and how you want to be perceived by others!",
+      category: 'swipe-personality',
+      subcategory: 'Aesthetic'
     },
     {
       id: 'quick-1',
-      question: "What does 'AI' stand for in technology?",
-      options: ["Advanced Intelligence", "Artificial Intelligence", "Automated Intelligence", "Algorithmic Intelligence"],
-      correct_answer: 1,
+      question: "Decode this viral trend: 💃🔥🎵",
+      options: ["Buss It Challenge", "Renegade Dance", "WAP Dance", "Savage Challenge"],
+      correct_answer: 0,
       difficulty: 'beginner' as const,
-      fun_fact: "The term 'Artificial Intelligence' was coined by John McCarthy in 1956 at the Dartmouth Conference.",
-      category: 'ai',
-      subcategory: 'Fundamentals'
+      question_type: 'emoji_decode' as const,
+      fun_fact: "The Buss It Challenge went viral during the pandemic, with millions participating worldwide!",
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
     }
   ]
 
