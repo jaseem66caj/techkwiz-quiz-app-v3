@@ -80,31 +80,29 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ width: '100vw' }}>
+    <div className="min-h-screen bg-gray-50" style={{ width: '100vw', margin: 0, padding: 0 }}>
       {/* Full Width Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40" style={{ width: '100%' }}>
-        <div className="px-12 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-2xl font-bold text-gray-900">TechKwiz Admin Dashboard</h1>
-              <span className="text-base text-gray-600 bg-gray-100 px-4 py-2 rounded-lg">
-                Welcome, {adminUser.username}
-              </span>
-            </div>
-            <button
-              onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors font-medium text-base"
-            >
-              Logout
-            </button>
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40" style={{ width: '100vw', margin: 0 }}>
+        <div className="flex justify-between items-center px-8 py-4">
+          <div className="flex items-center space-x-6">
+            <h1 className="text-2xl font-bold text-gray-900">TechKwiz Admin Dashboard</h1>
+            <span className="text-base text-gray-600 bg-gray-100 px-4 py-2 rounded-lg">
+              Welcome, {adminUser.username}
+            </span>
           </div>
+          <button
+            onClick={logout}
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors font-medium text-base"
+          >
+            Logout
+          </button>
         </div>
       </header>
 
       {/* Full Width Content Area */}
-      <div className="flex" style={{ width: '100vw', minHeight: 'calc(100vh - 80px)' }}>
-        {/* Wider Sidebar */}
-        <div className="bg-white shadow-sm border-r border-gray-200" style={{ width: '400px', minHeight: '100%' }}>
+      <div className="flex" style={{ width: '100vw', minHeight: 'calc(100vh - 80px)', margin: 0, padding: 0 }}>
+        {/* Sidebar */}
+        <div className="bg-white shadow-sm border-r border-gray-200 flex-shrink-0" style={{ width: '350px' }}>
           <nav className="p-6">
             <div className="space-y-3">
               {tabs.map((tab) => (
@@ -125,9 +123,9 @@ export default function AdminDashboard() {
           </nav>
         </div>
 
-        {/* Much Wider Main Content Area */}
-        <div className="flex-1 bg-white" style={{ minWidth: 'calc(100vw - 400px)' }}>
-          <div className="p-12" style={{ width: '100%' }}>
+        {/* Main Content Area - Full Remaining Width */}
+        <div className="flex-1 bg-white" style={{ width: 'calc(100vw - 350px)', minHeight: '100%' }}>
+          <div className="p-8 w-full">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 20 }}
