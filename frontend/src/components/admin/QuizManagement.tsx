@@ -197,39 +197,39 @@ export default function QuizManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 pb-4">
-        <h2 className="text-xl font-semibold text-gray-900">Quiz Management</h2>
-        <p className="mt-1 text-sm text-gray-500">Manage your quiz categories and questions</p>
+      <div className="border-b border-gray-200 pb-6 mb-8">
+        <h2 className="text-3xl font-bold text-gray-900">Quiz Management</h2>
+        <p className="mt-2 text-lg text-gray-600">Manage your quiz categories and questions</p>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <div className="text-2xl font-bold text-gray-900">{categories.length}</div>
-          <div className="text-sm text-gray-500">Total Categories</div>
+      {/* Stats Grid - Full Width */}
+      <div className="grid grid-cols-4 gap-8 mb-10">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-8 rounded-2xl text-white">
+          <div className="text-4xl font-bold mb-2">{categories.length}</div>
+          <div className="text-lg opacity-90">Total Categories</div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <div className="text-2xl font-bold text-gray-900">{questions.length}</div>
-          <div className="text-sm text-gray-500">Total Questions</div>
+        <div className="bg-gradient-to-r from-green-500 to-green-600 p-8 rounded-2xl text-white">
+          <div className="text-4xl font-bold mb-2">{questions.length}</div>
+          <div className="text-lg opacity-90">Total Questions</div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <div className="text-2xl font-bold text-green-600">{questions.filter(q => q.difficulty === 'beginner').length}</div>
-          <div className="text-sm text-gray-500">Beginner Questions</div>
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-8 rounded-2xl text-white">
+          <div className="text-4xl font-bold mb-2">{questions.filter(q => q.difficulty === 'beginner').length}</div>
+          <div className="text-lg opacity-90">Beginner Questions</div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <div className="text-2xl font-bold text-red-600">{questions.filter(q => q.difficulty === 'advanced').length}</div>
-          <div className="text-sm text-gray-500">Advanced Questions</div>
+        <div className="bg-gradient-to-r from-red-500 to-red-600 p-8 rounded-2xl text-white">
+          <div className="text-4xl font-bold mb-2">{questions.filter(q => q.difficulty === 'advanced').length}</div>
+          <div className="text-lg opacity-90">Advanced Questions</div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 mb-8">
+        <nav className="-mb-px flex space-x-12">
           <button
             onClick={() => setActiveSubTab('categories')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-4 px-2 border-b-4 font-semibold text-lg ${
               activeSubTab === 'categories'
                 ? 'border-indigo-500 text-indigo-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -239,7 +239,7 @@ export default function QuizManagement() {
           </button>
           <button
             onClick={() => setActiveSubTab('questions')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-4 px-2 border-b-4 font-semibold text-lg ${
               activeSubTab === 'questions'
                 ? 'border-indigo-500 text-indigo-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -252,63 +252,75 @@ export default function QuizManagement() {
 
       {/* Categories Tab */}
       {activeSubTab === 'categories' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-            <div className="flex-1 min-w-0">
-              <div className="max-w-lg">
-                <input
-                  type="text"
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="Search categories..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+        <div className="w-full">
+          {/* Action Bar */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex-1 max-w-xl">
+              <input
+                type="text"
+                className="w-full px-6 py-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Search categories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-            <div className="flex-shrink-0">
-              <button
-                onClick={() => setShowAddCategory(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Add Category
-              </button>
-            </div>
+            <button
+              onClick={() => setShowAddCategory(true)}
+              className="ml-6 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-lg rounded-xl shadow-lg transition-all"
+            >
+              ✨ Add New Category
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Categories Grid - Full Width */}
+          <div className="grid grid-cols-3 gap-8">
             {categories
               .filter(category => 
                 category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 category.description.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((category) => (
-              <div key={category.id} className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className="text-2xl mr-3">{category.icon}</span>
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-900">{category.name}</h3>
-                        <p className="text-sm text-gray-500">{category.description}</p>
-                      </div>
+              <div key={category.id} className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:shadow-xl hover:border-indigo-300 transition-all">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center flex-1">
+                    <span className="text-4xl mr-4">{category.icon}</span>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{category.name}</h3>
+                      <p className="text-base text-gray-600">{category.description}</p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteCategory(category.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
                   </div>
-                  
-                  <div className="mt-4 grid grid-cols-2 gap-4">
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">Entry Fee</dt>
-                      <dd className="text-lg font-semibold text-green-600">{category.entry_fee} coins</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">Questions</dt>
-                      <dd className="text-lg font-semibold text-indigo-600">{getQuestionCount(category.id)}</dd>
-                    </div>
+                  <button
+                    onClick={() => handleDeleteCategory(category.id)}
+                    className="px-4 py-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all font-medium"
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-6 mb-6">
+                  <div className="text-center p-4 bg-green-50 rounded-xl">
+                    <div className="text-2xl font-bold text-green-600">{category.entry_fee}</div>
+                    <div className="text-sm text-green-700 font-medium">Entry Fee (coins)</div>
+                  </div>
+                  <div className="text-center p-4 bg-blue-50 rounded-xl">
+                    <div className="text-2xl font-bold text-blue-600">{getQuestionCount(category.id)}</div>
+                    <div className="text-sm text-blue-700 font-medium">Questions</div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-3">Topics:</div>
+                  <div className="flex flex-wrap gap-2">
+                    {category.subcategories.slice(0, 3).map((sub, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
+                        {sub}
+                      </span>
+                    ))}
+                    {category.subcategories.length > 3 && (
+                      <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+                        +{category.subcategories.length - 3} more
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -319,21 +331,24 @@ export default function QuizManagement() {
 
       {/* Questions Tab */}
       {activeSubTab === 'questions' && (
-        <div className="space-y-6">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="w-full">
+          {/* Filters - Full Width */}
+          <div className="bg-gray-50 p-8 rounded-2xl mb-8">
+            <div className="grid grid-cols-4 gap-6">
               <div>
+                <label className="block text-base font-semibold text-gray-700 mb-3">Search Questions</label>
                 <input
                   type="text"
-                  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Search questions..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div>
+                <label className="block text-base font-semibold text-gray-700 mb-3">Category</label>
                 <select
-                  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                 >
@@ -344,8 +359,9 @@ export default function QuizManagement() {
                 </select>
               </div>
               <div>
+                <label className="block text-base font-semibold text-gray-700 mb-3">Difficulty</label>
                 <select
-                  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   value={selectedDifficulty}
                   onChange={(e) => setSelectedDifficulty(e.target.value)}
                 >
@@ -355,60 +371,76 @@ export default function QuizManagement() {
                   <option value="advanced">Advanced</option>
                 </select>
               </div>
-              <div>
+              <div className="flex items-end">
                 <button
                   onClick={() => setShowAddQuestion(true)}
-                  className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+                  className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold text-base rounded-xl shadow-lg transition-all"
                 >
-                  Add Question
+                  ➕ Add Question
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="bg-white shadow overflow-hidden sm:rounded-md">
-            <ul className="divide-y divide-gray-200">
-              {questions
-                .filter(question => {
-                  if (selectedCategory !== 'all' && question.category !== selectedCategory) return false;
-                  if (selectedDifficulty !== 'all' && question.difficulty !== selectedDifficulty) return false;
-                  if (searchTerm && !question.question.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-                  return true;
-                })
-                .map((question) => (
-                <li key={question.id}>
-                  <div className="px-4 py-4 hover:bg-gray-50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 mb-2">{question.question}</p>
-                        <div className="grid grid-cols-2 gap-2 mb-2">
-                          {question.options.map((option, idx) => (
-                            <div
-                              key={idx}
-                              className={`text-xs p-2 rounded border ${
-                                idx === question.correct_answer
-                                  ? 'bg-green-50 border-green-200 text-green-800'
-                                  : 'bg-gray-50 border-gray-200 text-gray-700'
-                              }`}
-                            >
-                              {option}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <button
-                          onClick={() => handleDeleteQuestion(question.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
+          {/* Questions List - Full Width */}
+          <div className="grid grid-cols-2 gap-8">
+            {questions
+              .filter(question => {
+                if (selectedCategory !== 'all' && question.category !== selectedCategory) return false;
+                if (selectedDifficulty !== 'all' && question.difficulty !== selectedDifficulty) return false;
+                if (searchTerm && !question.question.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+                return true;
+              })
+              .map((question) => (
+              <div key={question.id} className="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-indigo-300 transition-all">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center space-x-3">
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                      question.difficulty === 'beginner' ? 'bg-green-100 text-green-800' :
+                      question.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {question.difficulty.toUpperCase()}
+                    </span>
+                    <span className="text-sm text-gray-500 font-medium">
+                      {categories.find(c => c.id === question.category)?.name || question.category}
+                    </span>
                   </div>
-                </li>
-              ))}
-            </ul>
+                  <button
+                    onClick={() => handleDeleteQuestion(question.id)}
+                    className="px-3 py-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all font-medium"
+                  >
+                    🗑️
+                  </button>
+                </div>
+                
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">{question.question}</h4>
+                
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {question.options.map((option, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-lg border-2 text-sm ${
+                        idx === question.correct_answer
+                          ? 'bg-green-50 border-green-300 text-green-800 font-semibold'
+                          : 'bg-gray-50 border-gray-200 text-gray-700'
+                      }`}
+                    >
+                      <span className="font-bold mr-2">{String.fromCharCode(65 + idx)}.</span>
+                      {option}
+                    </div>
+                  ))}
+                </div>
+                
+                {question.fun_fact && (
+                  <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+                    <p className="text-blue-800 text-sm">
+                      💡 <span className="font-semibold">Fun Fact:</span> {question.fun_fact}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}
