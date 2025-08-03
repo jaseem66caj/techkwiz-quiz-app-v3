@@ -61,22 +61,25 @@ export default function HomePage() {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
       const coinsEarned = isCorrect ? 50 : 0 // 50 coins per correct answer
       
+      // Set states for popup
+      setIsLastAnswerCorrect(isCorrect)
+      setLastEarnedCoins(coinsEarned)
+      
       if (isCorrect) {
         setScore(score + 1)
-        setLastEarnedCoins(coinsEarned)
         
         // Award coins for correct answers on homepage quiz
         dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         
         console.log(`✅ Correct answer! Earned ${coinsEarned} coins`)
-        
-        // Show reward popup after first correct answer with earned coins
-        if (currentQuestion === 0) {
-          setShowRewardPopup(true)
-          return // Don't proceed to next question yet
-        }
       } else {
         console.log(`❌ Wrong answer, no coins earned`)
+      }
+      
+      // Show reward popup for both correct and wrong answers on first question
+      if (currentQuestion === 0) {
+        setShowRewardPopup(true)
+        return // Don't proceed to next question yet
       }
       
       // Proceed to next question or complete quiz
