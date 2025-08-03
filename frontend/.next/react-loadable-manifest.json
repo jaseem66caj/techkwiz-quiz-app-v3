@@ -4,9 +4,5 @@
     "files": [
       "static/chunks/_app-pages-browser_src_components_ClientHomePage_tsx.js"
     ]
-  },
-  "components/ClientHomePage.tsx -> ../app/providers": {
-    "id": "components/ClientHomePage.tsx -> ../app/providers",
-    "files": []
   }
 }
