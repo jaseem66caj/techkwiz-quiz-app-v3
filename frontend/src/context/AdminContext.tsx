@@ -26,14 +26,15 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
     
     if (storedToken && storedUsername) {
-      // Verify token with backend (but don't block main app)
-      verifyToken(storedToken, storedUsername);
-    } else {
-      setLoading(false);
+      // Verify token with backend (non-blocking - don't wait for this)
+      verifyToken(storedToken, storedUsername).catch(console.error);
     }
+    
+    // Always set loading to false immediately to not block main app
+    setLoading(false);
   }, []);
 
   const verifyToken = async (token: string, username: string) => {
