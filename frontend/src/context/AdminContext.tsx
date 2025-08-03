@@ -26,7 +26,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://a7600ffa-234c-454b-9044-5bce3717794f.preview.emergentagent.com';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://b2f8a3e3-86e1-4058-b3bd-70f281b2a8b8.preview.emergentagent.com';
     
     if (storedToken && storedUsername) {
       console.log('🔄 Found stored credentials, setting admin user immediately');
@@ -44,7 +44,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const verifyToken = async (token: string, username: string) => {
     try {
       console.log('🔐 Verifying token for:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://a7600ffa-234c-454b-9044-5bce3717794f.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://b2f8a3e3-86e1-4058-b3bd-70f281b2a8b8.preview.emergentagent.com';
       console.log('🌐 Using backend URL for verification:', backendUrl);
       
       const response = await fetch(`${backendUrl}/api/admin/verify`, {
@@ -80,7 +80,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       console.log('🔍 Admin login attempt:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://a7600ffa-234c-454b-9044-5bce3717794f.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://b2f8a3e3-86e1-4058-b3bd-70f281b2a8b8.preview.emergentagent.com';
       console.log('🌐 Using backend URL:', backendUrl);
       
       const response = await fetch(`${backendUrl}/api/admin/login`, {
