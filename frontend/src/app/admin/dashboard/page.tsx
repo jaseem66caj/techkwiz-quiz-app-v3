@@ -82,16 +82,16 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="w-full px-6 sm:px-8 lg:px-12">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">TechKwiz Admin</h1>
-              <span className="ml-4 text-sm text-gray-500">Welcome, {adminUser.username}</span>
+              <h1 className="text-3xl font-bold text-gray-900">TechKwiz Admin</h1>
+              <span className="ml-6 text-base text-gray-600 bg-gray-100 px-4 py-2 rounded-full">Welcome, {adminUser.username}</span>
             </div>
             <button
               onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors font-medium text-base"
             >
               Logout
             </button>
