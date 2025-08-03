@@ -102,11 +102,11 @@ function appReducer(state: AppState, action: any) {
         correctAnswers: state.user.correctAnswers + quizResult.correctAnswers,
       }
       
-      // Award coins based on quiz performance (50 coins per correct answer)
+      // Award coins based on quiz performance (25 coins per correct answer)
       const coinsEarned = quizResult.coinsEarned || 0
       updatedUserWithQuiz.coins = state.user.coins + coinsEarned
       
-      console.log(`🎉 Quiz completed! Earned ${coinsEarned} coins (${quizResult.correctAnswers} correct × 50)`)
+      console.log(`🎉 Quiz completed! Earned ${coinsEarned} coins (${quizResult.correctAnswers} correct × 25)`)
       
       // Calculate new level (every 5 quizzes)
       const newLevel = Math.floor(updatedUserWithQuiz.totalQuizzes / 5) + 1
