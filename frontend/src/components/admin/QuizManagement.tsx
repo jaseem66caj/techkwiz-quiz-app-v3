@@ -86,7 +86,7 @@ export default function QuizManagement() {
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/questions`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
