@@ -28,7 +28,7 @@ export default function HomePage() {
     setIsHydrated(true)
   }, [])
 
-  // Quick start quiz data - Youth-focused
+  // Youth-focused quick start quiz data
   const quickStartQuiz = [
     {
       id: 'quick-0',
