@@ -153,10 +153,7 @@ export default function ClientHomePage() {
     )
   }
 
-  // Auto-create guest user if not authenticated
-  useEffect(() => {
-    // This is now handled in the initial useEffect
-  }, [])
+  // (Auto-create guest user is now handled in useEffect above)
 
   // Show results
   if (showResult && quizCompleted) {
