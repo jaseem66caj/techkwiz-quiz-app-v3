@@ -290,8 +290,9 @@ export default function QuizPage({ params }: QuizPageProps) {
   }
 
   const handleClaimReward = () => {
-    // Double the coins
-    dispatch({ type: 'UPDATE_COINS', payload: lastEarnedCoins })
+    // Give 100 coins for watching ad
+    const adRewardCoins = 100
+    dispatch({ type: 'UPDATE_COINS', payload: adRewardCoins })
     
     // Proceed to next question
     if (currentQuestion < quizData.length - 1) {
