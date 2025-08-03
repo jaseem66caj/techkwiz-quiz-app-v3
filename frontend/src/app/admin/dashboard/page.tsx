@@ -130,7 +130,7 @@ export default function AdminDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-sm p-8 min-h-[600px]"
+              className="bg-white rounded-2xl shadow-lg p-10 min-h-[700px] border border-gray-100"
             >
               {renderActiveTab()}
             </motion.div>
