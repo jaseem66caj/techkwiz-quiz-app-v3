@@ -205,11 +205,13 @@ class AdSlotUpdate(BaseModel):
     ad_type: Optional[str] = None
     is_active: Optional[bool] = None
 
-# Rewarded Popup Configuration
+# Rewarded Popup Configuration (Granular per category and homepage)
 class RewardedPopupConfig(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    category_id: Optional[str] = None  # None for homepage, category_id for specific categories
+    category_name: Optional[str] = None  # For easy identification in admin
     trigger_after_questions: int = 5
-    coin_reward: int = 200
+    coin_reward: int = 100
     is_active: bool = True
     show_on_insufficient_coins: bool = True
     show_during_quiz: bool = True
@@ -217,6 +219,8 @@ class RewardedPopupConfig(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 class RewardedPopupConfigUpdate(BaseModel):
+    category_id: Optional[str] = None
+    category_name: Optional[str] = None
     trigger_after_questions: Optional[int] = None
     coin_reward: Optional[int] = None
     is_active: Optional[bool] = None
