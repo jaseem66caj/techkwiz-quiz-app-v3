@@ -315,23 +315,23 @@ export default function QuizManagement() {
     <div className="space-y-6">
       {/* Header with Quick Stats */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 text-white">
-        <h2 className="text-2xl font-bold mb-4">📚 Quiz Management Dashboard</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white/20 rounded-lg p-4">
-            <div className="text-2xl font-bold">{categories.length}</div>
-            <div className="text-sm opacity-90">Total Categories</div>
+        <h2 className="text-2xl font-bold mb-6">📚 Quiz Management Dashboard</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
+            <div className="text-3xl font-bold">{categories.length}</div>
+            <div className="text-sm opacity-90 mt-1">Total Categories</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4">
-            <div className="text-2xl font-bold">{questions.length}</div>
-            <div className="text-sm opacity-90">Total Questions</div>
+          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
+            <div className="text-3xl font-bold">{questions.length}</div>
+            <div className="text-sm opacity-90 mt-1">Total Questions</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4">
-            <div className="text-2xl font-bold">{questions.filter(q => q.difficulty === 'beginner').length}</div>
-            <div className="text-sm opacity-90">Beginner Questions</div>
+          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
+            <div className="text-3xl font-bold">{questions.filter(q => q.difficulty === 'beginner').length}</div>
+            <div className="text-sm opacity-90 mt-1">Beginner Questions</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4">
-            <div className="text-2xl font-bold">{questions.filter(q => q.difficulty === 'advanced').length}</div>
-            <div className="text-sm opacity-90">Advanced Questions</div>
+          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
+            <div className="text-3xl font-bold">{questions.filter(q => q.difficulty === 'advanced').length}</div>
+            <div className="text-sm opacity-90 mt-1">Advanced Questions</div>
           </div>
         </div>
       </div>
