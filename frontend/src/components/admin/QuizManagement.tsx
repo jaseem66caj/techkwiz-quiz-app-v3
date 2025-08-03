@@ -77,17 +77,32 @@ export default function QuizManagement() {
       console.log('❌ No admin token available for categories fetch');
       return;
     }
+    if (categoriesLoading) {
+      console.log('⚠️ Categories already loading, skipping request');
+      return;
+    }
     try {
+      setCategoriesLoading(true);
+      console.log('📦 Fetching categories...');
+      
+      // Add delay to prevent request flooding
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/categories`, {
         headers: getAuthHeaders()
       });
+      
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
+        console.log(`✅ Loaded ${data.length} categories`);
+      } else {
+        console.error('❌ Categories fetch failed:', response.status);
       }
     } catch (error) {
-      console.error('Failed to fetch categories:', error);
+      console.error('❌ Categories fetch error:', error);
     } finally {
+      setCategoriesLoading(false);
       setLoading(false);
     }
   };
