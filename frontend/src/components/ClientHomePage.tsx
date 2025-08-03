@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { QuizInterface } from './QuizInterface'
-import { Navigation } from './Navigation'
+import { MinimalNavigation } from './MinimalNavigation'
 import { RewardPopup } from './RewardPopup'
 
 export default function ClientHomePage() {
