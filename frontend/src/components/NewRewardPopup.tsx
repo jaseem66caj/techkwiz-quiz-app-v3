@@ -44,7 +44,7 @@ export function NewRewardPopup({
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
         const endpoint = categoryId 
           ? `/api/quiz/rewarded-config/${categoryId}` 
           : '/api/quiz/rewarded-config'
