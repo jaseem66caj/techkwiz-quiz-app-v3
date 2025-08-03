@@ -59,9 +59,11 @@ export default function QuizManagement() {
   });
 
   useEffect(() => {
-    fetchCategories();
-    fetchQuestions();
-  }, []);
+    if (adminUser?.token) {
+      fetchCategories();
+      fetchQuestions();
+    }
+  }, [adminUser]);
 
   const getAuthHeaders = () => ({
     'Authorization': `Bearer ${adminUser?.token || ''}`,
