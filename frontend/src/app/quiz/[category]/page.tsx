@@ -474,7 +474,7 @@ export default function QuizPage({ params }: QuizPageProps) {
       </main>
       
       {/* Reward Popup */}
-      <RewardPopup
+      <NewRewardPopup
         isOpen={showRewardPopup}
         onClose={() => setShowRewardPopup(false)}
         coinsEarned={lastEarnedCoins}
@@ -482,6 +482,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         onSkipReward={handleSkipReward}
         isCorrect={isLastAnswerCorrect}
         rewardCoins={100}
+        categoryId={categoryId}
       />
       
       {/* Auth Modal */}
