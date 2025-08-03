@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { useApp } from './providers'
 import { QuizInterface } from '../components/QuizInterface'
 import { Navigation } from '../components/Navigation'
-import { RewardedAdPopup } from '../components/RewardedAdPopup'
+import { RewardPopup } from '../components/RewardPopup'
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
