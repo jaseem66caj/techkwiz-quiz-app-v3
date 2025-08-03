@@ -18,10 +18,15 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('quizzes');
 
   useEffect(() => {
-    // Redirect to login if not authenticated
-    if (!loading && !adminUser) {
-      window.location.href = '/admin';
-    }
+    // Give more time for authentication to load
+    const checkAuth = setTimeout(() => {
+      if (!loading && !adminUser) {
+        console.log('🔄 Dashboard: Redirecting to login - no admin user found');
+        window.location.href = '/admin';
+      }
+    }, 1000); // Wait 1 second for context to stabilize
+    
+    return () => clearTimeout(checkAuth);
   }, [adminUser, loading]);
 
   if (loading) {
