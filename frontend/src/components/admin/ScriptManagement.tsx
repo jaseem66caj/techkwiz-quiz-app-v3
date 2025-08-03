@@ -38,7 +38,7 @@ export default function ScriptManagement() {
 
   const fetchScripts = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/scripts`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/scripts`, {
         headers: getAuthHeaders()
       });
       if (response.ok) {
@@ -55,7 +55,7 @@ export default function ScriptManagement() {
   const handleAddScript = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/scripts`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/scripts`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newScript)
@@ -78,7 +78,7 @@ export default function ScriptManagement() {
 
   const handleUpdateScript = async (scriptId: string, updates: Partial<ScriptInjection>) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/scripts/${scriptId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/scripts/${scriptId}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(updates)
@@ -96,7 +96,7 @@ export default function ScriptManagement() {
   const handleDeleteScript = async (scriptId: string) => {
     if (confirm('Are you sure you want to delete this script?')) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/scripts/${scriptId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/scripts/${scriptId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });

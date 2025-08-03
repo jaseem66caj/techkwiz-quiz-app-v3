@@ -26,7 +26,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
     
     if (storedToken && storedUsername) {
       // Verify token with backend (but don't block main app)
@@ -38,7 +38,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const verifyToken = async (token: string, username: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/admin/verify`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/admin/login`, {
         method: 'POST',
         headers: {

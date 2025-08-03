@@ -39,7 +39,7 @@ export default function StartPage() {
   // Fetch categories from database
   const fetchCategories = async () => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com';
       const response = await fetch(`${backendUrl}/api/quiz/categories`);
       
       if (response.ok) {

@@ -17,7 +17,7 @@ export default function DataExport() {
   const handleExportData = async () => {
     setExporting(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/export/quiz-data`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/export/quiz-data`, {
         headers: getAuthHeaders()
       });
 
@@ -51,7 +51,7 @@ export default function DataExport() {
       const fileContent = await file.text();
       const data = JSON.parse(fileContent);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://6f432a21-8a1b-4406-9faf-ea20a067d237.preview.emergentagent.com"}/api/admin/import/quiz-data`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://306de61d-9011-4e81-a193-1382a0fe10f3.preview.emergentagent.com"}/api/admin/import/quiz-data`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(data)
