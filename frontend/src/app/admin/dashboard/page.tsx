@@ -80,20 +80,20 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-        <div className="w-full px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold text-gray-900">TechKwiz Admin</h1>
-              <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+    <div className="min-h-screen bg-gray-50" style={{ width: '100vw' }}>
+      {/* Full Width Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40" style={{ width: '100%' }}>
+        <div className="px-12 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-6">
+              <h1 className="text-2xl font-bold text-gray-900">TechKwiz Admin Dashboard</h1>
+              <span className="text-base text-gray-600 bg-gray-100 px-4 py-2 rounded-lg">
                 Welcome, {adminUser.username}
               </span>
             </div>
             <button
               onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors font-medium text-base"
             >
               Logout
             </button>
@@ -101,33 +101,42 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="w-full px-8 py-8">
-        <div className="flex space-x-8">
-          {/* Sidebar Navigation */}
-          <div className="w-80 flex-shrink-0">
-            <nav className="space-y-1 sticky top-24">
+      {/* Full Width Content Area */}
+      <div className="flex" style={{ width: '100vw', minHeight: 'calc(100vh - 80px)' }}>
+        {/* Wider Sidebar */}
+        <div className="bg-white shadow-sm border-r border-gray-200" style={{ width: '400px', minHeight: '100%' }}>
+          <nav className="p-6">
+            <div className="space-y-3">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center px-4 py-3 text-left rounded-md transition-colors text-sm font-medium ${
+                  className={`w-full flex items-center px-6 py-4 text-left rounded-xl transition-all text-base font-medium ${
                     activeTab === tab.id
-                      ? 'bg-indigo-100 text-indigo-700 border-l-4 border-indigo-500'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-indigo-600 text-white shadow-lg transform scale-105'
+                      : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 bg-gray-50'
                   }`}
                 >
-                  <span className="mr-3 text-lg">{tab.icon}</span>
-                  <span>{tab.name}</span>
+                  <span className="text-2xl mr-4">{tab.icon}</span>
+                  <span className="text-lg">{tab.name}</span>
                 </button>
               ))}
-            </nav>
-          </div>
-
-          {/* Main Content - Much Wider */}
-          <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-lg shadow px-8 py-8 min-h-screen">
-              {renderActiveTab()}
             </div>
+          </nav>
+        </div>
+
+        {/* Much Wider Main Content Area */}
+        <div className="flex-1 bg-white" style={{ minWidth: 'calc(100vw - 400px)' }}>
+          <div className="p-12" style={{ width: '100%' }}>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full"
+            >
+              {renderActiveTab()}
+            </motion.div>
           </div>
         </div>
       </div>
