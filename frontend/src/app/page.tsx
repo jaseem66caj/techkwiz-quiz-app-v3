@@ -20,11 +20,30 @@ export default function HomePage() {
   const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
+  const [rewardConfig, setRewardConfig] = useState<any>(null)
 
   // Debug reward popup state
   useEffect(() => {
     console.log('🔧 HomePage: showRewardPopup state changed to:', showRewardPopup)
   }, [showRewardPopup])
+
+  // Fetch reward configuration
+  useEffect(() => {
+    const fetchRewardConfig = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
+        const response = await fetch(`${backendUrl}/api/quiz/rewarded-config`)
+        if (response.ok) {
+          const config = await response.json()
+          setRewardConfig(config)
+          console.log('🔧 HomePage: Reward config loaded:', config)
+        }
+      } catch (error) {
+        console.error('🔧 HomePage: Failed to fetch reward config:', error)
+      }
+    }
+    fetchRewardConfig()
+  }, [])
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
