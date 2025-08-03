@@ -102,56 +102,31 @@ export default function HomePage() {
     }, 1000)
   }
 
-  const handleClaimReward = () => {
-    // Give additional 100 coins for watching rewarded ad
-    const adRewardCoins = 100
-    dispatch({ type: 'UPDATE_COINS', payload: adRewardCoins })
-    
-    console.log(`📺 Watched ad! Earned ${adRewardCoins} coins`)
-    
-    // Proceed to next question or complete quiz
-    if (currentQuestion < quickStartQuiz.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-    } else {
-      setQuizCompleted(true)
-      setShowResult(true)
-      
-      setTimeout(() => {
-        router.push('/start')
-      }, 3000)
-    }
-  }
-
-  const handleSkipReward = () => {
-    // Proceed without doubling coins
-    if (currentQuestion < quickStartQuiz.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-    } else {
-      setQuizCompleted(true)
-      setShowResult(true)
-      
-      setTimeout(() => {
-        router.push('/start')
-      }, 3000)
-    }
-  }
-
-  const resetQuiz = () => {
-    setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setScore(0)
-    setQuizCompleted(false)
-    setShowResult(false)
+  const handlePopupClose = () => {
     setShowRewardPopup(false)
-    setLastEarnedCoins(0)
-    setIsLastAnswerCorrect(true)
+    
+    // After popup closes, proceed to next question
+    if (currentQuestion < quickStartQuiz.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+    } else {
+      setQuizCompleted(true)
+      setShowResult(true)
+      
+      setTimeout(() => {
+        router.push('/start')
+      }, 3000)
+    }
   }
 
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
+  const handleAdWatched = (coinsEarned: number) => {
+    console.log(`📺 Ad watched! Earned ${coinsEarned} coins`)
+    dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+  }
+
+  // Don't render until hydrated to prevent SSR issues
+  if (!isHydrated) {
+    return null
   }
 
   // Show loading state
