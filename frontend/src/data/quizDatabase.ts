@@ -902,21 +902,21 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
   ]
 }
 
-// Difficulty-based scoring and timing
+// Difficulty-based scoring and timing - Updated for youth engagement
 export const DIFFICULTY_CONFIG = {
   beginner: {
     timeLimit: 30,
-    coinsPerCorrect: 100,
+    coinsPerCorrect: 25,
     questions: 5
   },
   intermediate: {
     timeLimit: 45,
-    coinsPerCorrect: 200,
+    coinsPerCorrect: 25,
     questions: 7
   },
   advanced: {
     timeLimit: 60,
-    coinsPerCorrect: 300,
+    coinsPerCorrect: 25,
     questions: 10
   }
 }
