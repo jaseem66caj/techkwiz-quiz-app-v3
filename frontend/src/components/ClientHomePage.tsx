@@ -210,23 +210,8 @@ export default function ClientHomePage() {
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
-    if (!state.isAuthenticated) {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        name: 'Guest User', 
-        email: `guest_${Date.now()}@techkwiz.com`,
-        coins: 0,
-        level: 1,
-        totalQuizzes: 0,
-        correctAnswers: 0,
-        joinDate: new Date().toISOString(),
-        quizHistory: [],
-        achievements: []
-      }
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-    }
-  }, [state.isAuthenticated, dispatch])
+    // This is now handled in the initial useEffect
+  }, [])
 
   // Show results
   if (showResult && quizCompleted) {
