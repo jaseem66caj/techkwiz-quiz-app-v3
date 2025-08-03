@@ -398,7 +398,7 @@ export default function QuizManagement() {
                   </button>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-4 flex-1">
                   <div className="bg-gray-50 rounded-lg p-3">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex justify-between">
@@ -413,15 +413,15 @@ export default function QuizManagement() {
                   </div>
                   
                   <div className="bg-purple-50 rounded-lg p-3">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex justify-between items-center">
                       <span className="text-gray-700 font-medium text-sm">📊 Questions:</span>
-                      <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
                         {getQuestionCount(category.id)}
                       </span>
                     </div>
                   </div>
                   
-                  <div>
+                  <div className="mt-auto">
                     <span className="text-gray-700 font-medium text-sm">🏷️ Topics:</span>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {category.subcategories.map((sub, idx) => (
