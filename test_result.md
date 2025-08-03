@@ -626,7 +626,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "New Reward Popup System Testing"
+    - "Reward Popup Configuration System Testing - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
