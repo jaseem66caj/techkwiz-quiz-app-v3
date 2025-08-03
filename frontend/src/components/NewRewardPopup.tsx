@@ -49,24 +49,32 @@ export function NewRewardPopup({
           ? `/api/quiz/rewarded-config/${categoryId}` 
           : '/api/quiz/rewarded-config'
         
+        console.log('🔧 NewRewardPopup: Fetching config from:', `${backendUrl}${endpoint}`)
         const response = await fetch(`${backendUrl}${endpoint}`)
         if (response.ok) {
           const configData = await response.json()
+          console.log('✅ NewRewardPopup: Config fetched successfully:', configData)
           setConfig(configData)
+        } else {
+          console.error('❌ NewRewardPopup: Config fetch failed:', response.status)
+          throw new Error(`HTTP ${response.status}`)
         }
       } catch (error) {
-        console.error('Failed to fetch reward config:', error)
+        console.error('❌ NewRewardPopup: Failed to fetch reward config:', error)
         // Use default values
-        setConfig({
+        const defaultConfig = {
           coin_reward: 100,
           is_active: true,
           show_on_insufficient_coins: true,
           show_during_quiz: true
-        })
+        }
+        console.log('🔧 NewRewardPopup: Using default config:', defaultConfig)
+        setConfig(defaultConfig)
       }
     }
 
     if (isOpen) {
+      console.log('🔧 NewRewardPopup: Popup opened, fetching config...')
       fetchConfig()
     }
   }, [isOpen, categoryId])
