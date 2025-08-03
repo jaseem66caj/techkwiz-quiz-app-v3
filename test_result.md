@@ -626,12 +626,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Session-Based Coin Storage System"  
-    - "Fixed Homepage Guest User Creation"
-    - "Updated Providers Coin Logic"
-    - "Fixed Start Page Category Selection"
-    - "Updated Category Quiz Coin Rewards"
-    - "Enhanced RewardPopup Component"
+    - "Youth-Focused Quiz System Migration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
