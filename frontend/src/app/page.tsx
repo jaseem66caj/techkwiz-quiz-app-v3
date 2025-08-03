@@ -181,7 +181,7 @@ export default function HomePage() {
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
-    if (!state.isAuthenticated) {
+    if (appState && dispatch && !appState.isAuthenticated) {
       const guestUser = {
         id: `guest_${Date.now()}`,
         name: 'Guest User', 
