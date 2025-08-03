@@ -178,7 +178,7 @@ export default function QuizManagement() {
   const handleDeleteQuestion = async (questionId: string) => {
     if (confirm('Are you sure you want to delete this question?')) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/questions/${questionId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions/${questionId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });
