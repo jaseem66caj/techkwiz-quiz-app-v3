@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="w-full px-4">
+        <div className="w-full px-2">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">TechKwiz Admin</h1>
@@ -99,8 +99,8 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="w-full px-4 py-4">
-        <div className="flex gap-6 h-full">
+      <div className="w-full px-2 py-2">
+        <div className="flex gap-4 h-full">
           {/* Sidebar Navigation - Fixed Width */}
           <div className="w-80 flex-shrink-0">
             <nav className="space-y-3">
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg p-6 min-h-[800px] border border-gray-100 w-full"
+              className="bg-white rounded-2xl shadow-lg p-4 min-h-[800px] border border-gray-100 w-full"
             >
               {renderActiveTab()}
             </motion.div>
