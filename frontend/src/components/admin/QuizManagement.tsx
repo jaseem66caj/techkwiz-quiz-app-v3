@@ -133,7 +133,7 @@ export default function QuizManagement() {
   const handleAddQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/questions`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newQuestion)
