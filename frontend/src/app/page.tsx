@@ -83,7 +83,9 @@ export default function HomePage() {
         setScore(score + 1)
         
         // Award coins for correct answers on homepage quiz
-        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+        if (dispatch) {
+          dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+        }
         
         console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins`)
       } else {
