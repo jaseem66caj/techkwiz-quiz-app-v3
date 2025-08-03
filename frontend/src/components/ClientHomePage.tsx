@@ -56,16 +56,6 @@ export default function ClientHomePage() {
     
     initializeApp()
   }, [])
-  
-  // Local component state
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [score, setScore] = useState(0)
-  const [showResult, setShowResult] = useState(false)
-  const [quizCompleted, setQuizCompleted] = useState(false)
-  const [showRewardPopup, setShowRewardPopup] = useState(false)
-  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
-  const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
 
   // Youth-focused quick start quiz data
   const quickStartQuiz = [
