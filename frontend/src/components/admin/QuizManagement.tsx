@@ -337,7 +337,7 @@ export default function QuizManagement() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex flex-wrap gap-2 bg-gray-100 p-2 rounded-lg">
         <button
           onClick={() => setActiveSubTab('categories')}
           className={`px-6 py-3 rounded-md font-medium transition-colors ${
