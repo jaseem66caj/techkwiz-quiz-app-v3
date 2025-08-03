@@ -145,7 +145,7 @@ export default function QuizManagement() {
   // Keep original function for backwards compatibility
   const fetchCategories = () => fetchCategoriesWithRetry(0);
 
-  const fetchQuestions = async () => {
+  const fetchQuestionsWithRetry = async (retryCount = 0) => {
     if (!adminUser?.token) {
       console.log('❌ No admin token available for questions fetch');
       return;
@@ -156,10 +156,10 @@ export default function QuizManagement() {
     }
     try {
       setQuestionsLoading(true);
-      console.log('❓ Fetching questions...');
+      console.log(`❓ Fetching questions... (attempt ${retryCount + 1})`);
       
       // Add delay to prevent request flooding
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200 + (retryCount * 300)));
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/questions`, {
         headers: getAuthHeaders()
@@ -171,13 +171,26 @@ export default function QuizManagement() {
         console.log(`✅ Loaded ${data.length} questions`);
       } else {
         console.error('❌ Questions fetch failed:', response.status);
+        if (retryCount < 2 && response.status >= 500) {
+          console.log(`🔄 Retrying questions fetch...`);
+          setTimeout(() => fetchQuestionsWithRetry(retryCount + 1), 1000);
+        }
       }
     } catch (error) {
       console.error('❌ Questions fetch error:', error);
+      if (retryCount < 2) {
+        console.log(`🔄 Retrying questions fetch after error...`);
+        setTimeout(() => fetchQuestionsWithRetry(retryCount + 1), 1000);
+      }
     } finally {
-      setQuestionsLoading(false);
+      if (retryCount === 0) {
+        setQuestionsLoading(false);
+      }
     }
   };
+
+  // Keep original function for backwards compatibility
+  const fetchQuestions = () => fetchQuestionsWithRetry(0);
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
