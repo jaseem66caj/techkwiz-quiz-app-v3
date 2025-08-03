@@ -253,8 +253,8 @@ export default function HomePage() {
         </main>
       </div>
       
-      {/* Rewarded Ad Popup */}
-      <RewardedAdPopup
+      {/* Reward Ad Popup */}
+      <RewardPopup
         isVisible={showRewardPopup}
         onClose={handlePopupClose}
         onAdWatched={handleAdWatched}
