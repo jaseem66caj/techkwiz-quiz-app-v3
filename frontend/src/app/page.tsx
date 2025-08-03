@@ -142,6 +142,7 @@ export default function HomePage() {
     setShowResult(false)
     setShowRewardPopup(false)
     setLastEarnedCoins(0)
+    setIsLastAnswerCorrect(true)
   }
 
   const handleLogin = (user: any) => {
