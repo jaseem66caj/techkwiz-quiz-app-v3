@@ -254,7 +254,7 @@ export default function ClientHomePage() {
         isOpen={showRewardPopup}
         onClose={handlePopupClose}
         coinsEarned={lastEarnedCoins}
-        onClaimReward={handleAdWatched}
+        onClaimReward={handleClaimReward}
         onSkipReward={handlePopupClose}
         isCorrect={isLastAnswerCorrect}
         rewardCoins={100}
