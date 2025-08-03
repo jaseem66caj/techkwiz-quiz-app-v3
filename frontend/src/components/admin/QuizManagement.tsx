@@ -458,15 +458,39 @@ export default function QuizManagement() {
       {/* Questions Tab */}
       {activeSubTab === 'questions' && (
         <div className="space-y-8">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <h3 className="text-2xl font-bold text-gray-900">❓ Quiz Questions</h3>
-            <button
-              onClick={() => setShowAddQuestion(true)}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl flex items-center font-semibold shadow-lg text-base"
-            >
-              <span className="mr-3 text-xl">➕</span>
-              Add New Question
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+              <div className="flex gap-3">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+                <select
+                  value={selectedDifficulty}
+                  onChange={(e) => setSelectedDifficulty(e.target.value)}
+                  className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="all">All Difficulties</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+              <button
+                onClick={() => setShowAddQuestion(true)}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl flex items-center font-semibold shadow-lg text-base whitespace-nowrap"
+              >
+                <span className="mr-3 text-xl">➕</span>
+                Add New Question
+              </button>
+            </div>
           </div>
 
           {/* Filters */}
