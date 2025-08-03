@@ -88,9 +88,15 @@ class QuizQuestionUpdate(BaseModel):
     options: Optional[List[str]] = None
     correct_answer: Optional[int] = None
     difficulty: Optional[QuizDifficulty] = None
+    question_type: Optional[QuestionType] = None
     fun_fact: Optional[str] = None
     category: Optional[str] = None
     subcategory: Optional[str] = None
+    emoji_clue: Optional[str] = None
+    visual_options: Optional[List[str]] = None
+    personality_trait: Optional[str] = None
+    prediction_year: Optional[str] = None
+    youth_engagement_score: Optional[int] = None
 
 class QuizCategory(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
