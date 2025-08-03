@@ -18,6 +18,9 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
+  // Debug logging
+  console.log('Navigation component: hideHeaderElements =', hideHeaderElements)
+
   const navigationItems = [
     { name: 'Home', href: '/', icon: '🏠' },
     { name: 'Categories', href: '/start', icon: '📚' },
