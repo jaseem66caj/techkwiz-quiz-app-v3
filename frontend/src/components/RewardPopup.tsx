@@ -22,10 +22,26 @@ export function RewardPopup({
   onClaimReward, 
   onSkipReward,
   canWatchAgain = false,
-  onWatchAgain
+  onWatchAgain,
+  isCorrect = true,
+  rewardCoins = 100
 }: RewardPopupProps) {
   const [isWatchingAd, setIsWatchingAd] = useState(false)
   const [hasWatchedOnce, setHasWatchedOnce] = useState(false)
+
+  // Prevent body scroll when popup is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   const handleClaimReward = () => {
     setIsWatchingAd(true)
