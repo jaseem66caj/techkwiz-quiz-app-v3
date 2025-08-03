@@ -29,12 +29,16 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://status-monitor-4.preview.emergentagent.com';
     
     if (storedToken && storedUsername) {
+      console.log('🔄 Found stored credentials, setting admin user immediately');
+      // Set user immediately to prevent redirect loops
+      setAdminUser({ username: storedUsername, token: storedToken });
+      
       // Verify token with backend (non-blocking - don't wait for this)
       verifyToken(storedToken, storedUsername).catch(console.error);
+    } else {
+      // No stored credentials, set loading to false
+      setLoading(false);
     }
-    
-    // Always set loading to false immediately to not block main app
-    setLoading(false);
   }, []);
 
   const verifyToken = async (token: string, username: string) => {
