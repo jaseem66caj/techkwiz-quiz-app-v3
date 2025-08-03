@@ -1,11 +1,1 @@
-{
-  "app/page.tsx -> ../components/ClientHomePage": {
-    "id": 3448,
-    "files": [
-      "static/chunks/463-2b50bffd44d0f786.js",
-      "static/chunks/874-437a265a67d6cfee.js",
-      "static/chunks/533-c8e1f0a11fbfc634.js",
-      "static/chunks/448.92b6067a7cdfc3a2.js"
-    ]
-  }
-}
+{}

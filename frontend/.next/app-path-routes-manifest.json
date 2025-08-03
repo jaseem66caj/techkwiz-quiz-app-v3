@@ -8,11 +8,11 @@
   "/admin/forgot-password/page": "/admin/forgot-password",
   "/admin/page": "/admin",
   "/admin/reset-password/page": "/admin/reset-password",
+  "/page": "/",
   "/admin/setup/page": "/admin/setup",
   "/leaderboard/page": "/leaderboard",
-  "/page": "/",
   "/privacy/page": "/privacy",
-  "/profile/page": "/profile",
   "/quiz/[category]/page": "/quiz/[category]",
+  "/profile/page": "/profile",
   "/start/page": "/start"
 }
