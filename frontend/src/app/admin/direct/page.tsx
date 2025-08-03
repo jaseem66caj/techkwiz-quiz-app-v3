@@ -11,7 +11,7 @@ export default function DirectAdminLogin() {
     setResult('');
     
     try {
-      const backendUrl = 'https://946adfbf-ff49-462e-bed5-8b7dac895607.preview.emergentagent.com';
+      const backendUrl = 'http://localhost:8001';
       console.log('Testing login to:', `${backendUrl}/api/admin/login`);
       
       const response = await fetch(`${backendUrl}/api/admin/login`, {
