@@ -31,14 +31,21 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600"></div>
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mb-4"></div>
+        <p className="text-gray-600">Loading admin dashboard...</p>
       </div>
     );
   }
 
+  // Show loading a bit longer to prevent flashing
   if (!adminUser) {
-    return null; // Will redirect
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mb-4"></div>
+        <p className="text-gray-600">Authenticating...</p>
+      </div>
+    );
   }
 
   const tabs = [
