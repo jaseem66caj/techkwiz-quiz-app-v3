@@ -200,7 +200,7 @@ export default function ClientHomePage() {
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
+        <Navigation hideHeaderElements={true} />
         
         <main className="flex-1 p-4 flex flex-col items-center justify-center">
           
