@@ -97,7 +97,7 @@ export default function QuizManagement() {
     'Content-Type': 'application/json'
   });
 
-  const fetchCategories = async () => {
+  const fetchCategoriesWithRetry = async (retryCount = 0) => {
     if (!adminUser?.token) {
       console.log('❌ No admin token available for categories fetch');
       return;
@@ -108,10 +108,10 @@ export default function QuizManagement() {
     }
     try {
       setCategoriesLoading(true);
-      console.log('📦 Fetching categories...');
+      console.log(`📦 Fetching categories... (attempt ${retryCount + 1})`);
       
       // Add delay to prevent request flooding
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100 + (retryCount * 200)));
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/categories`, {
         headers: getAuthHeaders()
@@ -123,14 +123,27 @@ export default function QuizManagement() {
         console.log(`✅ Loaded ${data.length} categories`);
       } else {
         console.error('❌ Categories fetch failed:', response.status);
+        if (retryCount < 2 && response.status >= 500) {
+          console.log(`🔄 Retrying categories fetch...`);
+          setTimeout(() => fetchCategoriesWithRetry(retryCount + 1), 1000);
+        }
       }
     } catch (error) {
       console.error('❌ Categories fetch error:', error);
+      if (retryCount < 2) {
+        console.log(`🔄 Retrying categories fetch after error...`);
+        setTimeout(() => fetchCategoriesWithRetry(retryCount + 1), 1000);
+      }
     } finally {
-      setCategoriesLoading(false);
-      setLoading(false);
+      if (retryCount === 0) {
+        setCategoriesLoading(false);
+        setLoading(false);
+      }
     }
   };
+
+  // Keep original function for backwards compatibility
+  const fetchCategories = () => fetchCategoriesWithRetry(0);
 
   const fetchQuestions = async () => {
     if (!adminUser?.token) {
