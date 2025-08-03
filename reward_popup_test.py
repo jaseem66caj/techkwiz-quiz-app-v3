@@ -181,6 +181,14 @@ class RewardPopupConfigTester:
     def test_update_homepage_config(self):
         """Test PUT /api/admin/rewarded-config/homepage - should update homepage config"""
         try:
+            # First get current config to restore later
+            get_response = self.session.get(f"{BACKEND_URL}/admin/rewarded-config/homepage")
+            if get_response.status_code != 200:
+                self.log_test("PUT Homepage Config", False, "Could not get current config")
+                return False
+            
+            original_config = get_response.json()
+            
             update_data = {
                 "trigger_after_questions": 3,
                 "coin_reward": 150,
@@ -202,6 +210,16 @@ class RewardPopupConfigTester:
                 
                 # Verify it's still homepage config
                 if config.get("category_id") is None and config.get("category_name") == "Homepage":
+                    # Restore original config for other tests
+                    restore_data = {
+                        "trigger_after_questions": original_config.get("trigger_after_questions", 5),
+                        "coin_reward": 100,  # Reset to expected default
+                        "is_active": original_config.get("is_active", True),
+                        "show_on_insufficient_coins": original_config.get("show_on_insufficient_coins", True),
+                        "show_during_quiz": original_config.get("show_during_quiz", True)
+                    }
+                    self.session.put(f"{BACKEND_URL}/admin/rewarded-config/homepage", json=restore_data)
+                    
                     self.log_test("PUT Homepage Config", True, "Homepage config updated successfully")
                     return True
                 else:
