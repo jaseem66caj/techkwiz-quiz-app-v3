@@ -74,13 +74,32 @@ async def get_ad_slots_for_placement(placement: str):
 
 @quiz_router.get("/rewarded-config", response_model=RewardedPopupConfig)
 async def get_rewarded_popup_config():
-    """Get rewarded popup configuration for public use."""
+    """Get rewarded popup configuration for homepage."""
     database = get_db()
-    config = await database.rewarded_popup_config.find_one()
+    config = await database.rewarded_popup_config.find_one({"category_id": None})
     
     if not config:
         # Return default config if none exists
-        return RewardedPopupConfig()
+        return RewardedPopupConfig(category_name="Homepage")
+    
+    return RewardedPopupConfig(**config)
+
+@quiz_router.get("/rewarded-config/{category_id}", response_model=RewardedPopupConfig)
+async def get_rewarded_popup_config_for_category(category_id: str):
+    """Get rewarded popup configuration for specific category."""
+    database = get_db()
+    config = await database.rewarded_popup_config.find_one({"category_id": category_id})
+    
+    if not config:
+        # Get category name for better identification
+        category = await database.categories.find_one({"id": category_id})
+        category_name = category["name"] if category else f"Category {category_id}"
+        
+        # Return default config if none exists
+        return RewardedPopupConfig(
+            category_id=category_id,
+            category_name=category_name
+        )
     
     return RewardedPopupConfig(**config)
 
