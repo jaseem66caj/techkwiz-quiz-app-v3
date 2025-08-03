@@ -138,6 +138,11 @@ export default function ClientHomePage() {
     dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
   }
 
+  const handleClaimReward = () => {
+    // RewardPopup's onClaimReward doesn't pass parameters, so we use rewardCoins (100)
+    handleAdWatched(100)
+  }
+
   // Show loading state
   if (state.loading) {
     return (
