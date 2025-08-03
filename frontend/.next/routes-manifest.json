@@ -124,6 +124,12 @@
       "regex": "^/start(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/start(?:/)?$"
+    },
+    {
+      "page": "/test-no-header",
+      "regex": "^/test\\-no\\-header(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/test\\-no\\-header(?:/)?$"
     }
   ],
   "dataRoutes": [],

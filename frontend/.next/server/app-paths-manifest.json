@@ -13,6 +13,7 @@
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",
   "/profile/page": "app/profile/page.js",
+  "/start/page": "app/start/page.js",
   "/quiz/[category]/page": "app/quiz/[category]/page.js",
-  "/start/page": "app/start/page.js"
+  "/test-no-header/page": "app/test-no-header/page.js"
 }
