@@ -398,34 +398,34 @@ export default function QuizManagement() {
                   </button>
                 </div>
                 
-                <div className="space-y-4 flex-1">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="space-y-5 flex-1">
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">💰 Entry Fee:</span>
-                        <span className="font-semibold text-green-600">{category.entry_fee} coins</span>
+                        <span className="text-gray-600 font-medium">💰 Entry Fee:</span>
+                        <span className="font-bold text-green-600 text-lg">{category.entry_fee} coins</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">🏆 Prize Pool:</span>
-                        <span className="font-semibold text-blue-600">{category.prize_pool} coins</span>
+                        <span className="text-gray-600 font-medium">🏆 Prize Pool:</span>
+                        <span className="font-bold text-blue-600 text-lg">{category.prize_pool} coins</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="bg-purple-50 rounded-lg p-3">
+                  <div className="bg-purple-50 rounded-xl p-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-700 font-medium text-sm">📊 Questions:</span>
-                      <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                      <span className="text-gray-700 font-semibold">📊 Questions:</span>
+                      <span className="bg-purple-600 text-white px-4 py-2 rounded-full font-bold text-lg">
                         {getQuestionCount(category.id)}
                       </span>
                     </div>
                   </div>
                   
                   <div className="mt-auto">
-                    <span className="text-gray-700 font-medium text-sm">🏷️ Topics:</span>
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <span className="text-gray-700 font-semibold mb-3 block">🏷️ Topics:</span>
+                    <div className="flex flex-wrap gap-2">
                       {category.subcategories.map((sub, idx) => (
-                        <span key={idx} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">
+                        <span key={idx} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 px-4 py-2 rounded-full font-medium">
                           {sub}
                         </span>
                       ))}
