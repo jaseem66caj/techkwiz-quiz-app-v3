@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
 import { QuizInterface } from '../components/QuizInterface'
-import { RewardPopup } from '../components/RewardPopup'
+import { NewRewardPopup } from '../components/NewRewardPopup'
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
