@@ -170,33 +170,25 @@ export default function HomePage() {
     )
   }
 
-  // Ensure user is authenticated - create guest user if needed
-  if (!state.isAuthenticated) {
-    // Auto-login as guest user with 0 coins (session-based)
-    const guestUser = {
-      id: `guest_${Date.now()}`,
-      name: 'Guest User',
-      email: `guest_${Date.now()}@techkwiz.com`,
-      coins: 0, // Always start with 0 coins
-      level: 1,
-      totalQuizzes: 0,
-      correctAnswers: 0,
-      joinDate: new Date().toISOString(),
-      quizHistory: [],
-      achievements: []
+  // Auto-create guest user if not authenticated
+  useEffect(() => {
+    if (!state.isAuthenticated) {
+      const guestUser = {
+        id: `guest_${Date.now()}`,
+        name: 'Guest User', 
+        email: `guest_${Date.now()}@techkwiz.com`,
+        coins: 0,
+        level: 1,
+        totalQuizzes: 0,
+        correctAnswers: 0,
+        joinDate: new Date().toISOString(),
+        quizHistory: [],
+        achievements: []
+      }
+      
+      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     }
-    
-    // Set auth token to prevent infinite loop
-    localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
-    
-    // Save user to storage
-    const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
-    allUsers.push({ ...guestUser, coins: 0 }) // Store without coins in localStorage
-    localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
-    
-    // Dispatch login success and continue rendering
-    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-  }
+  }, [state.isAuthenticated, dispatch])
 
   // Authenticated user quiz interface - Mobile-web style
   return (
