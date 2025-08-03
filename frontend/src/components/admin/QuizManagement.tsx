@@ -32,6 +32,8 @@ export default function QuizManagement() {
   const [categories, setCategories] = useState<QuizCategory[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
