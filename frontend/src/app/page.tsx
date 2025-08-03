@@ -162,7 +162,7 @@ export default function HomePage() {
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     }
-  }, [appState, dispatch])
+  }, [state.isAuthenticated, dispatch])
 
   // Show results
   if (showResult && quizCompleted) {
