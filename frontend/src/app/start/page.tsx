@@ -368,7 +368,7 @@ export default function StartPage() {
         onSuccess={handleLogin}
       />
 
-      <RewardPopup
+      <NewRewardPopup
         isOpen={showRewardPopup}
         onClose={() => setShowRewardPopup(false)}
         coinsEarned={0}
