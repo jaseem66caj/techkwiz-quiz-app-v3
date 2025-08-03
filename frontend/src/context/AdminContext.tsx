@@ -26,7 +26,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://status-monitor-4.preview.emergentagent.com';
     
     if (storedToken && storedUsername) {
       // Verify token with backend (non-blocking - don't wait for this)
