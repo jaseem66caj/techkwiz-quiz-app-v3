@@ -10,8 +10,8 @@
   "/admin/reset-password/page": "/admin/reset-password",
   "/admin/setup/page": "/admin/setup",
   "/leaderboard/page": "/leaderboard",
-  "/page": "/",
   "/privacy/page": "/privacy",
+  "/page": "/",
   "/profile/page": "/profile",
   "/quiz/[category]/page": "/quiz/[category]",
   "/start/page": "/start"
