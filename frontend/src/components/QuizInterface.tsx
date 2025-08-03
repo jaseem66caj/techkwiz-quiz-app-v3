@@ -182,7 +182,10 @@ export function QuizInterface({
             key={index}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onAnswerSelect(index)}
+            onClick={() => {
+              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
+              onAnswerSelect(index)
+            }}
             disabled={selectedAnswer !== null}
             className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
               selectedAnswer === index 
