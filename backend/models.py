@@ -42,15 +42,29 @@ class QuizDifficulty(str, Enum):
     intermediate = "intermediate"
     advanced = "advanced"
 
+class QuestionType(str, Enum):
+    multiple_choice = "multiple_choice"
+    this_or_that = "this_or_that"
+    emoji_decode = "emoji_decode"
+    personality = "personality"
+    prediction = "prediction"
+
 class QuizQuestion(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     question: str
     options: List[str]
     correct_answer: int
     difficulty: QuizDifficulty
+    question_type: QuestionType = QuestionType.multiple_choice
     fun_fact: str
     category: str
     subcategory: str
+    # Interactive format specific fields
+    emoji_clue: Optional[str] = None  # For emoji_decode questions
+    visual_options: Optional[List[str]] = None  # For this_or_that visual choices
+    personality_trait: Optional[str] = None  # For personality questions
+    prediction_year: Optional[str] = None  # For prediction questions
+    youth_engagement_score: Optional[int] = None  # 1-10 engagement rating
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
