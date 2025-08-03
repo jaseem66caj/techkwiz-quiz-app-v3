@@ -312,26 +312,26 @@ export default function QuizManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header with Quick Stats */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 text-white">
-        <h2 className="text-2xl font-bold mb-6">📚 Quiz Management Dashboard</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
-            <div className="text-3xl font-bold">{categories.length}</div>
-            <div className="text-sm opacity-90 mt-1">Total Categories</div>
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
+        <h2 className="text-3xl font-bold mb-8">📚 Quiz Management Dashboard</h2>
+        <div className="grid grid-cols-4 gap-6">
+          <div className="bg-white/20 rounded-xl p-6 text-center min-h-[100px] flex flex-col justify-center hover:bg-white/30 transition-all">
+            <div className="text-4xl font-bold">{categories.length}</div>
+            <div className="text-base opacity-90 mt-2">Total Categories</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
-            <div className="text-3xl font-bold">{questions.length}</div>
-            <div className="text-sm opacity-90 mt-1">Total Questions</div>
+          <div className="bg-white/20 rounded-xl p-6 text-center min-h-[100px] flex flex-col justify-center hover:bg-white/30 transition-all">
+            <div className="text-4xl font-bold">{questions.length}</div>
+            <div className="text-base opacity-90 mt-2">Total Questions</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
-            <div className="text-3xl font-bold">{questions.filter(q => q.difficulty === 'beginner').length}</div>
-            <div className="text-sm opacity-90 mt-1">Beginner Questions</div>
+          <div className="bg-white/20 rounded-xl p-6 text-center min-h-[100px] flex flex-col justify-center hover:bg-white/30 transition-all">
+            <div className="text-4xl font-bold">{questions.filter(q => q.difficulty === 'beginner').length}</div>
+            <div className="text-base opacity-90 mt-2">Beginner Questions</div>
           </div>
-          <div className="bg-white/20 rounded-lg p-4 text-center min-h-[80px] flex flex-col justify-center">
-            <div className="text-3xl font-bold">{questions.filter(q => q.difficulty === 'advanced').length}</div>
-            <div className="text-sm opacity-90 mt-1">Advanced Questions</div>
+          <div className="bg-white/20 rounded-xl p-6 text-center min-h-[100px] flex flex-col justify-center hover:bg-white/30 transition-all">
+            <div className="text-4xl font-bold">{questions.filter(q => q.difficulty === 'advanced').length}</div>
+            <div className="text-base opacity-90 mt-2">Advanced Questions</div>
           </div>
         </div>
       </div>
