@@ -9,6 +9,7 @@ import { Navigation } from '../components/Navigation'
 import { RewardPopup } from '../components/RewardPopup'
 
 export default function HomePage() {
+  const { state, dispatch } = useApp()
   const router = useRouter()
   
   // Local component state
@@ -21,21 +22,10 @@ export default function HomePage() {
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [isHydrated, setIsHydrated] = useState(false)
-  const [appState, setAppState] = useState<any>(null)
-  const [dispatch, setDispatch] = useState<any>(null)
 
-  // Initialize app context only on client side
+  // Prevent hydration mismatch
   useEffect(() => {
-    const { useApp } = require('./providers')
-    try {
-      const { state, dispatch: appDispatch } = useApp()
-      setAppState(state)
-      setDispatch(() => appDispatch)
-      setIsHydrated(true)
-    } catch (error) {
-      console.error('Failed to initialize app context:', error)
-      setIsHydrated(true) // Still show the app even if context fails
-    }
+    setIsHydrated(true)
   }, [])
 
   // Youth-focused quick start quiz data
@@ -83,9 +73,7 @@ export default function HomePage() {
         setScore(score + 1)
         
         // Award coins for correct answers on homepage quiz
-        if (dispatch) {
-          dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-        }
+        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         
         console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins`)
       } else {
