@@ -479,6 +479,8 @@ export default function QuizPage({ params }: QuizPageProps) {
         coinsEarned={lastEarnedCoins}
         onClaimReward={handleClaimReward}
         onSkipReward={handleSkipReward}
+        isCorrect={isLastAnswerCorrect}
+        rewardCoins={100}
       />
       
       {/* Auth Modal */}
