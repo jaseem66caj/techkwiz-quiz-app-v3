@@ -164,7 +164,7 @@ export default function ClientHomePage() {
   if (showResult && quizCompleted) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
+        <Navigation hideHeaderElements={true} />
         <main className="flex-1 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
