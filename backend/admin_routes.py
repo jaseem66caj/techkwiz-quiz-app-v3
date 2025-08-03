@@ -415,36 +415,74 @@ async def delete_ad_slot(slot_id: str, current_admin: AdminUser = Depends(get_cu
     return {"message": "Ad slot deleted successfully"}
 
 # Rewarded Popup Configuration
-@admin_router.get("/rewarded-config", response_model=RewardedPopupConfig)
-async def get_rewarded_config(current_admin: AdminUser = Depends(get_current_admin_user)):
-    """Get rewarded popup configuration."""
+@admin_router.get("/rewarded-config", response_model=List[RewardedPopupConfig])
+async def get_all_rewarded_configs(current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Get all rewarded popup configurations."""
     database = get_db()
-    config = await database.rewarded_popup_config.find_one()
+    configs = await database.rewarded_popup_config.find().to_list(length=None)
+    
+    if not configs:
+        # Create default config for homepage if none exists
+        default_config = RewardedPopupConfig(category_name="Homepage")
+        await database.rewarded_popup_config.insert_one(default_config.dict())
+        return [default_config]
+    
+    return [RewardedPopupConfig(**config) for config in configs]
+
+@admin_router.get("/rewarded-config/{category_id}", response_model=RewardedPopupConfig)
+async def get_rewarded_config(category_id: str, current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Get rewarded popup configuration for specific category or homepage (use 'homepage' for homepage)."""
+    database = get_db()
+    
+    # For homepage, use None as category_id
+    query_category_id = None if category_id == "homepage" else category_id
+    config = await database.rewarded_popup_config.find_one({"category_id": query_category_id})
     
     if not config:
         # Create default config if none exists
-        default_config = RewardedPopupConfig()
+        category_name = "Homepage" if category_id == "homepage" else None
+        if category_name != "Homepage" and category_id:
+            # Get category name for better identification
+            category = await database.categories.find_one({"id": category_id})
+            category_name = category["name"] if category else f"Category {category_id}"
+            
+        default_config = RewardedPopupConfig(
+            category_id=query_category_id,
+            category_name=category_name
+        )
         await database.rewarded_popup_config.insert_one(default_config.dict())
         return default_config
     
     return RewardedPopupConfig(**config)
 
-@admin_router.put("/rewarded-config", response_model=RewardedPopupConfig)
-async def update_rewarded_config(config_data: RewardedPopupConfigUpdate, current_admin: AdminUser = Depends(get_current_admin_user)):
-    """Update rewarded popup configuration."""
+@admin_router.put("/rewarded-config/{category_id}", response_model=RewardedPopupConfig)
+async def update_rewarded_config(category_id: str, config_data: RewardedPopupConfigUpdate, current_admin: AdminUser = Depends(get_current_admin_user)):
+    """Update rewarded popup configuration for specific category or homepage."""
     database = get_db()
+    
+    # For homepage, use None as category_id
+    query_category_id = None if category_id == "homepage" else category_id
     
     update_data = {k: v for k, v in config_data.dict().items() if v is not None}
     update_data["updated_at"] = datetime.utcnow()
+    update_data["category_id"] = query_category_id
+    
+    # Get category name if not provided
+    if "category_name" not in update_data or not update_data["category_name"]:
+        if category_id == "homepage":
+            update_data["category_name"] = "Homepage"
+        elif category_id:
+            category = await database.categories.find_one({"id": category_id})
+            update_data["category_name"] = category["name"] if category else f"Category {category_id}"
     
     # Upsert the configuration
     await database.rewarded_popup_config.update_one(
-        {},
+        {"category_id": query_category_id},
         {"$set": update_data},
         upsert=True
     )
     
-    updated_config = await database.rewarded_popup_config.find_one()
+    updated_config = await database.rewarded_popup_config.find_one({"category_id": query_category_id})
     return RewardedPopupConfig(**updated_config)
 
 # Data Export and Backup
