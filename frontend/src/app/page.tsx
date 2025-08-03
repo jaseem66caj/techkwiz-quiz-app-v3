@@ -100,6 +100,7 @@ export default function HomePage() {
       
       // Show reward popup for both correct and wrong answers on first question
       if (currentQuestion === 0) {
+        console.log('🔧 HomePage: Triggering reward popup on first question')
         setShowRewardPopup(true)
         return // Don't proceed to next question yet
       }
