@@ -9,6 +9,7 @@ import {
   isAuthenticated,
   type User 
 } from '../utils/auth'
+import { AdminProvider } from '../context/AdminContext'
 
 // Types
 interface AppState {
