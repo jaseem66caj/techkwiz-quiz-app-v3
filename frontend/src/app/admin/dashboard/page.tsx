@@ -80,18 +80,20 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-full mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">TechKwiz Admin</h1>
-              <span className="ml-4 text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">Welcome, {adminUser.username}</span>
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-bold text-gray-900">TechKwiz Admin</h1>
+              <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                Welcome, {adminUser.username}
+              </span>
             </div>
             <button
               onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm"
             >
               Logout
             </button>
@@ -99,41 +101,33 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="max-w-full mx-auto px-6 py-6">
-        <div className="flex gap-6">
-          {/* Sidebar Navigation - Fixed Width */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex space-x-8">
+          {/* Sidebar Navigation */}
           <div className="w-64 flex-shrink-0">
-            <nav className="space-y-2 sticky top-24">
+            <nav className="space-y-1 sticky top-24">
               {tabs.map((tab) => (
-                <motion.button
+                <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-all text-sm ${
+                  className={`w-full flex items-center px-3 py-2 text-left rounded-md transition-colors text-sm font-medium ${
                     activeTab === tab.id
-                      ? 'bg-purple-600 text-white shadow-md'
-                      : 'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700 shadow-sm border border-gray-200'
+                      ? 'bg-indigo-100 text-indigo-700 border-l-4 border-indigo-500'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
-                  <span className="text-lg mr-3">{tab.icon}</span>
-                  <span className="font-medium">{tab.name}</span>
-                </motion.button>
+                  <span className="mr-3 text-lg">{tab.icon}</span>
+                  <span>{tab.name}</span>
+                </button>
               ))}
             </nav>
           </div>
 
-          {/* Main Content - Full Remaining Width */}
+          {/* Main Content */}
           <div className="flex-1 min-w-0">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-lg shadow-sm p-6 min-h-[600px] border border-gray-200 overflow-hidden"
-            >
+            <div className="bg-white rounded-lg shadow px-6 py-6">
               {renderActiveTab()}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
