@@ -73,15 +73,19 @@ export default function HomePage() {
   ]
 
   const handleAnswerSelect = (answerIndex: number) => {
+    console.log('🔧 HomePage: handleAnswerSelect called with answerIndex:', answerIndex, 'currentQuestion:', currentQuestion, 'selectedAnswer:', selectedAnswer)
     if (selectedAnswer !== null) return
     setSelectedAnswer(answerIndex)
     
     setTimeout(() => {
+      console.log('🔧 HomePage: Processing answer after timeout...')
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
       // For personality questions (correct_answer = -1), all answers are "correct"
       const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
       const finalIsCorrect = isPersonalityQuestion || isCorrect
       const coinsEarned = finalIsCorrect ? 25 : 0 // 25 coins per correct answer
+      
+      console.log('🔧 HomePage: Answer processed - isCorrect:', finalIsCorrect, 'coinsEarned:', coinsEarned)
       
       // Set states for popup
       setIsLastAnswerCorrect(finalIsCorrect)
