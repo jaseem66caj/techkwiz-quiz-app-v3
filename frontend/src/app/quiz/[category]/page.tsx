@@ -228,6 +228,9 @@ export default function QuizPage({ params }: QuizPageProps) {
       const answeredCount = questionsAnsweredCount + 1
       setQuestionsAnsweredCount(answeredCount)
       
+      // Set states for popup
+      setIsLastAnswerCorrect(isCorrect)
+      
       if (isCorrect) {
         const newScore = score + 1
         setScore(newScore)
@@ -252,6 +255,13 @@ export default function QuizPage({ params }: QuizPageProps) {
         }
       } else {
         setStreak(0)
+        setLastEarnedCoins(0)
+        
+        // Show reward popup for wrong answers too (but not on the last question)
+        if (answeredCount % 5 === 0 && currentQuestion < quizData.length - 1) {
+          setShowRewardPopup(true)
+          return // Don't proceed to next question yet
+        }
       }
       
       if (currentQuestion < quizData.length - 1) {
