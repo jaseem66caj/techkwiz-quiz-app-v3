@@ -235,8 +235,8 @@ export default function QuizPage({ params }: QuizPageProps) {
         const newScore = score + 1
         setScore(newScore)
         
-        // Award exactly 50 coins per correct answer (no bonuses)
-        const coinsPerAnswer = 50
+        // Award exactly 25 coins per correct answer (reduced from 50)
+        const coinsPerAnswer = 25
         
         setTotalCoinsEarned(prev => prev + coinsPerAnswer)
         setLastEarnedCoins(coinsPerAnswer)
