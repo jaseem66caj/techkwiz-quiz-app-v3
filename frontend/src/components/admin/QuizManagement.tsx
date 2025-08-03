@@ -160,7 +160,7 @@ export default function QuizManagement() {
   const handleDeleteCategory = async (categoryId: string) => {
     if (confirm('Are you sure you want to delete this category? This will also delete all questions in this category.')) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/categories/${categoryId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "https://status-monitor-4.preview.emergentagent.com"}/api/admin/categories/${categoryId}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });
