@@ -10,7 +10,7 @@ import { FunFact } from '../../../components/FunFact'
 import { AdBanner } from '../../../components/AdBanner'
 import { QuizResult } from '../../../components/QuizResult'
 import { AuthModal } from '../../../components/AuthModal'
-import { RewardPopup } from '../../../components/RewardPopup'
+import { NewRewardPopup } from '../../../components/NewRewardPopup'
 import { seoConfig, generateStructuredData } from '../../../utils/seo'
 
 interface QuizQuestion {
