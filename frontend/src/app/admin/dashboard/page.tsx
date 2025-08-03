@@ -99,25 +99,25 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="w-full px-6 sm:px-8 lg:px-12 py-8">
+        <div className="flex gap-8">
           {/* Sidebar Navigation */}
-          <div className="lg:w-64">
-            <nav className="space-y-2">
+          <div className="w-80 flex-shrink-0">
+            <nav className="space-y-3">
               {tabs.map((tab) => (
                 <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-all ${
+                  className={`w-full flex items-center px-6 py-4 text-left rounded-xl transition-all text-base ${
                     activeTab === tab.id
-                      ? 'bg-purple-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700'
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg'
+                      : 'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700 shadow-sm border border-gray-100'
                   }`}
                 >
-                  <span className="text-xl mr-3">{tab.icon}</span>
-                  <span className="font-medium">{tab.name}</span>
+                  <span className="text-2xl mr-4">{tab.icon}</span>
+                  <span className="font-semibold">{tab.name}</span>
                 </motion.button>
               ))}
             </nav>
