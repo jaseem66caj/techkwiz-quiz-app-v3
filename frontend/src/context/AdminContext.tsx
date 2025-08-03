@@ -39,7 +39,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const verifyToken = async (token: string, username: string) => {
     try {
+      console.log('🔐 Verifying token for:', username);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://status-monitor-4.preview.emergentagent.com';
+      console.log('🌐 Using backend URL for verification:', backendUrl);
+      
       const response = await fetch(`${backendUrl}/api/admin/verify`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -47,17 +50,24 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         }
       });
 
+      console.log('🔍 Verify response status:', response.status);
+      
       if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Token verified successfully:', data);
         setAdminUser({ username, token });
       } else {
+        console.log('❌ Token verification failed, clearing storage');
         // Token expired or invalid, clear storage
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_username');
+        setAdminUser(null);
       }
     } catch (error) {
-      console.error('Token verification failed:', error);
-      localStorage.removeItem('admin_token');
-      localStorage.removeItem('admin_username');
+      console.error('❌ Token verification error:', error);
+      // Don't clear storage on network errors - might be temporary
+      // Only clear if we got a 401/403 response
+      console.log('⚠️ Network error during verification, keeping token for now');
     } finally {
       setLoading(false);
     }
