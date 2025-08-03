@@ -10,9 +10,9 @@ import uuid
 import os
 
 # Database connection
-MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017/techkwiz")
+MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
 client = AsyncIOMotorClient(MONGO_URL)
-db = client.techkwiz
+db = client[os.environ.get("DB_NAME", "test_database")]
 
 # New Youth-Focused Categories
 YOUTH_CATEGORIES = [
