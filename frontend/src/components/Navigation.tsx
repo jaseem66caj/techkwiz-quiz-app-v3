@@ -8,7 +8,11 @@ import { useApp } from '../app/providers'
 import { AuthModal } from './AuthModal'
 import { logout } from '../utils/auth'
 
-export function Navigation() {
+interface NavigationProps {
+  hideHeaderElements?: boolean;
+}
+
+export function Navigation({ hideHeaderElements = false }: NavigationProps) {
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
