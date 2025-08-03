@@ -80,10 +80,10 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="w-full px-6 sm:px-8 lg:px-12">
+        <div className="w-full px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">TechKwiz Admin</h1>
@@ -99,9 +99,9 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="w-full px-6 sm:px-8 lg:px-12 py-8">
-        <div className="flex gap-8">
-          {/* Sidebar Navigation */}
+      <div className="w-full px-8 py-8">
+        <div className="flex gap-8 h-full">
+          {/* Sidebar Navigation - Fixed Width */}
           <div className="w-80 flex-shrink-0">
             <nav className="space-y-3">
               {tabs.map((tab) => (
@@ -123,14 +123,14 @@ export default function AdminDashboard() {
             </nav>
           </div>
 
-          {/* Main Content */}
+          {/* Main Content - Full Remaining Width */}
           <div className="flex-1 min-w-0">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg p-10 min-h-[700px] border border-gray-100"
+              className="bg-white rounded-2xl shadow-lg p-10 min-h-[800px] border border-gray-100 w-full"
             >
               {renderActiveTab()}
             </motion.div>
