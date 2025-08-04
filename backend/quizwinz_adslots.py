@@ -11,7 +11,7 @@ QUIZWINZ_AD_SLOTS = [
         "placement": "header",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Top of the page banner advertisement"
+        "description": "Top of the page banner advertisement",
     },
     {
         "id": "sidebar-right",
@@ -19,9 +19,9 @@ QUIZWINZ_AD_SLOTS = [
         "ad_unit_id": "",
         "ad_code": "",
         "placement": "sidebar",
-        "ad_type": "adsense", 
+        "ad_type": "adsense",
         "is_active": False,
-        "description": "Right side of the page advertisement"
+        "description": "Right side of the page advertisement",
     },
     {
         "id": "between-questions-1",
@@ -31,37 +31,37 @@ QUIZWINZ_AD_SLOTS = [
         "placement": "between-questions",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Advertisement between quiz questions (position 1)"
+        "description": "Advertisement between quiz questions (position 1)",
     },
     {
-        "id": "between-questions-2", 
+        "id": "between-questions-2",
         "name": "Between Questions #2",
         "ad_unit_id": "",
         "ad_code": "",
         "placement": "between-questions",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Advertisement between quiz questions (position 2)"
+        "description": "Advertisement between quiz questions (position 2)",
     },
     {
         "id": "between-questions-3",
-        "name": "Between Questions #3", 
+        "name": "Between Questions #3",
         "ad_unit_id": "",
         "ad_code": "",
         "placement": "between-questions",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Advertisement between quiz questions (position 3)"
+        "description": "Advertisement between quiz questions (position 3)",
     },
     {
         "id": "footer-banner",
         "name": "Footer Banner",
         "ad_unit_id": "",
-        "ad_code": "", 
+        "ad_code": "",
         "placement": "footer",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Bottom of the page banner advertisement"
+        "description": "Bottom of the page banner advertisement",
     },
     {
         "id": "popup-interstitial",
@@ -71,17 +71,17 @@ QUIZWINZ_AD_SLOTS = [
         "placement": "popup",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "In-game popup advertisement"
+        "description": "In-game popup advertisement",
     },
     {
         "id": "quiz-result-banner",
-        "name": "Quiz Result Banner", 
+        "name": "Quiz Result Banner",
         "ad_unit_id": "",
         "ad_code": "",
         "placement": "quiz-result",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Advertisement after quiz completion"
+        "description": "Advertisement after quiz completion",
     },
     {
         "id": "category-page-top",
@@ -89,9 +89,9 @@ QUIZWINZ_AD_SLOTS = [
         "ad_unit_id": "",
         "ad_code": "",
         "placement": "category-top",
-        "ad_type": "adsense", 
+        "ad_type": "adsense",
         "is_active": False,
-        "description": "Top of quiz category selection page"
+        "description": "Top of quiz category selection page",
     },
     {
         "id": "category-page-bottom",
@@ -101,6 +101,6 @@ QUIZWINZ_AD_SLOTS = [
         "placement": "category-bottom",
         "ad_type": "adsense",
         "is_active": False,
-        "description": "Bottom of quiz category selection page"
-    }
+        "description": "Bottom of quiz category selection page",
+    },
 ]
