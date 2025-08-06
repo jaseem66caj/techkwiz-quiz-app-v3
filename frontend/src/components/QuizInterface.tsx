@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 interface QuizInterfaceProps {
-  questionData: {
+  question: {
     id: string;
     question: string;
     options: string[];
@@ -19,10 +19,11 @@ interface QuizInterfaceProps {
     personality_trait?: string;
     prediction_year?: string;
   }
-  currentQuestion: number
-  totalQuestions: number
   selectedAnswer: number | null
   onAnswerSelect: (answerIndex: number) => void
+  questionAnswered: boolean
+  questionNumber: number
+  totalQuestions: number
 }
 
 export function QuizInterface({
