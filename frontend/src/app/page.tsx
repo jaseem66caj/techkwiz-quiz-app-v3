@@ -293,11 +293,12 @@ export default function HomePage() {
           {/* Quiz Interface */}
           <div className="w-full max-w-md">
             <QuizInterface
-              questionData={quickStartQuiz[currentQuestion]}
-              currentQuestion={currentQuestion}
-              totalQuestions={quickStartQuiz.length}
+              question={quickStartQuiz[currentQuestion]}
               selectedAnswer={selectedAnswer}
               onAnswerSelect={handleAnswerSelect}
+              questionAnswered={selectedAnswer !== null}
+              questionNumber={currentQuestion + 1}
+              totalQuestions={quickStartQuiz.length}
             />
           </div>
           
