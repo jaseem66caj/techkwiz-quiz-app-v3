@@ -130,8 +130,29 @@ export default function QuizPage({ params }: QuizPageProps) {
     }
   }
 
-  // Handle answer selection - TechKwiz sequential flow
-  const handleAnswerSelect = (answerIndex: number) => {
+  // Fetch between-questions ad slots
+  const fetchAdSlot = async () => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
+      const response = await fetch(`${backendUrl}/api/quiz/between-questions-ads`)
+      
+      if (response.ok) {
+        const adSlots = await response.json()
+        if (adSlots && adSlots.length > 0) {
+          // Get random ad slot for this question
+          const randomAd = adSlots[Math.floor(Math.random() * adSlots.length)]
+          setCurrentAdSlot(randomAd.ad_code || '')
+          return randomAd
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching ad slot:', error)
+    }
+    return null
+  }
+
+  // Enhanced answer handling with Qureka-style flow: Question → Answer → Ad → Reward → Next Question
+  const handleAnswerSelect = async (answerIndex: number) => {
     if (questionAnswered) return
     
     setSelectedAnswer(answerIndex)
@@ -154,51 +175,53 @@ export default function QuizPage({ params }: QuizPageProps) {
       const coinsEarned = 25 // TechKwiz standard: 25 coins per correct answer
       setTotalCoinsEarned(prev => prev + coinsEarned)
       
-      // Update user's coin balance
+      // Update user's coin balance immediately
       dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-      
-      // Show reward popup for correct answers (TechKwiz immediate feedback)
-      setShowRewardPopup(true)
-    } else {
-      // Show reward popup for wrong answers too (TechKwiz immediate feedback)
-      setShowRewardPopup(true)
     }
     
-    // Auto-advance after 2 seconds to maintain flow
+    // Phase 1: Immediate Reward Feedback (TechKwiz instant gratification)
+    setFlowPhase('immediate_reward')
+    setShowRewardPopup(true)
+    
+    // Fetch ad slot for potential mandatory ad
+    await fetchAdSlot()
+  }
+
+  // Handle ad completion and coin rewards
+  const handleAdCompleted = (adCoins: number) => {
+    setTotalCoinsEarned(prev => prev + adCoins)
+    dispatch({ type: 'UPDATE_COINS', payload: adCoins })
+    
+    // Move to final reward phase
+    setFlowPhase('final_reward')
+    
+    // Auto-advance to next question after showing final reward
     setTimeout(() => {
-      setShowRewardPopup(false)
       advanceToNextQuestion()
     }, 2000)
   }
 
+  // Seamless advancement to next question
   const advanceToNextQuestion = () => {
+    setShowRewardPopup(false)
+    
     if (currentQuestion < quizData.length - 1) {
-      // Show between-questions ad for questions 2, 3, 4 (after questions 1, 2, 3)
-      if (currentQuestion === 0 || currentQuestion === 1 || currentQuestion === 2) {
-        setShowBetweenQuestionAd(true)
-        
-        // After 3 seconds of ad, move to next question
-        setTimeout(() => {
-          setShowBetweenQuestionAd(false)
-          setCurrentQuestion(currentQuestion + 1)
-          setSelectedAnswer(null)
-          setQuestionAnswered(false)
-        }, 3000)
-      } else {
-        // No ad, just move to next question
-        setCurrentQuestion(currentQuestion + 1)
-        setSelectedAnswer(null)
-        setQuestionAnswered(false)
-      }
+      // Move to next question
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+      setQuestionAnswered(false)
+      setFlowPhase('question')
     } else {
       // Quiz completed - all 5 questions done
       setQuizCompleted(true)
       
-      // Award coins based on performance
+      // Final score calculation
+      const finalScore = score + (selectedAnswer === quizData[currentQuestion]?.correct_answer ? 1 : 0)
+      
       dispatch({
         type: 'END_QUIZ',
         payload: {
-          score: score + (selectedAnswer === quizData[currentQuestion].correct_answer ? 1 : 0),
+          score: finalScore,
           total: quizData.length,
           coinsEarned: totalCoinsEarned
         }
