@@ -44,7 +44,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const verifyToken = async (token: string, username: string) => {
     try {
       console.log('🔐 Verifying token for:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://66e21c30-8cd5-4586-814a-319b97a3b90d.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
       console.log('🌐 Using backend URL for verification:', backendUrl);
       
       const response = await fetch(`${backendUrl}/api/admin/verify`, {
