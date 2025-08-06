@@ -22,6 +22,10 @@ interface QuizQuestion {
   fun_fact: string;
   category: string;
   subcategory: string;
+  question_type?: string;
+  emoji_clue?: string;
+  visual_options?: string[];
+  personality_trait?: string;
 }
 
 interface QuizCategory {
@@ -33,12 +37,6 @@ interface QuizCategory {
   subcategories: string[];
   entry_fee: number;
   prize_pool: number;
-}
-
-const DIFFICULTY_CONFIG = {
-  beginner: { label: 'Beginner', coins: 10, coinsPerCorrect: 25, timeLimit: 30, questions: 10 },
-  intermediate: { label: 'Intermediate', coins: 20, coinsPerCorrect: 25, timeLimit: 25, questions: 12 },
-  advanced: { label: 'Advanced', coins: 30, coinsPerCorrect: 25, timeLimit: 20, questions: 15 }
 }
 
 interface QuizPageProps {
@@ -55,63 +53,175 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [categoryId, setCategoryId] = useState<string>('')
   const [categoryInfo, setCategoryInfo] = useState<QuizCategory | null>(null)
   
-  // Quiz state
+  // Sequential Quiz State - TechKwiz 5-question flow
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [quizCompleted, setQuizCompleted] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(30)
   const [quizData, setQuizData] = useState<QuizQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   
-  // New features
-  const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
-  const [quizStarted, setQuizStarted] = useState(false)
+  // Progress tracking for 5-question sequence
+  const [questionAnswered, setQuestionAnswered] = useState(false)
+  const [userAnswers, setUserAnswers] = useState<Array<{question: number, answer: number, correct: boolean}>>([])
   const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [maxStreak, setMaxStreak] = useState(0)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
+  const [showBetweenQuestionAd, setShowBetweenQuestionAd] = useState(false)
+
+  // Initialize component
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setCategoryId(resolvedParams.category)
+      fetchCategoryInfo(resolvedParams.category)
+      fetchSequentialQuestions(resolvedParams.category)
+    })
+  }, [])
 
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const { getCategoryInfo } = await import('../../../data/quizDatabase');
-      const categoryData = getCategoryInfo(catId);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
+      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`)
       
-      if (categoryData) {
-        setCategoryInfo(categoryData);
-        console.log('✅ Loaded category from local database:', categoryData.name);
-        return categoryData;
-      } else {
-        setError('Category not found');
-        return null;
+      if (!response.ok) {
+        throw new Error('Failed to fetch category')
       }
+      
+      const categoryData = await response.json()
+      setCategoryInfo(categoryData)
+      console.log('✅ Loaded category from API:', categoryData.name)
+      return categoryData
     } catch (error) {
-      console.error('Error loading local category:', error);
-      setError('Failed to load category information');
-      return null;
+      console.error('Error loading category:', error)
+      setError('Failed to load category information')
+      return null
     }
-  };
+  }
 
-  const fetchQuestions = async (catId: string, count: number = 10) => {
+  const fetchSequentialQuestions = async (catId: string) => {
     try {
-      const { getRandomQuestions } = await import('../../../data/quizDatabase');
-      const questionsData = getRandomQuestions(catId, count);
+      setLoading(true)
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
+      const response = await fetch(`${backendUrl}/api/quiz/sequential-questions/${catId}`)
       
-      if (questionsData && questionsData.length > 0) {
-        setQuizData(questionsData);
-        console.log('✅ Loaded questions from local database:', questionsData.length);
-        return questionsData;
+      if (!response.ok) {
+        throw new Error('Failed to fetch questions')
+      }
+      
+      const questionsData = await response.json()
+      
+      if (questionsData && questionsData.length === 5) {
+        setQuizData(questionsData)
+        console.log('✅ Loaded 5 sequential questions from API')
+        setLoading(false)
+        return questionsData
       } else {
-        setError('No questions available for this category');
-        return [];
+        setError('Expected 5 questions for sequential quiz')
+        setLoading(false)
+        return []
       }
     } catch (error) {
-      console.error('Error loading local questions:', error);
-      setError('Failed to load quiz questions');
-      return [];
+      console.error('Error loading sequential questions:', error)
+      setError('Failed to load quiz questions')
+      setLoading(false)
+      return []
     }
-  };
+  }
+
+  // Handle answer selection - TechKwiz sequential flow
+  const handleAnswerSelect = (answerIndex: number) => {
+    if (questionAnswered) return
+    
+    setSelectedAnswer(answerIndex)
+    setQuestionAnswered(true)
+    
+    const currentQ = quizData[currentQuestion]
+    const isCorrect = answerIndex === currentQ.correct_answer
+    
+    // Track user answer
+    const answerRecord = {
+      question: currentQuestion,
+      answer: answerIndex,
+      correct: isCorrect
+    }
+    
+    setUserAnswers(prev => [...prev, answerRecord])
+    
+    if (isCorrect) {
+      setScore(score + 1)
+      const coinsEarned = 25 // TechKwiz standard: 25 coins per correct answer
+      setTotalCoinsEarned(prev => prev + coinsEarned)
+      
+      // Update user's coin balance
+      dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+      
+      // Show reward popup for correct answers (TechKwiz immediate feedback)
+      setShowRewardPopup(true)
+    } else {
+      // Show reward popup for wrong answers too (TechKwiz immediate feedback)
+      setShowRewardPopup(true)
+    }
+    
+    // Auto-advance after 2 seconds to maintain flow
+    setTimeout(() => {
+      setShowRewardPopup(false)
+      advanceToNextQuestion()
+    }, 2000)
+  }
+
+  const advanceToNextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
+      // Show between-questions ad for questions 2, 3, 4 (after questions 1, 2, 3)
+      if (currentQuestion === 0 || currentQuestion === 1 || currentQuestion === 2) {
+        setShowBetweenQuestionAd(true)
+        
+        // After 3 seconds of ad, move to next question
+        setTimeout(() => {
+          setShowBetweenQuestionAd(false)
+          setCurrentQuestion(currentQuestion + 1)
+          setSelectedAnswer(null)
+          setQuestionAnswered(false)
+        }, 3000)
+      } else {
+        // No ad, just move to next question
+        setCurrentQuestion(currentQuestion + 1)
+        setSelectedAnswer(null)
+        setQuestionAnswered(false)
+      }
+    } else {
+      // Quiz completed - all 5 questions done
+      setQuizCompleted(true)
+      
+      // Award coins based on performance
+      dispatch({
+        type: 'END_QUIZ',
+        payload: {
+          score: score + (selectedAnswer === quizData[currentQuestion].correct_answer ? 1 : 0),
+          total: quizData.length,
+          coinsEarned: totalCoinsEarned
+        }
+      })
+    }
+  }
+
+  const restartQuiz = () => {
+    setCurrentQuestion(0)
+    setSelectedAnswer(null)
+    setScore(0)
+    setQuizCompleted(false)
+    setQuestionAnswered(false)
+    setUserAnswers([])
+    setTotalCoinsEarned(0)
+    setShowRewardPopup(false)
+    setShowBetweenQuestionAd(false)
+    
+    // Fetch new set of 5 questions
+    fetchSequentialQuestions(categoryId)
+  }
+
+  const goToCategories = () => {
+    router.push('/start')
+  }
 
   // SEO optimization
   useEffect(() => {
@@ -146,350 +256,124 @@ export default function QuizPage({ params }: QuizPageProps) {
       scriptTag.textContent = JSON.stringify(structuredData)
     }
   }, [categoryInfo, categoryId, quizData])
-  const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
-  const [questionsAnsweredCount, setQuestionsAnsweredCount] = useState(0)
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(true)
 
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
-  }
-
-  // Handle async params and load data from API
-  useEffect(() => {
-    const resolveParams = async () => {
-      const resolvedParams = await params
-      const catId = resolvedParams.category
-      setCategoryId(catId)
-      
-      // Fetch category info and questions from database
-      const categoryData = await fetchCategoryInfo(catId)
-      if (categoryData) {
-        await fetchQuestions(catId, 10) // Get 10 questions
-      }
-      setLoading(false)
-    }
-    resolveParams()
-  }, [params])
-
-  // Auto-start quiz when category is loaded (skip difficulty selection)
-  useEffect(() => {
-    if (categoryInfo && categoryId && !quizStarted && !loading && quizData.length > 0) {
-      // Auto-set to beginner difficulty and start quiz
-      setDifficulty('beginner')
-      
-      // Deduct entry fee first
-      const entryFee = categoryInfo.entry_fee
-      if (state.user && state.user.coins >= entryFee) {
-        dispatch({ type: 'UPDATE_COINS', payload: -entryFee })
-        setTimeLeft(30) // Set default time
-        setQuizStarted(true)
-      } else {
-        // Redirect back to categories if insufficient coins
-        router.push('/start')
-      }
-    }
-  }, [categoryInfo, categoryId, quizStarted, loading, quizData.length, state.user, dispatch, router])
-
-  // Timer logic
-  useEffect(() => {
-    if (timeLeft > 0 && !quizCompleted && quizStarted && quizData.length > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-      return () => clearTimeout(timer)
-    } else if (timeLeft === 0 && !quizCompleted && quizStarted) {
-      handleAnswerSelect(-1) // Time up
-    }
-  }, [timeLeft, quizCompleted, quizStarted, quizData.length])
-
-  const handleDifficultySelect = (selectedDifficulty: 'beginner' | 'intermediate' | 'advanced') => {
-    if (!categoryInfo) return
-    
-    const config = DIFFICULTY_CONFIG[selectedDifficulty]
-    const requiredCoins = categoryInfo.entry_fee * (selectedDifficulty === 'advanced' ? 2 : selectedDifficulty === 'intermediate' ? 1.5 : 1)
-    
-    if (state.user.coins >= requiredCoins) {
-      setDifficulty(selectedDifficulty)
-      setQuizStarted(true)
-      // Deduct entry fee
-      dispatch({ type: 'UPDATE_COINS', payload: -requiredCoins })
-    }
-  }
-
-  const handleAnswerSelect = (answerIndex: number) => {
-    if (quizData.length === 0) return
-    
-    setSelectedAnswer(answerIndex)
-    
-    setTimeout(() => {
-      const isCorrect = answerIndex === quizData[currentQuestion].correct_answer
-      const config = DIFFICULTY_CONFIG[difficulty]
-      const answeredCount = questionsAnsweredCount + 1
-      setQuestionsAnsweredCount(answeredCount)
-      
-      // Set states for popup
-      setIsLastAnswerCorrect(isCorrect)
-      
-      if (isCorrect) {
-        const newScore = score + 1
-        setScore(newScore)
-        
-        // Award exactly 25 coins per correct answer (reduced from 50)
-        const coinsPerAnswer = 25
-        
-        setTotalCoinsEarned(prev => prev + coinsPerAnswer)
-        setLastEarnedCoins(coinsPerAnswer)
-        setStreak(prev => {
-          const newStreak = prev + 1
-          setMaxStreak(Math.max(maxStreak, newStreak))
-          return newStreak
-        })
-        
-        dispatch({ type: 'UPDATE_COINS', payload: coinsPerAnswer })
-        
-        // Show reward popup after EVERY question (like TechKwiz's immediate feedback)
-        if (currentQuestion < quizData.length - 1) {
-          setShowRewardPopup(true)
-          return // Don't proceed to next question yet
-        }
-      } else {
-        setStreak(0)
-        setLastEarnedCoins(0)
-        
-        // Show reward popup for wrong answers too (like TechKwiz's immediate feedback)
-        if (currentQuestion < quizData.length - 1) {
-          setShowRewardPopup(true)
-          return // Don't proceed to next question yet
-        }
-      }
-      
-      if (currentQuestion < quizData.length - 1) {
-        setCurrentQuestion(currentQuestion + 1)
-        setSelectedAnswer(null)
-        setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
-      } else {
-        setQuizCompleted(true)
-        
-        // Save quiz result
-        dispatch({ 
-          type: 'END_QUIZ', 
-          payload: { 
-            category: categoryId, 
-            difficulty,
-            score, 
-            totalQuestions: quizData.length,
-            correctAnswers: score,
-            coinsEarned: totalCoinsEarned,
-            maxStreak,
-            completedAt: new Date().toISOString()
-          }
-        })
-      }
-    }, 1500)
-  }
-
-  const handleClaimReward = () => {
-    // Give 100 coins for watching ad
-    const adRewardCoins = 100
-    dispatch({ type: 'UPDATE_COINS', payload: adRewardCoins })
-    
-    // Proceed to next question
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-      setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
-    } else {
-      setQuizCompleted(true)
-    }
-  }
-
-  const handleSkipReward = () => {
-    // Proceed without doubling coins
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-      setTimeLeft(DIFFICULTY_CONFIG[difficulty].timeLimit)
-    } else {
-      setQuizCompleted(true)
-    }
-  }
-
-  const handlePlayAgain = () => {
-    setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setScore(0)
-    setQuizCompleted(false)
-    setQuizStarted(false)
-    setTotalCoinsEarned(0)
-    setStreak(0)
-    setMaxStreak(0)
-    setTimeLeft(30)
-    setShowRewardPopup(false)
-    setLastEarnedCoins(0)
-    setQuestionsAnsweredCount(0)
-  }
-
-  // Loading state - show until quiz is fully ready
-  if (loading || !categoryInfo || !quizStarted || quizData.length === 0) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="glass-effect p-8 rounded-2xl text-center">
-            {error ? (
-              <>
-                <div className="text-red-400 text-xl mb-4">⚠️</div>
-                <p className="text-white mb-4">{error}</p>
-                <button
-                  onClick={() => router.push('/start')}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  Back to Categories
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-                <p className="text-white">
-                  {loading ? 'Loading quiz...' : 
-                   !categoryInfo ? 'Loading category...' :
-                   !quizStarted ? 'Starting quiz...' :
-                   'Preparing questions...'}
-                </p>
-              </>
-            )}
-          </div>
-        </main>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-400 mx-auto"></div>
+          <p className="text-orange-100 mt-4">Loading TechKwiz Sequential Quiz...</p>
+        </div>
       </div>
     )
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 text-xl mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/start')}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg"
+          >
+            Back to Categories
+          </button>
+        </div>
+      </div>
+    )
+  }
 
-
-  // Quiz interface - direct start
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
       <Navigation />
       
-      <main className="flex-1 p-4 w-full max-w-lg mx-auto">
-        {/* Quiz Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-6"
-        >
-          <div className="flex items-center justify-center space-x-4 mb-4">
-            <div className="text-4xl">{categoryInfo.icon}</div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">
-                {categoryInfo.name} Quiz
-              </h1>
-              <p className="text-blue-200 capitalize">
-                {difficulty} Level
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Progress & Stats Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass-effect p-4 rounded-xl mb-6"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-lg font-bold text-white">{currentQuestion + 1}/{quizData.length}</div>
-              <div className="text-xs text-blue-200">Progress</div>
-            </div>
-            <div>
-              <div className={`text-lg font-bold ${timeLeft <= 10 ? 'text-red-400' : 'text-green-400'}`}>
-                {timeLeft}s
+      <div className="container mx-auto px-4 pt-24 pb-8">
+        {!quizCompleted ? (
+          <>
+            {/* Quiz Progress Header */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50">
+                <div className="flex justify-between items-center mb-4">
+                  <h1 className="text-2xl font-bold text-orange-100">
+                    {categoryInfo?.icon} {categoryInfo?.name}
+                  </h1>
+                  <div className="text-orange-300 font-bold">
+                    Question {currentQuestion + 1} of 5
+                  </div>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-orange-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${((currentQuestion + 1) / 5) * 100}%` }}
+                  ></div>
+                </div>
+                
+                <div className="flex justify-between text-sm text-slate-400 mt-2">
+                  <span>Score: {score}/{currentQuestion + (questionAnswered ? 1 : 0)}</span>
+                  <span>🪙 Earned: {totalCoinsEarned} coins</span>
+                </div>
               </div>
-              <div className="text-xs text-blue-200">Time Left</div>
             </div>
-            <div>
-              <div className="text-lg font-bold text-yellow-400">{score}</div>
-              <div className="text-xs text-blue-200">Correct</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-purple-400">{streak}</div>
-              <div className="text-xs text-blue-200">Streak</div>
-            </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="mt-4 bg-white/10 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
-            />
-          </div>
-        </motion.div>
 
-        <div className="flex flex-col items-center space-y-6">
-          {!quizCompleted ? (
-            <>
-              <motion.div
-                key={currentQuestion}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="w-full max-w-2xl"
-              >
-                <QuizInterface
-                  questionData={quizData[currentQuestion]}
-                  currentQuestion={currentQuestion}
-                  totalQuestions={quizData.length}
-                  selectedAnswer={selectedAnswer}
-                  onAnswerSelect={handleAnswerSelect}
-                />
-              </motion.div>
-              
-              <FunFact fact={quizData[currentQuestion]?.fun_fact} />
-            </>
-          ) : (
-            <QuizResult
+            {/* Between Questions Ad Display */}
+            {showBetweenQuestionAd && (
+              <div className="max-w-2xl mx-auto mb-8">
+                <div className="bg-slate-800/80 backdrop-blur-md rounded-xl p-8 border border-slate-700/50 text-center">
+                  <div className="text-2xl mb-4">🎯</div>
+                  <h3 className="text-xl font-bold text-orange-100 mb-2">Between Questions Ad</h3>
+                  <p className="text-slate-300 mb-4">Watch this quick ad to continue...</p>
+                  <div className="bg-gradient-to-r from-orange-500 to-pink-500 h-32 rounded-lg flex items-center justify-center">
+                    <p className="text-white font-bold">Advertisement Space</p>
+                  </div>
+                  <p className="text-slate-400 text-sm mt-2">Loading next question...</p>
+                </div>
+              </div>
+            )}
+
+            {/* Quiz Interface - Only show if not showing ad */}
+            {!showBetweenQuestionAd && quizData.length > 0 && (
+              <QuizInterface
+                question={quizData[currentQuestion]}
+                selectedAnswer={selectedAnswer}
+                onAnswerSelect={handleAnswerSelect}
+                questionAnswered={questionAnswered}
+                questionNumber={currentQuestion + 1}
+                totalQuestions={5}
+              />
+            )}
+
+            {/* Immediate Reward Popup - TechKwiz instant feedback */}
+            {showRewardPopup && (
+              <NewRewardPopup 
+                isCorrect={selectedAnswer === quizData[currentQuestion]?.correct_answer}
+                coinsEarned={selectedAnswer === quizData[currentQuestion]?.correct_answer ? 25 : 0}
+                onClose={() => setShowRewardPopup(false)}
+                showClaim={false} // No claim button for sequential questions, auto-advance
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {/* Quiz Results */}
+            <QuizResult 
               score={score}
-              totalQuestions={quizData.length}
-              category={categoryInfo.name}
-              difficulty={difficulty}
+              totalQuestions={5}
               coinsEarned={totalCoinsEarned}
-              maxStreak={maxStreak}
-              onPlayAgain={handlePlayAgain}
-              onBackToCategories={() => router.push('/start')}
+              onRestart={restartQuiz}
+              onBackToCategories={goToCategories}
+              categoryName={categoryInfo?.name || 'Quiz'}
             />
-          )}
-        </div>
-
-        {/* Bottom Ad */}
-        <AdBanner 
-          adSlot="4444444444"
-          adFormat="rectangle"
-          className="mt-8"
-        />
-      </main>
-      
-      {/* Reward Popup */}
-      <NewRewardPopup
-        isOpen={showRewardPopup}
-        onClose={() => setShowRewardPopup(false)}
-        coinsEarned={lastEarnedCoins}
-        onClaimReward={handleClaimReward}
-        onSkipReward={handleSkipReward}
-        isCorrect={isLastAnswerCorrect}
-        rewardCoins={100}
-        categoryId={categoryId}
-      />
-      
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleLogin}
-      />
+            
+            {/* Quiz Result Ad Banner */}
+            <div className="max-w-2xl mx-auto mt-8">
+              <AdBanner placement="quiz-result" />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
