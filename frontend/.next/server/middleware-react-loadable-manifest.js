@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"app/start/page.tsx -> ../../data/quizDatabase\":{\"id\":\"app/start/page.tsx -> ../../data/quizDatabase\",\"files\":[\"static/chunks/_app-pages-browser_src_data_quizDatabase_ts.js\"]}}"
