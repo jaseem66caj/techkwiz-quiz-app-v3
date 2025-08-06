@@ -509,7 +509,7 @@ class BackendTester:
                     self.log_result("Ad Slot CRUD", False, "Ad slot update not applied correctly")
                     return False
             
-            self.log_result("Enhanced Ad Slot System", True, f"Found {len(ad_slots)} ad slots with quizwinz.com structure, CRUD operations working")
+            self.log_result("Enhanced Ad Slot System", True, f"Found {len(ad_slots)} ad slots with techkwiz.com structure, CRUD operations working")
             return True
             
         except Exception as e:
