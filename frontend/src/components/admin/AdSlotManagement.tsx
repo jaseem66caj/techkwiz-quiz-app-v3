@@ -200,7 +200,7 @@ var adUnits = [{
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Ad Slot Management</h2>
-          <p className="text-gray-600 mt-1">Configure AdSense/AdX/Prebid slots matching quizwinz.com structure</p>
+          <p className="text-gray-600 mt-1">Configure AdSense/AdX/Prebid slots matching techkwiz.com structure</p>
         </div>
         <button
           onClick={() => setShowAddSlot(true)}
