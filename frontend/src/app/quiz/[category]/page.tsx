@@ -73,22 +73,21 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [maxStreak, setMaxStreak] = useState(0)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
 
-  // API functions
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
-      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`);
+      const { getCategoryInfo } = await import('../../../data/quizDatabase');
+      const categoryData = getCategoryInfo(catId);
       
-      if (response.ok) {
-        const data = await response.json();
-        setCategoryInfo(data);
-        return data;
+      if (categoryData) {
+        setCategoryInfo(categoryData);
+        console.log('✅ Loaded category from local database:', categoryData.name);
+        return categoryData;
       } else {
         setError('Category not found');
         return null;
       }
     } catch (error) {
-      console.error('Error fetching category:', error);
+      console.error('Error loading local category:', error);
       setError('Failed to load category information');
       return null;
     }
@@ -96,19 +95,19 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchQuestions = async (catId: string, count: number = 10) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
-      const response = await fetch(`${backendUrl}/api/quiz/questions/${catId}?count=${count}`);
+      const { getRandomQuestions } = await import('../../../data/quizDatabase');
+      const questionsData = getRandomQuestions(catId, count);
       
-      if (response.ok) {
-        const data = await response.json();
-        setQuizData(data);
-        return data;
+      if (questionsData && questionsData.length > 0) {
+        setQuizData(questionsData);
+        console.log('✅ Loaded questions from local database:', questionsData.length);
+        return questionsData;
       } else {
         setError('No questions available for this category');
         return [];
       }
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error('Error loading local questions:', error);
       setError('Failed to load quiz questions');
       return [];
     }
@@ -248,8 +247,8 @@ export default function QuizPage({ params }: QuizPageProps) {
         
         dispatch({ type: 'UPDATE_COINS', payload: coinsPerAnswer })
         
-        // Show reward popup after every 5 questions (but not on the last question)
-        if (answeredCount % 5 === 0 && currentQuestion < quizData.length - 1) {
+        // Show reward popup after EVERY question (like Qureka's immediate feedback)
+        if (currentQuestion < quizData.length - 1) {
           setShowRewardPopup(true)
           return // Don't proceed to next question yet
         }
@@ -257,8 +256,8 @@ export default function QuizPage({ params }: QuizPageProps) {
         setStreak(0)
         setLastEarnedCoins(0)
         
-        // Show reward popup for wrong answers too (but not on the last question)
-        if (answeredCount % 5 === 0 && currentQuestion < quizData.length - 1) {
+        // Show reward popup for wrong answers too (like Qureka's immediate feedback)
+        if (currentQuestion < quizData.length - 1) {
           setShowRewardPopup(true)
           return // Don't proceed to next question yet
         }

@@ -84,6 +84,26 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     entry_fee: 45,
     prize_pool: 900,
   },
+  'programming': {
+    id: 'programming',
+    name: 'Programming',
+    icon: '💻',
+    color: 'from-blue-500 to-purple-600',
+    description: 'Test your coding knowledge',
+    subcategories: ['JavaScript', 'Python', 'HTML', 'Algorithms'],
+    entry_fee: 25,
+    prize_pool: 500,
+  },
+  'ai': {
+    id: 'ai',
+    name: 'Artificial Intelligence',
+    icon: '🤖',
+    color: 'from-purple-500 to-pink-600',
+    description: 'Explore AI and machine learning',
+    subcategories: ['Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision'],
+    entry_fee: 30,
+    prize_pool: 600,
+  },
 }
 
 export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
