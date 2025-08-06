@@ -80,15 +80,15 @@ export function QuizInterface({
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
-          {questionData.question}
+          {question.question}
         </h3>
-        {questionData.emoji_clue && (
-          <div className="text-3xl mb-4">{questionData.emoji_clue}</div>
+        {question.emoji_clue && (
+          <div className="text-3xl mb-4">{question.emoji_clue}</div>
         )}
       </div>
       
       <div className="grid grid-cols-2 gap-3">
-        {questionData.options.map((option, index) => (
+        {question.options.map((option, index) => (
           <motion.button
             key={index}
             whileHover={{ scale: 1.02 }}
@@ -105,7 +105,7 @@ export function QuizInterface({
             }`}
           >
             <div className="text-2xl mb-2">
-              {questionData.visual_options?.[index] || '✨'}
+              {question.visual_options?.[index] || '✨'}
             </div>
             <div className="text-sm font-medium">
               {option}
@@ -121,18 +121,18 @@ export function QuizInterface({
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
-          {questionData.question}
+          {question.question}
         </h3>
-        {questionData.emoji_clue && (
+        {question.emoji_clue && (
           <div className="bg-purple-500/20 backdrop-blur-sm rounded-2xl px-6 py-4 inline-block border border-purple-400/30 mb-4">
-            <div className="text-4xl mb-2">{questionData.emoji_clue}</div>
+            <div className="text-4xl mb-2">{question.emoji_clue}</div>
             <div className="text-xs text-purple-200">Decode the emojis!</div>
           </div>
         )}
       </div>
       
       <div className="space-y-3">
-        {questionData.options.map((option, index) => (
+        {question.options.map((option, index) => (
           <motion.button
             key={index}
             whileHover={{ scale: 1.02 }}
@@ -147,11 +147,11 @@ export function QuizInterface({
                 ? 'bg-pink-500 text-white border-pink-400' 
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
             } ${
-              selectedAnswer !== null && index === questionData.correct_answer 
+              selectedAnswer !== null && index === question.correct_answer 
                 ? 'bg-green-500 border-green-400' 
                 : ''
             } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer 
+              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
                 ? 'bg-red-500 border-red-400' 
                 : ''
             }`}
@@ -171,7 +171,7 @@ export function QuizInterface({
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
-          {questionData.question}
+          {question.question}
         </h3>
         <div className="text-xs text-blue-200 mb-4">
           No wrong answers - just discover yourself! ✨
@@ -179,7 +179,7 @@ export function QuizInterface({
       </div>
       
       <div className="space-y-3">
-        {questionData.options.map((option, index) => (
+        {question.options.map((option, index) => (
           <motion.button
             key={index}
             whileHover={{ scale: 1.02 }}
@@ -210,19 +210,19 @@ export function QuizInterface({
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
-          {questionData.question}
+          {question.question}
         </h3>
-        {questionData.prediction_year && (
+        {question.prediction_year && (
           <div className="bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-green-400/30 mb-4">
             <span className="text-sm font-bold text-green-200">
-              Prediction for {questionData.prediction_year}
+              Prediction for {question.prediction_year}
             </span>
           </div>
         )}
       </div>
       
       <div className="space-y-3">
-        {questionData.options.map((option, index) => (
+        {question.options.map((option, index) => (
           <motion.button
             key={index}
             whileHover={{ scale: 1.02 }}
@@ -237,11 +237,11 @@ export function QuizInterface({
                 ? 'bg-green-500 text-white border-green-400' 
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
             } ${
-              selectedAnswer !== null && index === questionData.correct_answer 
+              selectedAnswer !== null && index === question.correct_answer 
                 ? 'bg-green-500 border-green-400' 
                 : ''
             } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer 
+              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
                 ? 'bg-red-500 border-red-400' 
                 : ''
             }`}
@@ -261,12 +261,12 @@ export function QuizInterface({
     <div className="space-y-4">
       <div className="text-center mb-6">
         <h3 className="text-lg font-semibold text-white mb-6 leading-tight">
-          {questionData.question}
+          {question.question}
         </h3>
       </div>
       
       <div className="space-y-3">
-        {questionData.options.map((option, index) => (
+        {question.options.map((option, index) => (
           <button
             key={index}
             onClick={() => {
@@ -279,11 +279,11 @@ export function QuizInterface({
                 ? 'bg-blue-500 text-white border-blue-400' 
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
             } ${
-              selectedAnswer !== null && index === questionData.correct_answer 
+              selectedAnswer !== null && index === question.correct_answer 
                 ? 'bg-green-500 border-green-400' 
                 : ''
             } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== questionData.correct_answer 
+              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
                 ? 'bg-red-500 border-red-400' 
                 : ''
             }`}
