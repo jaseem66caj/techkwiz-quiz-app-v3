@@ -5,7 +5,7 @@ async function testAdminLogin() {
   try {
     console.log('Testing admin login...');
     
-    const response = await fetch('https://66e21c30-8cd5-4586-814a-319b97a3b90d.preview.emergentagent.com/api/admin/login', {
+    const response = await fetch('https://ecdf3874-a58e-4344-ae7b-5c55ecddd09d.preview.emergentagent.com/api/admin/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ async function testAdminLogin() {
       console.log('✅ Login successful, testing verification...');
       
       // Test token verification
-      const verifyResponse = await fetch('https://66e21c30-8cd5-4586-814a-319b97a3b90d.preview.emergentagent.com/api/admin/verify', {
+      const verifyResponse = await fetch('https://ecdf3874-a58e-4344-ae7b-5c55ecddd09d.preview.emergentagent.com/api/admin/verify', {
         headers: {
           'Authorization': `Bearer ${data.access_token}`
         }

@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://66e21c30-8cd5-4586-814a-319b97a3b90d.preview.emergentagent.com/api"
+BACKEND_URL = "https://ecdf3874-a58e-4344-ae7b-5c55ecddd09d.preview.emergentagent.com/api"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "TechKwiz2025!"
 
