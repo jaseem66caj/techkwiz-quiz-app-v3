@@ -124,6 +124,16 @@ async def get_ad_slots_for_placement(placement: str):
     return [AdSlot(**slot) for slot in ad_slots]
 
 
+@quiz_router.get("/between-questions-ads", response_model=List[AdSlot])
+async def get_between_questions_ads():
+    """Get active ad slots for between questions placement (TechKwiz sequential flow)."""
+    database = get_db()
+    ad_slots = await database.ad_slots.find(
+        {"placement": "between-questions", "is_active": True}
+    ).to_list(1000)
+    return [AdSlot(**slot) for slot in ad_slots]
+
+
 @quiz_router.get("/rewarded-config", response_model=RewardedPopupConfig)
 async def get_rewarded_popup_config():
     """Get rewarded popup configuration for homepage."""
