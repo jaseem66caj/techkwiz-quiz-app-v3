@@ -36,21 +36,15 @@ export default function StartPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  // Fetch categories from database
   const fetchCategories = async () => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
-      const response = await fetch(`${backendUrl}/api/quiz/categories`);
+      const { QUIZ_CATEGORIES } = await import('../../data/quizDatabase');
       
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      } else {
-        console.error('Failed to fetch categories');
-        setError('Failed to load quiz categories');
-      }
+      const categoriesArray = Object.values(QUIZ_CATEGORIES);
+      setCategories(categoriesArray);
+      console.log('✅ Loaded categories from local database:', categoriesArray.length);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error('Error loading local categories:', error);
       setError('Failed to load quiz categories');
     } finally {
       setLoading(false);
