@@ -129,7 +129,7 @@ export function AdBanner({
   return null
 }
 
-// Specialized ad components for different placements matching QuizWinz structure
+// Specialized ad components for different placements matching TechKwiz structure
 export function HeaderBannerAd({ className }: { className?: string }) {
   return (
     <AdBanner
