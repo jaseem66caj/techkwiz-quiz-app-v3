@@ -43,13 +43,13 @@ async def get_quiz_category(category_id: str):
 
 @quiz_router.get("/questions/{category_id}", response_model=List[QuizQuestion])
 async def get_quiz_questions(
-    category_id: str, count: Optional[int] = 10, difficulty: Optional[str] = None
+    category_id: str, count: Optional[int] = 5, difficulty: Optional[str] = None
 ):
-    """Get random quiz questions for a category."""
+    """Get sequential quiz questions for a category - always returns exactly 5 questions for multi-question flow."""
     database = get_db()
 
-    # Build filter
-    filter_dict = {"category": category_id}
+    # Build filter - using category_id instead of category
+    filter_dict = {"category_id": category_id}
     if difficulty:
         filter_dict["difficulty"] = difficulty
 
@@ -64,9 +64,16 @@ async def get_quiz_questions(
     # Convert to QuizQuestion objects
     quiz_questions = [QuizQuestion(**q) for q in questions]
 
-    # Shuffle and return requested count
+    # Shuffle to ensure variety, but always return exactly 5 questions for sequential flow
     random.shuffle(quiz_questions)
-    return quiz_questions[:count]
+    
+    # Ensure we have exactly 5 questions (TechKwiz sequential quiz requirement)
+    if len(quiz_questions) < 5:
+        # If we have fewer than 5, repeat some questions to reach 5
+        while len(quiz_questions) < 5:
+            quiz_questions.extend(quiz_questions[:5-len(quiz_questions)])
+    
+    return quiz_questions[:5]  # Always return exactly 5 questions
 
 
 @quiz_router.get("/scripts/{placement}", response_model=List[ScriptInjection])
