@@ -238,7 +238,8 @@ export default function QuizPage({ params }: QuizPageProps) {
     setUserAnswers([])
     setTotalCoinsEarned(0)
     setShowRewardPopup(false)
-    setShowBetweenQuestionAd(false)
+    setCurrentAdSlot('')
+    setFlowPhase('question')
     
     // Fetch new set of 5 questions
     fetchSequentialQuestions(categoryId)
