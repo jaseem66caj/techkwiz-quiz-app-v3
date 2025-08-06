@@ -80,7 +80,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       console.log('🔍 Admin login attempt:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://66e21c30-8cd5-4586-814a-319b97a3b90d.preview.emergentagent.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
       console.log('🌐 Using backend URL:', backendUrl);
       
       const response = await fetch(`${backendUrl}/api/admin/login`, {
