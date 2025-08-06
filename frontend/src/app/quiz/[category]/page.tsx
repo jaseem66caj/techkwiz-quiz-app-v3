@@ -348,10 +348,12 @@ export default function QuizPage({ params }: QuizPageProps) {
             {/* Immediate Reward Popup - TechKwiz instant feedback */}
             {showRewardPopup && (
               <NewRewardPopup 
+                isOpen={showRewardPopup}
                 isCorrect={selectedAnswer === quizData[currentQuestion]?.correct_answer}
                 coinsEarned={selectedAnswer === quizData[currentQuestion]?.correct_answer ? 25 : 0}
                 onClose={() => setShowRewardPopup(false)}
-                showClaim={false} // No claim button for sequential questions, auto-advance
+                onClaimReward={() => setShowRewardPopup(false)}
+                onSkipReward={() => setShowRewardPopup(false)}
               />
             )}
           </>
