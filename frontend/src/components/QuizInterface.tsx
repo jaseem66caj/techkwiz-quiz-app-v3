@@ -339,7 +339,7 @@ export function QuizInterface({
         
         <div className="bg-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-blue-400/30 mb-6">
           <span className="text-sm font-bold text-white">
-            {currentQuestion + 1}/{totalQuestions} Question
+            {questionNumber}/{totalQuestions} Question
           </span>
         </div>
       </div>
