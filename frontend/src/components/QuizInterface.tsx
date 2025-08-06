@@ -42,7 +42,19 @@ export function QuizInterface({
     return () => clearTimeout(timer)
   }, [questionNumber])
 
-  const questionType = question.question_type || 'multiple_choice'
+  const questionType = question?.question_type || 'multiple_choice'
+
+  // Safety check - don't render if question is undefined
+  if (!question) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400 mx-auto mb-4"></div>
+          <p className="text-slate-300">Loading question...</p>
+        </div>
+      </div>
+    )
+  }
 
   // Youth-friendly headers based on question type
   const getQuestionHeader = () => {
