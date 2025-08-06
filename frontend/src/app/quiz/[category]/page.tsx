@@ -369,9 +369,11 @@ export default function QuizPage({ params }: QuizPageProps) {
               onBackToCategories={goToCategories}
             />
             
-            {/* Quiz Result Ad Banner */}
+            {/* Quiz Result Ad Banner - TODO: Implement proper ad slot integration */}
             <div className="max-w-2xl mx-auto mt-8">
-              <AdBanner placement="quiz-result" />
+              <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 text-center">
+                <p className="text-slate-400 text-sm">Quiz Result Advertisement Space</p>
+              </div>
             </div>
           </>
         )}
