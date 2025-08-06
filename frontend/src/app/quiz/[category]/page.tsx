@@ -247,7 +247,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         
         dispatch({ type: 'UPDATE_COINS', payload: coinsPerAnswer })
         
-        // Show reward popup after EVERY question (like Qureka's immediate feedback)
+        // Show reward popup after EVERY question (like TechKwiz's immediate feedback)
         if (currentQuestion < quizData.length - 1) {
           setShowRewardPopup(true)
           return // Don't proceed to next question yet
