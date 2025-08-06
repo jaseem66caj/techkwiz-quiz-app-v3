@@ -419,7 +419,7 @@ class BackendTester:
         try:
             headers = {'Authorization': f'Bearer {token}'}
             
-            # Expected quizwinz.com-style ad slots (10 total)
+            # Expected techkwiz.com-style ad slots (10 total)
             expected_ad_slots = [
                 {"name": "Header Banner", "placement": "header-banner"},
                 {"name": "Sidebar Right", "placement": "sidebar-right"},
