@@ -10,7 +10,7 @@ interface QuizInterfaceProps {
     options: string[];
     correct_answer: number;
     difficulty: 'beginner' | 'intermediate' | 'advanced';
-    question_type?: 'multiple_choice' | 'this_or_that' | 'emoji_decode' | 'personality' | 'prediction';
+    question_type?: string;
     fun_fact: string;
     category: string;
     subcategory: string;
