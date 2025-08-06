@@ -9,7 +9,7 @@ import { QuizInterface } from '../../../components/QuizInterface'
 import { FunFact } from '../../../components/FunFact'
 import { QuizResult } from '../../../components/QuizResult'
 import { AuthModal } from '../../../components/AuthModal'
-import { NewRewardPopup } from '../../../components/NewRewardPopup'
+import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { seoConfig, generateStructuredData } from '../../../utils/seo'
 
 interface QuizQuestion {
