@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from quizwinz_adslots import QUIZWINZ_AD_SLOTS
+from techkwiz_adslots import TECHKWIZ_AD_SLOTS
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
@@ -18,17 +18,17 @@ database = client[os.environ["DB_NAME"]]
 
 
 async def populate_ad_slots():
-    """Populate database with quizwinz.com ad slot structure."""
+    """Populate database with techkwiz.com ad slot structure."""
     try:
         # Clear existing ad slots
         await database.ad_slots.delete_many({})
         print("Cleared existing ad slots")
 
-        # Insert all quizwinz ad slots
-        if QUIZWINZ_AD_SLOTS:
-            await database.ad_slots.insert_many(QUIZWINZ_AD_SLOTS)
+        # Insert all techkwiz ad slots
+        if TECHKWIZ_AD_SLOTS:
+            await database.ad_slots.insert_many(TECHKWIZ_AD_SLOTS)
             print(
-                f"Inserted {len(QUIZWINZ_AD_SLOTS)} ad slots matching quizwinz.com structure"
+                f"Inserted {len(TECHKWIZ_AD_SLOTS)} ad slots matching techkwiz.com structure"
             )
 
         print("Ad slots population completed successfully!")
