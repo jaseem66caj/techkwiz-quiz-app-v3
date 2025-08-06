@@ -27,11 +27,12 @@ interface QuizInterfaceProps {
 }
 
 export function QuizInterface({
-  questionData,
-  currentQuestion,
-  totalQuestions,
+  question,
   selectedAnswer,
-  onAnswerSelect
+  onAnswerSelect,
+  questionAnswered,
+  questionNumber,
+  totalQuestions
 }: QuizInterfaceProps) {
   const [animateIn, setAnimateIn] = useState(false)
 
@@ -39,9 +40,9 @@ export function QuizInterface({
     setAnimateIn(true)
     const timer = setTimeout(() => setAnimateIn(false), 500)
     return () => clearTimeout(timer)
-  }, [currentQuestion])
+  }, [questionNumber])
 
-  const questionType = questionData.question_type || 'multiple_choice'
+  const questionType = question.question_type || 'multiple_choice'
 
   // Youth-friendly headers based on question type
   const getQuestionHeader = () => {
