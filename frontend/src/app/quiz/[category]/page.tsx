@@ -363,10 +363,10 @@ export default function QuizPage({ params }: QuizPageProps) {
             <QuizResult 
               score={score}
               totalQuestions={5}
+              category={categoryInfo?.name || 'Quiz'}
               coinsEarned={totalCoinsEarned}
-              onRestart={restartQuiz}
+              onPlayAgain={restartQuiz}
               onBackToCategories={goToCategories}
-              categoryName={categoryInfo?.name || 'Quiz'}
             />
             
             {/* Quiz Result Ad Banner */}
