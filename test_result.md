@@ -362,7 +362,7 @@ backend:
   - task: "Enhanced Ad Slot System"
     implemented: true
     working: true
-    file: "backend/admin_routes.py, backend/models.py, backend/quizwinz_adslots.py"
+    file: "backend/admin_routes.py, backend/models.py, backend/techkwiz_adslots.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
