@@ -411,7 +411,7 @@ class BackendTester:
             return False
     
     def test_enhanced_ad_slot_system(self, token):
-        """Test Enhanced Ad Slot System with quizwinz.com-style slots"""
+        """Test Enhanced Ad Slot System with techkwiz.com-style slots"""
         if not token:
             self.log_result("Enhanced Ad Slot System", False, "No admin token available")
             return False
