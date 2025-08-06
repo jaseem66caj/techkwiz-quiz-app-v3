@@ -739,7 +739,7 @@ class BackendTester:
                 self.log_result("Script Management APIs", False, "Script management endpoints not accessible")
                 return False
             
-            # Test Ad Slot Management APIs (all 10 QuizWinz slots)
+            # Test Ad Slot Management APIs (all 10 TechKwiz slots)
             ad_slots_response = requests.get(f"{self.api_base}/admin/ad-slots", headers=headers, timeout=10)
             if ad_slots_response.status_code != 200:
                 self.log_result("Ad Slot Management APIs", False, "Ad slot management endpoints not accessible")
