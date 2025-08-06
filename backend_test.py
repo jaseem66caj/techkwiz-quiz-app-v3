@@ -756,7 +756,7 @@ class BackendTester:
             missing_slots = [slot for slot in expected_slots if slot not in found_placements]
             
             if missing_slots:
-                self.log_result("QuizWinz Ad Slots", False, f"Missing expected ad slots: {missing_slots}")
+                self.log_result("TechKwiz Ad Slots", False, f"Missing expected ad slots: {missing_slots}")
                 return False
             
             # Test Rewarded Popup Configuration
