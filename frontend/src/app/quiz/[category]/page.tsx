@@ -344,23 +344,8 @@ export default function QuizPage({ params }: QuizPageProps) {
               </div>
             </div>
 
-            {/* Between Questions Ad Display */}
-            {showBetweenQuestionAd && (
-              <div className="max-w-2xl mx-auto mb-8">
-                <div className="bg-slate-800/80 backdrop-blur-md rounded-xl p-8 border border-slate-700/50 text-center">
-                  <div className="text-2xl mb-4">🎯</div>
-                  <h3 className="text-xl font-bold text-orange-100 mb-2">Between Questions Ad</h3>
-                  <p className="text-slate-300 mb-4">Watch this quick ad to continue...</p>
-                  <div className="bg-gradient-to-r from-orange-500 to-pink-500 h-32 rounded-lg flex items-center justify-center">
-                    <p className="text-white font-bold">Advertisement Space</p>
-                  </div>
-                  <p className="text-slate-400 text-sm mt-2">Loading next question...</p>
-                </div>
-              </div>
-            )}
-
-            {/* Quiz Interface - Only show if not showing ad */}
-            {!showBetweenQuestionAd && quizData.length > 0 && (
+            {/* Quiz Interface - Only show during question phase */}
+            {flowPhase === 'question' && quizData.length > 0 && (
               <QuizInterface
                 question={quizData[currentQuestion]}
                 selectedAnswer={selectedAnswer}
@@ -371,15 +356,20 @@ export default function QuizPage({ params }: QuizPageProps) {
               />
             )}
 
-            {/* Immediate Reward Popup - TechKwiz instant feedback */}
+            {/* Enhanced Immediate Reward Popup - Qureka-style engagement */}
             {showRewardPopup && (
-              <NewRewardPopup 
+              <EnhancedRewardPopup 
                 isOpen={showRewardPopup}
+                onClose={() => {
+                  setShowRewardPopup(false)
+                  advanceToNextQuestion()
+                }}
                 isCorrect={selectedAnswer === quizData[currentQuestion]?.correct_answer}
                 coinsEarned={selectedAnswer === quizData[currentQuestion]?.correct_answer ? 25 : 0}
-                onClose={() => setShowRewardPopup(false)}
-                onClaimReward={() => setShowRewardPopup(false)}
-                onSkipReward={() => setShowRewardPopup(false)}
+                onAdCompleted={handleAdCompleted}
+                autoClose={true}
+                showMandatoryAd={currentQuestion < 4} // Show ads between questions 1-4
+                adSlotCode={currentAdSlot}
               />
             )}
           </>
