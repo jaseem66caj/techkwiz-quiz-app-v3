@@ -81,8 +81,8 @@ async def get_sequential_quiz_questions(category_id: str):
     """Get exactly 5 sequential quiz questions for TechKwiz multi-question flow."""
     database = get_db()
 
-    # Get all questions for this category
-    questions = await database.quiz_questions.find({"category_id": category_id}).to_list(1000)
+    # Get all questions for this category using 'category' field
+    questions = await database.quiz_questions.find({"category": category_id}).to_list(1000)
 
     if not questions:
         raise HTTPException(
