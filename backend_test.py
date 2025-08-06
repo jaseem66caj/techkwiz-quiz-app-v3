@@ -1431,7 +1431,7 @@ class BackendTester:
             print(f"   ✅ Forgot password system with email='jaseem@adops.in'")
             print(f"   ✅ Profile management with current password verification")
             print(f"   ✅ Complete admin dashboard APIs (quiz, scripts, ads, config)")
-            print(f"   ✅ All 10 QuizWinz ad slots working")
+            print(f"   ✅ All 10 TechKwiz ad slots working")
             print(f"   ✅ Security features (authentication, token validation)")
         
         return passed, failed, self.results
