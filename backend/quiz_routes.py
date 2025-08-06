@@ -48,8 +48,8 @@ async def get_quiz_questions(
     """Get sequential quiz questions for a category - always returns exactly 5 questions for multi-question flow."""
     database = get_db()
 
-    # Build filter - using category_id instead of category
-    filter_dict = {"category_id": category_id}
+    # Build filter - using 'category' field as per migration data
+    filter_dict = {"category": category_id}
     if difficulty:
         filter_dict["difficulty"] = difficulty
 
