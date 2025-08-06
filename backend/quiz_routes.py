@@ -76,6 +76,34 @@ async def get_quiz_questions(
     return quiz_questions[:5]  # Always return exactly 5 questions
 
 
+@quiz_router.get("/sequential-questions/{category_id}", response_model=List[QuizQuestion])
+async def get_sequential_quiz_questions(category_id: str):
+    """Get exactly 5 sequential quiz questions for TechKwiz multi-question flow."""
+    database = get_db()
+
+    # Get all questions for this category
+    questions = await database.quiz_questions.find({"category_id": category_id}).to_list(1000)
+
+    if not questions:
+        raise HTTPException(
+            status_code=404, detail="No questions found for this category"
+        )
+
+    # Convert to QuizQuestion objects
+    quiz_questions = [QuizQuestion(**q) for q in questions]
+
+    # Shuffle for variety but maintain consistency during a quiz session
+    random.shuffle(quiz_questions)
+    
+    # Always return exactly 5 questions for TechKwiz sequential flow
+    if len(quiz_questions) < 5:
+        # If fewer than 5 questions available, cycle through available ones
+        while len(quiz_questions) < 5:
+            quiz_questions.extend(quiz_questions[:min(len(quiz_questions), 5-len(quiz_questions))])
+    
+    return quiz_questions[:5]
+
+
 @quiz_router.get("/scripts/{placement}", response_model=List[ScriptInjection])
 async def get_scripts_for_placement(placement: str):
     """Get all active scripts for a specific placement (header/footer)."""
