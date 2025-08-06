@@ -52,7 +52,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [categoryId, setCategoryId] = useState<string>('')
   const [categoryInfo, setCategoryInfo] = useState<QuizCategory | null>(null)
   
-  // Sequential Quiz State - TechKwiz 5-question flow
+  // Progress tracking for 5-question sequence with enhanced flow
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
@@ -61,12 +61,15 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   
-  // Progress tracking for 5-question sequence
+  // Enhanced reward system state
   const [questionAnswered, setQuestionAnswered] = useState(false)
   const [userAnswers, setUserAnswers] = useState<Array<{question: number, answer: number, correct: boolean}>>([])
   const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
   const [showRewardPopup, setShowRewardPopup] = useState(false)
-  const [showBetweenQuestionAd, setShowBetweenQuestionAd] = useState(false)
+  const [currentAdSlot, setCurrentAdSlot] = useState('')
+  
+  // Flow control
+  const [flowPhase, setFlowPhase] = useState<'question' | 'immediate_reward' | 'mandatory_ad' | 'final_reward'>('question')
 
   // Initialize component
   useEffect(() => {
