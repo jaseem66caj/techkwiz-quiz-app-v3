@@ -138,6 +138,12 @@ class QuizCategoryCreate(BaseModel):
     subcategories: List[str]
     entry_fee: int
     prize_pool: int
+    # Timer-based question settings
+    timer_enabled: bool = True
+    timer_seconds: int = 30
+    show_timer_warning: bool = True
+    auto_advance_on_timeout: bool = True
+    show_correct_answer_on_timeout: bool = True
 
 
 class QuizCategoryUpdate(BaseModel):
