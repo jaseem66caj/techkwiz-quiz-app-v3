@@ -8,16 +8,13 @@ import os
 import sys
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# Add backend to Python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 async def migrate_timer_settings():
     """Add timer settings to existing quiz categories."""
     
-    # Connect to MongoDB
-    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/techkwiz')
-    client = AsyncIOMotorClient(mongo_url)
-    db = client.get_default_database()
+    # Connect to MongoDB using same pattern as other migration scripts
+    MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+    client = AsyncIOMotorClient(MONGO_URL)
+    db = client[os.environ.get("DB_NAME", "test_database")]
     
     print("🚀 Starting Timer Settings Migration...")
     
