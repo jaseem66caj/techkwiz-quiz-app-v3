@@ -1312,6 +1312,334 @@ class BackendTester:
             self.log_result("Insufficient Coins Flow", False, f"Insufficient coins flow test failed: {str(e)}")
             return False
     
+    def test_timer_baseline_backend_health(self):
+        """Test backend health check and API responsiveness for timer baseline"""
+        try:
+            response = requests.get(f"{self.api_base}/health", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('status') == 'healthy':
+                    self.log_result("Timer Baseline - Backend Health", True, "Backend API is healthy and responsive")
+                    return True
+                else:
+                    self.log_result("Timer Baseline - Backend Health", False, f"Unexpected health response: {data}")
+                    return False
+            else:
+                self.log_result("Timer Baseline - Backend Health", False, f"Health check failed: HTTP {response.status_code}")
+                return False
+        except requests.exceptions.RequestException as e:
+            self.log_result("Timer Baseline - Backend Health", False, f"Health check connection failed: {str(e)}")
+            return False
+
+    def test_timer_baseline_quiz_categories(self):
+        """Test Quiz Categories API - ensure all 6 youth-focused categories are working"""
+        try:
+            response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            if response.status_code == 200:
+                categories = response.json()
+                
+                if not isinstance(categories, list):
+                    self.log_result("Timer Baseline - Quiz Categories", False, f"Expected list, got: {type(categories)}")
+                    return False, []
+                
+                if len(categories) < 6:
+                    self.log_result("Timer Baseline - Quiz Categories", False, f"Expected at least 6 categories, found {len(categories)}")
+                    return False, categories
+                
+                # Check for required fields in each category
+                required_fields = ['id', 'name', 'entry_fee', 'icon']
+                for i, category in enumerate(categories):
+                    missing_fields = [field for field in required_fields if field not in category]
+                    if missing_fields:
+                        self.log_result("Timer Baseline - Quiz Categories", False, f"Category {i+1} missing fields: {missing_fields}")
+                        return False, categories
+                
+                # Log category details
+                category_details = []
+                for cat in categories:
+                    category_details.append(f"{cat.get('name', 'Unknown')} ({cat.get('entry_fee', 0)} coins)")
+                
+                self.log_result("Timer Baseline - Quiz Categories", True, f"Found {len(categories)} categories: {', '.join(category_details)}")
+                return True, categories
+            else:
+                self.log_result("Timer Baseline - Quiz Categories", False, f"Categories API failed: HTTP {response.status_code}")
+                return False, []
+        except Exception as e:
+            self.log_result("Timer Baseline - Quiz Categories", False, f"Categories test failed: {str(e)}")
+            return False, []
+
+    def test_timer_baseline_sequential_questions(self, categories):
+        """Test Sequential Questions API - verify 5 questions per category"""
+        if not categories:
+            self.log_result("Timer Baseline - Sequential Questions", False, "No categories available for testing")
+            return False
+        
+        try:
+            total_questions_tested = 0
+            categories_with_questions = 0
+            
+            for category in categories[:3]:  # Test first 3 categories to avoid timeout
+                category_id = category.get('id')
+                category_name = category.get('name', 'Unknown')
+                
+                if not category_id:
+                    continue
+                
+                # Test the sequential questions endpoint
+                response = requests.get(f"{self.api_base}/quiz/sequential-questions/{category_id}", timeout=10)
+                
+                if response.status_code == 200:
+                    questions = response.json()
+                    
+                    if not isinstance(questions, list):
+                        self.log_result("Timer Baseline - Sequential Questions", False, f"Category {category_name}: Expected list, got {type(questions)}")
+                        return False
+                    
+                    if len(questions) != 5:
+                        self.log_result("Timer Baseline - Sequential Questions", False, f"Category {category_name}: Expected 5 questions, got {len(questions)}")
+                        return False
+                    
+                    # Check question structure
+                    required_fields = ['id', 'question', 'options', 'correct_answer']
+                    for i, question in enumerate(questions):
+                        missing_fields = [field for field in required_fields if field not in question]
+                        if missing_fields:
+                            self.log_result("Timer Baseline - Sequential Questions", False, f"Category {category_name}, Question {i+1}: Missing fields {missing_fields}")
+                            return False
+                    
+                    total_questions_tested += len(questions)
+                    categories_with_questions += 1
+                    
+                elif response.status_code == 404:
+                    self.log_result("Timer Baseline - Sequential Questions", False, f"Category {category_name}: No questions found")
+                    return False
+                else:
+                    self.log_result("Timer Baseline - Sequential Questions", False, f"Category {category_name}: HTTP {response.status_code}")
+                    return False
+            
+            if categories_with_questions > 0:
+                self.log_result("Timer Baseline - Sequential Questions", True, f"Sequential questions working correctly - tested {total_questions_tested} questions across {categories_with_questions} categories")
+                return True
+            else:
+                self.log_result("Timer Baseline - Sequential Questions", False, "No categories had working sequential questions")
+                return False
+                
+        except Exception as e:
+            self.log_result("Timer Baseline - Sequential Questions", False, f"Sequential questions test failed: {str(e)}")
+            return False
+
+    def test_timer_baseline_rewarded_config(self):
+        """Test Rewarded popup configuration API - confirm current settings"""
+        try:
+            response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if response.status_code == 200:
+                config = response.json()
+                
+                # Check for required configuration fields
+                required_fields = ['coin_reward', 'is_active', 'show_on_insufficient_coins']
+                missing_fields = [field for field in required_fields if field not in config]
+                
+                if missing_fields:
+                    self.log_result("Timer Baseline - Rewarded Config", False, f"Missing configuration fields: {missing_fields}")
+                    return False
+                
+                # Log current configuration
+                coin_reward = config.get('coin_reward', 0)
+                is_active = config.get('is_active', False)
+                show_on_insufficient = config.get('show_on_insufficient_coins', False)
+                trigger_after = config.get('trigger_after_questions', 1)
+                
+                config_summary = f"coin_reward={coin_reward}, is_active={is_active}, show_on_insufficient_coins={show_on_insufficient}, trigger_after_questions={trigger_after}"
+                
+                self.log_result("Timer Baseline - Rewarded Config", True, f"Rewarded popup configuration accessible: {config_summary}")
+                return True, config
+            else:
+                self.log_result("Timer Baseline - Rewarded Config", False, f"Rewarded config API failed: HTTP {response.status_code}")
+                return False, None
+        except Exception as e:
+            self.log_result("Timer Baseline - Rewarded Config", False, f"Rewarded config test failed: {str(e)}")
+            return False, None
+
+    def test_timer_baseline_admin_auth(self):
+        """Test Admin authentication with username='admin', password='TechKwiz2025!'"""
+        try:
+            # First try to setup admin if needed
+            setup_credentials = {
+                "username": "admin",
+                "password": "TechKwiz2025!"
+            }
+            
+            setup_response = requests.post(
+                f"{self.api_base}/admin/setup",
+                json=setup_credentials,
+                timeout=10
+            )
+            
+            # Setup might fail if admin already exists, that's okay
+            if setup_response.status_code == 200:
+                self.log_result("Timer Baseline - Admin Setup", True, "Admin user created successfully")
+            
+            # Now test login with the specific credentials
+            login_response = requests.post(
+                f"{self.api_base}/admin/login",
+                json=setup_credentials,
+                timeout=10
+            )
+            
+            if login_response.status_code == 200:
+                token_data = login_response.json()
+                if 'access_token' in token_data:
+                    self.log_result("Timer Baseline - Admin Auth", True, "Admin authentication working with username='admin', password='TechKwiz2025!'")
+                    return True, token_data['access_token']
+                else:
+                    self.log_result("Timer Baseline - Admin Auth", False, "Login successful but no access token returned")
+                    return False, None
+            else:
+                self.log_result("Timer Baseline - Admin Auth", False, f"Admin login failed: HTTP {login_response.status_code}")
+                return False, None
+                
+        except Exception as e:
+            self.log_result("Timer Baseline - Admin Auth", False, f"Admin authentication test failed: {str(e)}")
+            return False, None
+
+    def test_timer_baseline_mongodb_connectivity(self):
+        """Test MongoDB connectivity and data persistence"""
+        try:
+            # Create a test record to verify database connectivity
+            test_data = {"client_name": "timer_baseline_test"}
+            
+            post_response = requests.post(
+                f"{self.api_base}/status",
+                json=test_data,
+                timeout=10
+            )
+            
+            if post_response.status_code != 200:
+                self.log_result("Timer Baseline - MongoDB Connectivity", False, "Failed to create test record in database")
+                return False
+            
+            # Retrieve records to verify persistence
+            get_response = requests.get(f"{self.api_base}/status", timeout=10)
+            
+            if get_response.status_code == 200:
+                records = get_response.json()
+                test_record_found = any(
+                    record.get('client_name') == 'timer_baseline_test' 
+                    for record in records
+                )
+                
+                if test_record_found:
+                    self.log_result("Timer Baseline - MongoDB Connectivity", True, "MongoDB connectivity and data persistence working correctly")
+                    return True
+                else:
+                    self.log_result("Timer Baseline - MongoDB Connectivity", False, "Test record not found - data persistence issue")
+                    return False
+            else:
+                self.log_result("Timer Baseline - MongoDB Connectivity", False, "Failed to retrieve records from database")
+                return False
+                
+        except Exception as e:
+            self.log_result("Timer Baseline - MongoDB Connectivity", False, f"MongoDB connectivity test failed: {str(e)}")
+            return False
+
+    def run_timer_baseline_tests(self):
+        """Run comprehensive baseline tests before implementing timer-based questions"""
+        print(f"⏱️  Starting Timer-Based Questions Baseline Tests")
+        print(f"Backend URL: {self.backend_url}")
+        print(f"API Base: {self.api_base}")
+        print("=" * 70)
+        
+        passed = 0
+        failed = 0
+        categories = []
+        admin_token = None
+        rewarded_config = None
+        
+        # Test 1: Backend Health Check
+        try:
+            if self.test_timer_baseline_backend_health():
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: Backend Health - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        # Test 2: Quiz Categories API
+        try:
+            result, categories = self.test_timer_baseline_quiz_categories()
+            if result:
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: Quiz Categories - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        # Test 3: Sequential Questions API
+        try:
+            if self.test_timer_baseline_sequential_questions(categories):
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: Sequential Questions - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        # Test 4: Rewarded Popup Configuration
+        try:
+            result, rewarded_config = self.test_timer_baseline_rewarded_config()
+            if result:
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: Rewarded Config - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        # Test 5: Admin Authentication
+        try:
+            result, admin_token = self.test_timer_baseline_admin_auth()
+            if result:
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: Admin Auth - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        # Test 6: MongoDB Connectivity
+        try:
+            if self.test_timer_baseline_mongodb_connectivity():
+                passed += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ FAIL: MongoDB Connectivity - Exception: {str(e)}")
+            failed += 1
+        print("-" * 40)
+        
+        print(f"\n📊 Timer Baseline Test Summary:")
+        print(f"✅ Passed: {passed}")
+        print(f"❌ Failed: {failed}")
+        print(f"📈 Success Rate: {passed/(passed+failed)*100:.1f}%")
+        
+        if failed == 0:
+            print(f"\n🎉 TIMER BASELINE TESTS PASSED!")
+            print(f"Backend is ready for timer-based questions implementation.")
+            print(f"Found {len(categories)} quiz categories with sequential questions support.")
+            if rewarded_config:
+                print(f"Rewarded popup configured with {rewarded_config.get('coin_reward', 0)} coins per ad.")
+        else:
+            print(f"\n⚠️  BASELINE ISSUES FOUND - Backend needs fixes before timer implementation.")
+        
+        return passed, failed
+
     def run_zero_coins_implementation_tests(self):
         """Run comprehensive tests for the 0 coins implementation"""
         print(f"🪙 Starting 0 Coins Implementation Tests")
