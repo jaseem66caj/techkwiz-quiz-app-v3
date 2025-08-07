@@ -164,6 +164,27 @@ async def get_rewarded_popup_config_for_category(category_id: str):
     return RewardedPopupConfig(**config)
 
 
+@quiz_router.get("/categories/{category_id}/timer-config")
+async def get_category_timer_config(category_id: str):
+    """Get timer configuration for a specific category."""
+    database = get_db()
+    category = await database.quiz_categories.find_one({"id": category_id})
+    
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    # Return timer configuration from category
+    return {
+        "category_id": category_id,
+        "category_name": category.get("name", "Unknown"),
+        "timer_enabled": category.get("timer_enabled", True),
+        "timer_seconds": category.get("timer_seconds", 30),
+        "show_timer_warning": category.get("show_timer_warning", True),
+        "auto_advance_on_timeout": category.get("auto_advance_on_timeout", True),
+        "show_correct_answer_on_timeout": category.get("show_correct_answer_on_timeout", True)
+    }
+
+
 @quiz_router.get("/question/{question_id}", response_model=QuizQuestion)
 async def get_single_question(question_id: str):
     """Get a single question by ID."""
