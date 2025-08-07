@@ -1768,8 +1768,8 @@ def main():
     try:
         tester = BackendTester()
         
-        # Run 0 coins implementation tests as requested
-        passed, failed, results = tester.run_zero_coins_implementation_tests()
+        # Run timer baseline tests as requested
+        passed, failed = tester.run_timer_baseline_tests()
         
         # Return appropriate exit code
         sys.exit(0 if failed == 0 else 1)
