@@ -154,6 +154,12 @@ class QuizCategoryUpdate(BaseModel):
     subcategories: Optional[List[str]] = None
     entry_fee: Optional[int] = None
     prize_pool: Optional[int] = None
+    # Timer-based question settings
+    timer_enabled: Optional[bool] = None
+    timer_seconds: Optional[int] = None
+    show_timer_warning: Optional[bool] = None
+    auto_advance_on_timeout: Optional[bool] = None
+    show_correct_answer_on_timeout: Optional[bool] = None
 
 
 # Site Configuration Models
