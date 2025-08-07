@@ -1764,12 +1764,339 @@ class BackendTester:
         
         return passed, failed, self.results
 
+    def test_timer_configuration_migration(self):
+        """Test that timer configuration migration was successful - verify all categories have timer settings"""
+        try:
+            response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            
+            if response.status_code != 200:
+                self.log_result("Timer Configuration Migration", False, f"Categories API failed: HTTP {response.status_code}")
+                return False
+            
+            categories = response.json()
+            
+            if not isinstance(categories, list) or len(categories) == 0:
+                self.log_result("Timer Configuration Migration", False, "No categories found for timer migration verification")
+                return False
+            
+            # Check each category for timer settings
+            categories_with_timer = 0
+            categories_without_timer = []
+            timer_config_details = []
+            
+            for category in categories:
+                category_name = category.get('name', 'Unknown')
+                
+                # Check for all required timer fields
+                timer_fields = ['timer_enabled', 'timer_seconds', 'show_timer_warning', 'auto_advance_on_timeout', 'show_correct_answer_on_timeout']
+                missing_fields = [field for field in timer_fields if field not in category]
+                
+                if missing_fields:
+                    categories_without_timer.append({
+                        'name': category_name,
+                        'missing_fields': missing_fields
+                    })
+                else:
+                    categories_with_timer += 1
+                    timer_config_details.append({
+                        'name': category_name,
+                        'timer_enabled': category.get('timer_enabled'),
+                        'timer_seconds': category.get('timer_seconds'),
+                        'show_timer_warning': category.get('show_timer_warning'),
+                        'auto_advance_on_timeout': category.get('auto_advance_on_timeout'),
+                        'show_correct_answer_on_timeout': category.get('show_correct_answer_on_timeout')
+                    })
+            
+            # Report results
+            if categories_without_timer:
+                self.log_result("Timer Configuration Migration", False, f"Categories missing timer settings: {categories_without_timer}")
+                return False
+            
+            # Verify timer configuration values
+            incorrect_configs = []
+            for config in timer_config_details:
+                if (config['timer_enabled'] != True or 
+                    config['timer_seconds'] != 30 or
+                    config['show_timer_warning'] != True or
+                    config['auto_advance_on_timeout'] != True or
+                    config['show_correct_answer_on_timeout'] != True):
+                    incorrect_configs.append(config)
+            
+            if incorrect_configs:
+                self.log_result("Timer Configuration Migration", False, f"Categories with incorrect timer settings: {incorrect_configs}")
+                return False
+            
+            self.log_result("Timer Configuration Migration", True, f"All {len(categories)} categories successfully migrated with correct timer settings (30s countdown, auto-advance enabled)")
+            return True, categories
+            
+        except Exception as e:
+            self.log_result("Timer Configuration Migration", False, f"Timer migration verification failed: {str(e)}")
+            return False, []
+    
+    def test_timer_config_api_endpoint(self):
+        """Test new timer configuration API endpoint: /api/quiz/categories/{category_id}/timer-config"""
+        try:
+            # First get categories to test with
+            categories_response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            if categories_response.status_code != 200:
+                self.log_result("Timer Config API Endpoint", False, "Cannot get categories for timer config testing")
+                return False
+            
+            categories = categories_response.json()
+            if not categories:
+                self.log_result("Timer Config API Endpoint", False, "No categories available for timer config testing")
+                return False
+            
+            # Test timer config endpoint for multiple categories (2-3 as requested)
+            test_categories = categories[:3]  # Test first 3 categories
+            successful_tests = 0
+            
+            for category in test_categories:
+                category_id = category.get('id')
+                category_name = category.get('name', 'Unknown')
+                
+                if not category_id:
+                    continue
+                
+                # Test GET /api/quiz/categories/{category_id}/timer-config
+                timer_response = requests.get(f"{self.api_base}/quiz/categories/{category_id}/timer-config", timeout=10)
+                
+                if timer_response.status_code != 200:
+                    self.log_result("Timer Config API Endpoint", False, f"Timer config API failed for {category_name}: HTTP {timer_response.status_code}")
+                    continue
+                
+                timer_config = timer_response.json()
+                
+                # Verify response structure
+                required_fields = ['category_id', 'category_name', 'timer_enabled', 'timer_seconds', 'show_timer_warning', 'auto_advance_on_timeout', 'show_correct_answer_on_timeout']
+                missing_fields = [field for field in required_fields if field not in timer_config]
+                
+                if missing_fields:
+                    self.log_result("Timer Config API Endpoint", False, f"Timer config response missing fields for {category_name}: {missing_fields}")
+                    continue
+                
+                # Verify expected values
+                expected_values = {
+                    'category_id': category_id,
+                    'timer_enabled': True,
+                    'timer_seconds': 30,
+                    'show_timer_warning': True,
+                    'auto_advance_on_timeout': True,
+                    'show_correct_answer_on_timeout': True
+                }
+                
+                incorrect_values = []
+                for key, expected_value in expected_values.items():
+                    if timer_config.get(key) != expected_value:
+                        incorrect_values.append({
+                            'field': key,
+                            'expected': expected_value,
+                            'actual': timer_config.get(key)
+                        })
+                
+                if incorrect_values:
+                    self.log_result("Timer Config API Endpoint", False, f"Timer config incorrect values for {category_name}: {incorrect_values}")
+                    continue
+                
+                successful_tests += 1
+                self.log_result(f"Timer Config - {category_name}", True, f"Timer config API working correctly: 30s countdown, auto-advance enabled")
+            
+            if successful_tests >= 2:  # At least 2-3 categories as requested
+                self.log_result("Timer Config API Endpoint", True, f"Timer configuration API working correctly for {successful_tests} categories")
+                return True
+            else:
+                self.log_result("Timer Config API Endpoint", False, f"Only {successful_tests} categories passed timer config tests")
+                return False
+            
+        except Exception as e:
+            self.log_result("Timer Config API Endpoint", False, f"Timer config API test failed: {str(e)}")
+            return False
+    
+    def test_sequential_questions_with_timer(self):
+        """Test sequential questions API still works with timer-enabled categories"""
+        try:
+            # Get categories first
+            categories_response = requests.get(f"{self.api_base}/quiz/categories", timeout=10)
+            if categories_response.status_code != 200:
+                self.log_result("Sequential Questions with Timer", False, "Cannot get categories for sequential questions testing")
+                return False
+            
+            categories = categories_response.json()
+            if not categories:
+                self.log_result("Sequential Questions with Timer", False, "No categories available for sequential questions testing")
+                return False
+            
+            # Test sequential questions for multiple categories
+            test_categories = categories[:3]  # Test first 3 categories
+            successful_tests = 0
+            
+            for category in test_categories:
+                category_id = category.get('id')
+                category_name = category.get('name', 'Unknown')
+                
+                if not category_id:
+                    continue
+                
+                # Test GET /api/quiz/sequential-questions/{category_id}
+                questions_response = requests.get(f"{self.api_base}/quiz/sequential-questions/{category_id}", timeout=10)
+                
+                if questions_response.status_code != 200:
+                    self.log_result("Sequential Questions with Timer", False, f"Sequential questions API failed for {category_name}: HTTP {questions_response.status_code}")
+                    continue
+                
+                questions = questions_response.json()
+                
+                # Verify response structure
+                if not isinstance(questions, list):
+                    self.log_result("Sequential Questions with Timer", False, f"Sequential questions should return list for {category_name}")
+                    continue
+                
+                if len(questions) != 5:
+                    self.log_result("Sequential Questions with Timer", False, f"Sequential questions should return exactly 5 questions for {category_name}, got {len(questions)}")
+                    continue
+                
+                # Verify each question has required fields
+                valid_questions = 0
+                for question in questions:
+                    required_fields = ['id', 'question', 'options', 'correct_answer', 'difficulty', 'fun_fact', 'category']
+                    if all(field in question for field in required_fields):
+                        valid_questions += 1
+                
+                if valid_questions != 5:
+                    self.log_result("Sequential Questions with Timer", False, f"Only {valid_questions}/5 questions have valid structure for {category_name}")
+                    continue
+                
+                successful_tests += 1
+                self.log_result(f"Sequential Questions - {category_name}", True, f"Sequential questions API working correctly with timer-enabled category (5 questions returned)")
+            
+            if successful_tests >= 2:  # At least 2-3 categories as requested
+                self.log_result("Sequential Questions with Timer", True, f"Sequential questions API working correctly with timer-enabled categories for {successful_tests} categories")
+                return True
+            else:
+                self.log_result("Sequential Questions with Timer", False, f"Only {successful_tests} categories passed sequential questions tests")
+                return False
+            
+        except Exception as e:
+            self.log_result("Sequential Questions with Timer", False, f"Sequential questions with timer test failed: {str(e)}")
+            return False
+    
+    def test_timer_backend_comprehensive(self):
+        """Comprehensive test of timer-based questions backend implementation"""
+        try:
+            print("🎯 STARTING COMPREHENSIVE TIMER-BASED QUESTIONS BACKEND TESTING")
+            print("=" * 80)
+            
+            # Test 1: Timer Configuration Migration
+            migration_success, categories = self.test_timer_configuration_migration()
+            if not migration_success:
+                return False
+            
+            # Test 2: Timer Config API Endpoint
+            api_success = self.test_timer_config_api_endpoint()
+            if not api_success:
+                return False
+            
+            # Test 3: Sequential Questions with Timer
+            sequential_success = self.test_sequential_questions_with_timer()
+            if not sequential_success:
+                return False
+            
+            # Test 4: Verify specific category IDs work (2-3 different ones)
+            if len(categories) >= 2:
+                test_category_ids = [cat['id'] for cat in categories[:3]]
+                category_tests_passed = 0
+                
+                for category_id in test_category_ids:
+                    # Test timer config for this specific category
+                    timer_response = requests.get(f"{self.api_base}/quiz/categories/{category_id}/timer-config", timeout=10)
+                    if timer_response.status_code == 200:
+                        timer_config = timer_response.json()
+                        if (timer_config.get('timer_enabled') == True and 
+                            timer_config.get('timer_seconds') == 30 and
+                            timer_config.get('auto_advance_on_timeout') == True):
+                            category_tests_passed += 1
+                
+                if category_tests_passed >= 2:
+                    self.log_result("Category ID Timer Tests", True, f"Timer config working for {category_tests_passed} different category IDs")
+                else:
+                    self.log_result("Category ID Timer Tests", False, f"Only {category_tests_passed} category IDs passed timer tests")
+                    return False
+            
+            self.log_result("Timer Backend Comprehensive", True, "All timer-based questions backend tests passed - ready for frontend countdown timer implementation")
+            return True
+            
+        except Exception as e:
+            self.log_result("Timer Backend Comprehensive", False, f"Comprehensive timer test failed: {str(e)}")
+            return False
+
+    def run_timer_implementation_tests(self):
+        """Run comprehensive timer-based questions implementation tests"""
+        print(f"⏱️  Starting Timer-Based Questions Implementation Tests")
+        print(f"Backend URL: {self.backend_url}")
+        print(f"API Base: {self.api_base}")
+        print("=" * 80)
+        
+        # Timer implementation specific tests
+        timer_tests = [
+            ("Timer Configuration Migration", self.test_timer_configuration_migration),
+            ("Timer Config API Endpoint", self.test_timer_config_api_endpoint),
+            ("Sequential Questions with Timer", self.test_sequential_questions_with_timer),
+            ("Timer Backend Comprehensive", self.test_timer_backend_comprehensive),
+        ]
+        
+        passed = 0
+        failed = 0
+        
+        for test_name, test_func in timer_tests:
+            try:
+                print(f"\n🔍 Testing: {test_name}")
+                print("-" * 50)
+                
+                if test_name == "Timer Configuration Migration":
+                    result, _ = test_func()
+                else:
+                    result = test_func()
+                
+                if result:
+                    passed += 1
+                    print(f"✅ PASS: {test_name}")
+                else:
+                    failed += 1
+                    print(f"❌ FAIL: {test_name}")
+                    
+            except Exception as e:
+                self.log_result(test_name, False, f"Test crashed: {str(e)}")
+                failed += 1
+                print(f"❌ FAIL: {test_name} - Exception: {str(e)}")
+            
+            print()  # Add spacing between tests
+        
+        # Print comprehensive summary
+        print("=" * 80)
+        print(f"🎯 TIMER-BASED QUESTIONS BACKEND TESTING COMPLETE")
+        print(f"✅ Passed: {passed}")
+        print(f"❌ Failed: {failed}")
+        print(f"📊 Success Rate: {(passed/(passed+failed)*100):.1f}%")
+        
+        if failed == 0:
+            print("\n🎉 ALL TIMER IMPLEMENTATION TESTS PASSED!")
+            print("✅ Timer configuration migration successful - all categories have 30s timer settings")
+            print("✅ Timer configuration API endpoint working - /api/quiz/categories/{category_id}/timer-config")
+            print("✅ Sequential questions API compatible with timer-enabled categories")
+            print("✅ Multiple category IDs tested and working correctly")
+            print("\n🚀 Backend is ready to support frontend countdown timer implementation!")
+        else:
+            print(f"\n⚠️ TIMER IMPLEMENTATION ISSUES FOUND - {failed} tests failed")
+            print("Backend needs fixes before frontend timer implementation can proceed.")
+        
+        return passed, failed
+
 def main():
     try:
         tester = BackendTester()
         
-        # Run timer baseline tests as requested
-        passed, failed = tester.run_timer_baseline_tests()
+        # Run timer implementation tests as requested
+        passed, failed = tester.run_timer_implementation_tests()
         
         # Return appropriate exit code
         sys.exit(0 if failed == 0 else 1)
