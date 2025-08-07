@@ -120,6 +120,12 @@ class QuizCategory(BaseModel):
     subcategories: List[str]
     entry_fee: int
     prize_pool: int
+    # Timer-based question settings
+    timer_enabled: bool = True  # Enable/disable timer for this category
+    timer_seconds: int = 30  # Default 30 seconds per question
+    show_timer_warning: bool = True  # Show warning when timer is running low
+    auto_advance_on_timeout: bool = True  # Auto-advance when timer expires
+    show_correct_answer_on_timeout: bool = True  # Show correct answer when timer expires
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
