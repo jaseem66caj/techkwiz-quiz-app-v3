@@ -626,7 +626,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Reward Popup Configuration System Testing - COMPLETED"
+    - "Timer-based Questions Implementation - Backend Configuration"
+    - "Timer-based Questions Implementation - Frontend UI and Logic"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
