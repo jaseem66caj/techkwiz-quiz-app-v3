@@ -70,8 +70,22 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [showRewardPopup, setShowRewardPopup] = useState(false)
   const [currentAdSlot, setCurrentAdSlot] = useState('')
   
-  // Flow control
-  const [flowPhase, setFlowPhase] = useState<'question' | 'immediate_reward' | 'mandatory_ad' | 'final_reward'>('question')
+  // Flow control with timer states
+  const [flowPhase, setFlowPhase] = useState<'question' | 'immediate_reward' | 'mandatory_ad' | 'final_reward' | 'time_up'>('question')
+  
+  // Timer configuration state
+  const [timerConfig, setTimerConfig] = useState<{
+    timer_enabled: boolean
+    timer_seconds: number
+    show_timer_warning: boolean
+    auto_advance_on_timeout: boolean
+    show_correct_answer_on_timeout: boolean
+  } | null>(null)
+  
+  // Timer control state
+  const [isTimerActive, setIsTimerActive] = useState(false)
+  const [showTimeUpModal, setShowTimeUpModal] = useState(false)
+  const [timeUpForQuestion, setTimeUpForQuestion] = useState<QuizQuestion | null>(null)
 
   // Initialize component
   useEffect(() => {
