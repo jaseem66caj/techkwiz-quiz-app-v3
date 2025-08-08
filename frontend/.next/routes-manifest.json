@@ -126,6 +126,12 @@
       "namedRegex": "^/start(?:/)?$"
     },
     {
+      "page": "/test-exit-prevention",
+      "regex": "^/test\\-exit\\-prevention(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/test\\-exit\\-prevention(?:/)?$"
+    },
+    {
       "page": "/test-no-header",
       "regex": "^/test\\-no\\-header(?:/)?$",
       "routeKeys": {},
