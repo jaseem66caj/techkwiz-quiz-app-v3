@@ -437,7 +437,7 @@ export default function QuizPage({ params }: QuizPageProps) {
       <div className="container mx-auto px-4 pt-24 pb-8">
         {!quizCompleted ? (
           <>
-            {/* Quiz Progress Header */}
+            {/* Quiz Progress Header - Enhanced with encouragement */}
             <div className="max-w-2xl mx-auto mb-8">
               <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50">
                 <div className="flex justify-between items-center mb-4">
@@ -449,17 +449,28 @@ export default function QuizPage({ params }: QuizPageProps) {
                   </div>
                 </div>
                 
-                {/* Progress Bar */}
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-orange-500 to-pink-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((currentQuestion + 1) / 5) * 100}%` }}
-                  ></div>
+                {/* Enhanced Progress Bar with Animation */}
+                <div className="w-full bg-slate-700 rounded-full h-3 mb-4">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${((currentQuestion + 1) / 5) * 100}%` }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 h-3 rounded-full shadow-lg"
+                  ></motion.div>
                 </div>
                 
-                <div className="flex justify-between text-sm text-slate-400 mt-2">
+                <div className="flex justify-between text-sm text-slate-400">
                   <span>Score: {score}/{currentQuestion + (questionAnswered ? 1 : 0)}</span>
                   <span>🪙 Earned: {totalCoinsEarned} coins</span>
+                </div>
+                
+                {/* Progress Encouragement Message */}
+                <div className="mt-3 text-center">
+                  <p className="text-sm text-slate-300">
+                    {currentQuestion <= 1 ? "🚀 Just getting started!" :
+                     currentQuestion <= 3 ? "🔥 You're on fire!" :
+                     "💪 Almost there!"}
+                  </p>
                 </div>
               </div>
             </div>
