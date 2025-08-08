@@ -49,3 +49,20 @@ def verify_token(token: str) -> Optional[str]:
         return username
     except JWTError:
         return None
+
+
+async def get_current_admin_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Get current admin user from JWT token."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        username = verify_token(credentials.credentials)
+        if username is None:
+            raise credentials_exception
+        return username
+    except Exception:
+        raise credentials_exception
