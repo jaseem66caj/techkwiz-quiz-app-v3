@@ -208,7 +208,40 @@ export default function QuizPage({ params }: QuizPageProps) {
     return null
   }
 
-  // Enhanced answer handling with Qureka-style flow: Question → Answer → Ad → Reward → Next Question
+  // Handle timer expiry
+  const handleTimerUp = () => {
+    if (questionAnswered || flowPhase !== 'question') return
+    
+    console.log('⏰ Timer expired for question', currentQuestion + 1)
+    
+    // Stop the timer
+    setIsTimerActive(false)
+    
+    // Mark question as answered (with no selected answer)
+    setQuestionAnswered(true)
+    
+    // Track as incorrect answer
+    const answerRecord = {
+      question: currentQuestion,
+      answer: -1, // -1 indicates no answer (time up)
+      correct: false
+    }
+    setUserAnswers(prev => [...prev, answerRecord])
+    
+    // Show correct answer if configured
+    if (timerConfig?.show_correct_answer_on_timeout) {
+      setTimeUpForQuestion(quizData[currentQuestion])
+      setFlowPhase('time_up')
+      setShowTimeUpModal(true)
+    } else {
+      // Directly advance to next question
+      setTimeout(() => {
+        advanceToNextQuestion()
+      }, 1000)
+    }
+  }
+
+  // Enhanced answer handling with timer integration
   const handleAnswerSelect = async (answerIndex: number) => {
     if (questionAnswered) return
     
