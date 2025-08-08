@@ -167,6 +167,12 @@ export default function QuizPage({ params }: QuizPageProps) {
         setQuizData(questionsData)
         console.log('✅ Loaded 5 sequential questions from API')
         setLoading(false)
+        
+        // Start timer when questions are loaded and timer is enabled
+        if (timerConfig?.timer_enabled) {
+          setIsTimerActive(true)
+        }
+        
         return questionsData
       } else {
         setError('Expected 5 questions for sequential quiz')
