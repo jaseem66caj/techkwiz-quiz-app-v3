@@ -491,7 +491,7 @@ export default function HomePage() {
         currentProgress={{
           questionNumber: currentQuestion + 1,
           totalQuestions: quickStartQuiz.length,
-          coinsAtRisk: score * 25 // Potential coins from correct answers
+          coinsAtRisk: score * 100 // Potential coins from correct answers
         }}
       />
     </>
