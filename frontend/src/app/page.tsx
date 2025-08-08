@@ -9,7 +9,9 @@ import { NewRewardPopup } from '../components/NewRewardPopup'
 import { OnboardingFlow } from '../components/OnboardingFlow'
 import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
 import { SocialProofBanner } from '../components/SocialProofBanner'
+import { EnhancedCoinDisplay } from '../components/EnhancedCoinDisplay'
 import { useExitPrevention } from '../hooks/useExitPrevention'
+import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
 import { apiRequestJson } from '../utils/api'
 
 export default function HomePage() {
