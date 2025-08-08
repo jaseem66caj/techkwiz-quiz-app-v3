@@ -123,6 +123,33 @@ export default function HomePage() {
   // Onboarding completion handler
   const handleOnboardingComplete = (coinsEarned: number) => {
     console.log(`🎉 Onboarding completed! Earned ${coinsEarned} coins`)
+    
+    // Create guest user with earned coins
+    const guestUser = {
+      id: `guest_${Date.now()}`,
+      name: 'Guest User', 
+      email: `guest_${Date.now()}@techkwiz.com`,
+      coins: coinsEarned, // Start with earned coins from onboarding
+      level: 1,
+      totalQuizzes: 0,
+      correctAnswers: 0,
+      joinDate: new Date().toISOString(),
+      quizHistory: [],
+      achievements: []
+    }
+    
+    // Set auth token
+    localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
+    
+    // Save user
+    const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
+    allUsers.push(guestUser)
+    localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
+    
+    // Authenticate user
+    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+    
+    // Mark onboarding as completed
     setOnboardingCompleted(true)
     setShowOnboarding(false)
     localStorage.setItem('techkwiz_onboarding_completed', 'true')
