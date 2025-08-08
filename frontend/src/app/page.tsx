@@ -139,6 +139,7 @@ export default function HomePage() {
   const handleExitCancel = () => {
     setShowExitConfirmation(false)
   }
+  // Youth-focused quick start quiz data (after onboarding)
   const quickStartQuiz = [
     {
       id: 'quick-0',
