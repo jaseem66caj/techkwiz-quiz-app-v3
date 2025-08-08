@@ -15,6 +15,14 @@ export default function HomePage() {
   const { state, dispatch } = useApp()
   const router = useRouter()
   
+  // Onboarding flow state
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false)
+  const [onboardingSkipped, setOnboardingSkipped] = useState(false)
+  
+  // Exit prevention state
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false)
+  
   // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
