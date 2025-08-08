@@ -42,36 +42,32 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const verifyToken = async (token: string, username: string) => {
     try {
-      console.log('🔐 Verifying token for:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
-      console.log('🌐 Using backend URL for verification:', backendUrl);
+      console.log('🔐 Verifying admin token for:', username);
       
-      const response = await fetch(`${backendUrl}/api/admin/verify`, {
+      const response = await apiRequest('/api/admin/verify', {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
-
-      console.log('🔍 Verify response status:', response.status);
       
       if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Token verified successfully:', data);
-        setAdminUser({ username, token });
+        console.log('✅ Admin token verified successfully');
+        setLoading(false);
       } else {
-        console.log('❌ Token verification failed, clearing storage');
-        // Token expired or invalid, clear storage
+        console.log('❌ Admin token verification failed');
+        // Clear invalid token
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_username');
         setAdminUser(null);
+        setLoading(false);
       }
     } catch (error) {
-      console.error('❌ Token verification error:', error);
-      // Don't clear storage on network errors - might be temporary
-      // Only clear if we got a 401/403 response
-      console.log('⚠️ Network error during verification, keeping token for now');
-    } finally {
+      console.error('❌ Admin token verification error:', error);
+      // Clear potentially invalid token
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_username');
+      setAdminUser(null);
       setLoading(false);
     }
   };
