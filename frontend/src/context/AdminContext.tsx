@@ -27,8 +27,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem('admin_token');
     const storedUsername = localStorage.getItem('admin_username');
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
-    
     if (storedToken && storedUsername) {
       console.log('🔄 Found stored credentials, setting admin user immediately');
       // Set user immediately to prevent redirect loops
