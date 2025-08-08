@@ -115,7 +115,7 @@ export function EnhancedRewardPopup({
     console.log('📣 EnhancedRewardPopup: Ad scripts injected')
   }, [showingAd, adSlotCode])
 
-  const startAdExperience = () => {
+  const startAdExperience = async () => {
     setShowingAd(true)
     setAdCountdown(5)
     setShowClaim(false)
