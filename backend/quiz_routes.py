@@ -9,6 +9,7 @@ from models import (
     QuizQuestion,
     RewardedPopupConfig,
     ScriptInjection,
+    AdAnalyticsEvent,
 )
 
 quiz_router = APIRouter(prefix="/quiz", tags=["quiz"])
@@ -195,3 +196,12 @@ async def get_single_question(question_id: str):
         raise HTTPException(status_code=404, detail="Question not found")
 
     return QuizQuestion(**question)
+
+
+# NEW: Simple Ad Analytics endpoint
+@quiz_router.post("/ad-analytics/event")
+async def record_ad_event(event: AdAnalyticsEvent):
+    """Record an advertisement event (start/complete/error). Public endpoint."""
+    database = get_db()
+    await database.ad_analytics.insert_one(event.dict())
+    return {"status": "ok", "id": event.id}
