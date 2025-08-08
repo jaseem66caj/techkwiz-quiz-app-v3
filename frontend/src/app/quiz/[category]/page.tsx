@@ -13,6 +13,7 @@ import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
 import { seoConfig, generateStructuredData } from '../../../utils/seo'
+import { apiRequestJson } from '../../../utils/api'
 
 interface QuizQuestion {
   id: string;
