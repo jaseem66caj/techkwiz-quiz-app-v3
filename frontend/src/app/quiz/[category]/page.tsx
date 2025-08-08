@@ -490,13 +490,15 @@ export default function QuizPage({ params }: QuizPageProps) {
 
             {/* Quiz Interface - Only show during question phase */}
             {flowPhase === 'question' && quizData.length > 0 && (
-              <QuizInterface
+              <EnhancedQuizInterface
                 question={quizData[currentQuestion]}
                 selectedAnswer={selectedAnswer}
                 onAnswerSelect={handleAnswerSelect}
                 questionAnswered={questionAnswered}
                 questionNumber={currentQuestion + 1}
                 totalQuestions={5}
+                showProgress={false} // Progress already shown in header
+                encouragementMessages={true}
               />
             )}
 
