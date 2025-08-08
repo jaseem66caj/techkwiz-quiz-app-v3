@@ -7,13 +7,13 @@
   "/admin/direct/page": "/admin/direct",
   "/admin/forgot-password/page": "/admin/forgot-password",
   "/admin/page": "/admin",
-  "/admin/reset-password/page": "/admin/reset-password",
-  "/admin/setup/page": "/admin/setup",
-  "/leaderboard/page": "/leaderboard",
   "/page": "/",
+  "/admin/reset-password/page": "/admin/reset-password",
+  "/leaderboard/page": "/leaderboard",
+  "/quiz/[category]/page": "/quiz/[category]",
+  "/admin/setup/page": "/admin/setup",
   "/privacy/page": "/privacy",
   "/profile/page": "/profile",
-  "/quiz/[category]/page": "/quiz/[category]",
   "/start/page": "/start",
   "/test-no-header/page": "/test-no-header"
 }
