@@ -92,7 +92,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
             {/* Right Side */}
             <div className="flex items-center space-x-3">
               {/* User Section with Enhanced Coins */}
-              {!hideHeaderElements && state.isAuthenticated && state.user && (
+              {!hideHeaderElements && state.isAuthenticated && state.user ? (
                 <>
                   {/* Enhanced Coin Display */}
                   <EnhancedCoinDisplay
@@ -125,14 +125,14 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
                     </button>
                   </div>
                 </>
-              ) : !hideHeaderElements && (
+              ) : !hideHeaderElements ? (
                 <button
                   onClick={() => setShowAuthModal(true)}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors"
                 >
                   Login
                 </button>
-              )}
+              ) : null}
             </div>
           </div>
           
