@@ -97,6 +97,40 @@ export default function QuizPage({ params }: QuizPageProps) {
     })
   }, [])
 
+  const fetchTimerConfig = async (catId: string) => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
+      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}/timer-config`)
+      
+      if (response.ok) {
+        const timerData = await response.json()
+        setTimerConfig(timerData)
+        console.log('✅ Loaded timer config from API:', timerData)
+        return timerData
+      } else {
+        console.error('Failed to fetch timer config, using defaults')
+        // Use default timer settings
+        setTimerConfig({
+          timer_enabled: true,
+          timer_seconds: 30,
+          show_timer_warning: true,
+          auto_advance_on_timeout: true,
+          show_correct_answer_on_timeout: true
+        })
+      }
+    } catch (error) {
+      console.error('Error loading timer config:', error)
+      // Use default timer settings on error
+      setTimerConfig({
+        timer_enabled: true,
+        timer_seconds: 30,
+        show_timer_warning: true,
+        auto_advance_on_timeout: true,
+        show_correct_answer_on_timeout: true
+      })
+    }
+  }
+
   const fetchCategoryInfo = async (catId: string) => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
