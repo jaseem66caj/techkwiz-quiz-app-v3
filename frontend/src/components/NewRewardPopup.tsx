@@ -16,6 +16,8 @@ interface NewRewardPopupProps {
   rewardCoins?: number
   categoryId?: string
   adSlotCode?: string
+  disableAnalytics?: boolean // NEW: preview mode can disable analytics
+  disableScripts?: boolean // NEW: preview mode can disable ad script injection
 }
 
 interface RewardConfig {
@@ -38,6 +40,8 @@ export function NewRewardPopup({
   rewardCoins = 100,
   categoryId,
   adSlotCode,
+  disableAnalytics = false,
+  disableScripts = false,
 }: NewRewardPopupProps) {
   const [isWatchingAd, setIsWatchingAd] = useState(false)
   const [hasWatchedOnce, setHasWatchedOnce] = useState(false)
@@ -57,6 +61,8 @@ export function NewRewardPopup({
         setConfig({ coin_reward: 100, is_active: true, show_on_insufficient_coins: true, show_during_quiz: true, enable_analytics: true })
       }
 
+      if (disableScripts) return
+
       if (adSlotCode && adSlotCode.trim()) {
         setAdHtml(adSlotCode)
         return
@@ -69,7 +75,7 @@ export function NewRewardPopup({
     }
 
     if (isOpen) fetchAll()
-  }, [isOpen, categoryId, adSlotCode])
+  }, [isOpen, categoryId, adSlotCode, disableScripts])
 
   // Prevent scroll
   useEffect(() => {
@@ -79,6 +85,7 @@ export function NewRewardPopup({
 
   // Inject scripts on watch
   useEffect(() => {
+    if (disableScripts) return
     if (!isWatchingAd || !adHtml || !adContainerRef.current) return
     const container = adContainerRef.current
     container.innerHTML = ''
@@ -94,7 +101,7 @@ export function NewRewardPopup({
       s.text = oldScript.text || ''
       container.appendChild(s)
     })
-  }, [isWatchingAd, adHtml])
+  }, [isWatchingAd, adHtml, disableScripts])
 
   // Countdown
   useEffect(() => {
@@ -104,6 +111,7 @@ export function NewRewardPopup({
   }, [isWatchingAd, countdown])
 
   const sendAnalytics = async (type: 'start' | 'complete') => {
+    if (disableAnalytics) return
     if (config?.enable_analytics === false) return
     try {
       await fetch('/api/quiz/ad-analytics/event', {
@@ -149,24 +157,17 @@ export function NewRewardPopup({
 
   const effectiveRewardCoins = config?.coin_reward || rewardCoins
 
-  // UI — pixel polish to match the Qureka screenshot
+  // UI (Qureka-style)
   return (
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.25 }}
-            className="relative z-10 mx-4 w-full max-w-sm"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.25 }} className="relative z-10 mx-4 w-full max-w-sm">
             <div className="relative rounded-[28px] border border-white/25 shadow-2xl overflow-hidden" style={{ background: 'linear-gradient(145deg, #0b1020 0%, #0a0d1a 100%)' }}>
               {!isWatchingAd ? (
                 <div className="p-7 text-center">
-                  {/* Chest */}
                   <motion.div initial={{ scale: 0, rotate: -15 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }} className="mb-6">
                     <div className="mx-auto w-24 h-20">
                       <svg viewBox="0 0 120 100" className="w-full h-full">
@@ -174,25 +175,16 @@ export function NewRewardPopup({
                         <ellipse cx="60" cy="50" rx="40" ry="15" fill="#F4B942" stroke="#D4910A" strokeWidth="2" />
                         <rect x="57" y="53" width="6" height="10" rx="1" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="1" />
                         <circle cx="60" cy="56" r="2" fill="#A0A0A0" />
-                        {isCorrect ? (
-                          <>
-                            <circle cx="50" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                            <circle cx="60" cy="32" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                            <circle cx="70" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                            <circle cx="55" cy="40" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                            <circle cx="65" cy="40" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                          </>
-                        ) : (
-                          <>
-                            <circle cx="55" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                            <circle cx="65" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
-                          </>
-                        )}
+                        {/* Coins inside */}
+                        <circle cx="50" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" style={{ display: isCorrect ? 'block' : 'none' }} />
+                        <circle cx="60" cy="32" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" style={{ display: isCorrect ? 'block' : 'none' }} />
+                        <circle cx="70" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" style={{ display: isCorrect ? 'block' : 'none' }} />
+                        <circle cx="55" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" style={{ display: isCorrect ? 'none' : 'block' }} />
+                        <circle cx="65" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" style={{ display: isCorrect ? 'none' : 'block' }} />
                       </svg>
                     </div>
                   </motion.div>
 
-                  {/* Headings */}
                   <h2 className="text-3xl font-extrabold text-yellow-400 mb-1">{isCorrect ? 'Hurray!!' : 'Oops!!'}</h2>
                   <p className="text-base font-semibold text-yellow-300 mb-3">{isCorrect ? 'Correct answer' : 'Wrong answer'}</p>
 
@@ -207,7 +199,6 @@ export function NewRewardPopup({
                     <span className="text-yellow-400 font-bold text-[22px]">{effectiveRewardCoins} coins</span>
                   </p>
 
-                  {/* Buttons */}
                   <div className="mt-6 space-y-4">
                     {!hasWatchedOnce ? (
                       <button onClick={handleClaimReward} className="w-full relative rounded-2xl py-4 font-bold text-white shadow-lg transition-all hover:scale-[1.02]" style={{ background: 'linear-gradient(90deg, #6d28d9 0%, #5b21b6 100%)' }}>

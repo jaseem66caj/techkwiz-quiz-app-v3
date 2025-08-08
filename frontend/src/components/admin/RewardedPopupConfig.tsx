@@ -1,1 +1,1 @@
-/* Add Try Preview modal using NewRewardPopup component */
+/* Add Try Live Preview modal with NewRewardPopup */
