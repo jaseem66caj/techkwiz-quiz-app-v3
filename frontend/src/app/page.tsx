@@ -429,11 +429,25 @@ export default function HomePage() {
             />
           </div>
           
+          {/* Social Proof Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-8"
+          >
+            <SocialProofBanner 
+              position="bottom" 
+              variant="detailed" 
+              showLive={true} 
+            />
+          </motion.div>
+          
           {/* Features teaser - Enhanced messaging */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 1.0 }}
             className="mt-8 text-center"
           >
             <div className="bg-gray-800/30 backdrop-blur-sm p-4 rounded-xl border border-white/10">
