@@ -137,6 +137,14 @@ export function NewRewardPopup({
   }, [isWatchingAd, countdown])
 
   const handleClaimReward = async () => {
+    try {
+      await fetch('/api/quiz/ad-analytics/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_type: 'start', placement: 'popup', source: 'homepage' })
+      })
+    } catch (e) { /* ignore */ }
+
     setIsWatchingAd(true)
     setCountdown(5)
 
