@@ -1,368 +1,350 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAdmin } from '../../context/AdminContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { apiRequestJson } from '../../utils/api';
 
-interface RewardedPopupConfig {
-  id: string;
+interface RewardedPopupConfigModel {
+  id?: string;
   trigger_after_questions: number;
   coin_reward: number;
   is_active: boolean;
   show_on_insufficient_coins: boolean;
   show_during_quiz: boolean;
-  created_at: string;
-  updated_at: string;
-  enable_analytics: boolean; // NEW
+  enable_analytics: boolean;
+  category_id?: string | null;
+  category_name?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface QuizCategory {
+  id: string;
+  name: string;
+  icon: string;
+  entry_fee: number;
 }
 
 export default function RewardedPopupConfig() {
   const { adminUser } = useAdmin();
-  const [config, setConfig] = useState<RewardedPopupConfig | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [tempConfig, setTempConfig] = useState<Partial<RewardedPopupConfig>>({});
+  const [activeTab, setActiveTab] = useState<'homepage' | 'categories'>('homepage');
+
+  // Homepage config state
+  const [homeConfig, setHomeConfig] = useState<RewardedPopupConfigModel | null>(null);
+  const [homeTemp, setHomeTemp] = useState<RewardedPopupConfigModel | null>(null);
+  const [homeLoading, setHomeLoading] = useState(true);
+  const [savingHome, setSavingHome] = useState(false);
+
+  // Categories tab state
+  const [categories, setCategories] = useState<QuizCategory[]>([]);
+  const [catSearch, setCatSearch] = useState('');
+  const [selectedCat, setSelectedCat] = useState<QuizCategory | null>(null);
+  const [catConfig, setCatConfig] = useState<RewardedPopupConfigModel | null>(null);
+  const [catTemp, setCatTemp] = useState<RewardedPopupConfigModel | null>(null);
+  const [catLoading, setCatLoading] = useState(false);
+  const [savingCat, setSavingCat] = useState(false);
 
   const getAuthHeaders = () => ({
     'Authorization': `Bearer ${adminUser?.token}`,
     'Content-Type': 'application/json'
   });
 
+  // Fetch homepage config
   useEffect(() => {
-    fetchConfig();
+    const loadHome = async () => {
+      setHomeLoading(true);
+      try {
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
+        const res = await fetch(`${backend}/api/admin/rewarded-config/homepage`, { headers: getAuthHeaders() });
+        if (res.ok) {
+          const data: RewardedPopupConfigModel = await res.json();
+          // Ensure enable_analytics default
+          const withDefaults = { enable_analytics: true, trigger_after_questions: 5, coin_reward: 100, is_active: true, show_on_insufficient_coins: true, show_during_quiz: true, ...data };
+          setHomeConfig(withDefaults);
+          setHomeTemp(withDefaults);
+        }
+      } catch (e) {
+        console.error('Failed to load homepage rewarded config', e);
+      } finally {
+        setHomeLoading(false);
+      }
+    };
+    loadHome();
   }, []);
 
-  const fetchConfig = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/rewarded-config`, {
-        headers: getAuthHeaders()
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setConfig(data);
-        setTempConfig(data);
+  // Fetch categories for Category tab
+  useEffect(() => {
+    if (activeTab !== 'categories') return;
+    const loadCategories = async () => {
+      try {
+        const cats = await apiRequestJson<QuizCategory[]>(`/api/quiz/categories`);
+        setCategories(cats);
+      } catch (e) {
+        console.error('Failed to load categories', e);
       }
-    } catch (error) {
-      console.error('Failed to fetch config:', error);
+    };
+    loadCategories();
+  }, [activeTab]);
+
+  const filteredCategories = useMemo(() => {
+    const q = catSearch.trim().toLowerCase();
+    if (!q) return categories;
+    return categories.filter(c => c.name.toLowerCase().includes(q));
+  }, [categories, catSearch]);
+
+  // Load selected category config
+  const loadCategoryConfig = async (cat: QuizCategory) => {
+    setSelectedCat(cat);
+    setCatLoading(true);
+    setCatConfig(null);
+    setCatTemp(null);
+    try {
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
+      const res = await fetch(`${backend}/api/admin/rewarded-config/${cat.id}`, { headers: getAuthHeaders() });
+      if (res.ok) {
+        const data: RewardedPopupConfigModel = await res.json();
+        const withDefaults = { enable_analytics: true, trigger_after_questions: 5, coin_reward: 100, is_active: true, show_on_insufficient_coins: true, show_during_quiz: true, ...data };
+        setCatConfig(withDefaults);
+        setCatTemp(withDefaults);
+      }
+    } catch (e) {
+      console.error('Failed to load category rewarded config', e);
     } finally {
-      setLoading(false);
+      setCatLoading(false);
     }
   };
 
-  const handleSave = async () => {
-    if (!tempConfig) return;
-    
-    setSaving(true);
+  // Save homepage config
+  const saveHome = async () => {
+    if (!homeTemp) return;
+    setSavingHome(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001"}/api/admin/rewarded-config`, {
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
+      const res = await fetch(`${backend}/api/admin/rewarded-config`, {
         method: 'PUT',
         headers: getAuthHeaders(),
-        body: JSON.stringify(tempConfig)
+        body: JSON.stringify(homeTemp)
       });
-
-      if (response.ok) {
-        const updatedConfig = await response.json();
-        setConfig(updatedConfig);
-        setTempConfig(updatedConfig);
+      if (res.ok) {
+        const updated = await res.json();
+        setHomeConfig(updated);
+        setHomeTemp(updated);
       }
-    } catch (error) {
-      console.error('Failed to update config:', error);
+    } catch (e) {
+      console.error('Failed to save homepage rewarded config', e);
     } finally {
-      setSaving(false);
+      setSavingHome(false);
     }
   };
 
-  const handleReset = () => {
-    if (config) {
-      setTempConfig(config);
+  // Save category config
+  const saveCategory = async () => {
+    if (!catTemp || !selectedCat) return;
+    setSavingCat(true);
+    try {
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
+      const res = await fetch(`${backend}/api/admin/rewarded-config/${selectedCat.id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ ...catTemp, category_id: selectedCat.id, category_name: selectedCat.name })
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCatConfig(updated);
+        setCatTemp(updated);
+      }
+    } catch (e) {
+      console.error('Failed to save category rewarded config', e);
+    } finally {
+      setSavingCat(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-      </div>
-    );
-  }
+  const HomeForm = () => (
+    <div className="bg-white rounded-xl shadow-sm border p-6">
+      {!homeTemp ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-3"></div>
+          <p className="text-gray-600">Loading homepage configuration…</p>
+        </div>
+      ) : (
+        <>
+          {/* Toggles row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ToggleRow
+              title="Rewarded Popups"
+              subtitle="Enable or disable all rewarded popups on homepage"
+              checked={!!homeTemp.is_active}
+              onChange={(v) => setHomeTemp({ ...homeTemp, is_active: v })}
+            />
+            <ToggleRow
+              title="Ad Analytics"
+              subtitle="Record ad start/complete events for reporting"
+              checked={!!homeTemp.enable_analytics}
+              onChange={(v) => setHomeTemp({ ...homeTemp, enable_analytics: v })}
+            />
+          </div>
 
-  if (!config) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-6xl mb-4">⚠️</div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Config Not Found</h3>
-        <p className="text-gray-600">Failed to load rewarded popup configuration.</p>
-      </div>
-    );
-  }
+          {/* Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <NumberField
+              label="Coin reward amount"
+              value={homeTemp.coin_reward}
+              onChange={(v) => setHomeTemp({ ...homeTemp, coin_reward: v })}
+              min={50}
+              step={50}
+              suffix="coins"
+            />
+            <NumberField
+              label="Show popup after every X correct answers"
+              value={homeTemp.trigger_after_questions}
+              onChange={(v) => setHomeTemp({ ...homeTemp, trigger_after_questions: v })}
+              min={1}
+              step={1}
+              suffix="questions"
+            />
+          </div>
 
-  const hasChanges = JSON.stringify(config) !== JSON.stringify(tempConfig);
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <ToggleRow
+              title="Show during quiz gameplay"
+              subtitle="Display popup during quiz after correct answers"
+              checked={!!homeTemp.show_during_quiz}
+              onChange={(v) => setHomeTemp({ ...homeTemp, show_during_quiz: v })}
+            />
+            <ToggleRow
+              title="Show when user has insufficient coins"
+              subtitle="Display popup on category page when user can't afford entry"
+              checked={!!homeTemp.show_on_insufficient_coins}
+              onChange={(v) => setHomeTemp({ ...homeTemp, show_on_insufficient_coins: v })}
+            />
+          </div>
+
+          <div className="flex justify-end mt-8 border-t pt-6">
+            <button onClick={saveHome} disabled={savingHome} className={`px-6 py-2 rounded-lg font-medium ${savingHome ? 'bg-gray-300 text-gray-500' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}>
+              {savingHome ? 'Saving…' : 'Save Homepage Configuration'}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  const CategoryForm = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left: Category picker */}
+      <div className="bg-white rounded-xl shadow-sm border p-4 lg:col-span-1">
+        <div className="mb-3">
+          <input
+            value={catSearch}
+            onChange={(e) => setCatSearch(e.target.value)}
+            placeholder="Search categories…"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+        <div className="max-h-[60vh] overflow-auto divide-y">
+          {filteredCategories.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => loadCategoryConfig(c)}
+              className={`w-full text-left px-3 py-3 hover:bg-purple-50 ${selectedCat?.id === c.id ? 'bg-purple-100' : ''}`}
+            >
+              <div className="font-semibold text-gray-900">{c.icon} {c.name}</div>
+              <div className="text-xs text-gray-500">Entry: 🪙 {c.entry_fee}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Right: Config editor */}
+      <div className="bg-white rounded-xl shadow-sm border p-6 lg:col-span-2">
+        {!selectedCat ? (
+          <div className="text-center py-12 text-gray-600">Select a category to configure its rewarded popup</div>
+        ) : catLoading || !catTemp ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-3"></div>
+            <p className="text-gray-600">Loading {selectedCat.name} configuration…</p>
+          </div>
+        ) : (
+          <>
+            <div className="mb-2 text-sm text-gray-500">Category: <span className="font-semibold text-gray-800">{selectedCat.name}</span></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ToggleRow title="Rewarded Popups" subtitle="Enable or disable for this category" checked={!!catTemp.is_active} onChange={(v) => setCatTemp({ ...catTemp, is_active: v })} />
+              <ToggleRow title="Ad Analytics" subtitle="Record ad events" checked={!!catTemp.enable_analytics} onChange={(v) => setCatTemp({ ...catTemp, enable_analytics: v })} />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <NumberField label="Coin reward amount" value={catTemp.coin_reward} onChange={(v) => setCatTemp({ ...catTemp, coin_reward: v })} min={50} step={50} suffix="coins" />
+              <NumberField label="Show popup after every X correct answers" value={catTemp.trigger_after_questions} onChange={(v) => setCatTemp({ ...catTemp, trigger_after_questions: v })} min={1} step={1} suffix="questions" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <ToggleRow title="Show during quiz gameplay" subtitle="Display popup after correct answers" checked={!!catTemp.show_during_quiz} onChange={(v) => setCatTemp({ ...catTemp, show_during_quiz: v })} />
+              <ToggleRow title="Show when user has insufficient coins" subtitle="Display popup on category page" checked={!!catTemp.show_on_insufficient_coins} onChange={(v) => setCatTemp({ ...catTemp, show_on_insufficient_coins: v })} />
+            </div>
+
+            <div className="flex justify-end mt-8 border-t pt-6">
+              <button onClick={saveCategory} disabled={savingCat} className={`px-6 py-2 rounded-lg font-medium ${savingCat ? 'bg-gray-300 text-gray-500' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}>
+                {savingCat ? 'Saving…' : `Save ${selectedCat.name} Configuration`}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Rewarded Popup Configuration</h2>
-        <p className="text-gray-600 mt-1">Control when and how rewarded video ads appear to users</p>
+        <h2 className="text-2xl font-bold text-gray-900">Rewarded Popups</h2>
+        <p className="text-gray-600 mt-1">Control when and how rewarded ads appear across homepage and categories</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border p-6">
-        <div className="space-y-8">
-          {/* Active Status */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Rewarded Popups</h3>
-              <p className="text-sm text-gray-600">Enable or disable rewarded video advertisements</p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <span className={`text-sm font-medium ${tempConfig.is_active ? 'text-green-600' : 'text-red-600'}`}>
-                {tempConfig.is_active ? 'Active' : 'Inactive'}
-              </span>
-              <button
-                onClick={() => setTempConfig({ ...tempConfig, is_active: !tempConfig.is_active })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  tempConfig.is_active ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    tempConfig.is_active ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-
-          <div className="border-t pt-6">
-            {/* Analytics Toggle */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Ad Analytics</h3>
-                <p className="text-sm text-gray-600">Record ad start/complete events for reporting</p>
-              </div>
-              <button
-                onClick={() => setTempConfig({ ...tempConfig, enable_analytics: !tempConfig.enable_analytics })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  tempConfig.enable_analytics ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    tempConfig.enable_analytics ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Trigger Configuration */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900">Trigger Settings</h3>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Show popup after every X correct answers
-                  </label>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={tempConfig.trigger_after_questions || 5}
-                      onChange={(e) => setTempConfig({ 
-                        ...tempConfig, 
-                        trigger_after_questions: parseInt(e.target.value) || 5 
-                      })}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
-                    <span className="text-sm text-gray-600">questions</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Recommended: 5-10 questions for better user experience
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Coin reward amount
-                  </label>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="number"
-                      min="50"
-                      max="1000"
-                      step="50"
-                      value={tempConfig.coin_reward || 200}
-                      onChange={(e) => setTempConfig({ 
-                        ...tempConfig, 
-                        coin_reward: parseInt(e.target.value) || 200 
-                      })}
-                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
-                    <span className="text-sm text-gray-600">coins</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Amount of coins users receive for watching ads
-                  </p>
-                </div>
-              </div>
-
-              {/* Display Settings */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900">Display Settings</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Show when user has insufficient coins
-                      </label>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Display popup on category page when user can't afford quiz entry
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setTempConfig({ 
-                        ...tempConfig, 
-                        show_on_insufficient_coins: !tempConfig.show_on_insufficient_coins 
-                      })}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        tempConfig.show_on_insufficient_coins ? 'bg-purple-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          tempConfig.show_on_insufficient_coins ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Show during quiz gameplay
-                      </label>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Display popup during quiz after correct answers
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setTempConfig({ 
-                        ...tempConfig, 
-                        show_during_quiz: !tempConfig.show_during_quiz 
-                      })}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        tempConfig.show_during_quiz ? 'bg-purple-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          tempConfig.show_during_quiz ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Preview */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Preview</h3>
-            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-6">
-              <div className="bg-white rounded-lg p-4 max-w-sm mx-auto shadow-lg">
-                <div className="text-center">
-                  <div className="text-4xl mb-2">🎁</div>
-                  <h4 className="font-bold text-gray-900 mb-2">Watch Ad & Earn Coins!</h4>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Watch a short video to earn {tempConfig.coin_reward} coins
-                  </p>
-                  <div className="space-y-2">
-                    <button className="w-full bg-purple-600 text-white py-2 rounded-lg font-medium">
-                      Watch Ad ({tempConfig.coin_reward} coins)
-                    </button>
-                    <button className="w-full text-gray-500 text-sm">
-                      No thanks
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Summary */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Configuration</h3>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-gray-700">Status:</span>
-                  <span className={`ml-2 ${tempConfig.is_active ? 'text-green-600' : 'text-red-600'}`}>
-                    {tempConfig.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Trigger Frequency:</span>
-                  <span className="ml-2 text-gray-900">Every {tempConfig.trigger_after_questions} correct answers</span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Coin Reward:</span>
-                  <span className="ml-2 text-gray-900">{tempConfig.coin_reward} coins</span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Insufficient Coins:</span>
-                  <span className={`ml-2 ${tempConfig.show_on_insufficient_coins ? 'text-green-600' : 'text-red-600'}`}>
-                    {tempConfig.show_on_insufficient_coins ? 'Enabled' : 'Disabled'}
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">During Quiz:</span>
-                  <span className={`ml-2 ${tempConfig.show_during_quiz ? 'text-green-600' : 'text-red-600'}`}>
-                    {tempConfig.show_during_quiz ? 'Enabled' : 'Disabled'}
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Last Updated:</span>
-                  <span className="ml-2 text-gray-900">
-                    {new Date(config.updated_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-end space-x-4 pt-6 border-t">
-            <button
-              onClick={handleReset}
-              disabled={!hasChanges}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Reset Changes
-            </button>
-            <motion.button
-              onClick={handleSave}
-              disabled={!hasChanges || saving}
-              whileHover={hasChanges ? { scale: 1.02 } : {}}
-              whileTap={hasChanges ? { scale: 0.98 } : {}}
-              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                hasChanges
-                  ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {saving ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Saving...
-                </div>
-              ) : (
-                'Save Configuration'
-              )}
-            </motion.button>
-          </div>
+      {/* Tabs */}
+      <div className="mb-6">
+        <div className="inline-flex bg-gray-100 p-1 rounded-xl">
+          <TabButton active={activeTab==='homepage'} onClick={() => setActiveTab('homepage')}>Homepage</TabButton>
+          <TabButton active={activeTab==='categories'} onClick={() => setActiveTab('categories')}>Categories</TabButton>
         </div>
       </div>
+
+      {activeTab === 'homepage' ? <HomeForm /> : <CategoryForm />}
     </div>
   );
+}
+
+function TabButton({ active, onClick, children }: { active: boolean, onClick: () => void, children: React.ReactNode }) {
+  return (
+    <button onClick={onClick} className={`px-4 py-2 rounded-lg font-medium ${active ? 'bg-white shadow text-purple-700' : 'text-gray-700 hover:text-purple-700'}`}>
+      {children}
+    </button>
+  )
+}
+
+function ToggleRow({ title, subtitle, checked, onChange }: { title: string, subtitle?: string, checked: boolean, onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center justify-between bg-gray-50 border rounded-xl p-4">
+      <div>
+        <div className="font-semibold text-gray-900">{title}</div>
+        {subtitle && <div className="text-xs text-gray-600 mt-1">{subtitle}</div>}
+      </div>
+      <button onClick={() => onChange(!checked)} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? 'bg-purple-600' : 'bg-gray-300'}`}>
+        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
+      </button>
+    </div>
+  )
+}
+
+function NumberField({ label, value, onChange, min = 0, step = 1, suffix }: { label: string, value: number, onChange: (v: number) => void, min?: number, step?: number, suffix?: string }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <div className="flex items-center space-x-2">
+        <input type="number" value={value} min={min} step={step} onChange={(e) => onChange(parseInt(e.target.value || '0'))} className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        {suffix && <span className="text-sm text-gray-600">{suffix}</span>}
+      </div>
+    </div>
+  )
 }
