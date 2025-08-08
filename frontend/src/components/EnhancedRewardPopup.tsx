@@ -130,7 +130,7 @@ export function EnhancedRewardPopup({
     setShowClaim(false)
   }
 
-  const completeAdExperience = () => {
+  const completeAdExperience = async () => {
     const adCoins = config?.coin_reward || 100
     setShowingAd(false)
     onAdCompleted(adCoins)
