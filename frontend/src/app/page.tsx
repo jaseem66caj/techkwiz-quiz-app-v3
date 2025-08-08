@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { QuizInterface } from '../components/QuizInterface'
+import { EnhancedQuizInterface } from '../components/EnhancedQuizInterface'
 import { NewRewardPopup } from '../components/NewRewardPopup'
+import { OnboardingFlow } from '../components/OnboardingFlow'
+import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
+import { useExitPrevention } from '../hooks/useExitPrevention'
 import { apiRequestJson } from '../utils/api'
 
 export default function HomePage() {
