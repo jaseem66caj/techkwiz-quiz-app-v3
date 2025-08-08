@@ -91,36 +91,41 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
 
             {/* Right Side */}
             <div className="flex items-center space-x-3">
-              {state.isAuthenticated ? (
+              {/* User Section with Enhanced Coins */}
+              {!hideHeaderElements && state.isAuthenticated && state.user && (
                 <>
-                  {/* Coins Display - Hidden on home page */}
-                  {!hideHeaderElements && (
-                    <div className="bg-gray-700 px-3 py-1.5 rounded-full flex items-center space-x-2">
-                      <span className="text-lg">🪙</span>
-                      <span className="text-white font-semibold text-sm">
-                        {state.user?.coins || 0}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Menu Button - Hidden on home page */}
-                  {!hideHeaderElements && (
+                  {/* Enhanced Coin Display */}
+                  <EnhancedCoinDisplay
+                    coins={state.user.coins}
+                    multiplier={getCurrentMultiplier()}
+                    showAnimation={true}
+                    compact={true}
+                    onClick={() => setShowReferralModal(true)}
+                  />
+                  
+                  {/* Quick Actions */}
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setShowReferralModal(true)}
+                      className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 px-3 py-1 rounded-lg text-sm font-medium transition-colors border border-purple-400/30"
+                      title="Refer friends and earn coins"
+                    >
+                      👥 Refer
+                    </button>
+                  </div>
+                  
+                  {/* User Menu */}
+                  <div className="relative">
                     <button
                       onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                      className="p-2 rounded-lg text-white hover:bg-gray-700 transition-colors"
+                      className="text-white hover:text-orange-300 transition-colors"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} 
-                        />
-                      </svg>
+                      <span className="text-sm">Hi, {state.user.name.split(' ')[0]}!</span>
+                      <span className="ml-1">▼</span>
                     </button>
-                  )}
+                  </div>
                 </>
-              ) : (
+              ) : !hideHeaderElements && (
                 <button
                   onClick={() => setShowAuthModal(true)}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors"
