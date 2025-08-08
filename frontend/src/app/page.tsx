@@ -220,13 +220,11 @@ export default function HomePage() {
       // For personality questions (correct_answer = -1), all answers are "correct"
       const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
       const finalIsCorrect = isPersonalityQuestion || isCorrect
-      const coinsEarned = finalIsCorrect ? 25 : 0 // 25 coins per correct answer
       
-      console.log('🔧 HomePage: Answer processed - isCorrect:', finalIsCorrect, 'coinsEarned:', coinsEarned)
+      console.log('🔧 HomePage: Answer processed - isCorrect:', finalIsCorrect)
       
       // Set states for popup
       setIsLastAnswerCorrect(finalIsCorrect)
-      setLastEarnedCoins(coinsEarned)
       
       if (finalIsCorrect) {
         setScore(score + 1)
