@@ -8,6 +8,7 @@ import { EnhancedQuizInterface } from '../components/EnhancedQuizInterface'
 import { NewRewardPopup } from '../components/NewRewardPopup'
 import { OnboardingFlow } from '../components/OnboardingFlow'
 import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
+import { SocialProofBanner } from '../components/SocialProofBanner'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { apiRequestJson } from '../utils/api'
 
