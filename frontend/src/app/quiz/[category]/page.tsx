@@ -87,13 +87,27 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [showTimeUpModal, setShowTimeUpModal] = useState(false)
   const [timeUpForQuestion, setTimeUpForQuestion] = useState<QuizQuestion | null>(null)
 
-  // Initialize component
+  // Initialize component with proper sequencing
   useEffect(() => {
-    params.then(resolvedParams => {
+    params.then(async resolvedParams => {
       setCategoryId(resolvedParams.category)
-      fetchCategoryInfo(resolvedParams.category)
-      fetchTimerConfig(resolvedParams.category)
-      fetchSequentialQuestions(resolvedParams.category)
+      
+      try {
+        // Add small delay to ensure backend is ready
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
+        // Fetch data in sequence
+        const categoryData = await fetchCategoryInfo(resolvedParams.category)
+        const timerData = await fetchTimerConfig(resolvedParams.category)
+        
+        if (categoryData && timerData) {
+          await fetchSequentialQuestions(resolvedParams.category)
+        }
+      } catch (error) {
+        console.error('❌ QuizPage: Initialization error:', error)
+        setError('Failed to initialize quiz. Please refresh the page.')
+        setLoading(false)
+      }
     })
   }, [])
 
