@@ -19,10 +19,26 @@ interface NavigationProps {
 }
 
 export function Navigation({ hideHeaderElements = false }: NavigationProps) {
-  const router = useRouter()
   const { state, dispatch } = useApp()
+  const router = useRouter()
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  
+  // Revenue optimization hooks
+  const {
+    revenueMetrics,
+    activeMultipliers,
+    currentOffers,
+    showDailyBonus,
+    showReferralModal,
+    setShowReferralModal,
+    claimDailyBonus,
+    getCurrentMultiplier,
+    processReferral
+  } = useRevenueOptimization()
+  
+  const [userReferralCode] = useState(`TK${Math.random().toString(36).substr(2, 6).toUpperCase()}`)
 
   // Debug logging
   console.log('Navigation component: hideHeaderElements =', hideHeaderElements)
