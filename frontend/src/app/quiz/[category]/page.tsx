@@ -294,9 +294,10 @@ export default function QuizPage({ params }: QuizPageProps) {
     }, 2000)
   }
 
-  // Seamless advancement to next question
+  // Seamless advancement to next question with timer restart
   const advanceToNextQuestion = () => {
     setShowRewardPopup(false)
+    setShowTimeUpModal(false)
     
     if (currentQuestion < quizData.length - 1) {
       // Move to next question
@@ -304,6 +305,13 @@ export default function QuizPage({ params }: QuizPageProps) {
       setSelectedAnswer(null)
       setQuestionAnswered(false)
       setFlowPhase('question')
+      
+      // Restart timer for next question if enabled
+      if (timerConfig?.timer_enabled) {
+        setTimeout(() => {
+          setIsTimerActive(true)
+        }, 500) // Small delay for smooth transition
+      }
     } else {
       // Quiz completed - all 5 questions done
       setQuizCompleted(true)
