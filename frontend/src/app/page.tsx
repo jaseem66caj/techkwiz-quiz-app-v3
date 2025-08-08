@@ -81,14 +81,14 @@ export default function HomePage() {
     setTimeout(fetchRewardConfig, 1000)
   }, [])
 
-  // Auto-create guest user if not authenticated
+  // Auto-create guest user and show onboarding for new users
   useEffect(() => {
     if (!state.isAuthenticated) {
       const guestUser = {
         id: `guest_${Date.now()}`,
         name: 'Guest User', 
         email: `guest_${Date.now()}@techkwiz.com`,
-        coins: 0,
+        coins: 0, // Start with 0 coins - onboarding will give first 300
         level: 1,
         totalQuizzes: 0,
         correctAnswers: 0,
@@ -98,6 +98,14 @@ export default function HomePage() {
       }
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+      
+      // Check if user has completed onboarding before
+      const hasCompletedOnboarding = localStorage.getItem('techkwiz_onboarding_completed')
+      if (!hasCompletedOnboarding) {
+        setShowOnboarding(true)
+      } else {
+        setOnboardingSkipped(true)
+      }
     }
   }, [state.isAuthenticated, dispatch])
 
