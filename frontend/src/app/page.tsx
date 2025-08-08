@@ -83,31 +83,42 @@ export default function HomePage() {
 
   // Auto-create guest user and show onboarding for new users
   useEffect(() => {
-    if (!state.isAuthenticated) {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        name: 'Guest User', 
-        email: `guest_${Date.now()}@techkwiz.com`,
-        coins: 0, // Start with 0 coins - onboarding will give first 300
-        level: 1,
-        totalQuizzes: 0,
-        correctAnswers: 0,
-        joinDate: new Date().toISOString(),
-        quizHistory: [],
-        achievements: []
-      }
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-      
+    if (!state.isAuthenticated && !state.loading) {
       // Check if user has completed onboarding before
       const hasCompletedOnboarding = localStorage.getItem('techkwiz_onboarding_completed')
+      
       if (!hasCompletedOnboarding) {
+        console.log('🎯 New user detected - showing onboarding flow')
         setShowOnboarding(true)
       } else {
+        console.log('🔄 Returning user - creating guest user and skipping onboarding') 
+        // Create guest user for returning users who completed onboarding
+        const guestUser = {
+          id: `guest_${Date.now()}`,
+          name: 'Guest User', 
+          email: `guest_${Date.now()}@techkwiz.com`,
+          coins: 0, // Start with 0 coins
+          level: 1,
+          totalQuizzes: 0,
+          correctAnswers: 0,
+          joinDate: new Date().toISOString(),
+          quizHistory: [],
+          achievements: []
+        }
+        
+        // Set auth token
+        localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
+        
+        // Save user
+        const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
+        allUsers.push(guestUser)
+        localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
+        
+        dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
         setOnboardingSkipped(true)
       }
     }
-  }, [state.isAuthenticated, dispatch])
+  }, [state.isAuthenticated, state.loading, dispatch])
 
   // Onboarding completion handler
   const handleOnboardingComplete = (coinsEarned: number) => {
