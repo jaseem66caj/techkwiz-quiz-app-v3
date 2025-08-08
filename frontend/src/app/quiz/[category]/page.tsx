@@ -149,22 +149,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   const fetchSequentialQuestions = async (catId: string) => {
     try {
       setLoading(true)
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-      console.log('🔧 QuizPage: Fetching questions from:', `${backendUrl}/api/quiz/sequential-questions/${catId}`)
-      
-      const response = await fetch(`${backendUrl}/api/quiz/sequential-questions/${catId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(10000)
-      })
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-      
-      const questionsData = await response.json()
+      const questionsData = await apiRequestJson(`/api/quiz/sequential-questions/${catId}`)
       
       if (questionsData && questionsData.length === 5) {
         setQuizData(questionsData)
