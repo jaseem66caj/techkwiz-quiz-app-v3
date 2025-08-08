@@ -355,7 +355,7 @@ export default function HomePage() {
         
         <main className="flex-1 p-4 flex flex-col items-center justify-center">
           
-          {/* Welcome Message */}
+          {/* Welcome Message - Enhanced after onboarding */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -364,20 +364,29 @@ export default function HomePage() {
             <h1 className="text-3xl font-bold text-white mb-2">
               🎉 Welcome to <span className="text-orange-400">Youth Quiz Hub!</span>
             </h1>
-            <p className="text-blue-200 text-base">
+            <p className="text-blue-200 text-base mb-2">
               Level up with interactive quizzes designed for Gen Z!
             </p>
+            {onboardingCompleted && (
+              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-3 border border-green-400/30 inline-block">
+                <p className="text-green-200 text-sm">
+                  🚀 Great job! You're all set with <span className="text-yellow-400 font-bold">{state.user?.coins || 0} coins</span>!
+                </p>
+              </div>
+            )}
           </motion.div>
           
           {/* Quiz Interface */}
           <div className="w-full max-w-md">
-            <QuizInterface
+            <EnhancedQuizInterface
               question={quickStartQuiz[currentQuestion]}
               selectedAnswer={selectedAnswer}
               onAnswerSelect={handleAnswerSelect}
               questionAnswered={selectedAnswer !== null}
               questionNumber={currentQuestion + 1}
               totalQuestions={quickStartQuiz.length}
+              showProgress={true}
+              encouragementMessages={true}
             />
           </div>
           
