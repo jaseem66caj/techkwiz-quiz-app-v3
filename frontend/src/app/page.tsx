@@ -281,6 +281,16 @@ export default function HomePage() {
     )
   }
 
+  // Show onboarding flow for new users
+  if (showOnboarding) {
+    return (
+      <OnboardingFlow 
+        onComplete={handleOnboardingComplete}
+        onSkip={handleOnboardingSkip}
+      />
+    )
+  }
+
   // Show results
   if (showResult && quizCompleted) {
     return (
