@@ -173,10 +173,27 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const categoryData = await apiRequestJson(`/api/quiz/categories/${catId}`)
-      setCategoryInfo(categoryData)
-      console.log('✅ QuizPage: Category loaded successfully:', categoryData.name)
-      return categoryData
+      // Try to fetch from API first
+      try {
+        const categoryData = await apiRequestJson(`/api/quiz/categories/${catId}`)
+        setCategoryInfo(categoryData)
+        console.log('✅ QuizPage: Category loaded successfully from API:', categoryData.name)
+        return categoryData
+      } catch (apiError) {
+        console.log('⚠️ QuizPage: API failed for category, falling back to local data...')
+        
+        // Fallback to local data
+        const { QUIZ_CATEGORIES } = await import('../../../data/quizDatabase')
+        
+        const categoryData = QUIZ_CATEGORIES[catId]
+        if (!categoryData) {
+          throw new Error(`Category ${catId} not found in local database`)
+        }
+        
+        setCategoryInfo(categoryData)
+        console.log('✅ QuizPage: Category loaded successfully from local data:', categoryData.name)
+        return categoryData
+      }
     } catch (error) {
       console.error('❌ QuizPage: Error loading category:', error)
       setError('Failed to load category information. Please try again.')
