@@ -17,12 +17,18 @@ def get_backend_url():
         with open('/app/frontend/.env', 'r') as f:
             for line in f:
                 if line.startswith('NEXT_PUBLIC_BACKEND_URL='):
-                    return line.split('=', 1)[1].strip()
+                    url = line.split('=', 1)[1].strip()
+                    if url:
+                        return url
                 elif line.startswith('REACT_APP_BACKEND_URL='):
-                    return line.split('=', 1)[1].strip()
+                    url = line.split('=', 1)[1].strip()
+                    if url:
+                        return url
     except Exception as e:
         print(f"Error reading frontend .env: {e}")
-        return None
+    
+    # Fallback to localhost if no URL found in .env
+    return "http://localhost:8001"
 
 class BackendTester:
     def __init__(self):
