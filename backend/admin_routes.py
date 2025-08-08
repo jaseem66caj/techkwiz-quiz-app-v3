@@ -38,6 +38,76 @@ db = None
 def get_db():
     return db
 
+
+# Authentication endpoints
+@admin_router.post("/login", response_model=AdminToken)
+async def admin_login(login_data: AdminLogin):
+    """Admin login endpoint."""
+    database = get_db()
+    
+    # Find admin user
+    admin = await database.admin_users.find_one({"username": login_data.username})
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
+    
+    # Verify password
+    if not verify_password(login_data.password, admin["password_hash"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
+    
+    # Create access token
+    access_token = create_access_token(
+        data={"sub": admin["username"]},
+        expires_delta=timedelta(minutes=30)
+    )
+    
+    # Update last login
+    await database.admin_users.update_one(
+        {"username": login_data.username},
+        {"$set": {"last_login": datetime.utcnow().isoformat()}}
+    )
+    
+    return AdminToken(access_token=access_token, token_type="bearer")
+
+
+@admin_router.post("/setup", response_model=dict)
+async def admin_setup(setup_data: AdminSetup):
+    """Create initial admin user."""
+    database = get_db()
+    
+    # Check if admin already exists
+    existing_admin = await database.admin_users.find_one({"username": setup_data.username})
+    if existing_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Admin user already exists"
+        )
+    
+    # Create admin user
+    admin_data = {
+        "username": setup_data.username,
+        "email": "admin@techkwiz.com",
+        "password_hash": hash_password(setup_data.password),
+        "is_active": True,
+        "created_at": datetime.utcnow().isoformat(),
+        "last_login": None,
+    }
+    
+    await database.admin_users.insert_one(admin_data)
+    
+    return {"message": "Admin user created successfully"}
+
+
+@admin_router.get("/verify")
+async def verify_admin(current_admin: str = Depends(get_current_admin_user)):
+    """Verify admin token."""
+    return {"username": current_admin, "valid": True}
+
 # ... existing endpoints above (preserved) ...
 
 # Rewarded Popup Configuration
