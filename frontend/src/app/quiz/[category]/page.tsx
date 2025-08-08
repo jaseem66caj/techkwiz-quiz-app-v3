@@ -89,6 +89,9 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [isTimerActive, setIsTimerActive] = useState(false)
   const [showTimeUpModal, setShowTimeUpModal] = useState(false)
   const [timeUpForQuestion, setTimeUpForQuestion] = useState<QuizQuestion | null>(null)
+  
+  // Exit prevention state
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false)
 
   // Initialize component with proper sequencing
   useEffect(() => {
