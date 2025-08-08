@@ -135,22 +135,7 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchCategoryInfo = async (catId: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-      console.log('🔧 QuizPage: Fetching category info from:', `${backendUrl}/api/quiz/categories/${catId}`)
-      
-      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(10000)
-      })
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-      
-      const categoryData = await response.json()
+      const categoryData = await apiRequestJson(`/api/quiz/categories/${catId}`)
       setCategoryInfo(categoryData)
       console.log('✅ QuizPage: Category loaded successfully:', categoryData.name)
       return categoryData
