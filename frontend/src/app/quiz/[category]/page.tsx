@@ -97,6 +97,24 @@ export default function QuizPage({ params }: QuizPageProps) {
   
   // Exit prevention state
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
+  
+  // New engagement features state
+  const [showEncouragementModal, setShowEncouragementModal] = useState(false)
+  const [showAdGatedModal, setShowAdGatedModal] = useState(false)
+  const [adGatedContent, setAdGatedContent] = useState<'bonus_questions' | 'extra_time' | 'hint' | 'double_coins'>('bonus_questions')
+  const [showEnhancedReward, setShowEnhancedReward] = useState(false)
+  const [rewardType, setRewardType] = useState<'coins' | 'bonus' | 'streak' | 'perfect' | 'level_up'>('coins')
+  
+  // Streak tracking
+  const {
+    streakData,
+    recordCorrectAnswer,
+    recordIncorrectAnswer,
+    shouldShowEncouragement,
+    encouragementTrigger,
+    clearEncouragement,
+    checkEncouragementTriggers
+  } = useStreakTracking()
 
   // Debug state for exit prevention
   useEffect(() => {
