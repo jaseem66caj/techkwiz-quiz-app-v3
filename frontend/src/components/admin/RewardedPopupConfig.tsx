@@ -133,6 +133,25 @@ export default function RewardedPopupConfig() {
           </div>
 
           <div className="border-t pt-6">
+            {/* Analytics Toggle */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Ad Analytics</h3>
+                <p className="text-sm text-gray-600">Record ad start/complete events for reporting</p>
+              </div>
+              <button
+                onClick={() => setTempConfig({ ...tempConfig, enable_analytics: !tempConfig.enable_analytics })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  tempConfig.enable_analytics ? 'bg-purple-600' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    tempConfig.enable_analytics ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Trigger Configuration */}
               <div className="space-y-6">
