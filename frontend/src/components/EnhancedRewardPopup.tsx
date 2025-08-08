@@ -131,6 +131,14 @@ export function EnhancedRewardPopup({
   }
 
   const completeAdExperience = async () => {
+    try {
+      await apiRequestJson('/api/quiz/ad-analytics/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_type: 'complete', placement: 'popup', source: 'category' })
+      })
+    } catch (e) { /* non-blocking */ }
+
     const adCoins = config?.coin_reward || 100
     setShowingAd(false)
     onAdCompleted(adCoins)
