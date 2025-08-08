@@ -168,9 +168,16 @@ export function NewRewardPopup({
     if (!onWatchAgain) return
     setIsWatchingAd(true)
     setCountdown(5)
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsWatchingAd(false)
       onWatchAgain()
+      try {
+        await fetch('/api/quiz/ad-analytics/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event_type: 'complete', placement: 'popup', source: 'homepage' })
+        })
+      } catch (e) {}
       onClose()
     }, 5000)
   }
