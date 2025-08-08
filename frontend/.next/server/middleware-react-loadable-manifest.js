@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"app/quiz/[category]/page.tsx -> ../../../data/quizDatabase":{"id":3446,"files":["static/chunks/446.94c3a9c0da93bfa7.js"]},"app/start/page.tsx -> ../../data/quizDatabase":{"id":3446,"files":["static/chunks/446.94c3a9c0da93bfa7.js"]}}';
