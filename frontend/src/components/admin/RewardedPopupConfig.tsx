@@ -311,6 +311,29 @@ export default function RewardedPopupConfig() {
       </div>
 
       {activeTab === 'homepage' ? <HomeForm /> : <CategoryForm />}
+
+      {/* Tiny Visual Preview */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">Tiny Preview</h3>
+        <p className="text-sm text-gray-600 mb-4">This preview shows the look and feel of the reward popup. It does not play real ads.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Correct state preview */}
+          <div className="bg-white border rounded-2xl p-4">
+            <div className="text-xs text-gray-500 mb-2">Correct Answer</div>
+            <PopupVisualPreview coins={(homeTemp?.coin_reward ?? 100)} isCorrect={true} />
+          </div>
+          {/* Wrong state preview */}
+          <div className="bg-white border rounded-2xl p-4">
+            <div className="text-xs text-gray-500 mb-2">Wrong Answer</div>
+            <PopupVisualPreview coins={(homeTemp?.coin_reward ?? 100)} isCorrect={false} />
+          </div>
+          {/* LIVE AD state preview */}
+          <div className="bg-white border rounded-2xl p-4">
+            <div className="text-xs text-gray-500 mb-2">Live Ad (watching)</div>
+            <LiveAdPreview />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
