@@ -75,37 +75,23 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       console.log('🔍 Admin login attempt:', username);
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
-      console.log('🌐 Using backend URL:', backendUrl);
       
-      const response = await fetch(`${backendUrl}/api/admin/login`, {
+      const loginData = await apiRequestJson('/api/admin/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ username, password })
       });
-
-      console.log('📡 Login response status:', response.status);
       
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.access_token;
-        console.log('✅ Login successful, token received');
-        
-        // Store credentials
-        localStorage.setItem('admin_token', token);
-        localStorage.setItem('admin_username', username);
-        
-        setAdminUser({ username, token });
-        return true;
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Login failed:', response.status, errorData);
-      }
-      return false;
+      const token = loginData.access_token;
+      console.log('✅ Admin login successful, token received');
+      
+      // Store credentials
+      localStorage.setItem('admin_token', token);
+      localStorage.setItem('admin_username', username);
+      
+      setAdminUser({ username, token });
+      return true;
     } catch (error) {
-      console.error('❌ Login error:', error);
+      console.error('❌ Admin login error:', error);
       return false;
     }
   };
