@@ -176,8 +176,8 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
 
       {/* Auth Modal */}
       <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
         onSuccess={handleLogin}
       />
     </>
