@@ -553,6 +553,18 @@ export default function QuizPage({ params }: QuizPageProps) {
           </>
         )}
       </div>
+      
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        isOpen={showExitConfirmation}
+        onConfirm={handleExitConfirm}
+        onCancel={handleExitCancel}
+        currentProgress={{
+          questionNumber: currentQuestion + 1,
+          totalQuestions: 5,
+          coinsAtRisk: totalCoinsEarned + (score * 50) // Current coins + potential remaining coins
+        }}
+      />
     </div>
   )
 }
