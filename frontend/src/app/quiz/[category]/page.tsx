@@ -138,6 +138,22 @@ export default function QuizPage({ params }: QuizPageProps) {
     customMessage: "Are you sure you want to leave? Your quiz progress will be lost!"
   })
 
+  // Handle encouragement modal triggers
+  useEffect(() => {
+    if (shouldShowEncouragement && !showEncouragementModal) {
+      setShowEncouragementModal(true)
+    }
+  }, [shouldShowEncouragement, showEncouragementModal])
+
+  // Check for ad-gated content opportunities
+  useEffect(() => {
+    // Show ad-gated content after 3rd question if score is low
+    if (currentQuestion === 3 && score < 2 && !showAdGatedModal) {
+      setAdGatedContent('bonus_questions')
+      setShowAdGatedModal(true)
+    }
+  }, [currentQuestion, score, showAdGatedModal])
+
   // Exit confirmation handlers
   const handleExitConfirm = () => {
     setShowExitConfirmation(false)
