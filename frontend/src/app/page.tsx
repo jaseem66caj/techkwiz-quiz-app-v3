@@ -28,37 +28,13 @@ export default function HomePage() {
     console.log('🔧 HomePage: showRewardPopup state changed to:', showRewardPopup)
   }, [showRewardPopup])
 
-  // Fetch reward configuration with better error handling
+  // Fetch reward configuration with improved error handling
   useEffect(() => {
     const fetchRewardConfig = async () => {
       try {
-        // Use environment variable or fallback to localhost
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-        console.log('🔧 HomePage: Fetching reward config from:', `${backendUrl}/api/quiz/rewarded-config`)
-        
-        const response = await fetch(`${backendUrl}/api/quiz/rewarded-config`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // Add timeout to prevent hanging
-          signal: AbortSignal.timeout(10000)
-        })
-        
-        if (response.ok) {
-          const config = await response.json()
-          setRewardConfig(config)
-          console.log('✅ HomePage: Reward config loaded successfully:', config)
-        } else {
-          console.error('❌ HomePage: API response not OK:', response.status, response.statusText)
-          // Set default config on API failure
-          setRewardConfig({
-            coin_reward: 100,
-            is_active: true,
-            show_on_insufficient_coins: true,
-            show_during_quiz: true
-          })
-        }
+        const config = await apiRequestJson('/api/quiz/rewarded-config')
+        setRewardConfig(config)
+        console.log('✅ HomePage: Reward config loaded successfully:', config)
       } catch (error) {
         console.error('❌ HomePage: Failed to fetch reward config:', error)
         // Set default config on network failure
