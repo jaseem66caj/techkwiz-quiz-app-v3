@@ -379,7 +379,25 @@ export default function QuizPage({ params }: QuizPageProps) {
       
       // Update user's coin balance immediately
       dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+      
+      // Record correct answer for streak tracking
+      recordCorrectAnswer()
+      
+      // Check for streak-based rewards
+      if (streakData.currentStreak + 1 >= 3) {
+        setRewardType('streak')
+        setShowEnhancedReward(true)
+      } else {
+        setRewardType('coins')
+        setShowEnhancedReward(true)
+      }
+      
+    } else {
+      recordIncorrectAnswer()
     }
+    
+    // Check encouragement triggers
+    checkEncouragementTriggers(currentQuestion + 1, 5)
     
     // Phase 1: Immediate Reward Feedback (TechKwiz instant gratification)
     setFlowPhase('immediate_reward')
