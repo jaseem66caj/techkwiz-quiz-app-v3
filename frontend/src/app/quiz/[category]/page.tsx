@@ -93,6 +93,26 @@ export default function QuizPage({ params }: QuizPageProps) {
   // Exit prevention state
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
 
+  // Exit prevention hook - activate during active quiz
+  const { disablePrevention } = useExitPrevention({
+    isActive: !loading && !quizCompleted && !error,
+    onExitAttempt: () => {
+      setShowExitConfirmation(true)
+    },
+    customMessage: "Are you sure you want to leave? Your quiz progress will be lost!"
+  })
+
+  // Exit confirmation handlers
+  const handleExitConfirm = () => {
+    setShowExitConfirmation(false)
+    disablePrevention()
+    router.push('/start') // Redirect to categories
+  }
+
+  const handleExitCancel = () => {
+    setShowExitConfirmation(false)
+  }
+
   // Initialize component with proper sequencing
   useEffect(() => {
     params.then(async resolvedParams => {
