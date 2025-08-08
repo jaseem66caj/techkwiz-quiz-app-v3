@@ -15,6 +15,6 @@
   "/profile/page": "app/profile/page.js",
   "/quiz/[category]/page": "app/quiz/[category]/page.js",
   "/start/page": "app/start/page.js",
-  "/test-exit-prevention/page": "app/test-exit-prevention/page.js",
-  "/test-no-header/page": "app/test-no-header/page.js"
+  "/test-no-header/page": "app/test-no-header/page.js",
+  "/test-exit-prevention/page": "app/test-exit-prevention/page.js"
 }

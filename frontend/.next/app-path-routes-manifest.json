@@ -15,6 +15,6 @@
   "/profile/page": "/profile",
   "/quiz/[category]/page": "/quiz/[category]",
   "/start/page": "/start",
-  "/test-exit-prevention/page": "/test-exit-prevention",
-  "/test-no-header/page": "/test-no-header"
+  "/test-no-header/page": "/test-no-header",
+  "/test-exit-prevention/page": "/test-exit-prevention"
 }
