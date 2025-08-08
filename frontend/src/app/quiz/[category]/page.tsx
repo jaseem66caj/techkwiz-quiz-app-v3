@@ -454,6 +454,19 @@ export default function QuizPage({ params }: QuizPageProps) {
               </div>
             </div>
 
+            {/* Countdown Timer - Only show during question phase */}
+            {flowPhase === 'question' && timerConfig?.timer_enabled && (
+              <CountdownTimer
+                totalSeconds={timerConfig.timer_seconds}
+                isActive={isTimerActive && !questionAnswered}
+                onTimeUp={handleTimerUp}
+                showWarning={timerConfig.show_timer_warning}
+                warningThreshold={10}
+                questionNumber={currentQuestion}
+                autoAdvance={timerConfig.auto_advance_on_timeout}
+              />
+            )}
+
             {/* Quiz Interface - Only show during question phase */}
             {flowPhase === 'question' && quizData.length > 0 && (
               <QuizInterface
