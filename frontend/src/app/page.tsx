@@ -371,7 +371,7 @@ export default function HomePage() {
               
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-4 border border-orange-400/30">
                 <p className="text-orange-300 text-sm font-medium">Coins Earned</p>
-                <p className="text-white text-2xl font-bold">{score * 25}</p>
+                <p className="text-white text-2xl font-bold">{score * 100}</p>
               </div>
             </div>
             
