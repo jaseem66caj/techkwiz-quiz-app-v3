@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { apiRequestJson } from '../utils/api'
 
 interface EnhancedRewardPopupProps {
   isOpen: boolean
