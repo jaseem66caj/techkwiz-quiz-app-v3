@@ -338,6 +338,69 @@ export default function RewardedPopupConfig() {
   );
 }
 
+
+function PopupVisualPreview({ coins, isCorrect }: { coins: number, isCorrect: boolean }) {
+  return (
+    <div className="relative">
+      <div className="rounded-[20px] border border-white/25 shadow-xl overflow-hidden" style={{ background: 'linear-gradient(145deg, #0b1020 0%, #0a0d1a 100%)' }}>
+        <div className="p-4 text-center">
+          <div className="mx-auto w-16 h-14 mb-3">
+            <svg viewBox="0 0 120 100" className="w-full h-full">
+              <rect x="20" y="50" width="80" height="35" rx="8" fill="#D4910A" stroke="#B8800A" strokeWidth="2" />
+              <ellipse cx="60" cy="50" rx="40" ry="15" fill="#F4B942" stroke="#D4910A" strokeWidth="2" />
+              <rect x="57" y="53" width="6" height="10" rx="1" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="1" />
+              <circle cx="60" cy="56" r="2" fill="#A0A0A0" />
+              {isCorrect ? (
+                <>
+                  <circle cx="50" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                  <circle cx="60" cy="32" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                  <circle cx="70" cy="35" r="4" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                </>
+              ) : (
+                <>
+                  <circle cx="55" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                  <circle cx="65" cy="35" r="3" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                </>
+              )}
+            </svg>
+          </div>
+          <h4 className="text-xl font-extrabold text-yellow-400 mb-1">{isCorrect ? 'Hurray!!' : 'Oops!!'}</h4>
+          <p className="text-xs font-semibold text-yellow-300 mb-2">{isCorrect ? 'Correct answer' : 'Wrong answer'}</p>
+          {isCorrect ? (
+            <p className="text-white text-xs mb-2">You won <span className="text-yellow-400 font-bold">25 coins</span></p>
+          ) : (
+            <p className="text-white text-xs mb-2">You still have a chance to win coins.</p>
+          )}
+          <p className="text-white text-sm"><span className="block">Just watch an ad & earn</span><span className="text-yellow-400 font-bold">{coins} coins</span></p>
+          <div className="mt-3">
+            <button className="w-full relative rounded-xl py-2 font-bold text-white shadow-lg" style={{ background: 'linear-gradient(90deg, #6d28d9 0%, #5b21b6 100%)' }}>
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                <span className="text-sm">Claim</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-purple-900/60">Ad</span>
+              </span>
+            </button>
+            <button className="w-full mt-2 rounded-xl py-2 font-bold text-white bg-gray-700 text-xs">Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LiveAdPreview() {
+  return (
+    <div className="relative rounded-[20px] border border-purple-400/30 p-4 text-center overflow-hidden shadow-xl" style={{ background: 'linear-gradient(145deg, #111827 0%, #0f172a 100%)' }}>
+      <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-purple-400/30 bg-purple-500/20">
+        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+        <span className="text-xs font-bold text-purple-300">LIVE AD</span>
+      </div>
+      <div className="h-28 rounded-lg border-2 border-purple-400/30 bg-gradient-to-br from-purple-600/20 to-pink-600/20" />
+      <div className="mt-2 text-yellow-400 text-sm font-bold">5 seconds remaining</div>
+      <div className="text-yellow-300 text-xs">Please wait…</div>
+    </div>
+  )
+}
+
 function TabButton({ active, onClick, children }: { active: boolean, onClick: () => void, children: React.ReactNode }) {
   return (
     <button onClick={onClick} className={`px-4 py-2 rounded-lg font-medium ${active ? 'bg-white shadow text-purple-700' : 'text-gray-700 hover:text-purple-700'}`}>
