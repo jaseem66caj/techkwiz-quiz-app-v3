@@ -731,6 +731,34 @@ export default function QuizPage({ params }: QuizPageProps) {
           coinsAtRisk: totalCoinsEarned + (score * 50) // Current coins + potential remaining coins
         }}
       />
+      
+      {/* Mid-Quiz Encouragement Modal */}
+      <MidQuizEncouragementModal
+        isOpen={showEncouragementModal}
+        onClose={handleEncouragementClose}
+        currentQuestion={currentQuestion + 1}
+        totalQuestions={5}
+        currentScore={score}
+        streakCount={streakData.currentStreak}
+      />
+      
+      {/* Ad-Gated Content Modal */}
+      <AdGatedContentModal
+        isOpen={showAdGatedModal}
+        onClose={() => setShowAdGatedModal(false)}
+        onWatchAd={handleWatchAd}
+        onSkip={handleSkipAd}
+        contentType={adGatedContent}
+        rewardAmount={100}
+      />
+      
+      {/* Enhanced Reward Animation */}
+      <EnhancedRewardAnimation
+        isVisible={showEnhancedReward}
+        rewardType={rewardType}
+        amount={50}
+        onAnimationComplete={handleRewardAnimationComplete}
+      />
     </div>
   )
 }
