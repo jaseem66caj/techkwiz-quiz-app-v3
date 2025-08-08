@@ -116,6 +116,15 @@ export function EnhancedRewardPopup({
   }, [showingAd, adSlotCode])
 
   const startAdExperience = async () => {
+    try {
+      // Fire analytics start event
+      await apiRequestJson('/api/quiz/ad-analytics/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_type: 'start', placement: 'popup', source: 'category' })
+      })
+    } catch (e) { /* non-blocking */ }
+
     setShowingAd(true)
     setAdCountdown(5)
     setShowClaim(false)
