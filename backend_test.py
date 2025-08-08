@@ -28,7 +28,7 @@ def get_backend_url():
         print(f"Error reading frontend .env: {e}")
     
     # Fallback to localhost if no URL found in .env
-    return "http://localhost:8001"
+    return "http://localhost:8010"
 
 class BackendTester:
     def __init__(self):
