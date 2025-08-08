@@ -26,6 +26,9 @@ export default function HomePage() {
   // Exit prevention state
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
   
+  // Revenue optimization
+  const { awardCoins, getCurrentMultiplier } = useRevenueOptimization()
+  
   // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
