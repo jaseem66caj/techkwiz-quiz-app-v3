@@ -13,6 +13,7 @@ interface RewardedPopupConfig {
   show_during_quiz: boolean;
   created_at: string;
   updated_at: string;
+  enable_analytics: boolean; // NEW
 }
 
 export default function RewardedPopupConfig() {
