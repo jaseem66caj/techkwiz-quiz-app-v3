@@ -153,31 +153,8 @@ export function Providers({ children }: { children: ReactNode }) {
           console.log(`👤 Found user: ${currentUser.name} with ${currentUser.coins} session coins`)
           dispatch({ type: 'LOGIN_SUCCESS', payload: currentUser })
         } else {
-          console.log('👤 No authenticated user found - creating guest user')
-          
-          // Create a guest user automatically
-          const guestUser = {
-            id: `guest_${Date.now()}`,
-            name: 'Guest User',
-            email: `guest_${Date.now()}@techkwiz.com`,
-            coins: 0,
-            level: 1,
-            totalQuizzes: 0,
-            correctAnswers: 0,
-            joinDate: new Date().toISOString(),
-            quizHistory: [],
-            achievements: []
-          }
-          
-          // Set auth token
-          localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
-          
-          // Save user
-          const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
-          allUsers.push(guestUser)
-          localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
-          
-          dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+          console.log('👤 No authenticated user found - will let page components handle guest creation and onboarding')
+          // Don't auto-create guest user here - let homepage handle onboarding flow
         }
       } catch (error) {
         console.error('Auth initialization error:', error)
