@@ -245,6 +245,9 @@ export default function QuizPage({ params }: QuizPageProps) {
   const handleAnswerSelect = async (answerIndex: number) => {
     if (questionAnswered) return
     
+    // Stop timer when answer is selected
+    setIsTimerActive(false)
+    
     setSelectedAnswer(answerIndex)
     setQuestionAnswered(true)
     
