@@ -390,7 +390,7 @@ export default function HomePage() {
             />
           </div>
           
-          {/* Features teaser */}
+          {/* Features teaser - Enhanced messaging */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -398,11 +398,12 @@ export default function HomePage() {
             className="mt-8 text-center"
           >
             <div className="bg-gray-800/30 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-              <p className="text-blue-200 text-sm mb-2">🚀 <strong>What's New:</strong></p>
+              <p className="text-blue-200 text-sm mb-2">🚀 <strong>What's Next:</strong></p>
               <div className="text-xs text-blue-200 space-y-1">
-                <div>💰 Lower entry fees (20-45 coins)</div>
-                <div>🏆 25 coins per correct answer</div>
-                <div>🎯 Interactive formats & Gen Z vibes</div>
+                <div>💰 Earn more coins in category quizzes (20-45 coins entry)</div>
+                <div>🏆 Get 50 coins per correct answer</div>
+                <div>🎯 Challenge yourself with timer-based questions</div>
+                <div>📺 Watch ads to earn bonus coins</div>
               </div>
             </div>
           </motion.div>
@@ -419,6 +420,18 @@ export default function HomePage() {
         onSkipReward={handlePopupClose}
         isCorrect={isLastAnswerCorrect}
         rewardCoins={100}
+      />
+      
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        isOpen={showExitConfirmation}
+        onConfirm={handleExitConfirm}
+        onCancel={handleExitCancel}
+        currentProgress={{
+          questionNumber: currentQuestion + 1,
+          totalQuestions: quickStartQuiz.length,
+          coinsAtRisk: score * 25 // Potential coins from correct answers
+        }}
       />
     </>
   )
