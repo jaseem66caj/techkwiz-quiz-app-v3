@@ -229,18 +229,18 @@ export default function QuizPage({ params }: QuizPageProps) {
         console.log('⚠️ QuizPage: API failed for questions, falling back to local data...')
         
         // Fallback to local data
-        const { QUIZ_QUESTIONS } = await import('../../../data/quizDatabase')
+        const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
         
-        const categoryQuestions = Object.values(QUIZ_QUESTIONS).filter(
-          (q: any) => q.category === catId
-        ).slice(0, 5) // Take first 5 questions
+        const categoryQuestions = QUIZ_DATABASE[catId] || []
         
         if (categoryQuestions.length === 0) {
           throw new Error(`No questions found for category ${catId} in local database`)
         }
         
-        setQuizData(categoryQuestions)
-        console.log(`✅ QuizPage: ${categoryQuestions.length} questions loaded successfully from local data`)
+        const selectedQuestions = categoryQuestions.slice(0, 5) // Take first 5 questions
+        
+        setQuizData(selectedQuestions)
+        console.log(`✅ QuizPage: ${selectedQuestions.length} questions loaded successfully from local data`)
         setLoading(false)
         
         // Start timer when questions are loaded and timer is enabled
