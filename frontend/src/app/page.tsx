@@ -109,7 +109,36 @@ export default function HomePage() {
     }
   }, [state.isAuthenticated, dispatch])
 
-  // Youth-focused quick start quiz data
+  // Onboarding completion handler
+  const handleOnboardingComplete = (coinsEarned: number) => {
+    console.log(`🎉 Onboarding completed! Earned ${coinsEarned} coins`)
+    setOnboardingCompleted(true)
+    setShowOnboarding(false)
+    localStorage.setItem('techkwiz_onboarding_completed', 'true')
+    
+    // Small delay before showing main quiz
+    setTimeout(() => {
+      setOnboardingCompleted(true)
+    }, 500)
+  }
+
+  const handleOnboardingSkip = () => {
+    console.log('⏭️ Onboarding skipped')
+    setOnboardingSkipped(true)
+    setShowOnboarding(false)
+    localStorage.setItem('techkwiz_onboarding_completed', 'true')
+  }
+
+  // Exit confirmation handlers
+  const handleExitConfirm = () => {
+    setShowExitConfirmation(false)
+    disablePrevention()
+    router.push('/start') // Redirect to categories
+  }
+
+  const handleExitCancel = () => {
+    setShowExitConfirmation(false)
+  }
   const quickStartQuiz = [
     {
       id: 'quick-0',
