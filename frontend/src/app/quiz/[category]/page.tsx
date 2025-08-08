@@ -339,11 +339,20 @@ export default function QuizPage({ params }: QuizPageProps) {
     setUserAnswers([])
     setTotalCoinsEarned(0)
     setShowRewardPopup(false)
+    setShowTimeUpModal(false)
+    setTimeUpForQuestion(null)
     setCurrentAdSlot('')
     setFlowPhase('question')
+    setIsTimerActive(false) // Reset timer state
     
-    // Fetch new set of 5 questions
-    fetchSequentialQuestions(categoryId)
+    // Fetch new set of 5 questions and restart timer
+    fetchSequentialQuestions(categoryId).then(() => {
+      if (timerConfig?.timer_enabled) {
+        setTimeout(() => {
+          setIsTimerActive(true)
+        }, 1000)
+      }
+    })
   }
 
   const goToCategories = () => {
