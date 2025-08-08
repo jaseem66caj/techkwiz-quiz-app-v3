@@ -238,6 +238,7 @@ export default function HomePage() {
         
         console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${enhancedCoins} coins`)
       } else {
+        setLastEarnedCoins(0)
         console.log(`❌ Wrong answer, no coins earned`)
       }
       
