@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 
-from auth import get_current_admin_user
+from auth import get_current_admin_user, create_access_token, verify_password, hash_password
 from models import (
     AdminProfileUpdate,
     AdminToken,
@@ -20,6 +21,14 @@ from models import (
     ScriptInjectionUpdate,
     QuizDataExport,
 )
+
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminSetup(BaseModel):
+    username: str
+    password: str
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
 
