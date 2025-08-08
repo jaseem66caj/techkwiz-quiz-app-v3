@@ -122,7 +122,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
                 </>
               ) : (
                 <button
-                  onClick={() => setIsAuthModalOpen(true)}
+                  onClick={() => setShowAuthModal(true)}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors"
                 >
                   Login
