@@ -175,33 +175,41 @@ export default function QuizPage({ params }: QuizPageProps) {
     try {
       setLoading(true)
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-      const response = await fetch(`${backendUrl}/api/quiz/sequential-questions/${catId}`)
+      console.log('🔧 QuizPage: Fetching questions from:', `${backendUrl}/api/quiz/sequential-questions/${catId}`)
+      
+      const response = await fetch(`${backendUrl}/api/quiz/sequential-questions/${catId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(10000)
+      })
       
       if (!response.ok) {
-        throw new Error('Failed to fetch questions')
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
       
       const questionsData = await response.json()
       
       if (questionsData && questionsData.length === 5) {
         setQuizData(questionsData)
-        console.log('✅ Loaded 5 sequential questions from API')
+        console.log('✅ QuizPage: 5 sequential questions loaded successfully')
         setLoading(false)
         
         // Start timer when questions are loaded and timer is enabled
         if (timerConfig?.timer_enabled) {
-          setIsTimerActive(true)
+          setTimeout(() => {
+            setIsTimerActive(true)
+          }, 500)
         }
         
         return questionsData
       } else {
-        setError('Expected 5 questions for sequential quiz')
-        setLoading(false)
-        return []
+        throw new Error(`Expected 5 questions, got ${questionsData?.length || 0}`)
       }
     } catch (error) {
-      console.error('Error loading sequential questions:', error)
-      setError('Failed to load quiz questions')
+      console.error('❌ QuizPage: Error loading sequential questions:', error)
+      setError('Failed to load quiz questions. Please try again.')
       setLoading(false)
       return []
     }
