@@ -165,6 +165,52 @@ export default function QuizPage({ params }: QuizPageProps) {
     setShowExitConfirmation(false)
   }
 
+  // Encouragement modal handlers
+  const handleEncouragementClose = () => {
+    setShowEncouragementModal(false)
+    clearEncouragement()
+  }
+
+  // Ad-gated content handlers
+  const handleWatchAd = () => {
+    setShowAdGatedModal(false)
+    
+    // Apply ad rewards based on content type
+    switch (adGatedContent) {
+      case 'bonus_questions':
+        // Add 3 bonus questions logic here
+        console.log('🎯 Bonus questions unlocked!')
+        break
+      case 'extra_time':
+        // Add extra time to current question
+        console.log('⏰ Extra time added!')
+        break
+      case 'hint':
+        // Show hint for current question
+        console.log('💡 Hint revealed!')
+        break
+      case 'double_coins':
+        // Double current coins
+        const bonusCoins = totalCoinsEarned
+        setTotalCoinsEarned(totalCoinsEarned + bonusCoins)
+        dispatch({ type: 'UPDATE_COINS', payload: bonusCoins })
+        console.log('🪙 Coins doubled!')
+        break
+    }
+    
+    // Show reward animation
+    setRewardType('bonus')
+    setShowEnhancedReward(true)
+  }
+
+  const handleSkipAd = () => {
+    setShowAdGatedModal(false)
+  }
+
+  const handleRewardAnimationComplete = () => {
+    setShowEnhancedReward(false)
+  }
+
   // Initialize component with proper sequencing
   useEffect(() => {
     params.then(async resolvedParams => {
