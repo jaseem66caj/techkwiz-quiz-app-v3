@@ -93,10 +93,23 @@ export default function QuizPage({ params }: QuizPageProps) {
   // Exit prevention state
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
 
+  // Debug state for exit prevention
+  useEffect(() => {
+    console.log('🔧 Exit Prevention Debug:', {
+      loading,
+      quizCompleted,
+      error,
+      isActive: !loading && !quizCompleted && !error,
+      currentQuestion,
+      flowPhase
+    })
+  }, [loading, quizCompleted, error, currentQuestion, flowPhase])
+
   // Exit prevention hook - activate during active quiz
   const { disablePrevention } = useExitPrevention({
     isActive: !loading && !quizCompleted && !error,
     onExitAttempt: () => {
+      console.log('🚨 EXIT ATTEMPT DETECTED! Showing confirmation modal...')
       setShowExitConfirmation(true)
     },
     customMessage: "Are you sure you want to leave? Your quiz progress will be lost!"
