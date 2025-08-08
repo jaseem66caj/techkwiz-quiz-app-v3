@@ -185,6 +185,59 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
         onClose={() => setShowAuthModal(false)}
         onSuccess={handleLogin}
       />
+      
+      {/* Revenue Optimization Components */}
+      {state.isAuthenticated && (
+        <>
+          {/* Daily Bonus Modal */}
+          <DailyBonusModal
+            isOpen={showDailyBonus}
+            onClose={() => {}}
+            onClaimBonus={claimDailyBonus}
+            dayStreak={revenueMetrics.dailyStreak}
+          />
+          
+          {/* Referral System Modal */}
+          <ReferralSystemModal
+            isOpen={showReferralModal}
+            onClose={() => setShowReferralModal(false)}
+            onGenerateCode={() => {}}
+            userReferralCode={userReferralCode}
+            referralStats={{
+              totalReferrals: revenueMetrics.referrals,
+              coinsEarned: Math.floor(revenueMetrics.referrals * 100),
+              pendingRewards: 0
+            }}
+          />
+          
+          {/* Streak Multiplier Display */}
+          {getCurrentMultiplier() > 1 && (
+            <StreakMultiplierDisplay
+              currentStreak={revenueMetrics.dailyStreak}
+              multiplier={getCurrentMultiplier()}
+              isActive={true}
+              position="top-right"
+            />
+          )}
+          
+          {/* Limited Time Offers */}
+          {currentOffers.length > 0 && currentOffers.map((offer) => (
+            <LimitedTimeOfferBanner
+              key={offer.id}
+              offer={offer}
+              onClaim={(offerId) => {
+                console.log('Claimed offer:', offerId)
+                // Handle offer claim logic here
+              }}
+              onDismiss={(offerId) => {
+                console.log('Dismissed offer:', offerId)
+                // Handle offer dismiss logic here
+              }}
+              position="floating"
+            />
+          ))}
+        </>
+      )}
     </>
   )
 }
