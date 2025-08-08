@@ -136,7 +136,7 @@ export function NewRewardPopup({
     return () => clearTimeout(timer)
   }, [isWatchingAd, countdown])
 
-  const handleClaimReward = () => {
+  const handleClaimReward = async () => {
     setIsWatchingAd(true)
     setCountdown(5)
 
