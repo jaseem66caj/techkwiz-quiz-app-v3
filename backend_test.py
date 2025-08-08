@@ -1699,6 +1699,180 @@ class BackendTester:
         
         return passed, failed, self.results
 
+    def test_ad_analytics_event_endpoint(self):
+        """Test POST /api/quiz/ad-analytics/event endpoint"""
+        try:
+            # Test data as specified in review request
+            test_event = {
+                "event_type": "start",
+                "placement": "popup"
+            }
+            
+            response = requests.post(
+                f"{self.api_base}/quiz/ad-analytics/event",
+                json=test_event,
+                headers={'Content-Type': 'application/json'},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                if 'status' in data and 'id' in data:
+                    if data['status'] == 'ok' and data['id']:
+                        self.log_result("Ad Analytics Event POST", True, f"Event recorded successfully with ID: {data['id']}")
+                        return True
+                    else:
+                        self.log_result("Ad Analytics Event POST", False, f"Invalid response structure: {data}")
+                        return False
+                else:
+                    self.log_result("Ad Analytics Event POST", False, f"Missing required fields in response: {data}")
+                    return False
+            else:
+                self.log_result("Ad Analytics Event POST", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_result("Ad Analytics Event POST", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_rewarded_config_enable_analytics(self):
+        """Test GET /api/quiz/rewarded-config returns enable_analytics boolean"""
+        try:
+            response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            
+            if response.status_code == 200:
+                config = response.json()
+                
+                # Check if enable_analytics field exists
+                if 'enable_analytics' in config:
+                    enable_analytics = config['enable_analytics']
+                    if isinstance(enable_analytics, bool):
+                        self.log_result("Rewarded Config Enable Analytics", True, f"enable_analytics field present: {enable_analytics}")
+                        return True, config
+                    else:
+                        self.log_result("Rewarded Config Enable Analytics", False, f"enable_analytics is not boolean: {type(enable_analytics)}")
+                        return False, config
+                else:
+                    # Check if it defaults to true when absent (as per requirement)
+                    self.log_result("Rewarded Config Enable Analytics", True, "enable_analytics field absent - defaults to true as required")
+                    return True, config
+            else:
+                self.log_result("Rewarded Config Enable Analytics", False, f"HTTP {response.status_code}: {response.text}")
+                return False, None
+                
+        except Exception as e:
+            self.log_result("Rewarded Config Enable Analytics", False, f"Request failed: {str(e)}")
+            return False, None
+    
+    def test_admin_rewarded_config_update(self, token):
+        """Test PUT /api/admin/rewarded-config updates enable_analytics and persists"""
+        if not token:
+            self.log_result("Admin Rewarded Config Update", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            
+            # First, get current config to see current state
+            get_response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if get_response.status_code != 200:
+                self.log_result("Admin Rewarded Config Update", False, "Cannot get current config")
+                return False
+            
+            current_config = get_response.json()
+            current_analytics = current_config.get('enable_analytics', True)
+            
+            # Update enable_analytics to opposite value
+            new_analytics_value = not current_analytics
+            update_data = {
+                "enable_analytics": new_analytics_value
+            }
+            
+            # Test PUT /api/admin/rewarded-config (homepage)
+            put_response = requests.put(
+                f"{self.api_base}/admin/rewarded-config",
+                json=update_data,
+                headers=headers,
+                timeout=10
+            )
+            
+            if put_response.status_code != 200:
+                self.log_result("Admin Rewarded Config Update", False, f"PUT failed: HTTP {put_response.status_code}")
+                return False
+            
+            updated_config = put_response.json()
+            
+            # Verify the update was applied
+            if updated_config.get('enable_analytics') != new_analytics_value:
+                self.log_result("Admin Rewarded Config Update", False, f"enable_analytics not updated correctly: expected {new_analytics_value}, got {updated_config.get('enable_analytics')}")
+                return False
+            
+            # Verify persistence with subsequent GET
+            verify_response = requests.get(f"{self.api_base}/quiz/rewarded-config", timeout=10)
+            if verify_response.status_code != 200:
+                self.log_result("Admin Rewarded Config Update", False, "Cannot verify persistence")
+                return False
+            
+            verified_config = verify_response.json()
+            if verified_config.get('enable_analytics') != new_analytics_value:
+                self.log_result("Admin Rewarded Config Update", False, f"Changes not persisted: expected {new_analytics_value}, got {verified_config.get('enable_analytics')}")
+                return False
+            
+            self.log_result("Admin Rewarded Config Update", True, f"enable_analytics successfully updated to {new_analytics_value} and persisted")
+            
+            # Restore original value for other tests
+            restore_data = {"enable_analytics": current_analytics}
+            requests.put(
+                f"{self.api_base}/admin/rewarded-config",
+                json=restore_data,
+                headers=headers,
+                timeout=10
+            )
+            
+            return True
+            
+        except Exception as e:
+            self.log_result("Admin Rewarded Config Update", False, f"Update test failed: {str(e)}")
+            return False
+
+    def run_new_endpoints_tests(self):
+        """Run tests for new endpoints as requested in review"""
+        print(f"\n🎯 Testing New Endpoints for Ad Analytics and Enable Analytics")
+        print("=" * 80)
+        
+        # Get admin token first
+        auth_success, token = self.test_admin_authentication()
+        
+        # New endpoint tests
+        tests = [
+            ("Ad Analytics Event Endpoint", self.test_ad_analytics_event_endpoint),
+            ("Rewarded Config Enable Analytics", lambda: self.test_rewarded_config_enable_analytics()[0]),
+            ("Admin Rewarded Config Update", lambda: self.test_admin_rewarded_config_update(token)),
+        ]
+        
+        passed = 0
+        total = len(tests)
+        
+        for test_name, test_func in tests:
+            try:
+                if test_func():
+                    passed += 1
+            except Exception as e:
+                self.log_result(test_name, False, f"Test execution failed: {str(e)}")
+        
+        # Summary
+        print("\n" + "=" * 80)
+        print(f"🎯 NEW ENDPOINTS TESTING SUMMARY: {passed}/{total} tests passed ({passed/total*100:.1f}% success rate)")
+        
+        if passed == total:
+            print("✅ All new endpoint tests passed!")
+        else:
+            print(f"❌ {total - passed} tests failed.")
+        
+        return passed == total
+
     def run_all_tests(self):
         """Run comprehensive admin system tests including forgot password and profile management"""
         print(f"🚀 Starting Comprehensive Admin System Tests")
