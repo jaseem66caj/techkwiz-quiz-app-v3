@@ -7,24 +7,18 @@
  * Get the correct backend URL based on environment
  */
 export function getBackendUrl(): string {
-  // If environment variable is set, use it
-  if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+  // If environment variable is set and not empty, use it
+  if (process.env.NEXT_PUBLIC_BACKEND_URL && process.env.NEXT_PUBLIC_BACKEND_URL.trim() !== '') {
     return process.env.NEXT_PUBLIC_BACKEND_URL
   }
   
-  // Auto-detect based on current window location
+  // For Next.js apps with proxy configuration, use empty string for relative paths
+  // This will use the Next.js rewrites to proxy to localhost:8001
   if (typeof window !== 'undefined') {
-    const currentHost = window.location.hostname
-    const currentProtocol = window.location.protocol
-    
-    // If running on external domain, try to use the same domain with different port
-    if (currentHost !== 'localhost' && currentHost !== '127.0.0.1') {
-      // For external deployments, backend should be on the same domain or use proxy
-      return `${currentProtocol}//${currentHost}/api`
-    }
+    return '' // Relative URLs will be proxied by Next.js
   }
   
-  // Fallback to localhost for development
+  // Fallback to localhost for server-side rendering
   return 'http://localhost:8001'
 }
 
