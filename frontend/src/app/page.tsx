@@ -231,10 +231,14 @@ export default function HomePage() {
       if (finalIsCorrect) {
         setScore(score + 1)
         
-        // Award coins for correct answers on homepage quiz
-        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
+        // Enhanced coin rewards - higher values
+        const baseCoins = 100 // Increased from 25 to 100
+        const enhancedCoins = awardCoins(baseCoins, 'quiz')
         
-        console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins`)
+        // Update the coins earned for popup display
+        setLastEarnedCoins(enhancedCoins)
+        
+        console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${enhancedCoins} coins`)
       } else {
         console.log(`❌ Wrong answer, no coins earned`)
       }
