@@ -34,6 +34,25 @@ export default function HomePage() {
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [rewardConfig, setRewardConfig] = useState<any>(null)
 
+  // Exit prevention hook - activate during quiz
+  const { disablePrevention } = useExitPrevention({
+    isActive: !showOnboarding && !onboardingCompleted && !quizCompleted && !showResult,
+    onExitAttempt: () => {
+      setShowExitConfirmation(true)
+    },
+    customMessage: "Are you sure you want to leave? Your progress will be lost!"
+  })
+
+  // Debug onboarding state
+  useEffect(() => {
+    console.log('🔧 HomePage: Onboarding state -', {
+      showOnboarding,
+      onboardingCompleted, 
+      onboardingSkipped,
+      userCoins: state.user?.coins
+    })
+  }, [showOnboarding, onboardingCompleted, onboardingSkipped, state.user?.coins])
+
   // Debug reward popup state
   useEffect(() => {
     console.log('🔧 HomePage: showRewardPopup state changed to:', showRewardPopup)
