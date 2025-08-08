@@ -74,8 +74,11 @@ export function useExitPrevention({
   }, [])
 
   useEffect(() => {
+    console.log('🔧 useExitPrevention: Effect running, isActive:', isActive)
     if (!isActive) return
 
+    console.log('🔧 useExitPrevention: Adding event listeners...')
+    
     // Add event listeners
     window.addEventListener('beforeunload', handleBeforeUnload)
     window.addEventListener('popstate', handlePopState)
@@ -83,8 +86,11 @@ export function useExitPrevention({
 
     // Push initial state to enable back button detection
     window.history.pushState(null, '', window.location.pathname)
+    
+    console.log('🔧 useExitPrevention: Event listeners added successfully')
 
     return () => {
+      console.log('🔧 useExitPrevention: Cleaning up event listeners...')
       // Cleanup event listeners
       window.removeEventListener('beforeunload', handleBeforeUnload)
       window.removeEventListener('popstate', handlePopState)
