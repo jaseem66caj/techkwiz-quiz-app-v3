@@ -153,6 +153,13 @@ export function NewRewardPopup({
       setIsWatchingAd(false)
       setHasWatchedOnce(true)
       onClaimReward()
+      try {
+        await fetch('/api/quiz/ad-analytics/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event_type: 'complete', placement: 'popup', source: 'homepage' })
+        })
+      } catch (e) { /* ignore */ }
       if (!canWatchAgain) onClose()
     }, 5000)
   }
