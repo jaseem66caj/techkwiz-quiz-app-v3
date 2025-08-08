@@ -2,13 +2,13 @@
   "app/quiz/[category]/page.tsx -> ../../../data/quizDatabase": {
     "id": 3446,
     "files": [
-      "static/chunks/446.f055e3d73a58d029.js"
+      "static/chunks/446.558ea5c2e89ddceb.js"
     ]
   },
   "app/start/page.tsx -> ../../data/quizDatabase": {
     "id": 3446,
     "files": [
-      "static/chunks/446.f055e3d73a58d029.js"
+      "static/chunks/446.558ea5c2e89ddceb.js"
     ]
   }
 }
