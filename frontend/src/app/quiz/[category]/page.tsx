@@ -495,6 +495,19 @@ export default function QuizPage({ params }: QuizPageProps) {
                 adSlotCode={currentAdSlot}
               />
             )}
+
+            {/* Time Up Modal - Show correct answer when timer expires */}
+            {showTimeUpModal && timeUpForQuestion && (
+              <TimeUpModal
+                isOpen={showTimeUpModal}
+                question={timeUpForQuestion}
+                onClose={() => {
+                  setShowTimeUpModal(false)
+                  advanceToNextQuestion()
+                }}
+                autoCloseDelay={3000}
+              />
+            )}
           </>
         ) : (
           <>
