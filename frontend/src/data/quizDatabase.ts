@@ -107,6 +107,318 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
 }
 
 export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
+  'swipe-personality': [
+    {
+      id: 'swipe_001',
+      question: 'Your ideal weekend vibe is...',
+      options: ['Cozy café with a book ☕📚', 'Beach party with friends 🏖️🎉', 'Concert or music festival 🎵🎤', 'Hiking in nature trails 🌲🥾'],
+      correct_answer: -1, // No correct answer for personality
+      difficulty: 'beginner',
+      fun_fact: 'Your leisure choices reflect your personality type and social energy preferences!',
+      category: 'swipe-personality',
+      subcategory: 'Lifestyle'
+    },
+    {
+      id: 'swipe_002', 
+      question: 'Pick your dream aesthetic...',
+      options: ['Dark Academia ☕📚', 'Soft Girl 🌸✨', 'Y2K Cyber 💿🔮', 'Cottagecore 🍄🌿'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Aesthetics are visual representations of personality and lifestyle choices!',
+      category: 'swipe-personality',
+      subcategory: 'Aesthetic'
+    },
+    {
+      id: 'swipe_003',
+      question: 'Your social media energy is...',
+      options: ['Main character energy ✨👑', 'Supportive bestie vibes 💝🤗', 'Mysterious and selective 🖤🔮', 'Authentic storyteller 📖💭'],
+      correct_answer: -1,
+      difficulty: 'beginner', 
+      fun_fact: 'Social media presence often mirrors real-life personality traits!',
+      category: 'swipe-personality',
+      subcategory: 'Values'
+    },
+    {
+      id: 'swipe_004',
+      question: 'Your approach to new trends is...',
+      options: ['First to try everything 🚀', 'Wait and see what sticks 👀', 'Only if it fits my vibe ✨', 'Create my own trends 🎨'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Innovation adoption styles reveal personality and risk tolerance!',
+      category: 'swipe-personality', 
+      subcategory: 'Preferences'
+    },
+    {
+      id: 'swipe_005',
+      question: 'Your friend group dynamic is...',
+      options: ['The planner and organizer 📅', 'The mood lifter and comedian 😂', 'The advice giver and listener 💝', 'The adventure starter 🗺️'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Friend group roles often reflect natural leadership and social styles!',
+      category: 'swipe-personality',
+      subcategory: 'Values'
+    }
+  ],
+  'pop-culture-flash': [
+    {
+      id: 'pop_001',
+      question: 'Which app started the "For You Page" trend?',
+      options: ['Instagram', 'TikTok', 'Snapchat', 'YouTube'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'TikTok\'s algorithm-driven "For You Page" revolutionized social media content discovery!',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_002',
+      question: 'What does "VSCO girl" aesthetic include?',
+      options: ['Heavy makeup and curls', 'Scrunchies and Hydroflasks', 'Gothic clothing', 'Sporty athletic wear'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'VSCO girl trend promoted environmental consciousness and casual comfort!',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_003',
+      question: 'Which artist broke Spotify streaming records in 2024?',
+      options: ['Taylor Swift', 'Bad Bunny', 'Billie Eilish', 'The Weeknd'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Taylor Swift\'s re-recorded albums have dominated streaming platforms!',
+      category: 'pop-culture-flash', 
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_004',
+      question: 'What does "periodt" mean in Gen Z slang?',
+      options: ['Time period', 'End of discussion', 'Asking a question', 'Being confused'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'AAVE (African American Vernacular English) has heavily influenced Gen Z slang!',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_005',
+      question: 'Which meme format uses "Me explaining to my mom..."?',
+      options: ['Drake pointing', 'Charlie conspiracy board', 'Distracted boyfriend', 'Woman yelling at cat'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Charlie Day\'s conspiracy theory scene became a popular meme for explaining complex ideas!',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    }
+  ],
+  'micro-trivia': [
+    {
+      id: 'micro_001',
+      question: 'How many hearts does an octopus have?',
+      options: ['1', '2', '3', '4'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Octopuses have three hearts - two pump blood to the gills, one to the body!',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_002',
+      question: 'What\'s the only mammal capable of true flight?',
+      options: ['Flying squirrel', 'Bat', 'Sugar glider', 'Flying lemur'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Bats are the only mammals with powered flight - others just glide!',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_003', 
+      question: 'Which planet spins backwards?',
+      options: ['Mars', 'Venus', 'Uranus', 'Neptune'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Venus rotates clockwise, opposite to most planets in our solar system!',
+      category: 'micro-trivia',
+      subcategory: 'Brain Teasers'
+    },
+    {
+      id: 'micro_004',
+      question: 'What\'s the fastest land animal?',
+      options: ['Lion', 'Cheetah', 'Gazelle', 'Greyhound'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Cheetahs can reach speeds up to 70 mph in short bursts!',
+      category: 'micro-trivia',
+      subcategory: 'Speed Round'
+    },
+    {
+      id: 'micro_005',
+      question: 'How many bones are babies born with?',
+      options: ['206', '270', '350', '400'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Babies are born with 270 bones, but many fuse together as they grow!',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    }
+  ],
+  'social-identity': [
+    {
+      id: 'social_001',
+      question: 'Your ideal content creation style is...',
+      options: ['Aesthetic photos and vibes ✨📸', 'Educational and informative 🧠📚', 'Comedy and entertainment 😂🎭', 'Authentic life sharing 💝📱'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Content style reflects personality and what you value sharing with others!',
+      category: 'social-identity',
+      subcategory: 'Content Style'
+    },
+    {
+      id: 'social_002',
+      question: 'Your online persona energy is...',
+      options: ['Mysterious and intriguing 🖤🔮', 'Bubbly and positive ☀️💕', 'Cool and effortless 😎✨', 'Thoughtful and deep 🌙📖'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Online personas can amplify certain aspects of our real personalities!',
+      category: 'social-identity',
+      subcategory: 'Online Persona'
+    },
+    {
+      id: 'social_003',
+      question: 'Your approach to social media is...',
+      options: ['Quality over quantity posts 💎', 'Daily life documentation 📱', 'Curated aesthetic feed ✨', 'Interactive and engaging 💬'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Social media strategies reflect personal values and communication styles!',
+      category: 'social-identity',
+      subcategory: 'Social Vibe'
+    },
+    {
+      id: 'social_004',
+      question: 'If you were an influencer, you\'d be...',
+      options: ['Lifestyle and fashion guru 👗✨', 'Educational content creator 🧠📚', 'Comedy and entertainment 😂🎭', 'Travel and adventure guide 🗺️✈️'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Influencer types align with personal interests and natural talents!',
+      category: 'social-identity',
+      subcategory: 'Influencer Type'
+    },
+    {
+      id: 'social_005',
+      question: 'Your social media pet peeve is...',
+      options: ['Fake positivity and facades 🙄', 'Oversharing personal drama 😬', 'Constant self-promotion 📢', 'Poor photo quality 📸'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'What annoys us online often reflects our own values and standards!', 
+      category: 'social-identity',
+      subcategory: 'Social Vibe'
+    }
+  ],
+  'trend-vibes': [
+    {
+      id: 'trend_001',
+      question: 'What fashion trend made a major comeback in 2024?',
+      options: ['90s grunge', 'Y2K futurism', '70s bohemian', '80s neon'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Y2K fashion returned as Gen Z embraced millennium nostalgia!',
+      category: 'trend-vibes',
+      subcategory: 'Fashion'
+    },
+    {
+      id: 'trend_002',
+      question: 'Which local trend started in your area first?',
+      options: ['Food truck festivals 🚚🍕', 'Pop-up markets 🛍️✨', 'Rooftop events 🏢🎉', 'Community gardens 🌱🏡'],
+      correct_answer: -1,
+      difficulty: 'beginner',
+      fun_fact: 'Local trends often reflect community values and urban culture!',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_003',
+      question: 'The biggest wellness trend among youth is...',
+      options: ['Mental health awareness 🧠💚', 'Fitness challenges 💪🏃', 'Mindful eating 🥗🧘', 'Digital detox 📱🚫'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Gen Z prioritizes mental health more than any previous generation!',
+      category: 'trend-vibes',
+      subcategory: 'Wellness'
+    },
+    {
+      id: 'trend_004',
+      question: 'Which beauty trend defines Gen Z?',
+      options: ['Heavy contouring', 'Natural "no-makeup" look', 'Bold colorful eyeshadow', 'Instagram brows'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Gen Z embraces authentic beauty and self-acceptance over perfection!',
+      category: 'trend-vibes',
+      subcategory: 'Beauty'
+    },
+    {
+      id: 'trend_005',
+      question: 'The most influential trend platform for youth is...',
+      options: ['Instagram', 'TikTok', 'Pinterest', 'Twitter'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'TikTok\'s algorithm creates and spreads trends faster than any other platform!',
+      category: 'trend-vibes',
+      subcategory: 'Digital'
+    }
+  ],
+  'future-simulations': [
+    {
+      id: 'future_001',
+      question: 'In 2030, the most popular career will be...',
+      options: ['AI Ethicist 🤖⚖️', 'Climate Engineer 🌍🔧', 'Virtual Reality Designer 🥽🎨', 'Space Tourism Guide 🚀✨'],
+      correct_answer: -1,
+      difficulty: 'intermediate',
+      fun_fact: 'Future careers will blend technology, sustainability, and human creativity!',
+      category: 'future-simulations',
+      subcategory: 'Career Predictions'
+    },
+    {
+      id: 'future_002',
+      question: 'By 2035, education will primarily happen through...',
+      options: ['Traditional classrooms 🏫', 'Virtual reality learning 🥽📚', 'AI tutors 🤖👨‍🏫', 'Global online communities 🌐👥'],
+      correct_answer: -1,
+      difficulty: 'intermediate',
+      fun_fact: 'Future education will be personalized, immersive, and globally connected!',
+      category: 'future-simulations',
+      subcategory: 'Education Future'
+    },
+    {
+      id: 'future_003',
+      question: 'The next major social platform will focus on...',
+      options: ['Audio conversations 🎙️', 'Augmented reality 📱🔮', 'Brain-computer interfaces 🧠💻', 'Holographic meetings 👻💬'],
+      correct_answer: -1,
+      difficulty: 'advanced',
+      fun_fact: 'Future social platforms will blur the lines between digital and physical reality!',
+      category: 'future-simulations',
+      subcategory: 'Technology Trends'
+    },
+    {
+      id: 'future_004',
+      question: 'In your future city, transportation will be...',
+      options: ['Flying cars 🚗✈️', 'Teleportation pods 🌀⚡', 'Underground hyperloops 🚄🌍', 'Personal drones 🚁👤'],
+      correct_answer: -1,
+      difficulty: 'intermediate',
+      fun_fact: 'Future transportation will prioritize speed, sustainability, and automation!',
+      category: 'future-simulations',
+      subcategory: 'Urban Planning'
+    },
+    {
+      id: 'future_005',
+      question: 'The biggest challenge your generation will solve is...',
+      options: ['Climate change 🌍💚', 'Space colonization 🚀🪐', 'Artificial general intelligence 🤖🧠', 'Universal basic income 💰🌐'],
+      correct_answer: -1,
+      difficulty: 'advanced',
+      fun_fact: 'Gen Z is positioned to tackle humanity\'s greatest challenges with innovation!',
+      category: 'future-simulations',
+      subcategory: 'Global Solutions'
+    }
+  ],
   programming: [
     // Beginner Level
     {
