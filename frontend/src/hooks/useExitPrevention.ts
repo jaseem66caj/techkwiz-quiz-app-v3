@@ -24,8 +24,11 @@ export function useExitPrevention({
 
   // Browser beforeunload event handler
   const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
+    console.log('🔧 beforeunload event triggered, isActive:', preventionActiveRef.current)
     if (!preventionActiveRef.current) return
 
+    console.log('🚨 beforeunload: Preventing exit and calling onExitAttempt')
+    
     // Modern browsers ignore the custom message and show their own
     event.preventDefault()
     event.returnValue = customMessage
@@ -38,8 +41,11 @@ export function useExitPrevention({
 
   // Back button / navigation handler
   const handlePopState = useCallback((event: PopStateEvent) => {
+    console.log('🔧 popstate event triggered, isActive:', preventionActiveRef.current)
     if (!preventionActiveRef.current) return
 
+    console.log('🚨 popstate: Preventing navigation and calling onExitAttempt')
+    
     // Prevent navigation
     window.history.pushState(null, '', window.location.pathname)
     
@@ -61,6 +67,7 @@ export function useExitPrevention({
     )
 
     if (isExitShortcut) {
+      console.log('🚨 keyboard shortcut detected:', event.key, 'calling onExitAttempt')
       event.preventDefault()
       onExitAttemptRef.current()
     }
