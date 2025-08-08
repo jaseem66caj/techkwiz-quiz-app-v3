@@ -204,11 +204,43 @@ export default function QuizPage({ params }: QuizPageProps) {
   const fetchSequentialQuestions = async (catId: string) => {
     try {
       setLoading(true)
-      const questionsData = await apiRequestJson(`/api/quiz/sequential-questions/${catId}`)
       
-      if (questionsData && questionsData.length === 5) {
-        setQuizData(questionsData)
-        console.log('✅ QuizPage: 5 sequential questions loaded successfully')
+      // Try to fetch from API first
+      try {
+        const questionsData = await apiRequestJson(`/api/quiz/sequential-questions/${catId}`)
+        
+        if (questionsData && questionsData.length === 5) {
+          setQuizData(questionsData)
+          console.log('✅ QuizPage: 5 sequential questions loaded successfully from API')
+          setLoading(false)
+          
+          // Start timer when questions are loaded and timer is enabled
+          if (timerConfig?.timer_enabled) {
+            setTimeout(() => {
+              setIsTimerActive(true)
+            }, 500)
+          }
+          
+          return questionsData
+        } else {
+          throw new Error(`Expected 5 questions, got ${questionsData?.length || 0}`)
+        }
+      } catch (apiError) {
+        console.log('⚠️ QuizPage: API failed for questions, falling back to local data...')
+        
+        // Fallback to local data
+        const { QUIZ_QUESTIONS } = await import('../../../data/quizDatabase')
+        
+        const categoryQuestions = Object.values(QUIZ_QUESTIONS).filter(
+          (q: any) => q.category === catId
+        ).slice(0, 5) // Take first 5 questions
+        
+        if (categoryQuestions.length === 0) {
+          throw new Error(`No questions found for category ${catId} in local database`)
+        }
+        
+        setQuizData(categoryQuestions)
+        console.log(`✅ QuizPage: ${categoryQuestions.length} questions loaded successfully from local data`)
         setLoading(false)
         
         // Start timer when questions are loaded and timer is enabled
@@ -218,9 +250,7 @@ export default function QuizPage({ params }: QuizPageProps) {
           }, 500)
         }
         
-        return questionsData
-      } else {
-        throw new Error(`Expected 5 questions, got ${questionsData?.length || 0}`)
+        return categoryQuestions
       }
     } catch (error) {
       console.error('❌ QuizPage: Error loading sequential questions:', error)
