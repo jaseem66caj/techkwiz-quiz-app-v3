@@ -52,7 +52,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
 
   const handleLogin = (user: any) => {
     dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setIsAuthModalOpen(false)
+    setShowAuthModal(false)
   }
 
   const handleLogout = () => {
