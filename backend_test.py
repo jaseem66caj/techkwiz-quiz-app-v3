@@ -2269,11 +2269,11 @@ def main():
     try:
         tester = BackendTester()
         
-        # Run timer implementation tests as requested
-        passed, failed = tester.run_timer_implementation_tests()
+        # Run new endpoints tests as requested in review
+        success = tester.run_new_endpoints_tests()
         
         # Return appropriate exit code
-        sys.exit(0 if failed == 0 else 1)
+        sys.exit(0 if success else 1)
         
     except Exception as e:
         print(f"❌ CRITICAL ERROR: {str(e)}")
