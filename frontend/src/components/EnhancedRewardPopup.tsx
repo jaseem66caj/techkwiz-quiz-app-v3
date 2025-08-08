@@ -39,20 +39,25 @@ export function EnhancedRewardPopup({
   const [config, setConfig] = useState<RewardConfig | null>(null)
   const [sparkles, setSparkles] = useState<Array<{id: number, x: number, y: number}>>([])
 
-  // Fetch reward configuration
+  // Fetch reward configuration with improved error handling
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-        const response = await fetch(`${backendUrl}/api/quiz/rewarded-config`)
-        if (response.ok) {
-          const configData = await response.json()
-          setConfig(configData)
-        }
+        const configData = await apiRequestJson('/api/quiz/rewarded-config')
+        setConfig(configData)
+        console.log('✅ EnhancedRewardPopup: Config loaded successfully:', configData)
       } catch (error) {
-        console.error('Failed to fetch reward config:', error)
+        console.error('❌ EnhancedRewardPopup: Failed to fetch config:', error)
+        // Set default config on error
+        setConfig({
+          coin_reward: 100,
+          is_active: true,
+          show_during_quiz: true,
+          trigger_after_questions: 1
+        })
       }
     }
+    
     fetchConfig()
   }, [])
 
