@@ -164,7 +164,7 @@ export function NewRewardPopup({
     }, 5000)
   }
 
-  const handleWatchAgain = () => {
+  const handleWatchAgain = async () => {
     if (!onWatchAgain) return
     setIsWatchingAd(true)
     setCountdown(5)
