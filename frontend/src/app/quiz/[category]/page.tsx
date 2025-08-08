@@ -595,6 +595,9 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      {/* Social Proof Banner */}
+      <SocialProofBanner position="top" variant="compact" showLive={true} />
+      
       <Navigation />
       
       <div className="container mx-auto px-4 pt-24 pb-8">
