@@ -114,35 +114,10 @@ export default function QuizPage({ params }: QuizPageProps) {
 
   const fetchTimerConfig = async (catId: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-      console.log('🔧 QuizPage: Fetching timer config from:', `${backendUrl}/api/quiz/categories/${catId}/timer-config`)
-      
-      const response = await fetch(`${backendUrl}/api/quiz/categories/${catId}/timer-config`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(10000)
-      })
-      
-      if (response.ok) {
-        const timerData = await response.json()
-        setTimerConfig(timerData)
-        console.log('✅ QuizPage: Timer config loaded successfully:', timerData)
-        return timerData
-      } else {
-        console.error('❌ QuizPage: Timer config API response not OK:', response.status, response.statusText)
-        // Use default timer settings
-        const defaultConfig = {
-          timer_enabled: true,
-          timer_seconds: 30,
-          show_timer_warning: true,
-          auto_advance_on_timeout: true,
-          show_correct_answer_on_timeout: true
-        }
-        setTimerConfig(defaultConfig)
-        return defaultConfig
-      }
+      const timerData = await apiRequestJson(`/api/quiz/categories/${catId}/timer-config`)
+      setTimerConfig(timerData)
+      console.log('✅ QuizPage: Timer config loaded successfully:', timerData)
+      return timerData
     } catch (error) {
       console.error('❌ QuizPage: Failed to fetch timer config:', error)
       // Use default timer settings on error
