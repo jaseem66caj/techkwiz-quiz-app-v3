@@ -229,11 +229,17 @@ export default function QuizPage({ params }: QuizPageProps) {
     }
   }
 
-  // Fetch between-questions ad slots
+  // Fetch between-questions ad slots with better error handling
   const fetchAdSlot = async () => {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'
-      const response = await fetch(`${backendUrl}/api/quiz/between-questions-ads`)
+      const response = await fetch(`${backendUrl}/api/quiz/between-questions-ads`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(5000)
+      })
       
       if (response.ok) {
         const adSlots = await response.json()
@@ -241,11 +247,13 @@ export default function QuizPage({ params }: QuizPageProps) {
           // Get random ad slot for this question
           const randomAd = adSlots[Math.floor(Math.random() * adSlots.length)]
           setCurrentAdSlot(randomAd.ad_code || '')
+          console.log('✅ QuizPage: Ad slot fetched successfully')
           return randomAd
         }
       }
+      console.log('ℹ️ QuizPage: No ad slots available')
     } catch (error) {
-      console.error('Error fetching ad slot:', error)
+      console.error('❌ QuizPage: Error fetching ad slot:', error)
     }
     return null
   }
