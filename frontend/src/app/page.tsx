@@ -192,11 +192,6 @@ export default function HomePage() {
   if (state.loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        {/* TESTING DEBUG - This should prove the code is updating */}
-        <div style={{ position: 'fixed', top: 0, left: 0, background: 'red', color: 'white', zIndex: 9999, padding: '10px' }}>
-          CODE UPDATED - NO HEADER ELEMENTS
-        </div>
-        
         {/* Minimal Navigation - No hamburger menu, no coin counter, no user info */}
         <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
           <div className="px-4 py-3">
