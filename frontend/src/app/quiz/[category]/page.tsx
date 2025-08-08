@@ -92,6 +92,7 @@ export default function QuizPage({ params }: QuizPageProps) {
     params.then(resolvedParams => {
       setCategoryId(resolvedParams.category)
       fetchCategoryInfo(resolvedParams.category)
+      fetchTimerConfig(resolvedParams.category)
       fetchSequentialQuestions(resolvedParams.category)
     })
   }, [])
