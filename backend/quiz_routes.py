@@ -156,7 +156,7 @@ async def get_rewarded_popup_config_for_category(category_id: str):
 
     if not config:
         # Get category name for better identification
-        category = await database.categories.find_one({"id": category_id})
+        category = await database.quiz_categories.find_one({"id": category_id})
         category_name = category["name"] if category else f"Category {category_id}"
 
         # Return default config if none exists

@@ -1,4 +1,4 @@
-// File: /app/frontend/src/app/start/page.tsx
+// File: /Users/jaseem/Documents/GitHub/Techkwiz-v7/frontend/src/app/start/page.tsx
 import * as entry from '../../../../src/app/start/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
