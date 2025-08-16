@@ -8,6 +8,7 @@ import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
 import { apiRequestJson } from '../../../utils/api'
+import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
 interface QuizQuestion {
@@ -15,15 +16,21 @@ interface QuizQuestion {
   question: string
   options: string[]
   correct_answer: number
-  difficulty?: string
-  fun_fact?: string
-  category?: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  question_type?: string
+  fun_fact: string
+  category: string
+  subcategory: string
+  emoji_clue?: string
+  visual_options?: string[]
+  personality_trait?: string
+  prediction_year?: string
 }
 
-export default function QuizPage({ params }: { params: { category: string } }) {
+export default function QuizPage({ params }: { params: Promise<{ category: string }> }) {
   const { dispatch } = useApp()
   const router = useRouter()
-  const categoryId = params.category
+  const [categoryId, setCategoryId] = useState<string>('')
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -40,8 +47,17 @@ export default function QuizPage({ params }: { params: { category: string } }) {
   const [timerSeconds, setTimerSeconds] = useState(30)
   const [showTimeUp, setShowTimeUp] = useState(false)
 
+  // Resolve params Promise
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setCategoryId(resolvedParams.category)
+    })
+  }, [params])
+
   // Load config + questions
   useEffect(() => {
+    if (!categoryId) return
+
     const init = async () => {
       try {
         try {
@@ -54,9 +70,38 @@ export default function QuizPage({ params }: { params: { category: string } }) {
         }
 
         try {
-          const data = await apiRequestJson<QuizQuestion[]>(`/api/quiz/sequential-questions/${categoryId}`)
-          setQuestions((data || []).slice(0, 5))
-        } catch {
+          // First try to load from admin dashboard
+          const adminQuestions = quizDataManager.getQuestionsByCategoryAndSection(categoryId, 'category')
+
+          if (adminQuestions.length >= 3) {
+            // Convert admin format to quiz format
+            const convertedQuestions = adminQuestions.slice(0, 5).map(q => ({
+              id: q.id,
+              question: q.question,
+              options: q.options,
+              correct_answer: q.correctAnswer,
+              difficulty: q.difficulty,
+              fun_fact: q.funFact || '',
+              category: q.category,
+              subcategory: q.subcategory || categoryId
+            }))
+            setQuestions(convertedQuestions)
+            console.log(`✅ Using admin questions for category: ${categoryId}`)
+          } else {
+            // Fallback to API or quiz database
+            try {
+              const data = await apiRequestJson<QuizQuestion[]>(`/api/quiz/sequential-questions/${categoryId}`)
+              setQuestions((data || []).slice(0, 5))
+              console.log(`✅ Using API questions for category: ${categoryId}`)
+            } catch {
+              const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
+              const fallback = (QUIZ_DATABASE as any)[categoryId] || []
+              setQuestions(fallback.slice(0, 5))
+              console.log(`⚠️ Using fallback questions for category: ${categoryId}`)
+            }
+          }
+        } catch (error) {
+          console.error('Error loading questions:', error)
           const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
           const fallback = (QUIZ_DATABASE as any)[categoryId] || []
           setQuestions(fallback.slice(0, 5))

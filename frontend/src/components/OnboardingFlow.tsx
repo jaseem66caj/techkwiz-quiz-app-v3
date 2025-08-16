@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useApp } from '../app/providers'
+import { quizDataManager } from '../utils/quizDataManager'
 
 interface OnboardingQuestion {
   id: string
@@ -24,9 +25,49 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   const [totalCoinsEarned, setTotalCoinsEarned] = useState(0)
   const [showReward, setShowReward] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
+  const [onboardingQuestions, setOnboardingQuestions] = useState<OnboardingQuestion[]>([])
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
 
-  // Onboarding questions - simple, engaging, high success rate
-  const onboardingQuestions: OnboardingQuestion[] = [
+  // Load onboarding questions from admin dashboard
+  useEffect(() => {
+    const loadOnboardingQuestions = () => {
+      try {
+        setIsLoadingQuestions(true)
+
+        // Get onboarding section questions from admin dashboard
+        const adminQuestions = quizDataManager.getQuestionsBySection('onboarding')
+
+        if (adminQuestions.length >= 2) {
+          // Convert admin format to onboarding format
+          const convertedQuestions: OnboardingQuestion[] = adminQuestions.slice(0, 2).map(q => ({
+            id: q.id,
+            question: q.question,
+            options: q.options,
+            correct_answer: q.correctAnswer,
+            reward_coins: q.rewardCoins || 150,
+            fun_fact: q.funFact || "Great job!"
+          }))
+
+          setOnboardingQuestions(convertedQuestions)
+          console.log('✅ Using admin onboarding questions')
+        } else {
+          // Use fallback questions
+          setOnboardingQuestions(getFallbackOnboardingQuestions())
+          console.log('⚠️ Using fallback onboarding questions')
+        }
+      } catch (error) {
+        console.error('Error loading onboarding questions:', error)
+        setOnboardingQuestions(getFallbackOnboardingQuestions())
+      } finally {
+        setIsLoadingQuestions(false)
+      }
+    }
+
+    loadOnboardingQuestions()
+  }, [])
+
+  // Fallback onboarding questions
+  const getFallbackOnboardingQuestions = (): OnboardingQuestion[] => [
     {
       id: 'onboard-1',
       question: "Which tech company created the iPhone?",
@@ -75,6 +116,40 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
         }
       }, 2000)
     }, 1000)
+  }
+
+  // Show loading state while questions are being loaded
+  if (isLoadingQuestions) {
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-blue-800/90 to-purple-900/90 backdrop-blur-md rounded-2xl p-8 max-w-md mx-auto border border-blue-400/30 text-center"
+        >
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-400 mx-auto mb-4"></div>
+          <h2 className="text-xl font-bold text-white mb-2">Loading Questions...</h2>
+          <p className="text-blue-100">Preparing your onboarding experience</p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  // Show message if no questions available
+  if (onboardingQuestions.length === 0) {
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-red-800/90 to-pink-900/90 backdrop-blur-md rounded-2xl p-8 max-w-md mx-auto border border-red-400/30 text-center"
+        >
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-white mb-2">No Questions Available</h2>
+          <p className="text-red-100">Please add onboarding questions in the admin dashboard</p>
+        </motion.div>
+      </div>
+    )
   }
 
   if (isCompleted) {

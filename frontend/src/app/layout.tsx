@@ -2,6 +2,7 @@
 
 import { Inter } from 'next/font/google'
 import { Providers } from './providers'
+import { GoogleAnalytics } from '@/components/GoogleAnalytics'
 import './globals.css'
 import { usePathname } from 'next/navigation'
 
@@ -14,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className={inter.className}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
@@ -25,12 +29,13 @@ export default function RootLayout({
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isAdminPage = pathname?.startsWith('/admin')
+  // Check for both legacy admin routes and current jaseemadmin route
+  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/jaseemadmin')
 
   if (isAdminPage) {
-    // Full desktop layout for admin pages
+    // Full desktop layout for admin pages - no width constraints
     return (
-      <div style={{ width: '100vw', minHeight: '100vh', margin: 0, padding: 0 }}>
+      <div className="w-full min-h-screen">
         {children}
       </div>
     )

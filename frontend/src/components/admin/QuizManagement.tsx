@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import ConfirmationDialog from './v2/common/ConfirmationDialog';
 
 interface QuizCategory {
   id: string;
@@ -37,6 +38,12 @@ export default function QuizManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+
+  // Confirmation dialog states
+  const [showDeleteCategoryConfirm, setShowDeleteCategoryConfirm] = useState(false);
+  const [showDeleteQuestionConfirm, setShowDeleteQuestionConfirm] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
 
   const [newCategory, setNewCategory] = useState({
     name: '',
@@ -149,38 +156,64 @@ export default function QuizManagement() {
     }
   };
 
-  const handleDeleteCategory = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
-    
+  const handleDeleteCategory = (id: string) => {
+    setCategoryToDelete(id);
+    setShowDeleteCategoryConfirm(true);
+  };
+
+  const confirmDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/categories/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/categories/${categoryToDelete}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       });
-      
+
       if (response.ok) {
         fetchCategories();
       }
     } catch (error) {
       console.error('Error deleting category:', error);
+    } finally {
+      setShowDeleteCategoryConfirm(false);
+      setCategoryToDelete(null);
     }
   };
 
-  const handleDeleteQuestion = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this question?')) return;
-    
+  const cancelDeleteCategory = () => {
+    setShowDeleteCategoryConfirm(false);
+    setCategoryToDelete(null);
+  };
+
+  const handleDeleteQuestion = (id: string) => {
+    setQuestionToDelete(id);
+    setShowDeleteQuestionConfirm(true);
+  };
+
+  const confirmDeleteQuestion = async () => {
+    if (!questionToDelete) return;
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/questions/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/questions/${questionToDelete}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       });
-      
+
       if (response.ok) {
         fetchQuestions();
       }
     } catch (error) {
       console.error('Error deleting question:', error);
+    } finally {
+      setShowDeleteQuestionConfirm(false);
+      setQuestionToDelete(null);
     }
+  };
+
+  const cancelDeleteQuestion = () => {
+    setShowDeleteQuestionConfirm(false);
+    setQuestionToDelete(null);
   };
 
   const getQuestionCount = (categoryId: string) => {
@@ -639,6 +672,30 @@ export default function QuizManagement() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Delete Category Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showDeleteCategoryConfirm}
+        onConfirm={confirmDeleteCategory}
+        onCancel={cancelDeleteCategory}
+        title="Delete Category"
+        message="Are you sure you want to delete this category? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
+
+      {/* Delete Question Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showDeleteQuestionConfirm}
+        onConfirm={confirmDeleteQuestion}
+        onCancel={cancelDeleteQuestion}
+        title="Delete Question"
+        message="Are you sure you want to delete this question? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 }

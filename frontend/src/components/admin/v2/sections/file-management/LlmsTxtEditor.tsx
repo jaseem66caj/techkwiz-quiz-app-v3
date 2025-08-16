@@ -251,18 +251,10 @@ const LlmsTxtEditor: React.FC = () => {
   return (
     <FileEditor
       fileType={"llms.txt" as FileType}
-      content={content}
-      onContentChange={setContent}
+      initialContent={content}
       onSave={handleSave}
-      onRevert={handleRevert}
-      isModified={isModified}
-      lastSaved={lastSaved}
-      isLoading={isLoading}
-      error={error}
-      validateContent={validateContent}
-      language="text"
-      description="The llms.txt file specifies how AI language models should interact with your content, including training data preferences and access controls."
-      documentation="https://llmstxt.org/"
+      helpText="The llms.txt file specifies how AI language models should interact with your content, including training data preferences and access controls."
+      placeholder="Enter llms.txt content..."
     />
   )
 }

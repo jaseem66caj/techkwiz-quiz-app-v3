@@ -13,6 +13,8 @@ import { EnhancedCoinDisplay } from '../components/EnhancedCoinDisplay'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
 import { apiRequestJson } from '../utils/api'
+import { quizDataManager } from '../utils/quizDataManager'
+import { realTimeSyncService } from '../utils/realTimeSync'
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
@@ -39,6 +41,8 @@ export default function HomePage() {
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
   const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
   const [rewardConfig, setRewardConfig] = useState<any>(null)
+  const [quizQuestions, setQuizQuestions] = useState<any[]>([])
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
 
   // Exit prevention hook - activate during quiz
   const { disablePrevention } = useExitPrevention({
@@ -183,8 +187,133 @@ export default function HomePage() {
   const handleExitCancel = () => {
     setShowExitConfirmation(false)
   }
-  // Youth-focused quick start quiz data (after onboarding)
-  const quickStartQuiz = [
+
+  // Load questions from admin dashboard
+  const loadQuizQuestions = () => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    try {
+      setIsLoadingQuestions(true)
+
+      // Try to load from game sync data first
+      const gameSyncData = localStorage.getItem('game_quiz_data')
+      let questions = []
+
+      if (gameSyncData) {
+        questions = JSON.parse(gameSyncData)
+        console.log('📊 Loaded questions from game sync data:', questions.length)
+      } else {
+        // Fallback to admin data
+        try {
+          questions = quizDataManager.getQuestions() || []
+          console.log('📊 Loaded questions from admin data:', questions.length)
+        } catch (error) {
+          console.error('Error loading admin questions:', error)
+          questions = []
+        }
+      }
+
+      // Filter for homepage section questions first, then beginner difficulty
+      const homepageQuestions = questions.filter(q => q.section === 'homepage')
+      const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
+
+      // Prefer homepage section questions, fallback to beginner questions
+      let questionsToUse = homepageQuestions.length >= 3 ? homepageQuestions : beginnerQuestions
+
+      // If we have admin questions, use them; otherwise use fallback
+      if (questionsToUse.length >= 3) {
+        // Convert admin format to quiz format
+        const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
+          id: q.id,
+          question: q.question,
+          options: q.options,
+          correct_answer: q.correctAnswer,
+          difficulty: q.difficulty,
+          fun_fact: q.funFact || "Thanks for playing!",
+          category: q.category,
+          subcategory: q.subcategory || q.category
+        }))
+        setQuizQuestions(convertedQuestions)
+        console.log(`✅ Using ${homepageQuestions.length >= 3 ? 'homepage section' : 'beginner'} questions for quiz`)
+      } else {
+        // Use fallback questions
+        setQuizQuestions(getFallbackQuestions())
+        console.log('⚠️ Using fallback questions (no admin questions available)')
+      }
+    } catch (error) {
+      console.error('❌ Error loading quiz questions:', error)
+      setQuizQuestions(getFallbackQuestions())
+    } finally {
+      setIsLoadingQuestions(false)
+    }
+  }
+
+  // Fallback questions if admin data is not available
+  const getFallbackQuestions = () => [
+    {
+      id: 'fallback-1',
+      question: "Which social media platform is known for short-form videos?",
+      options: ["Instagram", "TikTok", "Twitter", "Snapchat"],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: "TikTok was originally called Musical.ly!",
+      category: "social-media",
+      subcategory: "social-media"
+    },
+    {
+      id: 'fallback-2',
+      question: "What does 'AI' stand for?",
+      options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Algorithmic Integration"],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: "The term 'Artificial Intelligence' was first coined in 1956!",
+      category: "technology",
+      subcategory: "technology"
+    },
+    {
+      id: 'fallback-3',
+      question: "Which company created the iPhone?",
+      options: ["Google", "Samsung", "Apple", "Microsoft"],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: "The first iPhone was released in 2007!",
+      category: "technology",
+      subcategory: "technology"
+    }
+  ]
+  // Load questions on component mount and set up sync
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+
+    loadQuizQuestions()
+
+    // Set up real-time sync listener
+    const handleQuizSync = () => {
+      console.log('🔄 Quiz data synced, reloading questions...')
+      loadQuizQuestions()
+    }
+
+    try {
+      realTimeSyncService.addEventListener('quiz_updated', handleQuizSync)
+    } catch (error) {
+      console.error('Error setting up quiz sync listener:', error)
+    }
+
+    return () => {
+      try {
+        realTimeSyncService.removeEventListener('quiz_updated', handleQuizSync)
+      } catch (error) {
+        console.error('Error removing quiz sync listener:', error)
+      }
+    }
+  }, [])
+
+  // Use dynamic questions or fallback
+  const quickStartQuiz = quizQuestions.length > 0 ? quizQuestions : [
     {
       id: 'quick-0',
       question: "Your vibe check: Pick your aesthetic",
@@ -304,7 +433,7 @@ export default function HomePage() {
   }
 
   // Show loading state
-  if (state.loading) {
+  if (state.loading || isLoadingQuestions) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         {/* Minimal Navigation - No hamburger menu, no coin counter, no user info */}
@@ -321,7 +450,14 @@ export default function HomePage() {
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">Loading TechKwiz...</p>
+            <p className="text-white">
+              {isLoadingQuestions ? 'Loading quiz questions...' : 'Loading TechKwiz...'}
+            </p>
+            {isLoadingQuestions && (
+              <p className="text-blue-200 text-sm mt-2">
+                Syncing with admin dashboard...
+              </p>
+            )}
           </div>
         </main>
       </div>
@@ -423,6 +559,28 @@ export default function HomePage() {
             )}
           </motion.div>
           
+          {/* Sync Status Indicator */}
+          <div className="w-full max-w-md mb-4">
+            <div className="bg-gray-800/30 backdrop-blur-sm p-3 rounded-lg border border-white/10">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    quizQuestions.length > 0 ? 'bg-green-400' : 'bg-yellow-400'
+                  }`}></div>
+                  <span className="text-blue-200">
+                    {quizQuestions.length > 0
+                      ? `${quizQuestions.length} questions loaded from admin`
+                      : 'Using fallback questions'
+                    }
+                  </span>
+                </div>
+                <span className="text-gray-400">
+                  {realTimeSyncService.isGameInSync() ? '🔄 Synced' : '⚠️ Out of sync'}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Quiz Interface */}
           <div className="w-full max-w-md">
             <EnhancedQuizInterface

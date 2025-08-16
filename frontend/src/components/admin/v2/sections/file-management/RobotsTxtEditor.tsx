@@ -194,18 +194,10 @@ const RobotsTxtEditor: React.FC = () => {
   return (
     <FileEditor
       fileType={"robots.txt" as FileType}
-      content={content}
-      onContentChange={setContent}
+      initialContent={content}
       onSave={handleSave}
-      onRevert={handleRevert}
-      isModified={isModified}
-      lastSaved={lastSaved}
-      isLoading={isLoading}
-      error={error}
-      validateContent={validateContent}
-      language="text"
-      description="The robots.txt file tells search engine crawlers which pages or files they can or can't request from your site."
-      documentation="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt"
+      helpText="The robots.txt file tells search engine crawlers which pages or files they can or can't request from your site."
+      placeholder="Enter robots.txt content..."
     />
   )
 }
