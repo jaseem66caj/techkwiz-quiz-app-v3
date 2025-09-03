@@ -27,8 +27,17 @@ export default function RootLayout({
   )
 }
 
+import { AchievementNotification } from '@/components/AchievementNotification';
+import { useApp } from './providers';
+
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const { state, dispatch } = useApp();
+
+  const handleCloseNotification = () => {
+    dispatch({ type: 'HIDE_NOTIFICATION' });
+  };
+
   // Check for both legacy admin routes and current jaseemadmin route
   const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/jaseemadmin')
 
@@ -37,6 +46,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
     return (
       <div className="w-full min-h-screen">
         {children}
+        <AchievementNotification achievement={state.notification} onClose={handleCloseNotification} />
       </div>
     )
   }
@@ -47,6 +57,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
       {/* Mobile-web container for desktop */}
       <div className="mx-auto max-w-sm sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm 2xl:max-w-sm min-h-screen bg-gray-900/50 backdrop-blur-sm border-x border-white/10">
         {children}
+        <AchievementNotification achievement={state.notification} onClose={handleCloseNotification} />
       </div>
     </div>
   )

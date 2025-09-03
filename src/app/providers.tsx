@@ -3,12 +3,13 @@
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
 import { 
   getCurrentUser, 
-  saveUserToStorage, 
+  saveUser, 
   updateUserCoins, 
   addQuizResult,
-  isAuthenticated,
   type User 
 } from '../utils/auth'
+import { getUnlockedAchievements } from '../utils/achievements';
+import { Achievement } from '../types/reward';
 
 // Types
 interface AppState {
@@ -17,6 +18,7 @@ interface AppState {
   currentQuiz: any
   quizHistory: any[]
   loading: boolean
+  notification: Achievement | null
 }
 
 interface AppContextType {
@@ -31,6 +33,7 @@ const initialState: AppState = {
   currentQuiz: null,
   quizHistory: [],
   loading: true,
+  notification: null,
 }
 
 // Context
@@ -62,21 +65,16 @@ function appReducer(state: AppState, action: any) {
     case 'UPDATE_COINS':
       if (!state.user) return state
       
-      // Calculate new coin amount
       const currentCoins = state.user.coins
       let newCoins = currentCoins + action.payload
       
-      // Never go below 0 coins
       newCoins = Math.max(0, newCoins)
-      
-      // Cap coins at reasonable maximum (500 coins max)
       newCoins = Math.min(500, newCoins)
       
       const updatedUser = { ...state.user, coins: newCoins }
       
-      // Save to session storage (not localStorage)
-      saveUserToStorage(updatedUser)
-      updateUserCoins(updatedUser.id, newCoins)
+      saveUser(updatedUser)
+      updateUserCoins(newCoins)
       
       console.log(`💰 COINS UPDATE: ${currentCoins} + ${action.payload} = ${newCoins}`)
       
@@ -86,10 +84,20 @@ function appReducer(state: AppState, action: any) {
       }
     
     case 'START_QUIZ':
+      if (!state.user) return state;
+      const { quiz, entryFee } = action.payload;
+      if (state.user.coins < entryFee) {
+        // Or handle this in the UI
+        return state;
+      }
+      const userAfterFee = { ...state.user, coins: state.user.coins - entryFee };
+      saveUser(userAfterFee);
+      updateUserCoins(userAfterFee.coins);
       return {
         ...state,
-        currentQuiz: action.payload,
-      }
+        user: userAfterFee,
+        currentQuiz: quiz,
+      };
     
     case 'END_QUIZ':
       if (!state.user) return state
@@ -99,22 +107,29 @@ function appReducer(state: AppState, action: any) {
         ...state.user,
         totalQuizzes: state.user.totalQuizzes + 1,
         correctAnswers: state.user.correctAnswers + quizResult.correctAnswers,
+        streak: quizResult.correctAnswers === quizResult.totalQuestions ? state.user.streak + 1 : 0
       }
       
-      // Award coins based on quiz performance (25 coins per correct answer)
-      const coinsEarned = quizResult.coinsEarned || 0
+      const coinsEarned = quizResult.correctAnswers * 50;
       updatedUserWithQuiz.coins = state.user.coins + coinsEarned
       
-      console.log(`🎉 Quiz completed! Earned ${coinsEarned} coins (${quizResult.correctAnswers} correct × 25)`)
+      console.log(`🎉 Quiz completed! Earned ${coinsEarned} coins (${quizResult.correctAnswers} correct × 50)`)
       
-      // Calculate new level (every 5 quizzes)
       const newLevel = Math.floor(updatedUserWithQuiz.totalQuizzes / 5) + 1
       updatedUserWithQuiz.level = newLevel
       
-      // Save quiz result and user data (including coins)
-      addQuizResult(state.user.id, quizResult)
-      saveUserToStorage(updatedUserWithQuiz)
-      updateUserCoins(updatedUserWithQuiz.id, updatedUserWithQuiz.coins)
+      const unlockedAchievements = getUnlockedAchievements(state.user)
+      const newlyUnlocked = getUnlockedAchievements(updatedUserWithQuiz).filter(
+        unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
+      );
+
+      if (newlyUnlocked.length > 0) {
+        // The component will dispatch the NEW_ACHIEVEMENT action
+      }
+
+      addQuizResult(quizResult)
+      saveUser(updatedUserWithQuiz)
+      updateUserCoins(updatedUserWithQuiz.coins)
       
       return {
         ...state,
@@ -128,6 +143,12 @@ function appReducer(state: AppState, action: any) {
         ...state,
         user: initialState.user,
       }
+
+    case 'NEW_ACHIEVEMENT':
+      return { ...state, notification: action.payload };
+
+    case 'HIDE_NOTIFICATION':
+      return { ...state, notification: null };
     
     default:
       return state
@@ -138,29 +159,24 @@ function appReducer(state: AppState, action: any) {
 export function Providers({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
-  // Initialize user from localStorage on app start
   useEffect(() => {
     const initializeAuth = async () => {
       console.log('🚀 Initializing auth with session-based coins...')
       
       try {
-        // Check if user is authenticated
         const currentUser = getCurrentUser()
         
         if (currentUser) {
-          // User exists, load with session-based coins (will be 0 if new session)
           console.log(`👤 Found user: ${currentUser.name} with ${currentUser.coins} session coins`)
           dispatch({ type: 'LOGIN_SUCCESS', payload: currentUser })
         } else {
           console.log('👤 No authenticated user found - will let page components handle guest creation and onboarding')
-          // Don't auto-create guest user here - let homepage handle onboarding flow
         }
       } catch (error) {
         console.error('Auth initialization error:', error)
         dispatch({ type: 'SET_LOADING', payload: false })
       }
       
-      // Always ensure loading is false after auth check
       dispatch({ type: 'SET_LOADING', payload: false })
     }
 

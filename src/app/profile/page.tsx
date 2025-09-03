@@ -12,85 +12,25 @@ import { seoConfig } from '../../utils/seo'
 export default function ProfilePage() {
   const router = useRouter()
   const { state, dispatch } = useApp()
-  const [showAuthModal, setShowAuthModal] = useState(false)
   const [activeTab, setActiveTab] = useState('stats')
 
-  // SEO optimization
   useEffect(() => {
-    document.title = seoConfig.profile.title
-    
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', seoConfig.profile.description)
+    if (!state.user) {
+      const guestUser = {
+        id: `guest_${Date.now()}`,
+        name: 'Guest',
+        email: 'guest@techkwiz.com',
+        coins: 0,
+        level: 1,
+        totalQuizzes: 0,
+        correctAnswers: 0,
+        joinDate: new Date().toISOString(),
+        quizHistory: [],
+        streak: 0
+      };
+      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser });
     }
-    
-    let metaKeywords = document.querySelector('meta[name="keywords"]')
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta')
-      metaKeywords.setAttribute('name', 'keywords')
-      document.head.appendChild(metaKeywords)
-    }
-    metaKeywords.setAttribute('content', seoConfig.profile.keywords)
-  }, [])
-
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
-  }
-
-  // Show loading state
-  if (state.loading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="glass-effect p-8 rounded-2xl text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">Loading profile...</p>
-          </div>
-        </main>
-      </div>
-    )
-  }
-
-  // Not authenticated - show login prompt
-  if (!state.isAuthenticated || !state.user) {
-    return (
-      <>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-          <Navigation />
-          
-          <main className="flex-1 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="glass-effect p-8 rounded-2xl text-center max-w-md"
-            >
-              <div className="text-6xl mb-6">👤</div>
-              <h1 className="text-2xl font-bold text-white mb-4">
-                Profile Access
-              </h1>
-              <p className="text-blue-200 mb-6">
-                Please login to view your profile and quiz statistics.
-              </p>
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors"
-              >
-                Login to View Profile
-              </button>
-            </motion.div>
-          </main>
-        </div>
-
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onSuccess={handleLogin}
-        />
-      </>
-    )
-  }
+  }, [state.user, dispatch])
 
   const user = state.user
 
@@ -101,36 +41,20 @@ export default function ProfilePage() {
   const level = user.level || 1
 
   // Mock achievements
-  const achievements = [
-    { 
-      id: 'first_quiz', 
-      name: 'First Steps', 
-      description: 'Complete your first quiz',
-      icon: '🎯',
-      unlocked: totalQuizzes >= 1
-    },
-    { 
-      id: 'quiz_master', 
-      name: 'Quiz Master', 
-      description: 'Complete 10 quizzes',
-      icon: '🏆',
-      unlocked: totalQuizzes >= 10
-    },
-    { 
-      id: 'coin_collector', 
-      name: 'Coin Collector', 
-      description: 'Earn 1000 coins',
-      icon: '🪙',
-      unlocked: user.coins >= 1000
-    },
-    { 
-      id: 'tech_expert', 
-      name: 'Tech Expert', 
-      description: 'Answer 100 questions correctly',
-      icon: '💻',
-      unlocked: correctAnswers >= 100
-    }
-  ]
+  import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements';
+
+// ... (imports)
+
+export default function ProfilePage() {
+  // ... (state and effects)
+
+  const allAchievements = getAllAchievements();
+  const unlockedAchievements = getUnlockedAchievements(user);
+
+  const achievements = allAchievements.map(achievement => ({
+    ...achievement,
+    unlocked: unlockedAchievements.some(unlocked => unlocked.id === achievement.id)
+  }));
 
   const recentActivity = user.quizHistory?.slice(-5) || []
 
