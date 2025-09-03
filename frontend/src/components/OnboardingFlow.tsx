@@ -43,9 +43,9 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
             id: q.id,
             question: q.question,
             options: q.options,
-            correct_answer: q.correctAnswer,
-            reward_coins: q.rewardCoins || 150,
-            fun_fact: q.funFact || "Great job!"
+            correct_answer: (q as any).correct_answer || 0,
+            reward_coins: 150,
+            fun_fact: (q as any).fun_fact || "Great job!"
           }))
 
           setOnboardingQuestions(convertedQuestions)

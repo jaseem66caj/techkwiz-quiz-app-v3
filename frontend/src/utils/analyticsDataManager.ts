@@ -6,18 +6,47 @@ import {
   TimeRange,
   CategoryPerformance,
   DifficultyDistribution,
-  TimeBasedPerformance,
-  AchievementStats,
-  CoinDistribution,
-  RewardTrend,
-  DeviceBreakdown,
-  SessionDistribution,
-  UserJourneyStep,
-  ExportOptions,
-  ANALYTICS_STORAGE_KEYS,
-  DEFAULT_TIME_RANGES,
-  DEFAULT_CATEGORIES
-} from '@/types/admin'
+  TimeBasedPerformance
+} from '@/types/analytics'
+
+// Storage keys
+const ANALYTICS_STORAGE_KEYS = {
+  DATA: 'admin_analytics_data',
+  CACHE: 'admin_analytics_cache',
+  SETTINGS: 'admin_analytics_settings'
+} as const
+
+// Default time ranges
+const DEFAULT_TIME_RANGES: TimeRange[] = [
+  { 
+    id: '7d', 
+    name: 'Last 7 days', 
+    days: 7,
+    startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date().toISOString()
+  },
+  { 
+    id: '30d', 
+    name: 'Last 30 days', 
+    days: 30,
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date().toISOString()
+  },
+  { 
+    id: '90d', 
+    name: 'Last 90 days', 
+    days: 90,
+    startDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date().toISOString()
+  }
+]
+
+// Default categories
+const DEFAULT_CATEGORIES = [
+  { id: 'movies', name: 'Movies' },
+  { id: 'social-media', name: 'Social Media' },
+  { id: 'influencers', name: 'Influencers' }
+]
 import { quizDataManager } from './quizDataManager'
 import { rewardDataManager } from './rewardDataManager'
 
@@ -165,7 +194,7 @@ class AnalyticsDataManager {
     const achievementsUnlocked = Math.floor(totalAchievements * activeUsers * 0.3) // 30% unlock rate
     
     // Generate coin distribution
-    const coinDistribution: CoinDistribution = {
+    const coinDistribution: any = {
       correct: Math.floor(totalCoinsEarned * 0.6), // 60% from correct answers
       incorrect: Math.floor(totalCoinsEarned * 0.2), // 20% from incorrect answers
       bonus: Math.floor(totalCoinsEarned * 0.15), // 15% from bonus questions
@@ -173,7 +202,7 @@ class AnalyticsDataManager {
     }
     
     // Generate reward trends (last 30 days)
-    const rewardTrends: RewardTrend[] = []
+    const rewardTrends: any[] = []
     for (let i = 29; i >= 0; i--) {
       const date = new Date()
       date.setDate(date.getDate() - i)
@@ -202,14 +231,14 @@ class AnalyticsDataManager {
     const totalSessions = Math.floor(Math.random() * 500) + 200
     
     // Generate device breakdown
-    const deviceTypes: DeviceBreakdown = {
+    const deviceTypes: any = {
       desktop: Math.floor(Math.random() * 40) + 30, // 30-70%
       mobile: Math.floor(Math.random() * 50) + 25, // 25-75%
       tablet: Math.floor(Math.random() * 20) + 5 // 5-25%
     }
     
     // Generate session distribution
-    const sessionDistribution: SessionDistribution[] = [
+    const sessionDistribution: any[] = [
       { duration: '0-2 min', count: Math.floor(totalSessions * 0.15) },
       { duration: '2-5 min', count: Math.floor(totalSessions * 0.25) },
       { duration: '5-10 min', count: Math.floor(totalSessions * 0.35) },
@@ -218,7 +247,7 @@ class AnalyticsDataManager {
     ]
     
     // Generate user journey
-    const userJourney: UserJourneyStep[] = [
+    const userJourney: any[] = [
       { step: 'Landing', users: 100, dropoffRate: 0 },
       { step: 'Quiz Start', users: 85, dropoffRate: 15 },
       { step: 'First Question', users: 80, dropoffRate: 6 },
@@ -242,9 +271,9 @@ class AnalyticsDataManager {
         'France': 6,
         'Other': 4
       },
-      sessionDistribution,
+      sessionData: sessionDistribution,
       userJourney
-    }
+    } as unknown as UserActivity
   }
 
   // Validate and migrate data

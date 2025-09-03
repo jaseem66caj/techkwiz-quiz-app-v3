@@ -17,7 +17,7 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
     try {
       // Load GA settings from admin dashboard
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaConfig = (settings as any).googleAnalytics
 
       if (!gaConfig?.enabled || !gaConfig.trackingId) {
         console.log('📊 Google Analytics: Disabled or no tracking ID configured')
@@ -77,7 +77,7 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
     
     try {
       const settings = settingsDataManager.getSystemSettings()
-      return settings.googleAnalytics
+      return (settings as any).googleAnalytics
     } catch (error) {
       console.error('Error loading GA config:', error)
       return null
@@ -134,7 +134,7 @@ export function useGoogleAnalytics() {
 
     try {
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaConfig = (settings as any).googleAnalytics
 
       if (!gaConfig?.enabled || !gaConfig.trackPageViews) return
 
@@ -154,7 +154,7 @@ export function useGoogleAnalytics() {
 
     try {
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaConfig = (settings as any).googleAnalytics
 
       if (!gaConfig?.enabled || !gaConfig.trackEvents) return
 

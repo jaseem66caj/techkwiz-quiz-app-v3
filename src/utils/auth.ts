@@ -73,3 +73,40 @@ export const addQuizResult = (quizResult: any): void => {
 export const getAllUsers = (): User[] => {
   return [getCurrentUser()];
 };
+
+// Login function (for compatibility)
+export const login = async (email: string, password: string): Promise<User> => {
+  // In a real app, this would authenticate with a server
+  // For now, just return the current user or create a new one
+  const user = getCurrentUser();
+  return user;
+};
+
+// Signup function (for compatibility)
+export const signup = async (name: string, email: string, password: string): Promise<User> => {
+  // In a real app, this would create a new user on the server
+  // For now, just create a local user
+  const newUser: User = {
+    id: `user_${Date.now()}`,
+    name,
+    avatar: name.charAt(0).toUpperCase(),
+    coins: 100, // Welcome bonus
+    level: 1,
+    totalQuizzes: 0,
+    correctAnswers: 0,
+    joinDate: new Date().toISOString(),
+    quizHistory: [],
+    streak: 0
+  };
+  saveUser(newUser);
+  return newUser;
+};
+
+// Logout function (for compatibility)
+export const logout = (): void => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};

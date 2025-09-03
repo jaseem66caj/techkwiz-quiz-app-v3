@@ -129,3 +129,58 @@ export const DEFAULT_REWARD_CONFIG: Omit<RewardConfig, 'id' | 'createdAt' | 'upd
   achievements: []
 }
 
+// Default achievement templates
+export const DEFAULT_ACHIEVEMENT_TEMPLATES: Achievement[] = [
+  {
+    id: 'first_quiz',
+    name: 'First Steps',
+    description: 'Complete your first quiz',
+    icon: '🎯',
+    requirement: {
+      type: 'questions_answered',
+      value: 5
+    },
+    reward: {
+      coins: 50,
+      badge: true
+    },
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  },
+  {
+    id: 'quiz_master',
+    name: 'Quiz Master',
+    description: 'Answer 100 questions correctly',
+    icon: '🏆',
+    requirement: {
+      type: 'correct_answers',
+      value: 100
+    },
+    reward: {
+      coins: 500,
+      badge: true
+    },
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  },
+  {
+    id: 'streak_warrior',
+    name: 'Streak Warrior',
+    description: 'Maintain a 7-day streak',
+    icon: '🔥',
+    requirement: {
+      type: 'streak_days',
+      value: 7
+    },
+    reward: {
+      coins: 200,
+      badge: true
+    },
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  }
+]
+

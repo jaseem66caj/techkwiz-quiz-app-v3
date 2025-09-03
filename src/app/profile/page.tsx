@@ -8,6 +8,7 @@ import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
 import { AuthModal } from '../../components/AuthModal'
 import { seoConfig } from '../../utils/seo'
+import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements'
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -19,7 +20,7 @@ export default function ProfilePage() {
       const guestUser = {
         id: `guest_${Date.now()}`,
         name: 'Guest',
-        email: 'guest@techkwiz.com',
+        avatar: '👤',
         coins: 0,
         level: 1,
         totalQuizzes: 0,
@@ -40,14 +41,7 @@ export default function ProfilePage() {
   const successRate = totalQuizzes > 0 ? Math.round((correctAnswers / (totalQuizzes * 5)) * 100) : 0 // Assuming 5 questions per quiz on average
   const level = user.level || 1
 
-  // Mock achievements
-  import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements';
-
-// ... (imports)
-
-export default function ProfilePage() {
-  // ... (state and effects)
-
+  // Get achievements
   const allAchievements = getAllAchievements();
   const unlockedAchievements = getUnlockedAchievements(user);
 
@@ -73,7 +67,7 @@ export default function ProfilePage() {
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
             <div className="w-20 h-20 md:w-24 md:h-24 bg-orange-500 rounded-full flex items-center justify-center text-3xl md:text-4xl text-white font-bold">
-              {user.name.charAt(0).toUpperCase()}
+              {user.avatar || user.name.charAt(0).toUpperCase()}
             </div>
             
             {/* User Info */}
@@ -82,7 +76,7 @@ export default function ProfilePage() {
                 {user.name}
               </h1>
               <p className="text-blue-200 mb-4">
-                {user.email}
+                Member since {new Date(user.joinDate).toLocaleDateString()}
               </p>
               
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
