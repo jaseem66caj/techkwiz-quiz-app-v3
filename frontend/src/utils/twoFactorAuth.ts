@@ -130,7 +130,10 @@ class TwoFactorAuthService {
 
         // Update security settings
         const securitySettings = settingsDataManager.getSecuritySettings()
-        securitySettings.twoFactorAuth = true
+        securitySettings.twoFactorAuth = {
+          enabled: true,
+          methods: ['authenticator']
+        }
         settingsDataManager.saveSecuritySettings(securitySettings)
 
         return {
@@ -285,7 +288,10 @@ class TwoFactorAuthService {
 
       // Update security settings
       const securitySettings = settingsDataManager.getSecuritySettings()
-      securitySettings.twoFactorAuth = false
+      securitySettings.twoFactorAuth = {
+        enabled: false,
+        methods: []
+      }
       settingsDataManager.saveSecuritySettings(securitySettings)
 
       return {

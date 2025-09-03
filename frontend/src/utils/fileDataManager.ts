@@ -9,7 +9,7 @@ import {
   ALLOWED_FILE_TYPES,
   FILE_SIZE_LIMITS,
   FILE_ICONS
-} from '@/types/admin'
+} from '@/types/file'
 
 class FileDataManager {
   private static instance: FileDataManager
@@ -214,6 +214,7 @@ class FileDataManager {
       size: 0,
       path: this.generateFilePath(name, parentId),
       parentId,
+      url: '',
       uploadedAt: Date.now(),
       modifiedAt: Date.now(),
       tags: [],
@@ -272,17 +273,15 @@ class FileDataManager {
       
       return {
         used,
-        total,
-        percentage: Math.round((used / total) * 100),
-        breakdown
+        limit: total,
+        percentage: Math.round((used / total) * 100)
       }
     } catch (error) {
       console.error('Error calculating storage quota:', error)
       return {
         used: 0,
-        total: FILE_SIZE_LIMITS.maxTotalSize,
-        percentage: 0,
-        breakdown: { images: 0, videos: 0, documents: 0, audio: 0, other: 0 }
+        limit: FILE_SIZE_LIMITS.maxTotalSize,
+        percentage: 0
       }
     }
   }
@@ -341,10 +340,10 @@ class FileDataManager {
     
     // Check total storage
     const quota = this.getStorageQuota()
-    if (quota.used + file.size > quota.total) {
-      return { 
-        valid: false, 
-        error: `Not enough storage space. Need ${this.formatFileSize(file.size)}, but only ${this.formatFileSize(quota.total - quota.used)} available` 
+    if (quota.used + file.size > quota.limit) {
+      return {
+        valid: false,
+        error: `Not enough storage space. Need ${this.formatFileSize(file.size)}, but only ${this.formatFileSize(quota.limit - quota.used)} available`
       }
     }
     
@@ -361,7 +360,7 @@ class FileDataManager {
   }
 
   private shouldGenerateThumbnail(mimeType: string): boolean {
-    return ALLOWED_FILE_TYPES.images.includes(mimeType as any)
+    return mimeType.startsWith('image/')
   }
 
   private generateThumbnail(dataUrl: string, mimeType: string): string {
@@ -424,7 +423,7 @@ class FileDataManager {
   private calculateStorageBreakdown(files: FileItem[]): StorageBreakdown {
     const breakdown: StorageBreakdown = {
       images: 0,
-      videos: 0,
+      video: 0,
       documents: 0,
       audio: 0,
       other: 0
@@ -436,7 +435,7 @@ class FileDataManager {
       if (file.mimeType.startsWith('image/')) {
         breakdown.images += file.size
       } else if (file.mimeType.startsWith('video/')) {
-        breakdown.videos += file.size
+        breakdown.video += file.size
       } else if (file.mimeType.startsWith('audio/')) {
         breakdown.audio += file.size
       } else if (file.mimeType.includes('pdf') || file.mimeType.includes('text') || file.mimeType.includes('document')) {
@@ -489,15 +488,11 @@ class FileDataManager {
 
   private validateFileSettings(settings: any): FileSettings {
     return {
-      id: settings.id || `settings_${Date.now()}`,
       maxFileSize: Math.max(1024, Math.min(50 * 1024 * 1024, Number(settings.maxFileSize) || FILE_SIZE_LIMITS.maxFileSize)),
       allowedTypes: Array.isArray(settings.allowedTypes) ? settings.allowedTypes : DEFAULT_FILE_SETTINGS.allowedTypes,
-      autoOptimize: Boolean(settings.autoOptimize ?? DEFAULT_FILE_SETTINGS.autoOptimize),
+      autoOptimizeImages: Boolean(settings.autoOptimizeImages ?? DEFAULT_FILE_SETTINGS.autoOptimizeImages),
       generateThumbnails: Boolean(settings.generateThumbnails ?? DEFAULT_FILE_SETTINGS.generateThumbnails),
-      defaultFolder: settings.defaultFolder || DEFAULT_FILE_SETTINGS.defaultFolder,
-      compressionLevel: Math.max(10, Math.min(100, Number(settings.compressionLevel) || DEFAULT_FILE_SETTINGS.compressionLevel)),
-      createdAt: settings.createdAt || Date.now(),
-      updatedAt: settings.updatedAt || Date.now()
+      storageLimit: Math.max(10 * 1024 * 1024, Number(settings.storageLimit) || DEFAULT_FILE_SETTINGS.storageLimit)
     }
   }
 
@@ -512,6 +507,7 @@ class FileDataManager {
         size: 0,
         path: '/uploads',
         parentId: null,
+        url: '',
         uploadedAt: Date.now() - 86400000,
         modifiedAt: Date.now() - 86400000,
         tags: [],
@@ -525,6 +521,7 @@ class FileDataManager {
         size: 0,
         path: '/uploads/images',
         parentId: 'folder_uploads',
+        url: '',
         uploadedAt: Date.now() - 86400000,
         modifiedAt: Date.now() - 86400000,
         tags: [],
@@ -538,12 +535,9 @@ class FileDataManager {
 
   private createDefaultFileSettings(): FileSettings {
     const settings: FileSettings = {
-      id: `settings_${Date.now()}`,
-      ...DEFAULT_FILE_SETTINGS,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      ...DEFAULT_FILE_SETTINGS
     }
-    
+
     localStorage.setItem(FILE_STORAGE_KEYS.SETTINGS, JSON.stringify(settings))
     return settings
   }

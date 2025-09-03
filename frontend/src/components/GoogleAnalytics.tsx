@@ -17,14 +17,14 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
     try {
       // Load GA settings from admin dashboard
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!gaConfig?.enabled || !gaConfig.trackingId) {
+      if (!gaTrackingId) {
         console.log('📊 Google Analytics: Disabled or no tracking ID configured')
         return
       }
 
-      const finalTrackingId = trackingId || gaConfig.trackingId
+      const finalTrackingId = trackingId || gaTrackingId
 
       // Initialize Google Analytics
       if (typeof window.gtag === 'undefined') {
@@ -39,32 +39,14 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
         window.gtag('config', finalTrackingId, {
           page_title: document.title,
           page_location: window.location.href,
-          anonymize_ip: gaConfig.anonymizeIp,
-          send_page_view: gaConfig.trackPageViews
+          anonymize_ip: true,
+          send_page_view: true
         })
-
-        // Configure additional measurement ID if provided
-        if (gaConfig.measurementId && gaConfig.measurementId !== finalTrackingId) {
-          window.gtag('config', gaConfig.measurementId, {
-            anonymize_ip: gaConfig.anonymizeIp,
-            send_page_view: gaConfig.trackPageViews
-          })
-        }
 
         console.log('📊 Google Analytics initialized:', finalTrackingId)
       }
 
-      // Execute custom code if provided
-      if (gaConfig.customCode) {
-        try {
-          // Create a function to safely execute custom code
-          const executeCustomCode = new Function(gaConfig.customCode)
-          executeCustomCode()
-          console.log('📊 Google Analytics custom code executed')
-        } catch (error) {
-          console.error('📊 Google Analytics custom code error:', error)
-        }
-      }
+      // Custom code execution disabled for simplified version
 
     } catch (error) {
       console.error('📊 Google Analytics initialization error:', error)
@@ -72,26 +54,26 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
   }, [trackingId])
 
   // Get GA configuration
-  const getGAConfig = () => {
+  const getGATrackingId = () => {
     if (typeof window === 'undefined') return null
-    
+
     try {
       const settings = settingsDataManager.getSystemSettings()
-      return settings.googleAnalytics
+      return settings.analytics?.googleAnalyticsId
     } catch (error) {
       console.error('Error loading GA config:', error)
       return null
     }
   }
 
-  const gaConfig = getGAConfig()
-  
-  // Don't render anything if GA is disabled or no tracking ID
-  if (!gaConfig?.enabled || !gaConfig.trackingId) {
+  const gaTrackingId = getGATrackingId()
+
+  // Don't render anything if no tracking ID
+  if (!gaTrackingId && !trackingId) {
     return null
   }
 
-  const finalTrackingId = trackingId || gaConfig.trackingId
+  const finalTrackingId = trackingId || gaTrackingId
 
   return (
     <>
@@ -109,18 +91,9 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
           gtag('js', new Date());
           
           gtag('config', '${finalTrackingId}', {
-            anonymize_ip: ${gaConfig.anonymizeIp},
-            send_page_view: ${gaConfig.trackPageViews}
+            anonymize_ip: true,
+            send_page_view: true
           });
-          
-          ${gaConfig.measurementId && gaConfig.measurementId !== finalTrackingId ? `
-          gtag('config', '${gaConfig.measurementId}', {
-            anonymize_ip: ${gaConfig.anonymizeIp},
-            send_page_view: ${gaConfig.trackPageViews}
-          });
-          ` : ''}
-          
-          ${gaConfig.customCode || ''}
         `}
       </Script>
     </>
@@ -134,11 +107,11 @@ export function useGoogleAnalytics() {
 
     try {
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!gaConfig?.enabled || !gaConfig.trackPageViews) return
+      if (!gaTrackingId) return
 
-      window.gtag('config', gaConfig.trackingId, {
+      window.gtag('config', gaTrackingId, {
         page_title: title || document.title,
         page_location: url
       })
@@ -154,9 +127,9 @@ export function useGoogleAnalytics() {
 
     try {
       const settings = settingsDataManager.getSystemSettings()
-      const gaConfig = settings.googleAnalytics
+      const gaTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!gaConfig?.enabled || !gaConfig.trackEvents) return
+      if (!gaTrackingId) return
 
       window.gtag('event', eventName, parameters)
 

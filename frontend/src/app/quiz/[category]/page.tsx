@@ -7,7 +7,6 @@ import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface
 import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
-import { apiRequestJson } from '../../../utils/api'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
@@ -60,14 +59,9 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
     const init = async () => {
       try {
-        try {
-          const cfg = await apiRequestJson(`/api/quiz/categories/${categoryId}/timer-config`)
-          setTimerEnabled(!!cfg?.timer_enabled)
-          setTimerSeconds(cfg?.timer_seconds ?? 30)
-        } catch {
-          setTimerEnabled(true)
-          setTimerSeconds(30)
-        }
+        // Use default timer configuration
+        setTimerEnabled(true)
+        setTimerSeconds(30)
 
         try {
           // First try to load from admin dashboard
@@ -79,26 +73,20 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
               id: q.id,
               question: q.question,
               options: q.options,
-              correct_answer: q.correctAnswer,
+              correct_answer: q.correct_answer ?? 0,
               difficulty: q.difficulty,
-              fun_fact: q.funFact || '',
+              fun_fact: q.fun_fact || '',
               category: q.category,
               subcategory: q.subcategory || categoryId
             }))
             setQuestions(convertedQuestions)
             console.log(`✅ Using admin questions for category: ${categoryId}`)
           } else {
-            // Fallback to API or quiz database
-            try {
-              const data = await apiRequestJson<QuizQuestion[]>(`/api/quiz/sequential-questions/${categoryId}`)
-              setQuestions((data || []).slice(0, 5))
-              console.log(`✅ Using API questions for category: ${categoryId}`)
-            } catch {
-              const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
-              const fallback = (QUIZ_DATABASE as any)[categoryId] || []
-              setQuestions(fallback.slice(0, 5))
-              console.log(`⚠️ Using fallback questions for category: ${categoryId}`)
-            }
+            // Fallback to quiz database
+            const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
+            const fallback = (QUIZ_DATABASE as any)[categoryId] || []
+            setQuestions(fallback.slice(0, 5))
+            console.log(`⚠️ Using fallback questions for category: ${categoryId}`)
           }
         } catch (error) {
           console.error('Error loading questions:', error)
@@ -116,16 +104,11 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     init()
   }, [categoryId])
 
-  // Fetch popup interstitial ad code once
+  // Fetch popup interstitial ad code - using default ad code
   useEffect(() => {
-    const loadAd = async () => {
-      try {
-        const slots = await apiRequestJson<any[]>(`/api/quiz/ad-slots/popup`)
-        const active = slots?.find(s => s?.is_active && (s?.ad_code || '').trim() !== '') || slots?.[0]
-        if (active?.ad_code) setAdSlotCode(active.ad_code)
-      } catch {}
-    }
-    loadAd()
+    // Removed backend API call for ad slots
+    // Using default ad code or empty string
+    setAdSlotCode('')
   }, [])
 
   const handleTimeUp = () => {

@@ -7,7 +7,7 @@ import {
   REWARD_STORAGE_KEYS,
   DEFAULT_REWARD_CONFIG,
   DEFAULT_ACHIEVEMENT_TEMPLATES 
-} from '@/types/admin'
+} from '@/types/reward'
 
 // Validation rules for reward configuration
 export const REWARD_VALIDATION_RULES = {
@@ -195,12 +195,18 @@ class RewardDataManager {
         }
       
       case 'achievement':
-        const sampleAchievement = config.achievements[0] || DEFAULT_ACHIEVEMENT_TEMPLATES[0]
+        const sampleAchievementTemplate = config.achievements[0] || DEFAULT_ACHIEVEMENT_TEMPLATES[0]
+        const sampleAchievement = {
+          ...sampleAchievementTemplate,
+          id: `achievement_${Date.now()}`,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        }
         return {
           type: 'achievement',
           coins: sampleAchievement.reward.coins,
-          message: config.popupSettings.customMessages.achievement.replace('{achievement}', sampleAchievement.name),
-          achievement: sampleAchievement as Achievement
+          message: `Achievement Unlocked: ${sampleAchievement.name}!`,
+          achievement: sampleAchievement
         }
       
       default:
@@ -209,113 +215,136 @@ class RewardDataManager {
   }
 
   // Validation methods
-  private validateRewardConfig(config: RewardConfig): void {
+  private validateRewardConfig(config: any): void {
     // Validate coin values
-    if (config.coinValues.correct < REWARD_VALIDATION_RULES.COIN_MIN_VALUE || 
-        config.coinValues.correct > REWARD_VALIDATION_RULES.COIN_MAX_VALUE) {
-      throw new RewardDataError(
-        `Correct answer coins must be between ${REWARD_VALIDATION_RULES.COIN_MIN_VALUE} and ${REWARD_VALIDATION_RULES.COIN_MAX_VALUE}`,
-        'INVALID_COIN_VALUE'
-      )
+    if (!config.coinValues) {
+      throw new RewardDataError('Coin values are required', 'INVALID_COIN_VALUES')
     }
     
-    if (config.coinValues.incorrect < REWARD_VALIDATION_RULES.COIN_MIN_VALUE || 
-        config.coinValues.incorrect > REWARD_VALIDATION_RULES.COIN_MAX_VALUE) {
-      throw new RewardDataError(
-        `Incorrect answer coins must be between ${REWARD_VALIDATION_RULES.COIN_MIN_VALUE} and ${REWARD_VALIDATION_RULES.COIN_MAX_VALUE}`,
-        'INVALID_COIN_VALUE'
-      )
-    }
+    Object.entries(config.coinValues).forEach(([key, value]) => {
+      if (typeof value !== 'number' || value < REWARD_VALIDATION_RULES.COIN_MIN_VALUE || value > REWARD_VALIDATION_RULES.COIN_MAX_VALUE) {
+        throw new RewardDataError(
+          `Invalid coin value for ${key}. Must be between ${REWARD_VALIDATION_RULES.COIN_MIN_VALUE} and ${REWARD_VALIDATION_RULES.COIN_MAX_VALUE}`,
+          'INVALID_COIN_VALUE'
+        )
+      }
+    })
     
-    if (config.coinValues.bonus < REWARD_VALIDATION_RULES.COIN_MIN_VALUE || 
-        config.coinValues.bonus > REWARD_VALIDATION_RULES.COIN_MAX_VALUE) {
-      throw new RewardDataError(
-        `Bonus question coins must be between ${REWARD_VALIDATION_RULES.COIN_MIN_VALUE} and ${REWARD_VALIDATION_RULES.COIN_MAX_VALUE}`,
-        'INVALID_COIN_VALUE'
-      )
-    }
-    
-    if (config.coinValues.streakMultiplier < REWARD_VALIDATION_RULES.STREAK_MIN_MULTIPLIER || 
-        config.coinValues.streakMultiplier > REWARD_VALIDATION_RULES.STREAK_MAX_MULTIPLIER) {
-      throw new RewardDataError(
-        `Streak multiplier must be between ${REWARD_VALIDATION_RULES.STREAK_MIN_MULTIPLIER} and ${REWARD_VALIDATION_RULES.STREAK_MAX_MULTIPLIER}`,
-        'INVALID_STREAK_MULTIPLIER'
-      )
+    // Validate streak settings
+    if (config.streakSettings) {
+      if (typeof config.streakSettings.multiplierPerDay !== 'number' || 
+          config.streakSettings.multiplierPerDay < REWARD_VALIDATION_RULES.STREAK_MIN_MULTIPLIER ||
+          config.streakSettings.multiplierPerDay > REWARD_VALIDATION_RULES.STREAK_MAX_MULTIPLIER) {
+        throw new RewardDataError(
+          `Invalid streak multiplier. Must be between ${REWARD_VALIDATION_RULES.STREAK_MIN_MULTIPLIER} and ${REWARD_VALIDATION_RULES.STREAK_MAX_MULTIPLIER}`,
+          'INVALID_STREAK_MULTIPLIER'
+        )
+      }
     }
     
     // Validate popup settings
-    if (config.popupSettings.duration < REWARD_VALIDATION_RULES.POPUP_MIN_DURATION || 
-        config.popupSettings.duration > REWARD_VALIDATION_RULES.POPUP_MAX_DURATION) {
-      throw new RewardDataError(
-        `Popup duration must be between ${REWARD_VALIDATION_RULES.POPUP_MIN_DURATION} and ${REWARD_VALIDATION_RULES.POPUP_MAX_DURATION} seconds`,
-        'INVALID_POPUP_DURATION'
-      )
+    if (config.popupSettings) {
+      if (typeof config.popupSettings.duration !== 'number' || 
+          config.popupSettings.duration < REWARD_VALIDATION_RULES.POPUP_MIN_DURATION ||
+          config.popupSettings.duration > REWARD_VALIDATION_RULES.POPUP_MAX_DURATION) {
+        throw new RewardDataError(
+          `Invalid popup duration. Must be between ${REWARD_VALIDATION_RULES.POPUP_MIN_DURATION} and ${REWARD_VALIDATION_RULES.POPUP_MAX_DURATION}`,
+          'INVALID_POPUP_DURATION'
+        )
+      }
     }
     
-    // Validate AdSense config
-    if (config.adSenseConfig.frequency < REWARD_VALIDATION_RULES.AD_MIN_FREQUENCY || 
-        config.adSenseConfig.frequency > REWARD_VALIDATION_RULES.AD_MAX_FREQUENCY) {
-      throw new RewardDataError(
-        `Ad frequency must be between ${REWARD_VALIDATION_RULES.AD_MIN_FREQUENCY} and ${REWARD_VALIDATION_RULES.AD_MAX_FREQUENCY}`,
-        'INVALID_AD_FREQUENCY'
-      )
+    // Validate ad settings
+    if (config.adSettings) {
+      if (typeof config.adSettings.frequency !== 'number' || 
+          config.adSettings.frequency < REWARD_VALIDATION_RULES.AD_MIN_FREQUENCY ||
+          config.adSettings.frequency > REWARD_VALIDATION_RULES.AD_MAX_FREQUENCY) {
+        throw new RewardDataError(
+          `Invalid ad frequency. Must be between ${REWARD_VALIDATION_RULES.AD_MIN_FREQUENCY} and ${REWARD_VALIDATION_RULES.AD_MAX_FREQUENCY}`,
+          'INVALID_AD_FREQUENCY'
+        )
+      }
     }
   }
 
-  private validateAchievement(achievement: Partial<Achievement>): void {
-    if (!achievement.name || achievement.name.length < REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MIN_LENGTH) {
+  private validateAchievement(achievement: any): void {
+    if (!achievement.name || achievement.name.length < REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MIN_LENGTH || achievement.name.length > REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MAX_LENGTH) {
       throw new RewardDataError(
-        `Achievement name must be at least ${REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MIN_LENGTH} characters long`,
+        `Achievement name must be between ${REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MIN_LENGTH} and ${REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MAX_LENGTH} characters`,
         'INVALID_ACHIEVEMENT_NAME'
       )
     }
     
-    if (achievement.name.length > REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MAX_LENGTH) {
+    if (!achievement.description || achievement.description.length < REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MIN_LENGTH || achievement.description.length > REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MAX_LENGTH) {
       throw new RewardDataError(
-        `Achievement name must be no more than ${REWARD_VALIDATION_RULES.ACHIEVEMENT_NAME_MAX_LENGTH} characters long`,
-        'INVALID_ACHIEVEMENT_NAME'
-      )
-    }
-    
-    if (!achievement.description || achievement.description.length < REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MIN_LENGTH) {
-      throw new RewardDataError(
-        `Achievement description must be at least ${REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MIN_LENGTH} characters long`,
+        `Achievement description must be between ${REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MIN_LENGTH} and ${REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MAX_LENGTH} characters`,
         'INVALID_ACHIEVEMENT_DESCRIPTION'
       )
     }
     
-    if (achievement.description.length > REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MAX_LENGTH) {
+    if (!achievement.requirement || !achievement.requirement.type || typeof achievement.requirement.value !== 'number' || achievement.requirement.value < REWARD_VALIDATION_RULES.REQUIREMENT_MIN_VALUE || achievement.requirement.value > REWARD_VALIDATION_RULES.REQUIREMENT_MAX_VALUE) {
       throw new RewardDataError(
-        `Achievement description must be no more than ${REWARD_VALIDATION_RULES.ACHIEVEMENT_DESC_MAX_LENGTH} characters long`,
-        'INVALID_ACHIEVEMENT_DESCRIPTION'
-      )
-    }
-    
-    if (!achievement.requirement || 
-        achievement.requirement.value < REWARD_VALIDATION_RULES.REQUIREMENT_MIN_VALUE || 
-        achievement.requirement.value > REWARD_VALIDATION_RULES.REQUIREMENT_MAX_VALUE) {
-      throw new RewardDataError(
-        `Achievement requirement value must be between ${REWARD_VALIDATION_RULES.REQUIREMENT_MIN_VALUE} and ${REWARD_VALIDATION_RULES.REQUIREMENT_MAX_VALUE}`,
-        'INVALID_REQUIREMENT_VALUE'
-      )
-    }
-    
-    if (!achievement.reward || 
-        achievement.reward.coins < REWARD_VALIDATION_RULES.COIN_MIN_VALUE || 
-        achievement.reward.coins > REWARD_VALIDATION_RULES.COIN_MAX_VALUE) {
-      throw new RewardDataError(
-        `Achievement reward coins must be between ${REWARD_VALIDATION_RULES.COIN_MIN_VALUE} and ${REWARD_VALIDATION_RULES.COIN_MAX_VALUE}`,
-        'INVALID_REWARD_COINS'
+        `Invalid achievement requirement. Type is required and value must be between ${REWARD_VALIDATION_RULES.REQUIREMENT_MIN_VALUE} and ${REWARD_VALIDATION_RULES.REQUIREMENT_MAX_VALUE}`,
+        'INVALID_ACHIEVEMENT_REQUIREMENT'
       )
     }
   }
 
-  // Utility methods
+  // Config migration for backward compatibility
+  private validateAndMigrateConfig(config: any): RewardConfig {
+    // Ensure all required fields exist
+    const validatedConfig: RewardConfig = {
+      id: config.id || this.generateId('rc'),
+      coinValues: {
+        correct: config.coinValues?.correct || DEFAULT_REWARD_CONFIG.coinValues.correct,
+        incorrect: config.coinValues?.incorrect || DEFAULT_REWARD_CONFIG.coinValues.incorrect,
+        bonus: config.coinValues?.bonus || DEFAULT_REWARD_CONFIG.coinValues.bonus,
+        dailyBonus: config.coinValues?.dailyBonus || DEFAULT_REWARD_CONFIG.coinValues.dailyBonus,
+        streakBonus: config.coinValues?.streakBonus || DEFAULT_REWARD_CONFIG.coinValues.streakBonus
+      },
+      streakSettings: {
+        enabled: config.streakSettings?.enabled !== undefined ? config.streakSettings.enabled : DEFAULT_REWARD_CONFIG.streakSettings.enabled,
+        multiplierPerDay: config.streakSettings?.multiplierPerDay || DEFAULT_REWARD_CONFIG.streakSettings.multiplierPerDay,
+        maxMultiplier: config.streakSettings?.maxMultiplier || DEFAULT_REWARD_CONFIG.streakSettings.maxMultiplier,
+        resetOnWrongAnswer: config.streakSettings?.resetOnWrongAnswer !== undefined ? config.streakSettings.resetOnWrongAnswer : DEFAULT_REWARD_CONFIG.streakSettings.resetOnWrongAnswer
+      },
+      popupSettings: {
+        enabled: config.popupSettings?.enabled !== undefined ? config.popupSettings.enabled : DEFAULT_REWARD_CONFIG.popupSettings.enabled,
+        showAfterQuestions: config.popupSettings?.showAfterQuestions || DEFAULT_REWARD_CONFIG.popupSettings.showAfterQuestions,
+        duration: config.popupSettings?.duration || DEFAULT_REWARD_CONFIG.popupSettings.duration,
+        showFunFact: config.popupSettings?.showFunFact !== undefined ? config.popupSettings.showFunFact : DEFAULT_REWARD_CONFIG.popupSettings.showFunFact,
+        customMessages: {
+          correct: config.popupSettings?.customMessages?.correct || DEFAULT_REWARD_CONFIG.popupSettings.customMessages.correct,
+          incorrect: config.popupSettings?.customMessages?.incorrect || DEFAULT_REWARD_CONFIG.popupSettings.customMessages.incorrect,
+          bonus: config.popupSettings?.customMessages?.bonus || DEFAULT_REWARD_CONFIG.popupSettings.customMessages.bonus
+        }
+      },
+      adSettings: {
+        enabled: config.adSettings?.enabled !== undefined ? config.adSettings.enabled : DEFAULT_REWARD_CONFIG.adSettings.enabled,
+        frequency: config.adSettings?.frequency || DEFAULT_REWARD_CONFIG.adSettings.frequency,
+        minQuestionsBetweenAds: config.adSettings?.minQuestionsBetweenAds || DEFAULT_REWARD_CONFIG.adSettings.minQuestionsBetweenAds,
+        rewardCoins: config.adSettings?.rewardCoins || DEFAULT_REWARD_CONFIG.adSettings.rewardCoins
+      },
+      achievements: Array.isArray(config.achievements) ? config.achievements : DEFAULT_REWARD_CONFIG.achievements,
+      createdAt: config.createdAt || Date.now(),
+      updatedAt: config.updatedAt || Date.now()
+    }
+    
+    return validatedConfig
+  }
+
+  // Helper methods
   private initializeWithDefaults(): RewardConfig {
     const now = Date.now()
     const defaultConfig: RewardConfig = {
+      id: this.generateId('rc'),
       ...DEFAULT_REWARD_CONFIG,
-      id: this.generateId('config'),
+      achievements: [...DEFAULT_ACHIEVEMENT_TEMPLATES.map(template => ({
+        ...template,
+        id: this.generateId('ach'),
+        createdAt: now,
+        updatedAt: now
+      }))],
       createdAt: now,
       updatedAt: now
     }
@@ -324,113 +353,55 @@ class RewardDataManager {
     return defaultConfig
   }
 
-  private validateAndMigrateConfig(config: any): RewardConfig {
-    // Ensure all required properties exist with defaults
-    const migratedConfig: RewardConfig = {
-      id: config.id || this.generateId('config'),
-      coinValues: {
-        correct: config.coinValues?.correct ?? DEFAULT_REWARD_CONFIG.coinValues.correct,
-        incorrect: config.coinValues?.incorrect ?? DEFAULT_REWARD_CONFIG.coinValues.incorrect,
-        bonus: config.coinValues?.bonus ?? DEFAULT_REWARD_CONFIG.coinValues.bonus,
-        streakMultiplier: config.coinValues?.streakMultiplier ?? DEFAULT_REWARD_CONFIG.coinValues.streakMultiplier
-      },
-      achievements: config.achievements || [],
-      popupSettings: {
-        ...DEFAULT_REWARD_CONFIG.popupSettings,
-        ...config.popupSettings
-      },
-      adSenseConfig: {
-        ...DEFAULT_REWARD_CONFIG.adSenseConfig,
-        ...config.adSenseConfig
-      },
-      isEnabled: config.isEnabled ?? DEFAULT_REWARD_CONFIG.isEnabled,
-      createdAt: config.createdAt || Date.now(),
-      updatedAt: config.updatedAt || Date.now()
-    }
-    
-    return migratedConfig
+  private generateId(prefix: string = ''): string {
+    return `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`
   }
 
-  private generateId(prefix: string): string {
-    return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-  }
-
-  // Backup and restore functionality
+  // Create backup
   createBackup(): string {
-    const backup = {
-      rewardConfig: this.getRewardConfig(),
+    const backupData = {
+      config: this.getRewardConfig(),
       timestamp: Date.now(),
       version: '1.0'
     }
-
-    return JSON.stringify(backup, null, 2)
+    
+    const backupString = JSON.stringify(backupData)
+    this.safeSetItem(REWARD_STORAGE_KEYS.BACKUP, backupString)
+    return backupString
   }
 
-  restoreFromBackup(backupData: string): boolean {
+  // Restore from backup
+  restoreFromBackup(backupData: string): void {
     try {
-      const backup = JSON.parse(backupData)
-
-      if (!backup.rewardConfig) {
-        throw new RewardDataError('Invalid backup format: missing reward config', 'INVALID_BACKUP')
+      const parsedData = JSON.parse(backupData)
+      
+      if (parsedData.config) {
+        this.safeSetItem(REWARD_STORAGE_KEYS.CONFIG, JSON.stringify(parsedData.config))
       }
-
-      // Validate the backup data
-      this.validateRewardConfig(backup.rewardConfig)
-
-      // Create current backup before restore
-      const currentBackup = this.createBackup()
-      this.safeSetItem(REWARD_STORAGE_KEYS.BACKUP, currentBackup)
-
-      // Restore data
-      this.safeSetItem(REWARD_STORAGE_KEYS.CONFIG, JSON.stringify(backup.rewardConfig))
-
-      return true
+      
+      console.log('✅ Successfully restored reward data from backup')
     } catch (error) {
       throw new RewardDataError(
-        `Failed to restore backup: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to restore from backup: ${error instanceof Error ? error.message : 'Unknown error'}`,
         'RESTORE_FAILED'
       )
     }
   }
 
-  // Reset to defaults
-  resetToDefaults(): RewardConfig {
-    // Create backup before reset
-    const currentBackup = this.createBackup()
-    this.safeSetItem(REWARD_STORAGE_KEYS.BACKUP, currentBackup)
-
-    // Clear current config and reinitialize
-    localStorage.removeItem(REWARD_STORAGE_KEYS.CONFIG)
-    return this.initializeWithDefaults()
+  // Get backup
+  getBackup(): string | null {
+    return this.safeGetItem(REWARD_STORAGE_KEYS.BACKUP)
   }
 
-  // Export configuration as JSON
-  exportConfig(): string {
-    const config = this.getRewardConfig()
-    return JSON.stringify(config, null, 2)
-  }
-
-  // Import configuration from JSON
-  importConfig(configData: string): RewardConfig {
-    try {
-      const config = JSON.parse(configData)
-      this.validateRewardConfig(config)
-
-      // Create backup before import
-      const currentBackup = this.createBackup()
-      this.safeSetItem(REWARD_STORAGE_KEYS.BACKUP, currentBackup)
-
-      // Import the new configuration
-      const importedConfig = this.validateAndMigrateConfig(config)
-      this.safeSetItem(REWARD_STORAGE_KEYS.CONFIG, JSON.stringify(importedConfig))
-
-      return importedConfig
-    } catch (error) {
-      throw new RewardDataError(
-        `Failed to import configuration: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        'IMPORT_FAILED'
-      )
-    }
+  // Clear all reward data
+  clearAllData(): void {
+    Object.values(REWARD_STORAGE_KEYS).forEach(key => {
+      try {
+        localStorage.removeItem(key)
+      } catch (error) {
+        console.error(`Error clearing reward data for key ${key}:`, error)
+      }
+    })
   }
 }
 

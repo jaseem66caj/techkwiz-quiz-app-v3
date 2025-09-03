@@ -318,9 +318,9 @@ class ComprehensiveDataSyncService {
       const userEngagement = this.getStorageData('user_engagement', {})
       const conversionData = this.getStorageData('conversion_data', {})
       
-      const totalPageViews = Object.values(pageViews).reduce((sum: number, views: any) => sum + (views || 0), 0)
-      const engagementScore = userEngagement.averageEngagement || 0
-      const conversionRate = conversionData.rate || 0
+      const totalPageViews = Object.values(pageViews as any).reduce((sum: number, views: any) => sum + (views || 0), 0) as number
+      const engagementScore = ((userEngagement as any)?.averageEngagement || 0) as number
+      const conversionRate = ((conversionData as any)?.rate || 0) as number
 
       return {
         totalPageViews,

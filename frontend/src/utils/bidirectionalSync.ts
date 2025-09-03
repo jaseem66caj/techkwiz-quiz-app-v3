@@ -137,7 +137,7 @@ class BidirectionalSyncService {
       systemSettings: {
         featureFlags: settingsDataManager.getSystemSettings().featureFlags || {},
         configValues: settingsDataManager.getSystemSettings() || {},
-        adsConfig: settingsDataManager.getIntegrationSettings().adsense || {},
+        adsConfig: {},
         lastModified: parseInt(localStorage.getItem('admin_settings_updated') || now.toString()),
         version: this.generateVersion('systemSettings')
       }
@@ -1072,7 +1072,7 @@ class BidirectionalSyncService {
   }
 
   // Check if operation is in progress
-  isOperationInProgress(): boolean {
+  getOperationStatus(): boolean {
     return this.isOperationInProgress
   }
 }

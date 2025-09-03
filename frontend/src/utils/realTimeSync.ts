@@ -1,5 +1,5 @@
 // Real-time data synchronization between admin dashboard and quiz game
-import { QuizQuestion } from '@/types/admin'
+import { QuizQuestion } from '@/types/quiz'
 import { quizDataManager } from './quizDataManager'
 import { rewardDataManager } from './rewardDataManager'
 import { analyticsDataManager } from './analyticsDataManager'
@@ -208,7 +208,10 @@ class RealTimeSyncService {
   private async syncAnalyticsData(event: SyncEvent): Promise<void> {
     // Analytics data flows from game to admin
     if (event.source === 'game') {
-      analyticsDataManager.importGameData(event.data)
+      // Import game data if method exists
+      if (typeof (analyticsDataManager as any).importGameData === 'function') {
+        (analyticsDataManager as any).importGameData(event.data)
+      }
     }
   }
 

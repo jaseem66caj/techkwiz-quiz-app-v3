@@ -12,7 +12,6 @@ import { SocialProofBanner } from '../components/SocialProofBanner'
 import { EnhancedCoinDisplay } from '../components/EnhancedCoinDisplay'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
-import { apiRequestJson } from '../utils/api'
 import { quizDataManager } from '../utils/quizDataManager'
 import { realTimeSyncService } from '../utils/realTimeSync'
 
@@ -70,25 +69,14 @@ export default function HomePage() {
 
   // Fetch reward configuration with improved error handling
   useEffect(() => {
-    const fetchRewardConfig = async () => {
-      try {
-        const config = await apiRequestJson('/api/quiz/rewarded-config')
-        setRewardConfig(config)
-        console.log('✅ HomePage: Reward config loaded successfully:', config)
-      } catch (error) {
-        console.error('❌ HomePage: Failed to fetch reward config:', error)
-        // Set default config on network failure
-        setRewardConfig({
-          coin_reward: 100,
-          is_active: true,
-          show_on_insufficient_coins: true,
-          show_during_quiz: true
-        })
-      }
-    }
-    
-    // Add a small delay to ensure backend is ready
-    setTimeout(fetchRewardConfig, 1000)
+    // Removed backend API call and using default config
+    setRewardConfig({
+      coin_reward: 100,
+      is_active: true,
+      show_on_insufficient_coins: true,
+      show_during_quiz: true,
+      trigger_after_questions: 1
+    })
   }, [])
 
   // Auto-create guest user and show onboarding for new users
@@ -101,7 +89,7 @@ export default function HomePage() {
         console.log('🎯 New user detected - showing onboarding flow')
         setShowOnboarding(true)
       } else {
-        console.log('🔄 Returning user - creating guest user and skipping onboarding') 
+        console.log('🔄 Returning user - creating guest user and skipping onboarding')
         // Create guest user for returning users who completed onboarding
         const guestUser = {
           id: `guest_${Date.now()}`,
@@ -230,9 +218,9 @@ export default function HomePage() {
           id: q.id,
           question: q.question,
           options: q.options,
-          correct_answer: q.correctAnswer,
+          correct_answer: q.correct_answer ?? 0,
           difficulty: q.difficulty,
-          fun_fact: q.funFact || "Thanks for playing!",
+          fun_fact: q.fun_fact || "Thanks for playing!",
           category: q.category,
           subcategory: q.subcategory || q.category
         }))
@@ -455,7 +443,7 @@ export default function HomePage() {
             </p>
             {isLoadingQuestions && (
               <p className="text-blue-200 text-sm mt-2">
-                Syncing with admin dashboard...
+                Loading questions...
               </p>
             )}
           </div>
@@ -569,7 +557,7 @@ export default function HomePage() {
                   }`}></div>
                   <span className="text-blue-200">
                     {quizQuestions.length > 0
-                      ? `${quizQuestions.length} questions loaded from admin`
+                      ? `${quizQuestions.length} questions loaded`
                       : 'Using fallback questions'
                     }
                   </span>
