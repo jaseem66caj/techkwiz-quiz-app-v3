@@ -10,7 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/api/',
           '/private/',
           '/admin/',
           '/jaseem/', // Admin panel route
@@ -20,12 +19,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/api/', '/private/', '/admin/', '/jaseem/'],
+        disallow: ['/private/', '/admin/', '/jaseem/'],
       },
       {
         userAgent: 'Bingbot',
         allow: '/',
-        disallow: ['/api/', '/private/', '/admin/', '/jaseem/'],
+        disallow: ['/private/', '/admin/', '/jaseem/'],
       }
     ],
     sitemap: 'https://techkwiz.com/sitemap.xml',

@@ -6,8 +6,9 @@ import {
   SETTINGS_STORAGE_KEYS,
   DEFAULT_SYSTEM_SETTINGS,
   DEFAULT_USER_PREFERENCES,
-  DEFAULT_SECURITY_SETTINGS
-} from '@/types/admin'
+  DEFAULT_SECURITY_SETTINGS,
+  DEFAULT_INTEGRATION_SETTINGS
+} from '@/types/settings'
 
 class SettingsDataManager {
   private static instance: SettingsDataManager
@@ -198,73 +199,100 @@ class SettingsDataManager {
       const backup = {
         version: this.SETTINGS_VERSION,
         timestamp: Date.now(),
-        systemSettings: this.getSystemSettings(),
+        system: this.getSystemSettings(),
         userPreferences: this.getUserPreferences(),
-        securitySettings: this.getSecuritySettings(),
-        integrationSettings: this.getIntegrationSettings()
+        security: this.getSecuritySettings(),
+        integrations: this.getIntegrationSettings()
       }
-      
-      return JSON.stringify(backup, null, 2)
+
+      const backupString = JSON.stringify(backup)
+      localStorage.setItem(SETTINGS_STORAGE_KEYS.BACKUP, backupString)
+      return backupString
     } catch (error) {
-      console.error('Error creating backup:', error)
-      throw new Error('Failed to create backup')
+      console.error('Error creating settings backup:', error)
+      throw new Error('Failed to create settings backup')
     }
   }
 
   restoreFromBackup(backupData: string): boolean {
     try {
       const backup = JSON.parse(backupData)
-      
-      // Validate backup structure
-      if (!backup.version || !backup.systemSettings || !backup.userPreferences) {
-        throw new Error('Invalid backup format')
+
+      if (backup.system) {
+        this.saveSystemSettings(backup.system)
       }
-      
-      // Restore each section
-      this.saveSystemSettings(backup.systemSettings)
-      this.saveUserPreferences(backup.userPreferences)
-      this.saveSecuritySettings(backup.securitySettings)
-      this.saveIntegrationSettings(backup.integrationSettings)
-      
+
+      if (backup.userPreferences) {
+        this.saveUserPreferences(backup.userPreferences)
+      }
+
+      if (backup.security) {
+        this.saveSecuritySettings(backup.security)
+      }
+
+      if (backup.integrations) {
+        this.saveIntegrationSettings(backup.integrations)
+      }
+
+      console.log('✅ Settings restored from backup')
       return true
     } catch (error) {
-      console.error('Error restoring backup:', error)
+      console.error('Error restoring settings from backup:', error)
       return false
     }
   }
 
-  // Reset to defaults
-  resetToDefaults(): boolean {
-    // Return false if not on client side
-    if (typeof window === 'undefined') {
-      return false
-    }
-
-    try {
-      localStorage.removeItem(SETTINGS_STORAGE_KEYS.SYSTEM)
-      localStorage.removeItem(SETTINGS_STORAGE_KEYS.USER_PREFERENCES)
-      localStorage.removeItem(SETTINGS_STORAGE_KEYS.SECURITY)
-      localStorage.removeItem(SETTINGS_STORAGE_KEYS.INTEGRATIONS)
-      return true
-    } catch (error) {
-      console.error('Error resetting to defaults:', error)
-      return false
-    }
+  getBackup(): string | null {
+    return localStorage.getItem(SETTINGS_STORAGE_KEYS.BACKUP)
   }
 
   // Validation methods
   private validateSystemSettings(settings: any): SystemSettings {
     return {
-      id: settings.id || `system_${Date.now()}`,
-      applicationName: settings.applicationName || DEFAULT_SYSTEM_SETTINGS.applicationName,
-      applicationVersion: settings.applicationVersion || DEFAULT_SYSTEM_SETTINGS.applicationVersion,
-      maintenanceMode: Boolean(settings.maintenanceMode),
-      debugMode: Boolean(settings.debugMode),
-      logLevel: ['error', 'warn', 'info', 'debug'].includes(settings.logLevel) ? settings.logLevel : 'info',
-      maxUsers: Math.max(1, Math.min(1000, Number(settings.maxUsers) || 100)),
-      sessionTimeout: Math.max(5, Math.min(120, Number(settings.sessionTimeout) || 30)),
-      autoBackup: Boolean(settings.autoBackup),
-      backupFrequency: ['daily', 'weekly', 'monthly'].includes(settings.backupFrequency) ? settings.backupFrequency : 'weekly',
+      id: settings.id || `sys_${Date.now()}`,
+      siteName: settings.siteName || DEFAULT_SYSTEM_SETTINGS.siteName,
+      siteDescription: settings.siteDescription || DEFAULT_SYSTEM_SETTINGS.siteDescription,
+      logoUrl: settings.logoUrl || DEFAULT_SYSTEM_SETTINGS.logoUrl,
+      faviconUrl: settings.faviconUrl || DEFAULT_SYSTEM_SETTINGS.faviconUrl,
+      theme: settings.theme && ['light', 'dark', 'auto'].includes(settings.theme) 
+        ? settings.theme 
+        : DEFAULT_SYSTEM_SETTINGS.theme,
+      language: settings.language || DEFAULT_SYSTEM_SETTINGS.language,
+      timezone: settings.timezone || DEFAULT_SYSTEM_SETTINGS.timezone,
+      maintenanceMode: typeof settings.maintenanceMode === 'boolean' 
+        ? settings.maintenanceMode 
+        : DEFAULT_SYSTEM_SETTINGS.maintenanceMode,
+      maintenanceMessage: settings.maintenanceMessage || DEFAULT_SYSTEM_SETTINGS.maintenanceMessage,
+      featureFlags: {
+        ...DEFAULT_SYSTEM_SETTINGS.featureFlags,
+        ...settings.featureFlags
+      },
+      performance: {
+        cacheEnabled: typeof settings.performance?.cacheEnabled === 'boolean' 
+          ? settings.performance.cacheEnabled 
+          : DEFAULT_SYSTEM_SETTINGS.performance.cacheEnabled,
+        cacheDuration: typeof settings.performance?.cacheDuration === 'number' 
+          ? settings.performance.cacheDuration 
+          : DEFAULT_SYSTEM_SETTINGS.performance.cacheDuration,
+        lazyLoading: typeof settings.performance?.lazyLoading === 'boolean' 
+          ? settings.performance.lazyLoading 
+          : DEFAULT_SYSTEM_SETTINGS.performance.lazyLoading
+      },
+      seo: {
+        metaTitle: settings.seo?.metaTitle || DEFAULT_SYSTEM_SETTINGS.seo.metaTitle,
+        metaDescription: settings.seo?.metaDescription || DEFAULT_SYSTEM_SETTINGS.seo.metaDescription,
+        metaKeywords: settings.seo?.metaKeywords || DEFAULT_SYSTEM_SETTINGS.seo.metaKeywords,
+        openGraph: {
+          title: settings.seo?.openGraph?.title || DEFAULT_SYSTEM_SETTINGS.seo.openGraph.title,
+          description: settings.seo?.openGraph?.description || DEFAULT_SYSTEM_SETTINGS.seo.openGraph.description,
+          image: settings.seo?.openGraph?.image || DEFAULT_SYSTEM_SETTINGS.seo.openGraph.image
+        }
+      },
+      analytics: {
+        googleAnalyticsId: settings.analytics?.googleAnalyticsId || DEFAULT_SYSTEM_SETTINGS.analytics.googleAnalyticsId,
+        hotjarId: settings.analytics?.hotjarId || DEFAULT_SYSTEM_SETTINGS.analytics.hotjarId,
+        matomoUrl: settings.analytics?.matomoUrl || DEFAULT_SYSTEM_SETTINGS.analytics.matomoUrl
+      },
       createdAt: settings.createdAt || Date.now(),
       updatedAt: settings.updatedAt || Date.now()
     }
@@ -272,27 +300,58 @@ class SettingsDataManager {
 
   private validateUserPreferences(preferences: any): UserPreferences {
     return {
-      id: preferences.id || `user_${Date.now()}`,
-      theme: ['light', 'dark', 'auto'].includes(preferences.theme) ? preferences.theme : 'light',
-      language: preferences.language || 'en',
-      timezone: preferences.timezone || 'UTC',
-      dateFormat: preferences.dateFormat || 'MM/DD/YYYY',
-      timeFormat: ['12h', '24h'].includes(preferences.timeFormat) ? preferences.timeFormat : '12h',
-      dashboardLayout: ['compact', 'comfortable', 'spacious'].includes(preferences.dashboardLayout) ? preferences.dashboardLayout : 'comfortable',
+      id: preferences.id || `pref_${Date.now()}`,
+      userId: preferences.userId || 'guest',
       notifications: {
-        emailNotifications: Boolean(preferences.notifications?.emailNotifications ?? true),
-        pushNotifications: Boolean(preferences.notifications?.pushNotifications ?? false),
-        systemAlerts: Boolean(preferences.notifications?.systemAlerts ?? true),
-        maintenanceAlerts: Boolean(preferences.notifications?.maintenanceAlerts ?? true),
-        securityAlerts: Boolean(preferences.notifications?.securityAlerts ?? true),
-        digestFrequency: ['immediate', 'hourly', 'daily', 'weekly'].includes(preferences.notifications?.digestFrequency) ? preferences.notifications.digestFrequency : 'daily'
+        email: typeof preferences.notifications?.email === 'boolean' 
+          ? preferences.notifications.email 
+          : DEFAULT_USER_PREFERENCES.notifications.email,
+        push: typeof preferences.notifications?.push === 'boolean' 
+          ? preferences.notifications.push 
+          : DEFAULT_USER_PREFERENCES.notifications.push,
+        sms: typeof preferences.notifications?.sms === 'boolean' 
+          ? preferences.notifications.sms 
+          : DEFAULT_USER_PREFERENCES.notifications.sms,
+        inApp: typeof preferences.notifications?.inApp === 'boolean' 
+          ? preferences.notifications.inApp 
+          : DEFAULT_USER_PREFERENCES.notifications.inApp
+      },
+      privacy: {
+        profileVisibility: preferences.privacy?.profileVisibility && 
+          ['public', 'friends', 'private'].includes(preferences.privacy.profileVisibility)
+          ? preferences.privacy.profileVisibility
+          : DEFAULT_USER_PREFERENCES.privacy.profileVisibility,
+        activityVisibility: preferences.privacy?.activityVisibility && 
+          ['public', 'friends', 'private'].includes(preferences.privacy.activityVisibility)
+          ? preferences.privacy.activityVisibility
+          : DEFAULT_USER_PREFERENCES.privacy.activityVisibility,
+        dataSharing: typeof preferences.privacy?.dataSharing === 'boolean' 
+          ? preferences.privacy.dataSharing 
+          : DEFAULT_USER_PREFERENCES.privacy.dataSharing
       },
       accessibility: {
-        highContrast: Boolean(preferences.accessibility?.highContrast ?? false),
-        largeText: Boolean(preferences.accessibility?.largeText ?? false),
-        reducedMotion: Boolean(preferences.accessibility?.reducedMotion ?? false),
-        screenReader: Boolean(preferences.accessibility?.screenReader ?? false),
-        keyboardNavigation: Boolean(preferences.accessibility?.keyboardNavigation ?? true)
+        fontSize: preferences.accessibility?.fontSize && 
+          ['small', 'medium', 'large'].includes(preferences.accessibility.fontSize)
+          ? preferences.accessibility.fontSize
+          : DEFAULT_USER_PREFERENCES.accessibility.fontSize,
+        highContrast: typeof preferences.accessibility?.highContrast === 'boolean' 
+          ? preferences.accessibility.highContrast 
+          : DEFAULT_USER_PREFERENCES.accessibility.highContrast,
+        screenReader: typeof preferences.accessibility?.screenReader === 'boolean' 
+          ? preferences.accessibility.screenReader 
+          : DEFAULT_USER_PREFERENCES.accessibility.screenReader
+      },
+      display: {
+        theme: preferences.display?.theme && 
+          ['light', 'dark', 'auto'].includes(preferences.display.theme)
+          ? preferences.display.theme
+          : DEFAULT_USER_PREFERENCES.display.theme,
+        animations: typeof preferences.display?.animations === 'boolean' 
+          ? preferences.display.animations 
+          : DEFAULT_USER_PREFERENCES.display.animations,
+        compactMode: typeof preferences.display?.compactMode === 'boolean' 
+          ? preferences.display.compactMode 
+          : DEFAULT_USER_PREFERENCES.display.compactMode
       },
       createdAt: preferences.createdAt || Date.now(),
       updatedAt: preferences.updatedAt || Date.now()
@@ -301,32 +360,66 @@ class SettingsDataManager {
 
   private validateSecuritySettings(settings: any): SecuritySettings {
     return {
-      id: settings.id || `security_${Date.now()}`,
+      id: settings.id || `sec_${Date.now()}`,
       passwordPolicy: {
-        minLength: Math.max(6, Math.min(32, Number(settings.passwordPolicy?.minLength) || 8)),
-        requireUppercase: Boolean(settings.passwordPolicy?.requireUppercase ?? true),
-        requireLowercase: Boolean(settings.passwordPolicy?.requireLowercase ?? true),
-        requireNumbers: Boolean(settings.passwordPolicy?.requireNumbers ?? true),
-        requireSpecialChars: Boolean(settings.passwordPolicy?.requireSpecialChars ?? true),
-        expirationDays: Math.max(30, Math.min(365, Number(settings.passwordPolicy?.expirationDays) || 90)),
-        preventReuse: Math.max(1, Math.min(10, Number(settings.passwordPolicy?.preventReuse) || 5))
+        minLength: typeof settings.passwordPolicy?.minLength === 'number' 
+          ? settings.passwordPolicy.minLength 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.minLength,
+        requireNumbers: typeof settings.passwordPolicy?.requireNumbers === 'boolean' 
+          ? settings.passwordPolicy.requireNumbers 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.requireNumbers,
+        requireSpecialChars: typeof settings.passwordPolicy?.requireSpecialChars === 'boolean' 
+          ? settings.passwordPolicy.requireSpecialChars 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.requireSpecialChars,
+        requireUppercase: typeof settings.passwordPolicy?.requireUppercase === 'boolean' 
+          ? settings.passwordPolicy.requireUppercase 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.requireUppercase,
+        requireLowercase: typeof settings.passwordPolicy?.requireLowercase === 'boolean' 
+          ? settings.passwordPolicy.requireLowercase 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.requireLowercase,
+        expirationDays: typeof settings.passwordPolicy?.expirationDays === 'number' 
+          ? settings.passwordPolicy.expirationDays 
+          : DEFAULT_SECURITY_SETTINGS.passwordPolicy.expirationDays
       },
-      sessionSecurity: {
-        maxConcurrentSessions: Math.max(1, Math.min(10, Number(settings.sessionSecurity?.maxConcurrentSessions) || 3)),
-        idleTimeout: Math.max(5, Math.min(120, Number(settings.sessionSecurity?.idleTimeout) || 30)),
-        forceLogoutOnPasswordChange: Boolean(settings.sessionSecurity?.forceLogoutOnPasswordChange ?? true),
-        requireReauthForSensitive: Boolean(settings.sessionSecurity?.requireReauthForSensitive ?? true)
+      twoFactorAuth: {
+        enabled: typeof settings.twoFactorAuth?.enabled === 'boolean' 
+          ? settings.twoFactorAuth.enabled 
+          : DEFAULT_SECURITY_SETTINGS.twoFactorAuth.enabled,
+        methods: Array.isArray(settings.twoFactorAuth?.methods) 
+          ? settings.twoFactorAuth.methods.filter((method: string) => 
+              ['sms', 'email', 'authenticator'].includes(method))
+          : DEFAULT_SECURITY_SETTINGS.twoFactorAuth.methods
       },
-      loginAttempts: {
-        maxAttempts: Math.max(3, Math.min(10, Number(settings.loginAttempts?.maxAttempts) || 5)),
-        lockoutDuration: Math.max(5, Math.min(60, Number(settings.loginAttempts?.lockoutDuration) || 15)),
-        resetAfter: Math.max(30, Math.min(300, Number(settings.loginAttempts?.resetAfter) || 60)),
-        notifyOnLockout: Boolean(settings.loginAttempts?.notifyOnLockout ?? true)
+      session: {
+        timeoutMinutes: typeof settings.session?.timeoutMinutes === 'number' 
+          ? settings.session.timeoutMinutes 
+          : DEFAULT_SECURITY_SETTINGS.session.timeoutMinutes,
+        maxSessions: typeof settings.session?.maxSessions === 'number' 
+          ? settings.session.maxSessions 
+          : DEFAULT_SECURITY_SETTINGS.session.maxSessions,
+        ipLocking: typeof settings.session?.ipLocking === 'boolean' 
+          ? settings.session.ipLocking 
+          : DEFAULT_SECURITY_SETTINGS.session.ipLocking
       },
-      twoFactorAuth: Boolean(settings.twoFactorAuth ?? false),
-      ipWhitelist: Array.isArray(settings.ipWhitelist) ? settings.ipWhitelist : [],
-      auditLogging: Boolean(settings.auditLogging ?? true),
-      encryptionEnabled: Boolean(settings.encryptionEnabled ?? true),
+      rateLimiting: {
+        requestsPerMinute: typeof settings.rateLimiting?.requestsPerMinute === 'number' 
+          ? settings.rateLimiting.requestsPerMinute 
+          : DEFAULT_SECURITY_SETTINGS.rateLimiting.requestsPerMinute,
+        burstLimit: typeof settings.rateLimiting?.burstLimit === 'number' 
+          ? settings.rateLimiting.burstLimit 
+          : DEFAULT_SECURITY_SETTINGS.rateLimiting.burstLimit,
+        blockDuration: typeof settings.rateLimiting?.blockDuration === 'number' 
+          ? settings.rateLimiting.blockDuration 
+          : DEFAULT_SECURITY_SETTINGS.rateLimiting.blockDuration
+      },
+      auditLogging: {
+        enabled: typeof settings.auditLogging?.enabled === 'boolean' 
+          ? settings.auditLogging.enabled 
+          : DEFAULT_SECURITY_SETTINGS.auditLogging.enabled,
+        retentionDays: typeof settings.auditLogging?.retentionDays === 'number' 
+          ? settings.auditLogging.retentionDays 
+          : DEFAULT_SECURITY_SETTINGS.auditLogging.retentionDays
+      },
       createdAt: settings.createdAt || Date.now(),
       updatedAt: settings.updatedAt || Date.now()
     }
@@ -334,89 +427,54 @@ class SettingsDataManager {
 
   private validateIntegrationSettings(settings: any): IntegrationSettings {
     return {
-      id: settings.id || `integration_${Date.now()}`,
+      id: settings.id || `int_${Date.now()}`,
       apiConfiguration: {
-        baseUrl: settings.apiConfiguration?.baseUrl || '',
-        apiKey: settings.apiConfiguration?.apiKey || '',
-        rateLimit: Math.max(10, Math.min(10000, Number(settings.apiConfiguration?.rateLimit) || 1000)),
-        timeout: Math.max(1000, Math.min(30000, Number(settings.apiConfiguration?.timeout) || 5000)),
-        retryAttempts: Math.max(0, Math.min(5, Number(settings.apiConfiguration?.retryAttempts) || 3)),
-        enableCaching: Boolean(settings.apiConfiguration?.enableCaching ?? true)
+        baseUrl: settings.apiConfiguration?.baseUrl || DEFAULT_INTEGRATION_SETTINGS.apiConfiguration.baseUrl,
+        timeout: typeof settings.apiConfiguration?.timeout === 'number' 
+          ? settings.apiConfiguration.timeout 
+          : DEFAULT_INTEGRATION_SETTINGS.apiConfiguration.timeout,
+        retries: typeof settings.apiConfiguration?.retries === 'number' 
+          ? settings.apiConfiguration.retries 
+          : DEFAULT_INTEGRATION_SETTINGS.apiConfiguration.retries,
+        headers: {
+          ...DEFAULT_INTEGRATION_SETTINGS.apiConfiguration.headers,
+          ...settings.apiConfiguration?.headers
+        }
       },
       thirdPartyServices: {
-        googleAnalytics: {
-          enabled: Boolean(settings.thirdPartyServices?.googleAnalytics?.enabled ?? false),
-          trackingId: settings.thirdPartyServices?.googleAnalytics?.trackingId || '',
-          anonymizeIp: Boolean(settings.thirdPartyServices?.googleAnalytics?.anonymizeIp ?? true)
+        google: {
+          clientId: settings.thirdPartyServices?.google?.clientId || DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.google.clientId,
+          enabled: typeof settings.thirdPartyServices?.google?.enabled === 'boolean' 
+            ? settings.thirdPartyServices.google.enabled 
+            : DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.google.enabled
         },
-        adSense: {
-          enabled: Boolean(settings.thirdPartyServices?.adSense?.enabled ?? false),
-          publisherId: settings.thirdPartyServices?.adSense?.publisherId || '',
-          adSlotId: settings.thirdPartyServices?.adSense?.adSlotId || ''
+        facebook: {
+          appId: settings.thirdPartyServices?.facebook?.appId || DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.facebook.appId,
+          enabled: typeof settings.thirdPartyServices?.facebook?.enabled === 'boolean' 
+            ? settings.thirdPartyServices.facebook.enabled 
+            : DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.facebook.enabled
         },
-        emailService: {
-          enabled: Boolean(settings.thirdPartyServices?.emailService?.enabled ?? false),
-          provider: ['sendgrid', 'mailgun', 'ses'].includes(settings.thirdPartyServices?.emailService?.provider) ? settings.thirdPartyServices.emailService.provider : 'sendgrid',
-          apiKey: settings.thirdPartyServices?.emailService?.apiKey || '',
-          fromEmail: settings.thirdPartyServices?.emailService?.fromEmail || ''
+        twitter: {
+          apiKey: settings.thirdPartyServices?.twitter?.apiKey || DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.twitter.apiKey,
+          enabled: typeof settings.thirdPartyServices?.twitter?.enabled === 'boolean' 
+            ? settings.thirdPartyServices.twitter.enabled 
+            : DEFAULT_INTEGRATION_SETTINGS.thirdPartyServices.twitter.enabled
         }
       },
       webhooks: {
-        enabled: Boolean(settings.webhooks?.enabled ?? false),
-        endpoints: Array.isArray(settings.webhooks?.endpoints) ? settings.webhooks.endpoints : [],
-        retryPolicy: {
-          maxRetries: Math.max(0, Math.min(5, Number(settings.webhooks?.retryPolicy?.maxRetries) || 3)),
-          backoffMultiplier: Math.max(1, Math.min(10, Number(settings.webhooks?.retryPolicy?.backoffMultiplier) || 2)),
-          maxBackoffTime: Math.max(1000, Math.min(60000, Number(settings.webhooks?.retryPolicy?.maxBackoffTime) || 30000))
-        }
-      },
-      socialMedia: {
-        twitter: {
-          enabled: Boolean(settings.socialMedia?.twitter?.enabled ?? false),
-          apiKey: settings.socialMedia?.twitter?.apiKey || '',
-          apiSecret: settings.socialMedia?.twitter?.apiSecret || ''
+        quizCompleted: {
+          url: settings.webhooks?.quizCompleted?.url || DEFAULT_INTEGRATION_SETTINGS.webhooks.quizCompleted.url,
+          enabled: typeof settings.webhooks?.quizCompleted?.enabled === 'boolean' 
+            ? settings.webhooks.quizCompleted.enabled 
+            : DEFAULT_INTEGRATION_SETTINGS.webhooks.quizCompleted.enabled,
+          secret: settings.webhooks?.quizCompleted?.secret || DEFAULT_INTEGRATION_SETTINGS.webhooks.quizCompleted.secret
         },
-        facebook: {
-          enabled: Boolean(settings.socialMedia?.facebook?.enabled ?? false),
-          appId: settings.socialMedia?.facebook?.appId || '',
-          appSecret: settings.socialMedia?.facebook?.appSecret || ''
-        },
-        linkedin: {
-          enabled: Boolean(settings.socialMedia?.linkedin?.enabled ?? false),
-          clientId: settings.socialMedia?.linkedin?.clientId || '',
-          clientSecret: settings.socialMedia?.linkedin?.clientSecret || ''
-        }
-      },
-      analytics: {
-        customAnalytics: {
-          enabled: Boolean(settings.analytics?.customAnalytics?.enabled ?? false),
-          endpoint: settings.analytics?.customAnalytics?.endpoint || '',
-          apiKey: settings.analytics?.customAnalytics?.apiKey || ''
-        },
-        heatmaps: {
-          enabled: Boolean(settings.analytics?.heatmaps?.enabled ?? false),
-          provider: ['hotjar', 'fullstory', 'logrocket'].includes(settings.analytics?.heatmaps?.provider) ? settings.analytics.heatmaps.provider : 'hotjar',
-          trackingId: settings.analytics?.heatmaps?.trackingId || ''
-        }
-      },
-      notifications: {
-        email: {
-          enabled: Boolean(settings.notifications?.email?.enabled ?? false),
-          smtpHost: settings.notifications?.email?.smtpHost || '',
-          smtpPort: Number(settings.notifications?.email?.smtpPort) || 587,
-          username: settings.notifications?.email?.username || '',
-          password: settings.notifications?.email?.password || ''
-        },
-        sms: {
-          enabled: Boolean(settings.notifications?.sms?.enabled ?? false),
-          provider: ['twilio', 'nexmo', 'aws-sns'].includes(settings.notifications?.sms?.provider) ? settings.notifications.sms.provider : 'twilio',
-          apiKey: settings.notifications?.sms?.apiKey || '',
-          fromNumber: settings.notifications?.sms?.fromNumber || ''
-        },
-        push: {
-          enabled: Boolean(settings.notifications?.push?.enabled ?? false),
-          vapidPublicKey: settings.notifications?.push?.vapidPublicKey || '',
-          vapidPrivateKey: settings.notifications?.push?.vapidPrivateKey || ''
+        userRegistered: {
+          url: settings.webhooks?.userRegistered?.url || DEFAULT_INTEGRATION_SETTINGS.webhooks.userRegistered.url,
+          enabled: typeof settings.webhooks?.userRegistered?.enabled === 'boolean' 
+            ? settings.webhooks.userRegistered.enabled 
+            : DEFAULT_INTEGRATION_SETTINGS.webhooks.userRegistered.enabled,
+          secret: settings.webhooks?.userRegistered?.secret || DEFAULT_INTEGRATION_SETTINGS.webhooks.userRegistered.secret
         }
       },
       createdAt: settings.createdAt || Date.now(),
@@ -426,123 +484,57 @@ class SettingsDataManager {
 
   // Default creation methods
   private createDefaultSystemSettings(): SystemSettings {
+    const now = Date.now()
     return {
-      id: `system_${Date.now()}`,
+      id: `sys_${now}`,
       ...DEFAULT_SYSTEM_SETTINGS,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      createdAt: now,
+      updatedAt: now
     }
   }
 
   private createDefaultUserPreferences(): UserPreferences {
+    const now = Date.now()
     return {
-      id: `user_${Date.now()}`,
+      id: `pref_${now}`,
+      userId: 'guest',
       ...DEFAULT_USER_PREFERENCES,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      createdAt: now,
+      updatedAt: now
     }
   }
 
   private createDefaultSecuritySettings(): SecuritySettings {
+    const now = Date.now()
     return {
-      id: `security_${Date.now()}`,
+      id: `sec_${now}`,
       ...DEFAULT_SECURITY_SETTINGS,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      createdAt: now,
+      updatedAt: now
     }
   }
 
   private createDefaultIntegrationSettings(): IntegrationSettings {
+    const now = Date.now()
     return {
-      id: `integration_${Date.now()}`,
-      apiConfiguration: {
-        baseUrl: '',
-        apiKey: '',
-        rateLimit: 1000,
-        timeout: 5000,
-        retryAttempts: 3,
-        enableCaching: true
-      },
-      thirdPartyServices: {
-        googleAnalytics: {
-          enabled: false,
-          trackingId: '',
-          anonymizeIp: true
-        },
-        adSense: {
-          enabled: false,
-          publisherId: '',
-          adSlotId: ''
-        },
-        emailService: {
-          enabled: false,
-          provider: 'sendgrid',
-          apiKey: '',
-          fromEmail: ''
-        }
-      },
-      webhooks: {
-        enabled: false,
-        endpoints: [],
-        retryPolicy: {
-          maxRetries: 3,
-          backoffMultiplier: 2,
-          maxBackoffTime: 30000
-        }
-      },
-      socialMedia: {
-        twitter: {
-          enabled: false,
-          apiKey: '',
-          apiSecret: ''
-        },
-        facebook: {
-          enabled: false,
-          appId: '',
-          appSecret: ''
-        },
-        linkedin: {
-          enabled: false,
-          clientId: '',
-          clientSecret: ''
-        }
-      },
-      analytics: {
-        customAnalytics: {
-          enabled: false,
-          endpoint: '',
-          apiKey: ''
-        },
-        heatmaps: {
-          enabled: false,
-          provider: 'hotjar',
-          trackingId: ''
-        }
-      },
-      notifications: {
-        email: {
-          enabled: false,
-          smtpHost: '',
-          smtpPort: 587,
-          username: '',
-          password: ''
-        },
-        sms: {
-          enabled: false,
-          provider: 'twilio',
-          apiKey: '',
-          fromNumber: ''
-        },
-        push: {
-          enabled: false,
-          vapidPublicKey: '',
-          vapidPrivateKey: ''
-        }
-      },
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      id: `int_${now}`,
+      ...DEFAULT_INTEGRATION_SETTINGS,
+      createdAt: now,
+      updatedAt: now
     }
+  }
+
+  // Clear all settings
+  clearAllSettings(): void {
+    Object.values(SETTINGS_STORAGE_KEYS).forEach(key => {
+      try {
+        localStorage.removeItem(key)
+      } catch (error) {
+        console.error(`Error clearing settings for key ${key}:`, error)
+      }
+    })
   }
 }
 
+// Export singleton instance
 export const settingsDataManager = SettingsDataManager.getInstance()

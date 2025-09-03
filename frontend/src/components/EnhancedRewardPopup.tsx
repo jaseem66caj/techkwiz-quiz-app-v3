@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiRequestJson } from '../utils/api'
 
 interface EnhancedRewardPopupProps {
   isOpen: boolean
@@ -41,17 +40,10 @@ export function EnhancedRewardPopup({
   const [sparkles, setSparkles] = useState<Array<{ id: number, x: number, y: number }>>([])
   const adContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // Load config
+  // Load config - now using default values instead of API call
   useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const cfg = await apiRequestJson<RewardConfig>('/api/quiz/rewarded-config')
-        setConfig(cfg)
-      } catch {
-        setConfig({ coin_reward: 100, is_active: true, show_during_quiz: true, trigger_after_questions: 1, enable_analytics: true })
-      }
-    }
-    fetchConfig()
+    // Removed backend API call and using default config
+    setConfig({ coin_reward: 100, is_active: true, show_during_quiz: true, trigger_after_questions: 1, enable_analytics: false })
   }, [])
 
   // Init effects
@@ -91,14 +83,8 @@ export function EnhancedRewardPopup({
   }, [showingAd, adSlotCode])
 
   const sendAnalytics = async (type: 'start' | 'complete') => {
-    if (config?.enable_analytics === false) return
-    try {
-      await apiRequestJson('/api/quiz/ad-analytics/event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event_type: type, placement: 'popup', source: 'category' })
-      } as any)
-    } catch {}
+    // Removed backend API call for analytics
+    console.log(`Analytics event: ${type}`)
   }
 
   const startAdExperience = async () => {

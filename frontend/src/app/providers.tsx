@@ -9,7 +9,6 @@ import {
   isAuthenticated,
   type User 
 } from '../utils/auth'
-import { AdminProvider } from '../context/AdminContext'
 
 // Types
 interface AppState {
@@ -170,9 +169,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
-      <AdminProvider>
-        {children}
-      </AdminProvider>
+      {children}
     </AppContext.Provider>
   )
 }

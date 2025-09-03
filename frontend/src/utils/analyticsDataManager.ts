@@ -17,7 +17,7 @@ import {
   ANALYTICS_STORAGE_KEYS,
   DEFAULT_TIME_RANGES,
   DEFAULT_CATEGORIES
-} from '@/types/admin'
+} from '@/types/analytics'
 import { quizDataManager } from './quizDataManager'
 import { rewardDataManager } from './rewardDataManager'
 
@@ -199,233 +199,102 @@ class AnalyticsDataManager {
 
   // Generate user activity data
   private generateUserActivity(): UserActivity {
-    const totalSessions = Math.floor(Math.random() * 500) + 200
-    
-    // Generate device breakdown
-    const deviceTypes: DeviceBreakdown = {
-      desktop: Math.floor(Math.random() * 40) + 30, // 30-70%
-      mobile: Math.floor(Math.random() * 50) + 25, // 25-75%
-      tablet: Math.floor(Math.random() * 20) + 5 // 5-25%
-    }
-    
-    // Generate session distribution
-    const sessionDistribution: SessionDistribution[] = [
-      { duration: '0-2 min', count: Math.floor(totalSessions * 0.15) },
-      { duration: '2-5 min', count: Math.floor(totalSessions * 0.25) },
-      { duration: '5-10 min', count: Math.floor(totalSessions * 0.35) },
-      { duration: '10-20 min', count: Math.floor(totalSessions * 0.20) },
-      { duration: '20+ min', count: Math.floor(totalSessions * 0.05) }
-    ]
-    
-    // Generate user journey
-    const userJourney: UserJourneyStep[] = [
-      { step: 'Landing', users: 100, dropoffRate: 0 },
-      { step: 'Quiz Start', users: 85, dropoffRate: 15 },
-      { step: 'First Question', users: 80, dropoffRate: 6 },
-      { step: 'Mid Quiz', users: 70, dropoffRate: 12.5 },
-      { step: 'Quiz Complete', users: 65, dropoffRate: 7 },
-      { step: 'Reward Claim', users: 60, dropoffRate: 8 }
-    ]
-    
     return {
-      totalSessions,
-      averageSessionDuration: 7.5 + Math.random() * 5, // 7.5-12.5 minutes
-      returnRate: 45 + Math.random() * 30, // 45-75%
-      peakUsageHours: [14, 15, 16, 19, 20, 21], // 2-4 PM and 7-9 PM
-      deviceTypes,
-      geographicData: {
-        'United States': 35,
-        'United Kingdom': 20,
-        'Canada': 15,
-        'Australia': 12,
-        'Germany': 8,
-        'France': 6,
-        'Other': 4
+      dailyActiveUsers: Math.floor(Math.random() * 50) + 25,
+      weeklyActiveUsers: Math.floor(Math.random() * 200) + 100,
+      monthlyActiveUsers: Math.floor(Math.random() * 500) + 300,
+      userRetention: {
+        day1: 85 + Math.random() * 10, // 85-95%
+        day7: 65 + Math.random() * 15, // 65-80%
+        day30: 45 + Math.random() * 15  // 45-60%
       },
-      sessionDistribution,
-      userJourney
+      deviceBreakdown: {
+        desktop: 35 + Math.random() * 15, // 35-50%
+        mobile: 55 + Math.random() * 20,  // 55-75%
+        tablet: 5 + Math.random() * 10    // 5-15%
+      },
+      sessionDistribution: {
+        morning: 25 + Math.random() * 10,   // 25-35%
+        afternoon: 30 + Math.random() * 15, // 30-45%
+        evening: 35 + Math.random() * 15,   // 35-50%
+        night: 10 + Math.random() * 10      // 10-20%
+      },
+      userJourney: [
+        { step: 'Landing', completionRate: 100, dropOffRate: 0 },
+        { step: 'Category Selection', completionRate: 90, dropOffRate: 10 },
+        { step: 'Quiz Start', completionRate: 85, dropOffRate: 15 },
+        { step: 'Question 1', completionRate: 80, dropOffRate: 20 },
+        { step: 'Question 2', completionRate: 75, dropOffRate: 25 },
+        { step: 'Question 3', completionRate: 70, dropOffRate: 30 },
+        { step: 'Question 4', completionRate: 65, dropOffRate: 35 },
+        { step: 'Question 5', completionRate: 60, dropOffRate: 40 },
+        { step: 'Results', completionRate: 55, dropOffRate: 45 }
+      ]
     }
   }
 
-  // Validate and migrate data
+  // Validate and migrate data for backward compatibility
   private validateAndMigrateData(data: any, timeRange?: TimeRange): AnalyticsData {
-    // Ensure all required properties exist
-    const migratedData: AnalyticsData = {
+    // Ensure all required fields exist
+    const validatedData: AnalyticsData = {
       id: data.id || `analytics_${Date.now()}`,
-      quizMetrics: data.quizMetrics || this.generateQuizMetrics(2),
-      rewardMetrics: data.rewardMetrics || this.generateRewardMetrics(1),
+      quizMetrics: data.quizMetrics || this.generateQuizMetrics(0),
+      rewardMetrics: data.rewardMetrics || this.generateRewardMetrics(0),
       userActivity: data.userActivity || this.generateUserActivity(),
-      timeRange: timeRange || data.timeRange || DEFAULT_TIME_RANGES[1],
+      timeRange: data.timeRange || timeRange || DEFAULT_TIME_RANGES[1],
       createdAt: data.createdAt || Date.now(),
+      updatedAt: data.updatedAt || Date.now()
+    }
+    
+    return validatedData
+  }
+
+  // Update analytics data
+  updateAnalyticsData(updates: Partial<Omit<AnalyticsData, 'id' | 'createdAt'>>): AnalyticsData {
+    const currentData = this.getAnalyticsData()
+    const updatedData: AnalyticsData = {
+      ...currentData,
+      ...updates,
       updatedAt: Date.now()
     }
     
-    return migratedData
-  }
-
-  // Refresh analytics data
-  refreshData(timeRange?: TimeRange): AnalyticsData {
-    const newData = this.generateMockAnalyticsData(timeRange)
-    this.safeSetItem(ANALYTICS_STORAGE_KEYS.DATA, JSON.stringify(newData))
-    return newData
+    this.safeSetItem(ANALYTICS_STORAGE_KEYS.DATA, JSON.stringify(updatedData))
+    return updatedData
   }
 
   // Export analytics data
-  exportData(options: ExportOptions): string {
-    const data = this.getAnalyticsData(options.dateRange)
+  exportAnalyticsData(options: ExportOptions): string {
+    const data = this.getAnalyticsData()
     
-    if (options.format === 'json') {
-      return JSON.stringify(data, null, 2)
-    } else if (options.format === 'csv') {
-      return this.convertToCSV(data, options.sections)
-    }
-    
-    return JSON.stringify(data, null, 2) // Fallback to JSON
-  }
-
-  // Convert data to CSV format
-  private convertToCSV(data: AnalyticsData, sections: string[]): string {
-    let csv = ''
-    
-    if (sections.includes('quiz')) {
-      csv += 'Quiz Analytics\n'
-      csv += 'Metric,Value\n'
-      csv += `Total Questions,${data.quizMetrics.totalQuestions}\n`
-      csv += `Questions Answered,${data.quizMetrics.questionsAnswered}\n`
-      csv += `Success Rate,${data.quizMetrics.successRate.toFixed(2)}%\n`
-      csv += `Average Session Time,${data.quizMetrics.averageSessionTime.toFixed(1)} minutes\n\n`
-    }
-    
-    if (sections.includes('rewards')) {
-      csv += 'Reward Analytics\n'
-      csv += 'Metric,Value\n'
-      csv += `Total Coins Earned,${data.rewardMetrics.totalCoinsEarned}\n`
-      csv += `Achievements Unlocked,${data.rewardMetrics.achievementsUnlocked}\n`
-      csv += `Active Users,${data.rewardMetrics.activeUsers}\n`
-      csv += `Engagement Rate,${data.rewardMetrics.engagementRate.toFixed(2)}%\n\n`
-    }
-    
-    return csv
-  }
-
-  // Get analytics settings
-  getSettings(): any {
-    const settings = this.safeGetItem(ANALYTICS_STORAGE_KEYS.SETTINGS)
-    if (!settings) {
-      return {
-        defaultTimeRange: DEFAULT_TIME_RANGES[1],
-        autoRefresh: true,
-        refreshInterval: 30000, // 30 seconds
-        chartType: 'line'
-      }
-    }
-    
-    try {
-      return JSON.parse(settings)
-    } catch (error) {
-      console.error('Error parsing analytics settings:', error)
-      return {
-        defaultTimeRange: DEFAULT_TIME_RANGES[1],
-        autoRefresh: true,
-        refreshInterval: 30000,
-        chartType: 'line'
-      }
+    switch (options.format) {
+      case 'json':
+        return JSON.stringify(data, null, 2)
+      
+      case 'csv':
+        // Simple CSV export of key metrics
+        let csv = 'Metric,Value\n'
+        csv += `Total Questions,${data.quizMetrics.totalQuestions}\n`
+        csv += `Questions Answered,${data.quizMetrics.questionsAnswered}\n`
+        csv += `Success Rate,${data.quizMetrics.successRate.toFixed(2)}%\n`
+        csv += `Total Coins Earned,${data.rewardMetrics.totalCoinsEarned}\n`
+        csv += `Achievements Unlocked,${data.rewardMetrics.achievementsUnlocked}\n`
+        csv += `Active Users,${data.rewardMetrics.activeUsers}\n`
+        return csv
+      
+      default:
+        throw new Error(`Unsupported export format: ${options.format}`)
     }
   }
 
-  // Save analytics settings
-  saveSettings(settings: any): boolean {
-    return this.safeSetItem(ANALYTICS_STORAGE_KEYS.SETTINGS, JSON.stringify(settings))
-  }
-
-  // Get quiz metrics for dashboard
-  getQuizMetrics(): { totalCoinsEarned: number; questionsAnswered: number; successRate: number } {
-    try {
-      const analyticsData = this.getAnalyticsData()
-      return {
-        totalCoinsEarned: analyticsData.rewardMetrics?.totalCoinsEarned || 0,
-        questionsAnswered: analyticsData.quizMetrics?.questionsAnswered || 0,
-        successRate: analyticsData.quizMetrics?.successRate || 0
+  // Clear analytics data
+  clearAnalyticsData(): void {
+    Object.values(ANALYTICS_STORAGE_KEYS).forEach(key => {
+      try {
+        localStorage.removeItem(key)
+      } catch (error) {
+        console.error(`Error clearing analytics data for key ${key}:`, error)
       }
-    } catch (error) {
-      console.error('Error getting quiz metrics:', error)
-      return { totalCoinsEarned: 0, questionsAnswered: 0, successRate: 0 }
-    }
-  }
-
-  // Get activity data for dashboard
-  getActivityData(): { averageSessionTime: number } {
-    try {
-      const analyticsData = this.getAnalyticsData()
-      return {
-        averageSessionTime: analyticsData.userActivity?.averageSessionDuration || 0
-      }
-    } catch (error) {
-      console.error('Error getting activity data:', error)
-      return { averageSessionTime: 0 }
-    }
-  }
-
-  // Get recent activity for dashboard
-  getRecentActivity(): Array<{ id: string; type: string; description: string; timestamp: number }> {
-    try {
-      const analyticsData = this.getAnalyticsData()
-
-      // Generate mock recent activity based on analytics data
-      const activities = []
-      const now = Date.now()
-
-      // Add some sample activities based on the analytics data
-      if (analyticsData.quizMetrics?.questionsAnswered > 0) {
-        activities.push({
-          id: 'activity-1',
-          type: 'quiz',
-          description: `${analyticsData.quizMetrics.questionsAnswered} questions answered today`,
-          timestamp: now - (1000 * 60 * 30) // 30 minutes ago
-        })
-      }
-
-      if (analyticsData.rewardMetrics?.totalCoinsEarned > 0) {
-        activities.push({
-          id: 'activity-2',
-          type: 'reward',
-          description: `${analyticsData.rewardMetrics.totalCoinsEarned} coins earned`,
-          timestamp: now - (1000 * 60 * 60) // 1 hour ago
-        })
-      }
-
-      if (analyticsData.rewardMetrics?.achievementsUnlocked > 0) {
-        activities.push({
-          id: 'activity-3',
-          type: 'achievement',
-          description: `${analyticsData.rewardMetrics.achievementsUnlocked} achievements unlocked`,
-          timestamp: now - (1000 * 60 * 90) // 1.5 hours ago
-        })
-      }
-
-      // Add some default activities if no data
-      if (activities.length === 0) {
-        activities.push(
-          {
-            id: 'activity-default-1',
-            type: 'system',
-            description: 'Dashboard initialized',
-            timestamp: now - (1000 * 60 * 10) // 10 minutes ago
-          },
-          {
-            id: 'activity-default-2',
-            type: 'system',
-            description: 'Analytics data refreshed',
-            timestamp: now - (1000 * 60 * 20) // 20 minutes ago
-          }
-        )
-      }
-
-      return activities.sort((a, b) => b.timestamp - a.timestamp) // Sort by newest first
-    } catch (error) {
-      console.error('Error getting recent activity:', error)
-      return []
-    }
+    })
   }
 }
 

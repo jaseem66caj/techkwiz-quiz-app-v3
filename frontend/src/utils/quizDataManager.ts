@@ -7,7 +7,7 @@ import {
   QuizManagementSettings,
   QUIZ_STORAGE_KEYS,
   DEFAULT_CATEGORIES 
-} from '@/types/admin'
+} from '@/types/quiz'
 
 // Data validation schemas
 export const VALIDATION_RULES = {
@@ -199,897 +199,486 @@ class QuizDataManager {
   searchQuestions(filters: SearchFilters): QuizQuestion[] {
     const questions = this.getQuestions()
     
+    if (!filters || Object.keys(filters).length === 0) {
+      return questions
+    }
+    
     return questions.filter(question => {
       // Text search
-      if (filters.searchText) {
-        const searchLower = filters.searchText.toLowerCase()
-        if (!question.question.toLowerCase().includes(searchLower)) {
+      if (filters.query) {
+        const query = filters.query.toLowerCase()
+        const matchesQuestion = question.question.toLowerCase().includes(query)
+        const matchesOptions = question.options.some(option => 
+          option.toLowerCase().includes(query)
+        )
+        const matchesCategory = question.category.toLowerCase().includes(query)
+        const matchesSubcategory = question.subcategory.toLowerCase().includes(query)
+        const matchesTags = question.tags?.some(tag => 
+          tag.toLowerCase().includes(query)
+        )
+        
+        if (!matchesQuestion && !matchesOptions && !matchesCategory && 
+            !matchesSubcategory && !matchesTags) {
           return false
         }
       }
       
       // Category filter
-      if (filters.category !== 'all' && question.category !== filters.category) {
+      if (filters.category && question.category !== filters.category) {
         return false
       }
       
       // Difficulty filter
-      if (filters.difficulty !== 'all' && question.difficulty !== filters.difficulty) {
+      if (filters.difficulty && question.difficulty !== filters.difficulty) {
         return false
       }
       
       // Type filter
-      if (filters.type !== 'all' && question.type !== filters.type) {
+      if (filters.type && question.type !== filters.type) {
         return false
       }
-
+      
       // Section filter
-      if (filters.section !== 'all' && question.section !== filters.section) {
+      if (filters.section && question.section !== filters.section) {
         return false
       }
-
+      
       // Subcategory filter
-      if (filters.subcategory !== 'all' && question.subcategory !== filters.subcategory) {
+      if (filters.subcategory && question.subcategory !== filters.subcategory) {
         return false
       }
-
+      
+      // Tags filter
+      if (filters.tags && filters.tags.length > 0) {
+        const hasMatchingTag = filters.tags.some(tag => 
+          question.tags?.includes(tag)
+        )
+        if (!hasMatchingTag) {
+          return false
+        }
+      }
+      
       return true
+    }).sort((a, b) => {
+      // Sorting
+      switch (filters.sortBy) {
+        case 'createdAt':
+          return filters.sortOrder === 'desc' 
+            ? (b.createdAt || 0) - (a.createdAt || 0)
+            : (a.createdAt || 0) - (b.createdAt || 0)
+        case 'updatedAt':
+          return filters.sortOrder === 'desc' 
+            ? (b.updatedAt || 0) - (a.updatedAt || 0)
+            : (a.updatedAt || 0) - (b.updatedAt || 0)
+        case 'difficulty':
+          const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3 }
+          return filters.sortOrder === 'desc' 
+            ? (difficultyOrder[b.difficulty] || 0) - (difficultyOrder[a.difficulty] || 0)
+            : (difficultyOrder[a.difficulty] || 0) - (difficultyOrder[b.difficulty] || 0)
+        default:
+          return 0
+      }
     })
   }
 
-  // Categories management
-  getCategories(): QuizCategory[] {
-    const questions = this.getQuestions()
-    const categoryCounts = questions.reduce((acc, question) => {
-      acc[question.category] = (acc[question.category] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
-    
-    return DEFAULT_CATEGORIES.map(category => ({
-      ...category,
-      questionCount: categoryCounts[category.id] || 0
-    }))
-  }
-
-  // Draft management
-  saveDraft(draft: QuestionDraft): void {
-    const drafts = this.getDrafts()
-    const existingIndex = drafts.findIndex(d => d.id === draft.id)
-    
-    if (existingIndex >= 0) {
-      drafts[existingIndex] = { ...draft, lastSaved: Date.now() }
-    } else {
-      drafts.push({ ...draft, lastSaved: Date.now() })
-    }
-    
-    this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(drafts))
-  }
-
-  getDrafts(): QuestionDraft[] {
-    const data = this.safeGetItem(QUIZ_STORAGE_KEYS.DRAFTS)
-    if (!data) return []
-    
+  // Import questions from JSON
+  importQuestions(jsonData: string): BulkOperationResult {
     try {
-      return JSON.parse(data)
+      const parsedData = JSON.parse(jsonData)
+      const questions: QuizQuestion[] = Array.isArray(parsedData) ? parsedData : [parsedData]
+      
+      if (questions.length > VALIDATION_RULES.MAX_BULK_OPERATIONS) {
+        throw new QuizDataError(
+          `Cannot import more than ${VALIDATION_RULES.MAX_BULK_OPERATIONS} questions at once`,
+          'BULK_LIMIT_EXCEEDED'
+        )
+      }
+      
+      // Validate each question
+      questions.forEach(question => this.validateQuestion(question))
+      
+      // Save to localStorage
+      const existingQuestions = this.getQuestions()
+      const allQuestions = [...existingQuestions, ...questions.map(q => ({
+        ...q,
+        id: q.id || this.generateId(),
+        createdAt: q.createdAt || Date.now(),
+        updatedAt: q.updatedAt || Date.now()
+      }))]
+      
+      this.saveQuestions(allQuestions)
+      
+      return {
+        success: true,
+        processedCount: questions.length,
+        errorCount: 0,
+        errors: []
+      }
     } catch (error) {
-      console.error('Error parsing drafts data:', error)
-      return []
+      if (error instanceof QuizDataError) {
+        throw error
+      }
+      
+      throw new QuizDataError(
+        `Failed to import questions: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'IMPORT_FAILED'
+      )
     }
   }
 
-  deleteDraft(id: string): void {
-    const drafts = this.getDrafts().filter(d => d.id !== id)
-    this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(drafts))
-  }
-
-  // Settings management
-  getSettings(): QuizManagementSettings {
-    const data = this.safeGetItem(QUIZ_STORAGE_KEYS.SETTINGS)
-    if (!data) return this.getDefaultSettings()
+  // Export questions to JSON
+  exportQuestions(filters?: SearchFilters): string {
+    const questions = filters 
+      ? this.searchQuestions(filters)
+      : this.getQuestions()
     
-    try {
-      return { ...this.getDefaultSettings(), ...JSON.parse(data) }
-    } catch (error) {
-      console.error('Error parsing settings data:', error)
-      return this.getDefaultSettings()
-    }
+    return JSON.stringify(questions, null, 2)
   }
 
-  saveSettings(settings: Partial<QuizManagementSettings>): void {
-    const currentSettings = this.getSettings()
-    const updatedSettings = { ...currentSettings, ...settings }
-    this.safeSetItem(QUIZ_STORAGE_KEYS.SETTINGS, JSON.stringify(updatedSettings))
-  }
-
-  private getDefaultSettings(): QuizManagementSettings {
-    return {
-      pageSize: 10,
-      sortBy: 'updatedAt',
-      sortOrder: 'desc',
-      filters: {
-        searchText: '',
-        category: 'all',
-        difficulty: 'all',
-        type: 'all',
-        section: 'all',
-        subcategory: 'all'
-      },
-      selectedQuestions: []
-    }
-  }
-
-  // Validation
-  private validateQuestion(question: Partial<QuizQuestion>): void {
+  // Validation methods
+  private validateQuestion(question: any): void {
     if (!question.question || question.question.length < VALIDATION_RULES.QUESTION_MIN_LENGTH) {
       throw new QuizDataError(
         `Question must be at least ${VALIDATION_RULES.QUESTION_MIN_LENGTH} characters long`,
-        'INVALID_QUESTION_LENGTH'
+        'INVALID_QUESTION'
       )
     }
     
     if (question.question.length > VALIDATION_RULES.QUESTION_MAX_LENGTH) {
       throw new QuizDataError(
         `Question must be no more than ${VALIDATION_RULES.QUESTION_MAX_LENGTH} characters long`,
-        'INVALID_QUESTION_LENGTH'
+        'INVALID_QUESTION'
       )
     }
     
-    if (!question.options || question.options.length !== VALIDATION_RULES.MIN_OPTIONS) {
+    if (!Array.isArray(question.options) || 
+        question.options.length < VALIDATION_RULES.MIN_OPTIONS ||
+        question.options.length > VALIDATION_RULES.MAX_OPTIONS) {
       throw new QuizDataError(
         `Question must have exactly ${VALIDATION_RULES.MIN_OPTIONS} options`,
-        'INVALID_OPTIONS_COUNT'
+        'INVALID_OPTIONS'
       )
     }
     
-    // Validate each option
-    question.options.forEach((option, index) => {
+    question.options.forEach((option: string, index: number) => {
       if (!option || option.length < VALIDATION_RULES.OPTION_MIN_LENGTH) {
         throw new QuizDataError(
-          `Option ${index + 1} must be at least ${VALIDATION_RULES.OPTION_MIN_LENGTH} character long`,
-          'INVALID_OPTION_LENGTH'
+          `Option ${index + 1} must be at least ${VALIDATION_RULES.OPTION_MIN_LENGTH} characters long`,
+          'INVALID_OPTION'
         )
       }
       
       if (option.length > VALIDATION_RULES.OPTION_MAX_LENGTH) {
         throw new QuizDataError(
           `Option ${index + 1} must be no more than ${VALIDATION_RULES.OPTION_MAX_LENGTH} characters long`,
-          'INVALID_OPTION_LENGTH'
+          'INVALID_OPTION'
         )
       }
     })
     
-    // Check for duplicate options
-    const uniqueOptions = new Set(question.options.map(opt => opt.toLowerCase().trim()))
-    if (uniqueOptions.size !== question.options.length) {
-      throw new QuizDataError('All options must be unique', 'DUPLICATE_OPTIONS')
+    if (typeof question.correct_answer !== 'number' || 
+        question.correct_answer < 0 || 
+        question.correct_answer >= question.options.length) {
+      throw new QuizDataError(
+        `Correct answer index must be between 0 and ${question.options.length - 1}`,
+        'INVALID_CORRECT_ANSWER'
+      )
     }
     
-    // Validate correct answer
-    if (typeof question.correctAnswer !== 'number' || 
-        question.correctAnswer < 0 || 
-        question.correctAnswer >= question.options.length) {
-      throw new QuizDataError('Invalid correct answer selection', 'INVALID_CORRECT_ANSWER')
+    if (!question.difficulty || !['beginner', 'intermediate', 'advanced'].includes(question.difficulty)) {
+      throw new QuizDataError(
+        'Question must have a valid difficulty level (beginner, intermediate, or advanced)',
+        'INVALID_DIFFICULTY'
+      )
     }
     
-    // Validate category
-    const validCategories = DEFAULT_CATEGORIES.map(c => c.id)
-    if (!question.category || !validCategories.includes(question.category)) {
-      throw new QuizDataError('Invalid category selection', 'INVALID_CATEGORY')
+    if (!question.category) {
+      throw new QuizDataError(
+        'Question must have a category',
+        'INVALID_CATEGORY'
+      )
+    }
+    
+    if (!question.subcategory) {
+      throw new QuizDataError(
+        'Question must have a subcategory',
+        'INVALID_SUBCATEGORY'
+      )
     }
   }
 
-  // Utility methods
+  // Helper methods
   private saveQuestions(questions: QuizQuestion[]): void {
     this.safeSetItem(QUIZ_STORAGE_KEYS.QUESTIONS, JSON.stringify(questions))
   }
 
   private generateId(): string {
-    return `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    return Date.now().toString(36) + Math.random().toString(36).substr(2)
   }
 
-  // CSV Export/Import functionality
-  exportToCSV(questions?: QuizQuestion[]): string {
-    const questionsToExport = questions || this.getQuestions()
-
-    const headers = [
-      'ID', 'Question', 'Option 1', 'Option 2', 'Option 3', 'Option 4',
-      'Correct Answer', 'Category', 'Difficulty', 'Type', 'Fun Fact', 'Tags',
-      'Created At', 'Updated At'
-    ]
-
-    const csvRows = [
-      headers.join(','),
-      ...questionsToExport.map(q => [
-        q.id,
-        `"${q.question.replace(/"/g, '""')}"`,
-        `"${q.options[0].replace(/"/g, '""')}"`,
-        `"${q.options[1].replace(/"/g, '""')}"`,
-        `"${q.options[2].replace(/"/g, '""')}"`,
-        `"${q.options[3].replace(/"/g, '""')}"`,
-        q.correctAnswer + 1, // 1-based for human readability
-        q.category,
-        q.difficulty,
-        q.type,
-        `"${(q.funFact || '').replace(/"/g, '""')}"`,
-        `"${(q.tags || []).join(';')}"`,
-        new Date(q.createdAt).toISOString(),
-        new Date(q.updatedAt).toISOString()
-      ].join(','))
-    ]
-
-    // Add UTF-8 BOM for Excel compatibility
-    return '\uFEFF' + csvRows.join('\n')
-  }
-
-  async importFromCSV(csvContent: string): Promise<BulkOperationResult> {
-    const lines = csvContent.split('\n').filter(line => line.trim())
-    if (lines.length < 2) {
-      throw new QuizDataError('CSV file must contain at least a header and one data row', 'INVALID_CSV_FORMAT')
-    }
-
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''))
-    const dataLines = lines.slice(1)
-
-    const results: BulkOperationResult = {
-      success: true,
-      processedCount: 0,
-      errorCount: 0,
-      errors: []
-    }
-
-    const validQuestions: QuizQuestion[] = []
-    const existingQuestions = this.getQuestions()
-
-    for (let i = 0; i < dataLines.length; i++) {
-      try {
-        const values = this.parseCSVLine(dataLines[i])
-        if (values.length < 8) {
-          results.errors.push(`Line ${i + 2}: Insufficient data columns`)
-          results.errorCount++
-          continue
-        }
-
-        const question: QuizQuestion = {
-          id: values[0] || this.generateId(),
-          question: values[1],
-          options: [values[2], values[3], values[4], values[5]],
-          correctAnswer: parseInt(values[6]) - 1, // Convert back to 0-based
-          category: values[7],
-          difficulty: values[8] as 'beginner' | 'intermediate' | 'advanced',
-          type: (values[9] || 'regular') as 'regular' | 'bonus',
-          funFact: values[10] || undefined,
-          tags: values[11] ? values[11].split(';').filter(t => t.trim()) : undefined,
-          createdAt: values[12] ? new Date(values[12]).getTime() : Date.now(),
-          updatedAt: values[13] ? new Date(values[13]).getTime() : Date.now()
-        }
-
-        // Validate the question
-        this.validateQuestion(question)
-
-        // Check for duplicates
-        const existingIndex = existingQuestions.findIndex(q => q.id === question.id)
-        if (existingIndex >= 0) {
-          // Update existing question
-          existingQuestions[existingIndex] = question
-        } else {
-          validQuestions.push(question)
-        }
-
-        results.processedCount++
-      } catch (error) {
-        results.errors.push(`Line ${i + 2}: ${error instanceof Error ? error.message : 'Unknown error'}`)
-        results.errorCount++
-      }
-    }
-
-    // Save all valid questions
-    if (validQuestions.length > 0) {
-      const allQuestions = [...existingQuestions, ...validQuestions]
-      this.saveQuestions(allQuestions)
-    }
-
-    results.success = results.errorCount === 0
-    return results
-  }
-
-  private parseCSVLine(line: string): string[] {
-    const result: string[] = []
-    let current = ''
-    let inQuotes = false
-
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i]
-
-      if (char === '"') {
-        if (inQuotes && line[i + 1] === '"') {
-          current += '"'
-          i++ // Skip next quote
-        } else {
-          inQuotes = !inQuotes
-        }
-      } else if (char === ',' && !inQuotes) {
-        result.push(current.trim())
-        current = ''
-      } else {
-        current += char
-      }
-    }
-
-    result.push(current.trim())
-    return result
-  }
-
+  // Initialize with sample data if no data exists
   private initializeWithSampleData(): QuizQuestion[] {
-    // Check if we should import existing questions
-    if (this.shouldImportExistingQuestions()) {
-      return this.importAllExistingQuestions()
-    }
-
-    // Initialize with a few sample questions for demonstration
     const sampleQuestions: QuizQuestion[] = [
       {
-        id: 'sample_1',
-        question: 'Which social media platform is known for its short-form video content and viral dances?',
+        id: 'sample-1',
+        question: 'Which social media platform is known for short-form videos?',
         options: ['Instagram', 'TikTok', 'Twitter', 'Snapchat'],
-        correctAnswer: 1,
-        category: 'social-media',
+        correct_answer: 1,
         difficulty: 'beginner',
-        type: 'regular',
+        fun_fact: 'TikTok was originally called Musical.ly!',
+        category: 'social-media',
+        subcategory: 'Platforms',
         section: 'homepage',
-        funFact: 'TikTok was originally called Musical.ly before being acquired by ByteDance.',
-        tags: ['social-media', 'video', 'viral'],
-        createdAt: Date.now() - 86400000, // 1 day ago
-        updatedAt: Date.now() - 86400000
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      },
+      {
+        id: 'sample-2',
+        question: 'What does "AI" stand for?',
+        options: ['Artificial Intelligence', 'Automated Internet', 'Advanced Interface', 'Algorithmic Integration'],
+        correct_answer: 0,
+        difficulty: 'beginner',
+        fun_fact: 'The term "Artificial Intelligence" was first coined in 1956!',
+        category: 'technology',
+        subcategory: 'Acronyms',
+        section: 'homepage',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      },
+      {
+        id: 'sample-3',
+        question: 'Which company created the iPhone?',
+        options: ['Google', 'Samsung', 'Apple', 'Microsoft'],
+        correct_answer: 2,
+        difficulty: 'beginner',
+        fun_fact: 'The first iPhone was released in 2007!',
+        category: 'technology',
+        subcategory: 'Companies',
+        section: 'homepage',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       }
-      // Add more sample questions as needed
     ]
-
+    
     this.saveQuestions(sampleQuestions)
     return sampleQuestions
   }
 
-  // Check if we should import existing questions
-  private shouldImportExistingQuestions(): boolean {
-    // Only import if localStorage is empty and we're on client side
-    if (typeof window === 'undefined') return false
-
-    const hasImported = this.safeGetItem('quiz_questions_imported')
-    return !hasImported
-  }
-
-  // Import all existing questions from different sources
-  private importAllExistingQuestions(): QuizQuestion[] {
-    const allQuestions: QuizQuestion[] = []
+  // Get categories
+  getCategories(): QuizCategory[] {
+    const data = this.safeGetItem(QUIZ_STORAGE_KEYS.CATEGORIES)
+    if (!data) return this.initializeWithSampleCategories()
 
     try {
-      // Import onboarding questions
-      const onboardingQuestions = this.importOnboardingQuestions()
-      allQuestions.push(...onboardingQuestions)
-
-      // Import homepage fallback questions
-      const homepageQuestions = this.importHomepageQuestions()
-      allQuestions.push(...homepageQuestions)
-
-      // Import category questions from quiz database
-      const categoryQuestions = this.importCategoryQuestions()
-      allQuestions.push(...categoryQuestions)
-
-      console.log(`📊 Imported ${allQuestions.length} questions from existing sources`)
-
-      // Save all imported questions
-      this.saveQuestions(allQuestions)
-
-      // Mark as imported
-      this.safeSetItem('quiz_questions_imported', 'true')
-
-      return allQuestions
+      const categories = JSON.parse(data)
+      return Array.isArray(categories) ? categories : this.initializeWithSampleCategories()
     } catch (error) {
-      console.error('Error importing existing questions:', error)
+      console.error('Error parsing categories data:', error)
+      return this.initializeWithSampleCategories()
+    }
+  }
+
+  private initializeWithSampleCategories(): QuizCategory[] {
+    const now = Date.now()
+    const sampleCategories: QuizCategory[] = [
+      {
+        id: 'movies',
+        name: 'Movies',
+        description: 'Test your knowledge of movies and cinema',
+        icon: '🎬',
+        color: 'bg-blue-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
+      },
+      {
+        id: 'social-media',
+        name: 'Social Media',
+        description: 'How well do you know social media platforms?',
+        icon: '📱',
+        color: 'bg-purple-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
+      },
+      {
+        id: 'influencers',
+        name: 'Influencers',
+        description: 'Test your knowledge of popular influencers',
+        icon: '🌟',
+        color: 'bg-pink-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
+      }
+    ]
+    
+    this.safeSetItem(QUIZ_STORAGE_KEYS.CATEGORIES, JSON.stringify(sampleCategories))
+    return sampleCategories
+  }
+
+  // Save categories
+  saveCategories(categories: QuizCategory[]): void {
+    this.safeSetItem(QUIZ_STORAGE_KEYS.CATEGORIES, JSON.stringify(categories))
+  }
+
+  // Get settings
+  getSettings(): QuizManagementSettings {
+    const data = this.safeGetItem(QUIZ_STORAGE_KEYS.SETTINGS)
+    if (!data) return this.initializeWithDefaultSettings()
+
+    try {
+      const settings = JSON.parse(data)
+      return typeof settings === 'object' ? settings : this.initializeWithDefaultSettings()
+    } catch (error) {
+      console.error('Error parsing settings data:', error)
+      return this.initializeWithDefaultSettings()
+    }
+  }
+
+  private initializeWithDefaultSettings(): QuizManagementSettings {
+    const defaultSettings: QuizManagementSettings = {
+      autoSaveEnabled: true,
+      autoSaveInterval: VALIDATION_RULES.AUTO_SAVE_INTERVAL,
+      maxBulkOperations: VALIDATION_RULES.MAX_BULK_OPERATIONS,
+      maxFileSize: VALIDATION_RULES.MAX_FILE_SIZE
+    }
+    
+    this.safeSetItem(QUIZ_STORAGE_KEYS.SETTINGS, JSON.stringify(defaultSettings))
+    return defaultSettings
+  }
+
+  // Save settings
+  saveSettings(settings: QuizManagementSettings): void {
+    this.safeSetItem(QUIZ_STORAGE_KEYS.SETTINGS, JSON.stringify(settings))
+  }
+
+  // Get drafts
+  getDrafts(): QuestionDraft[] {
+    const data = this.safeGetItem(QUIZ_STORAGE_KEYS.DRAFTS)
+    if (!data) return []
+
+    try {
+      const drafts = JSON.parse(data)
+      return Array.isArray(drafts) ? drafts : []
+    } catch (error) {
+      console.error('Error parsing drafts data:', error)
       return []
     }
   }
 
-  // Import methods for existing questions
-  private importOnboardingQuestions(): QuizQuestion[] {
-    const onboardingQuestions = [
-      {
-        id: 'onboard-1',
-        question: "Which tech company created the iPhone?",
-        options: ["Apple 🍎", "Google 🔍", "Samsung 📱", "Microsoft 💻"],
-        correctAnswer: 0,
-        category: 'technology',
-        difficulty: 'beginner' as const,
-        type: 'regular' as const,
-        section: 'onboarding' as const,
-        rewardCoins: 150,
-        funFact: "The first iPhone was released on June 29, 2007, revolutionizing the smartphone industry.",
-        tags: ['technology', 'apple', 'smartphone'],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      },
-      {
-        id: 'onboard-2',
-        question: "What does 'WWW' stand for?",
-        options: ["World Wide Web 🌐", "World Web Works 🔧", "Web World Wide 🌍", "Wide World Web 📡"],
-        correctAnswer: 0,
-        category: 'technology',
-        difficulty: 'beginner' as const,
-        type: 'regular' as const,
-        section: 'onboarding' as const,
-        rewardCoins: 150,
-        funFact: "The World Wide Web was invented by Tim Berners-Lee in 1989 while working at CERN.",
-        tags: ['technology', 'internet', 'web'],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      }
-    ]
-
-    return onboardingQuestions
-  }
-
-  private importHomepageQuestions(): QuizQuestion[] {
-    const homepageQuestions = [
-      {
-        id: 'homepage-1',
-        question: "Which social media platform is known for short-form videos?",
-        options: ["Instagram", "TikTok", "Twitter", "Snapchat"],
-        correctAnswer: 1,
-        category: 'social-media',
-        difficulty: 'beginner' as const,
-        type: 'regular' as const,
-        section: 'homepage' as const,
-        funFact: "TikTok was originally called Musical.ly!",
-        tags: ['social-media', 'video', 'apps'],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      },
-      {
-        id: 'homepage-2',
-        question: "What does 'AI' stand for?",
-        options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Algorithmic Integration"],
-        correctAnswer: 0,
-        category: 'technology',
-        difficulty: 'beginner' as const,
-        type: 'regular' as const,
-        section: 'homepage' as const,
-        funFact: "The term 'Artificial Intelligence' was first coined in 1956!",
-        tags: ['technology', 'ai', 'computing'],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      },
-      {
-        id: 'homepage-3',
-        question: "Which company created the iPhone?",
-        options: ["Google", "Samsung", "Apple", "Microsoft"],
-        correctAnswer: 2,
-        category: 'technology',
-        difficulty: 'beginner' as const,
-        type: 'regular' as const,
-        section: 'homepage' as const,
-        funFact: "The first iPhone was released in 2007!",
-        tags: ['technology', 'apple', 'smartphone'],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      }
-    ]
-
-    return homepageQuestions
-  }
-
-  private importCategoryQuestions(): QuizQuestion[] {
-    // Import a subset of questions from the quiz database
-    const categoryQuestions: QuizQuestion[] = []
-
-    try {
-      // Sample category questions - in a real implementation, this would import from the actual quiz database
-      const sampleCategoryQuestions = [
-        {
-          id: 'cat-tech-1',
-          question: "Which programming language is known for its use in web development and has a coffee-related name?",
-          options: ["Python", "Java", "JavaScript", "C++"],
-          correctAnswer: 1,
-          category: 'technology',
-          difficulty: 'intermediate' as const,
-          type: 'regular' as const,
-          section: 'category' as const,
-          subcategory: 'programming',
-          funFact: "Java was originally called Oak and was developed by James Gosling at Sun Microsystems.",
-          tags: ['programming', 'java', 'development'],
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        },
-        {
-          id: 'cat-social-1',
-          question: "Which social media platform was originally called 'The Facebook'?",
-          options: ["Instagram", "Twitter", "Facebook", "LinkedIn"],
-          correctAnswer: 2,
-          category: 'social-media',
-          difficulty: 'beginner' as const,
-          type: 'regular' as const,
-          section: 'category' as const,
-          subcategory: 'history',
-          funFact: "Facebook was founded by Mark Zuckerberg in 2004 while he was a student at Harvard University.",
-          tags: ['social-media', 'facebook', 'history'],
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        }
-      ]
-
-      categoryQuestions.push(...sampleCategoryQuestions)
-    } catch (error) {
-      console.error('Error importing category questions:', error)
+  // Save draft
+  saveDraft(draft: Omit<QuestionDraft, 'id' | 'createdAt' | 'updatedAt'>): QuestionDraft {
+    const drafts = this.getDrafts()
+    const now = Date.now()
+    const newDraft: QuestionDraft = {
+      ...draft,
+      id: this.generateId(),
+      createdAt: now,
+      updatedAt: now
     }
-
-    return categoryQuestions
+    
+    drafts.push(newDraft)
+    this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(drafts))
+    return newDraft
   }
 
-  // Force reimport of all questions (for admin use)
-  forceReimportQuestions(): BulkOperationResult {
-    try {
-      // Clear the import flag
-      this.safeSetItem('quiz_questions_imported', '')
-
-      // Clear existing questions
-      this.safeSetItem(QUIZ_STORAGE_KEYS.QUESTIONS, '')
-
-      // Import all questions
-      const importedQuestions = this.importAllExistingQuestions()
-
-      return {
-        success: true,
-        processedCount: importedQuestions.length,
-        errorCount: 0,
-        errors: []
-      }
-    } catch (error) {
-      return {
-        success: false,
-        processedCount: 0,
-        errorCount: 1,
-        errors: [error instanceof Error ? error.message : 'Import failed']
-      }
+  // Update draft
+  updateDraft(id: string, updates: Partial<Omit<QuestionDraft, 'id' | 'createdAt'>>): QuestionDraft {
+    const drafts = this.getDrafts()
+    const index = drafts.findIndex(d => d.id === id)
+    
+    if (index === -1) {
+      throw new QuizDataError(`Draft with id ${id} not found`, 'NOT_FOUND')
     }
+    
+    const updatedDraft = {
+      ...drafts[index],
+      ...updates,
+      updatedAt: Date.now()
+    }
+    
+    drafts[index] = updatedDraft
+    this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(drafts))
+    return updatedDraft
   }
 
-  // Backup and restore functionality
+  // Delete draft
+  deleteDraft(id: string): boolean {
+    const drafts = this.getDrafts()
+    const filteredDrafts = drafts.filter(d => d.id !== id)
+    
+    if (filteredDrafts.length === drafts.length) {
+      throw new QuizDataError(`Draft with id ${id} not found`, 'NOT_FOUND')
+    }
+    
+    this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(filteredDrafts))
+    return true
+  }
+
+  // Create backup
   createBackup(): string {
-    const backup = {
+    const backupData = {
       questions: this.getQuestions(),
+      categories: this.getCategories(),
       settings: this.getSettings(),
       drafts: this.getDrafts(),
       timestamp: Date.now(),
       version: '1.0'
     }
-
-    return JSON.stringify(backup, null, 2)
+    
+    const backupString = JSON.stringify(backupData)
+    this.safeSetItem(QUIZ_STORAGE_KEYS.BACKUP, backupString)
+    return backupString
   }
 
-  restoreFromBackup(backupData: string): BulkOperationResult {
+  // Restore from backup
+  restoreFromBackup(backupData: string): void {
     try {
-      const backup = JSON.parse(backupData)
-
-      if (!backup.questions || !Array.isArray(backup.questions)) {
-        throw new QuizDataError('Invalid backup format: missing questions array', 'INVALID_BACKUP')
+      const parsedData = JSON.parse(backupData)
+      
+      if (parsedData.questions) {
+        this.saveQuestions(parsedData.questions)
       }
-
-      // Validate all questions in backup
-      backup.questions.forEach((q: any, index: number) => {
-        try {
-          this.validateQuestion(q)
-        } catch (error) {
-          throw new QuizDataError(
-            `Invalid question at index ${index}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            'INVALID_BACKUP_QUESTION'
-          )
-        }
-      })
-
-      // Create current backup before restore
-      const currentBackup = this.createBackup()
-      this.safeSetItem(QUIZ_STORAGE_KEYS.BACKUP, currentBackup)
-
-      // Restore data
-      this.saveQuestions(backup.questions)
-      if (backup.settings) {
-        this.safeSetItem(QUIZ_STORAGE_KEYS.SETTINGS, JSON.stringify(backup.settings))
+      
+      if (parsedData.categories) {
+        this.saveCategories(parsedData.categories)
       }
-      if (backup.drafts) {
-        this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(backup.drafts))
+      
+      if (parsedData.settings) {
+        this.saveSettings(parsedData.settings)
       }
-
-      return {
-        success: true,
-        processedCount: backup.questions.length,
-        errorCount: 0,
-        errors: []
+      
+      if (parsedData.drafts) {
+        this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(parsedData.drafts))
       }
+      
+      console.log('✅ Successfully restored from backup')
     } catch (error) {
       throw new QuizDataError(
-        `Failed to restore backup: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to restore from backup: ${error instanceof Error ? error.message : 'Unknown error'}`,
         'RESTORE_FAILED'
       )
     }
   }
 
-  // Auto-save functionality for drafts
-  startAutoSave(draftId: string, getDraftData: () => Partial<QuestionDraft>): void {
-    this.stopAutoSave()
+  // Get backup
+  getBackup(): string | null {
+    return this.safeGetItem(QUIZ_STORAGE_KEYS.BACKUP)
+  }
 
-    this.autoSaveTimer = setInterval(() => {
+  // Clear all data
+  clearAllData(): void {
+    Object.values(QUIZ_STORAGE_KEYS).forEach(key => {
       try {
-        const draftData = getDraftData()
-        if (draftData.question && draftData.question.length > 0) {
-          const draft: QuestionDraft = {
-            id: draftId,
-            question: draftData.question || '',
-            options: draftData.options || ['', '', '', ''],
-            correctAnswer: draftData.correctAnswer || 0,
-            category: draftData.category || 'facts',
-            difficulty: draftData.difficulty || 'beginner',
-            type: draftData.type || 'regular',
-            funFact: draftData.funFact,
-            tags: draftData.tags,
-            lastSaved: Date.now()
-          }
-
-          this.saveDraft(draft)
-        }
+        localStorage.removeItem(key)
       } catch (error) {
-        console.error('Auto-save failed:', error)
-      }
-    }, VALIDATION_RULES.AUTO_SAVE_INTERVAL)
-  }
-
-  stopAutoSave(): void {
-    if (this.autoSaveTimer) {
-      clearInterval(this.autoSaveTimer)
-      this.autoSaveTimer = null
-    }
-  }
-
-  // CSV Export functionality
-  exportToCSV(questionsToExport?: QuizQuestion[]): string {
-    const questions = questionsToExport || this.getQuestions()
-    const headers = [
-      'ID',
-      'Question',
-      'Option 1',
-      'Option 2',
-      'Option 3',
-      'Option 4',
-      'Correct Answer (1-4)',
-      'Category',
-      'Difficulty',
-      'Type',
-      'Fun Fact',
-      'Tags',
-      'Created At',
-      'Updated At'
-    ]
-
-    const csvRows = [headers.join(',')]
-
-    questions.forEach(question => {
-      const row = [
-        question.id,
-        `"${question.question.replace(/"/g, '""')}"`, // Escape quotes
-        `"${question.options[0]?.replace(/"/g, '""') || ''}"`,
-        `"${question.options[1]?.replace(/"/g, '""') || ''}"`,
-        `"${question.options[2]?.replace(/"/g, '""') || ''}"`,
-        `"${question.options[3]?.replace(/"/g, '""') || ''}"`,
-        question.correctAnswer + 1, // Convert 0-based to 1-based
-        question.category,
-        question.difficulty,
-        question.type,
-        `"${(question.funFact || '').replace(/"/g, '""')}"`,
-        `"${(question.tags || []).join(';')}"`,
-        new Date(question.createdAt).toISOString(),
-        new Date(question.updatedAt).toISOString()
-      ]
-      csvRows.push(row.join(','))
-    })
-
-    return csvRows.join('\n')
-  }
-
-  // Download CSV file
-  downloadCSV(): void {
-    try {
-      const csvContent = this.exportToCSV()
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob)
-        link.setAttribute('href', url)
-        link.setAttribute('download', `techkwiz-questions-${new Date().toISOString().split('T')[0]}.csv`)
-        link.style.visibility = 'hidden'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
-      }
-    } catch (error) {
-      throw new QuizDataError('Failed to download CSV file', 'EXPORT_ERROR')
-    }
-  }
-
-  // Parse CSV content
-  parseCSV(csvContent: string): { questions: Partial<QuizQuestion>[]; errors: string[] } {
-    const lines = csvContent.split('\n').filter(line => line.trim())
-    const errors: string[] = []
-    const questions: Partial<QuizQuestion>[] = []
-
-    if (lines.length < 2) {
-      errors.push('CSV file must contain at least a header row and one data row')
-      return { questions, errors }
-    }
-
-    // Skip header row
-    const dataLines = lines.slice(1)
-
-    dataLines.forEach((line, index) => {
-      try {
-        const values = this.parseCSVLine(line)
-
-        if (values.length < 8) {
-          errors.push(`Row ${index + 2}: Insufficient columns (minimum 8 required)`)
-          return
-        }
-
-        const [id, question, opt1, opt2, opt3, opt4, correctAnswer, category, difficulty, type, funFact, tags, createdAt, updatedAt] = values
-
-        // Validate required fields
-        if (!question?.trim()) {
-          errors.push(`Row ${index + 2}: Question is required`)
-          return
-        }
-
-        if (!opt1?.trim() || !opt2?.trim() || !opt3?.trim() || !opt4?.trim()) {
-          errors.push(`Row ${index + 2}: All 4 options are required`)
-          return
-        }
-
-        const correctAnswerNum = parseInt(correctAnswer) - 1 // Convert 1-based to 0-based
-        if (isNaN(correctAnswerNum) || correctAnswerNum < 0 || correctAnswerNum > 3) {
-          errors.push(`Row ${index + 2}: Correct answer must be 1, 2, 3, or 4`)
-          return
-        }
-
-        if (!category?.trim()) {
-          errors.push(`Row ${index + 2}: Category is required`)
-          return
-        }
-
-        if (!['beginner', 'intermediate', 'advanced'].includes(difficulty)) {
-          errors.push(`Row ${index + 2}: Difficulty must be 'beginner', 'intermediate', or 'advanced'`)
-          return
-        }
-
-        if (!['regular', 'bonus'].includes(type)) {
-          errors.push(`Row ${index + 2}: Type must be 'regular' or 'bonus'`)
-          return
-        }
-
-        const questionData: Partial<QuizQuestion> = {
-          id: id || `imported_${Date.now()}_${index}`,
-          question: question.trim(),
-          options: [opt1.trim(), opt2.trim(), opt3.trim(), opt4.trim()],
-          correctAnswer: correctAnswerNum,
-          category: category.trim(),
-          difficulty: difficulty as 'beginner' | 'intermediate' | 'advanced',
-          type: type as 'regular' | 'bonus',
-          funFact: funFact?.trim() || undefined,
-          tags: tags ? tags.split(';').map(tag => tag.trim()).filter(Boolean) : [],
-          createdAt: createdAt ? new Date(createdAt).getTime() : Date.now(),
-          updatedAt: updatedAt ? new Date(updatedAt).getTime() : Date.now()
-        }
-
-        questions.push(questionData)
-      } catch (error) {
-        errors.push(`Row ${index + 2}: ${error instanceof Error ? error.message : 'Parse error'}`)
+        console.error(`Error clearing data for key ${key}:`, error)
       }
     })
-
-    return { questions, errors }
-  }
-
-  // Helper to parse CSV line with proper quote handling
-  private parseCSVLine(line: string): string[] {
-    const result: string[] = []
-    let current = ''
-    let inQuotes = false
-    let i = 0
-
-    while (i < line.length) {
-      const char = line[i]
-
-      if (char === '"') {
-        if (inQuotes && line[i + 1] === '"') {
-          // Escaped quote
-          current += '"'
-          i += 2
-        } else {
-          // Toggle quote state
-          inQuotes = !inQuotes
-          i++
-        }
-      } else if (char === ',' && !inQuotes) {
-        // End of field
-        result.push(current)
-        current = ''
-        i++
-      } else {
-        current += char
-        i++
-      }
-    }
-
-    result.push(current) // Add last field
-    return result
-  }
-
-  // Import from CSV
-  importFromCSV(csvContent: string): BulkOperationResult {
-    try {
-      const { questions, errors } = this.parseCSV(csvContent)
-
-      if (errors.length > 0) {
-        return {
-          success: false,
-          processedCount: 0,
-          errorCount: errors.length,
-          errors
-        }
-      }
-
-      let successCount = 0
-      const importErrors: string[] = []
-
-      questions.forEach((questionData, index) => {
-        try {
-          const fullQuestion: QuizQuestion = {
-            id: questionData.id!,
-            question: questionData.question!,
-            options: questionData.options!,
-            correctAnswer: questionData.correctAnswer!,
-            category: questionData.category!,
-            difficulty: questionData.difficulty!,
-            type: questionData.type!,
-            funFact: questionData.funFact,
-            tags: questionData.tags || [],
-            createdAt: questionData.createdAt!,
-            updatedAt: questionData.updatedAt!
-          }
-
-          // Validate the complete question
-          const validation = this.validateQuestion(fullQuestion)
-          if (!validation.isValid) {
-            importErrors.push(`Question ${index + 1}: ${validation.errors.join(', ')}`)
-            return
-          }
-
-          this.saveQuestion(fullQuestion)
-          successCount++
-        } catch (error) {
-          importErrors.push(`Question ${index + 1}: ${error instanceof Error ? error.message : 'Save error'}`)
-        }
-      })
-
-      return {
-        success: importErrors.length === 0,
-        processedCount: successCount,
-        errorCount: importErrors.length,
-        errors: importErrors
-      }
-    } catch (error) {
-      return {
-        success: false,
-        processedCount: 0,
-        errorCount: 1,
-        errors: [error instanceof Error ? error.message : 'Import failed']
-      }
-    }
   }
 }
 

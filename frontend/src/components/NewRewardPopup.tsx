@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiRequestJson } from '../utils/api'
 
 interface NewRewardPopupProps {
   isOpen: boolean
@@ -50,31 +49,18 @@ export function NewRewardPopup({
   const [adHtml, setAdHtml] = useState<string>('')
   const adContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // Fetch config and popup ad slot
+  // Fetch config and popup ad slot - now using default values instead of API calls
   useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const endpoint = categoryId ? `/api/quiz/rewarded-config/${categoryId}` : '/api/quiz/rewarded-config'
-        const cfg = await apiRequestJson<RewardConfig>(endpoint)
-        setConfig(cfg)
-      } catch {
-        setConfig({ coin_reward: 100, is_active: true, show_on_insufficient_coins: true, show_during_quiz: true, enable_analytics: true })
-      }
+    // Removed backend API calls and using default config
+    setConfig({ coin_reward: 100, is_active: true, show_on_insufficient_coins: true, show_during_quiz: true, enable_analytics: false })
 
-      if (disableScripts) return
+    if (disableScripts) return
 
-      if (adSlotCode && adSlotCode.trim()) {
-        setAdHtml(adSlotCode)
-        return
-      }
-      try {
-        const slots = await apiRequestJson<any[]>(`/api/quiz/ad-slots/popup`)
-        const active = slots?.find(s => s?.is_active && (s?.ad_code || '').trim()) || slots?.[0]
-        if (active?.ad_code) setAdHtml(active.ad_code)
-      } catch {}
+    // Use provided ad slot code if available
+    if (adSlotCode && adSlotCode.trim()) {
+      setAdHtml(adSlotCode)
     }
-
-    if (isOpen) fetchAll()
+    // Removed API call to fetch ad slots
   }, [isOpen, categoryId, adSlotCode, disableScripts])
 
   // Prevent scroll
@@ -111,15 +97,8 @@ export function NewRewardPopup({
   }, [isWatchingAd, countdown])
 
   const sendAnalytics = async (type: 'start' | 'complete') => {
-    if (disableAnalytics) return
-    if (config?.enable_analytics === false) return
-    try {
-      await fetch('/api/quiz/ad-analytics/event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event_type: type, placement: 'popup', source: categoryId ? 'category' : 'homepage', category_id: categoryId || null })
-      })
-    } catch {}
+    // Removed backend API call for analytics
+    console.log(`Analytics event: ${type}`)
   }
 
   const handleClaimReward = async () => {
