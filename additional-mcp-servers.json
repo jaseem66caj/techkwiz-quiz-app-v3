@@ -1,0 +1,196 @@
+{
+  "additionalMcpServers": {
+    "description": "Additional free MCP servers for enhanced TechKwiz development",
+    "servers": {
+      "system-monitor": {
+        "command": "npx",
+        "args": ["-y", "seekrays/mcp-monitor"],
+        "description": "Monitor system performance (CPU, memory, disk, network)",
+        "category": "monitoring",
+        "free": true
+      },
+      "npm-security": {
+        "command": "npx",
+        "args": ["-y", "qianniuspace/mcp-security-audit"],
+        "description": "Security audit for npm dependencies",
+        "category": "security",
+        "free": true
+      },
+      "docker": {
+        "command": "npx",
+        "args": ["-y", "@docker/mcp-server-docker"],
+        "description": "Docker container management",
+        "category": "devops",
+        "free": true
+      },
+      "sqlite": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "./data/techkwiz.db"],
+        "description": "SQLite database operations",
+        "category": "database",
+        "free": true
+      },
+      "postgres": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-postgres"],
+        "env": {
+          "DATABASE_URL": "postgresql://localhost/techkwiz"
+        },
+        "description": "PostgreSQL database operations",
+        "category": "database",
+        "free": true
+      },
+      "duckduckgo-search": {
+        "command": "npx",
+        "args": ["-y", "nickclyde/duckduckgo-mcp-server"],
+        "description": "Free web search without API key",
+        "category": "search",
+        "free": true
+      },
+      "arxiv-search": {
+        "command": "npx",
+        "args": ["-y", "blazickjp/arxiv-mcp-server"],
+        "description": "Search academic papers on ArXiv",
+        "category": "research",
+        "free": true
+      },
+      "hackernews": {
+        "command": "npx",
+        "args": ["-y", "erithwik/mcp-hn"],
+        "description": "Access Hacker News stories and discussions",
+        "category": "news",
+        "free": true
+      },
+      "youtube-transcripts": {
+        "command": "npx",
+        "args": ["-y", "anaisbetts/mcp-youtube"],
+        "description": "Fetch YouTube video transcripts",
+        "category": "content",
+        "free": true
+      },
+      "weather": {
+        "command": "npx",
+        "args": ["-y", "devilcoder01/weather-mcp-server"],
+        "env": {
+          "WEATHER_API_KEY": "your_weather_api_key_here"
+        },
+        "description": "Weather information (free tier available)",
+        "category": "utilities",
+        "free": true
+      },
+      "qr-code": {
+        "command": "npx",
+        "args": ["-y", "2niuhe/qrcode_mcp"],
+        "description": "Generate QR codes",
+        "category": "utilities",
+        "free": true
+      },
+      "plantuml": {
+        "command": "npx",
+        "args": ["-y", "2niuhe/plantuml_web"],
+        "description": "Generate PlantUML diagrams",
+        "category": "documentation",
+        "free": true
+      },
+      "pdf-tools": {
+        "command": "npx",
+        "args": ["-y", "danielkennedy1/pdf-tools-mcp"],
+        "description": "PDF manipulation and viewing",
+        "category": "utilities",
+        "free": true
+      },
+      "image-analysis": {
+        "command": "npx",
+        "args": ["-y", "stass/exif-mcp"],
+        "description": "Analyze image metadata and EXIF data",
+        "category": "analysis",
+        "free": true
+      },
+      "web-crawler": {
+        "command": "npx",
+        "args": ["-y", "pragmar/mcp-server-webcrawl"],
+        "description": "Advanced web crawling and data extraction",
+        "category": "scraping",
+        "free": true
+      },
+      "local-rag": {
+        "command": "npx",
+        "args": ["-y", "nkapila6/mcp-local-rag"],
+        "description": "Local RAG-like search without APIs",
+        "category": "search",
+        "free": true
+      },
+      "task-warrior": {
+        "command": "npx",
+        "args": ["-y", "awwaiid/mcp-server-taskwarrior"],
+        "description": "Task management with TaskWarrior",
+        "category": "productivity",
+        "free": true
+      },
+      "obsidian": {
+        "command": "npx",
+        "args": ["-y", "calclavia/mcp-obsidian", "--vault-path", "./docs"],
+        "description": "Access Obsidian/Markdown notes",
+        "category": "documentation",
+        "free": true
+      },
+      "gitlab": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-gitlab"],
+        "env": {
+          "GITLAB_PERSONAL_ACCESS_TOKEN": "your_gitlab_token_here"
+        },
+        "description": "GitLab integration",
+        "category": "version-control",
+        "free": true
+      },
+      "domain-lookup": {
+        "command": "npx",
+        "args": ["-y", "dotemacs/domain-lookup-mcp"],
+        "description": "Domain name lookup and WHOIS information",
+        "category": "networking",
+        "free": true
+      },
+      "ip-info": {
+        "command": "npx",
+        "args": ["-y", "briandconnelly/mcp-server-ipinfo"],
+        "env": {
+          "IPINFO_API_KEY": "your_ipinfo_key_here"
+        },
+        "description": "IP address geolocation (free tier available)",
+        "category": "networking",
+        "free": true
+      }
+    }
+  },
+  "installation_notes": {
+    "free_servers": [
+      "system-monitor",
+      "npm-security", 
+      "docker",
+      "sqlite",
+      "duckduckgo-search",
+      "arxiv-search",
+      "hackernews",
+      "youtube-transcripts",
+      "qr-code",
+      "plantuml",
+      "pdf-tools",
+      "image-analysis",
+      "web-crawler",
+      "local-rag",
+      "task-warrior",
+      "obsidian",
+      "domain-lookup"
+    ],
+    "requires_free_api_key": [
+      "weather",
+      "gitlab",
+      "ip-info"
+    ],
+    "database_servers": [
+      "sqlite",
+      "postgres"
+    ]
+  }
+}
