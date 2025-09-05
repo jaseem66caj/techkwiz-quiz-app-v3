@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Script from 'next/script'
 import { settingsDataManager } from '@/utils/settingsDataManager'
 
@@ -10,21 +10,29 @@ interface GoogleAnalyticsProps {
 
 // Google Analytics component that injects GA code into all pages
 export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
+  const [gaTrackingId, setGaTrackingId] = useState<string | null>(null)
+  const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
+    // Mark as client-side
+    setIsClient(true)
+
     // Only run on client side
     if (typeof window === 'undefined') return
 
     try {
       // Load GA settings from admin dashboard
       const settings = settingsDataManager.getSystemSettings()
-      const gaTrackingId = settings.analytics?.googleAnalyticsId
+      const configuredTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!gaTrackingId) {
+      if (!configuredTrackingId) {
         console.log('📊 Google Analytics: Disabled or no tracking ID configured')
         return
       }
 
-      const finalTrackingId = trackingId || gaTrackingId
+      setGaTrackingId(configuredTrackingId)
+
+      const finalTrackingId = trackingId || configuredTrackingId
 
       // Initialize Google Analytics
       if (typeof window.gtag === 'undefined') {
@@ -33,7 +41,7 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
         window.gtag = function gtag() {
           window.dataLayer.push(arguments)
         }
-        
+
         // Configure GA
         window.gtag('js', new Date())
         window.gtag('config', finalTrackingId, {
@@ -53,23 +61,8 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
     }
   }, [trackingId])
 
-  // Get GA configuration
-  const getGATrackingId = () => {
-    if (typeof window === 'undefined') return null
-
-    try {
-      const settings = settingsDataManager.getSystemSettings()
-      return settings.analytics?.googleAnalyticsId
-    } catch (error) {
-      console.error('Error loading GA config:', error)
-      return null
-    }
-  }
-
-  const gaTrackingId = getGATrackingId()
-
-  // Don't render anything if no tracking ID
-  if (!gaTrackingId && !trackingId) {
+  // Don't render anything on server side or if no tracking ID
+  if (!isClient || (!gaTrackingId && !trackingId)) {
     return null
   }
 
@@ -82,14 +75,14 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
         src={`https://www.googletagmanager.com/gtag/js?id=${finalTrackingId}`}
         strategy="afterInteractive"
       />
-      
+
       {/* Google Analytics Configuration */}
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          
+
           gtag('config', '${finalTrackingId}', {
             anonymize_ip: true,
             send_page_view: true

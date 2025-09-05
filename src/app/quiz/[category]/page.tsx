@@ -7,6 +7,7 @@ import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface
 import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
+import { RewardPopup } from '../../../components/RewardPopup'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
@@ -224,15 +225,16 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       </div>
 
       {showReward && (
-        <EnhancedRewardPopup 
+        <RewardPopup
           isOpen={showReward}
           onClose={advance}
           isCorrect={isCorrect}
           coinsEarned={isCorrect ? 25 : 0}
-          onAdCompleted={handleAdCompleted}
-          autoClose={true}
-          showMandatoryAd={true}
-          adSlotCode={adSlotCode}
+          onClaimReward={() => {
+            handleAdCompleted(isCorrect ? 25 : 0);
+            advance();
+          }}
+          onSkipReward={advance}
         />
       )}
 

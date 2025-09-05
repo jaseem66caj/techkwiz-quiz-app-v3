@@ -15,7 +15,8 @@ export default function LeaderboardPage() {
   const [leaderboardData, setLeaderboardData] = useState<User[]>([])
 
   useEffect(() => {
-    if (!state.user) {
+    // Only create guest user if auth initialization is complete and no user exists
+    if (!state.loading && !state.user) {
       const guestUser = {
         id: `guest_${Date.now()}`,
         name: 'Guest',
@@ -30,10 +31,27 @@ export default function LeaderboardPage() {
       };
       dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser });
     }
+
+    // Load leaderboard data regardless of user state
     const users = getAllUsers()
     const sortedUsers = users.sort((a, b) => b.coins - a.coins)
     setLeaderboardData(sortedUsers)
-  }, [state.user, dispatch])
+  }, [state.loading, state.user, dispatch])
+
+  // Show loading state while auth is initializing
+  if (state.loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <Navigation />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="glass-effect p-8 rounded-2xl text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white">Loading leaderboard...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   const userRank = leaderboardData.findIndex(user => user.id === state.user?.id) + 1
 
@@ -72,16 +90,16 @@ export default function LeaderboardPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-xl text-white font-bold">
-                {state.user.name.charAt(0).toUpperCase()}
+                {state.user?.name?.charAt(0).toUpperCase() || 'G'}
               </div>
               <div>
                 <h3 className="text-white font-semibold">Your Rank</h3>
-                <p className="text-blue-200 text-sm">{state.user.name}</p>
+                <p className="text-blue-200 text-sm">{state.user?.name || 'Guest'}</p>
               </div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-orange-400">#{userRank > 0 ? userRank : 'N/A'}</div>
-              <div className="text-blue-200 text-sm">{state.user.coins} coins</div>
+              <div className="text-blue-200 text-sm">{state.user?.coins || 0} coins</div>
             </div>
           </div>
         </motion.div>
