@@ -338,6 +338,9 @@ export default function HomePage() {
             <p className="text-blue-200 text-base mb-2">
               Test your knowledge with this quick quiz!
             </p>
+            <p className="text-green-300 text-sm font-medium">
+              👆 Click an answer below to start earning coins!
+            </p>
           </motion.div>
 
           <div className="w-full max-w-md">
