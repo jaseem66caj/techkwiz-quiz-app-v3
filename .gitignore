@@ -86,3 +86,30 @@ agenthub/agents/youtube/db
 android-sdk/ frontend/node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
 frontend/node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
 frontend/node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
+
+# Temporary and generated files
+.monitor.pid
+*.pid
+
+# Archive and backup folders
+archive-*/
+deployment-readiness-*/
+techkwiz-v8-production-validation-*/
+
+# Test artifacts (keep only essential ones)
+test-results/.playwright-artifacts-*/
+test-results/*-retry*/
+
+# Performance results
+performance-results/
+
+# Video files (too large for git)
+*.webm
+*.mp4
+*.avi
+
+# Claude Desktop configs (contain sensitive info)
+claude_desktop_config*.json
+
+# Dependency graphs (generated files)
+dependency-graphs/
