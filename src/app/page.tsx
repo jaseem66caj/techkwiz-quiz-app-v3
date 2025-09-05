@@ -5,241 +5,137 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
 import { EnhancedQuizInterface } from '../components/EnhancedQuizInterface'
-import { NewRewardPopup } from '../components/NewRewardPopup'
-import { OnboardingFlow } from '../components/OnboardingFlow'
 import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
-import { SocialProofBanner } from '../components/SocialProofBanner'
-import { EnhancedCoinDisplay } from '../components/EnhancedCoinDisplay'
 import { useExitPrevention } from '../hooks/useExitPrevention'
-import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
 import { quizDataManager } from '../utils/quizDataManager'
 import { realTimeSyncService } from '../utils/realTimeSync'
+import { CreateProfile } from '../components/CreateProfile';
+import { saveUser } from '../utils/auth';
+import { getUnlockedAchievements } from '../utils/achievements';
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
   const router = useRouter()
   
-  // Onboarding flow state
-  const [showOnboarding, setShowOnboarding] = useState(false)
-  const [onboardingCompleted, setOnboardingCompleted] = useState(false)
-  const [onboardingSkipped, setOnboardingSkipped] = useState(false)
-  
-  // Exit prevention state
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
-  
-  // Revenue optimization
-  const { awardCoins, getCurrentMultiplier } = useRevenueOptimization()
-  
-  // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
-  const [showRewardPopup, setShowRewardPopup] = useState(false)
-  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
-  const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
-  const [rewardConfig, setRewardConfig] = useState<any>(null)
   const [quizQuestions, setQuizQuestions] = useState<any[]>([])
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
+  const [showCreateProfile, setShowCreateProfile] = useState(false);
+  const [resultCountdown, setResultCountdown] = useState(90);
 
-  // Exit prevention hook - activate during quiz
+  // Auto-redirect timer effect
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    let interval: NodeJS.Timeout;
+    
+    if (showResult && quizCompleted) {
+      // Auto-redirect to profile creation after 90 seconds
+      timer = setTimeout(() => {
+        setShowResult(false);
+        setShowCreateProfile(true);
+      }, 90000); // 90 seconds
+
+      // Countdown timer
+      interval = setInterval(() => {
+        setResultCountdown(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [showResult, quizCompleted]);
+
   const { disablePrevention } = useExitPrevention({
-    isActive: !showOnboarding && !onboardingCompleted && !quizCompleted && !showResult,
+    isActive: !quizCompleted && !showResult,
     onExitAttempt: () => {
       setShowExitConfirmation(true)
     },
     customMessage: "Are you sure you want to leave? Your progress will be lost!"
   })
 
-  // Debug onboarding state
   useEffect(() => {
-    console.log('🔧 HomePage: Onboarding state -', {
-      showOnboarding,
-      onboardingCompleted, 
-      onboardingSkipped,
-      userCoins: state.user?.coins
-    })
-  }, [showOnboarding, onboardingCompleted, onboardingSkipped, state.user?.coins])
+    const loadQuizQuestions = () => {
+      if (typeof window === 'undefined') {
+        return
+      }
 
-  // Debug reward popup state
-  useEffect(() => {
-    console.log('🔧 HomePage: showRewardPopup state changed to:', showRewardPopup)
-  }, [showRewardPopup])
+      try {
+        setIsLoadingQuestions(true)
+        const gameSyncData = localStorage.getItem('game_quiz_data')
+        let questions = []
 
-  // Fetch reward configuration with improved error handling
-  useEffect(() => {
-    // Removed backend API call and using default config
-    setRewardConfig({
-      coin_reward: 100,
-      is_active: true,
-      show_on_insufficient_coins: true,
-      show_during_quiz: true,
-      trigger_after_questions: 1
-    })
-  }, [])
-
-  // Auto-create guest user and show onboarding for new users
-  useEffect(() => {
-    if (!state.isAuthenticated && !state.loading) {
-      // Check if user has completed onboarding before
-      const hasCompletedOnboarding = localStorage.getItem('techkwiz_onboarding_completed')
-      
-      if (!hasCompletedOnboarding) {
-        console.log('🎯 New user detected - showing onboarding flow')
-        setShowOnboarding(true)
-      } else {
-        console.log('🔄 Returning user - creating guest user and skipping onboarding')
-        // Create guest user for returning users who completed onboarding
-        const guestUser = {
-          id: `guest_${Date.now()}`,
-          name: 'Guest User', 
-          email: `guest_${Date.now()}@techkwiz.com`,
-          coins: 0, // Start with 0 coins
-          level: 1,
-          totalQuizzes: 0,
-          correctAnswers: 0,
-          joinDate: new Date().toISOString(),
-          quizHistory: [],
-          achievements: []
+        if (gameSyncData) {
+          questions = JSON.parse(gameSyncData)
+        } else {
+          try {
+            questions = quizDataManager.getQuestions() || []
+          } catch (error) {
+            console.error('Error loading admin questions:', error)
+            questions = []
+          }
         }
-        
-        // Set auth token
-        localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
-        
-        // Save user
-        const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
-        allUsers.push(guestUser)
-        localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
-        
-        dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-        setOnboardingSkipped(true)
+
+        const homepageQuestions = questions.filter(q => q.section === 'homepage')
+        const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
+        let questionsToUse = homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
+
+        if (questionsToUse.length >= 5) {
+          const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
+            id: q.id,
+            question: q.question,
+            options: q.options,
+            correct_answer: q.correct_answer ?? 0,
+            difficulty: q.difficulty,
+            fun_fact: q.fun_fact || "Thanks for playing!",
+            category: q.category,
+            subcategory: q.subcategory || q.category
+          }))
+          setQuizQuestions(convertedQuestions)
+        } else {
+          setQuizQuestions(getFallbackQuestions())
+        }
+      } catch (error) {
+        console.error('❌ Error loading quiz questions:', error)
+        setQuizQuestions(getFallbackQuestions())
+      } finally {
+        setIsLoadingQuestions(false)
       }
     }
-  }, [state.isAuthenticated, state.loading, dispatch])
 
-  // Onboarding completion handler
-  const handleOnboardingComplete = (coinsEarned: number) => {
-    console.log(`🎉 Onboarding completed! Earned ${coinsEarned} coins`)
-    
-    // Create guest user with earned coins
-    const guestUser = {
-      id: `guest_${Date.now()}`,
-      name: 'Guest User', 
-      email: `guest_${Date.now()}@techkwiz.com`,
-      coins: coinsEarned, // Start with earned coins from onboarding
-      level: 1,
-      totalQuizzes: 0,
-      correctAnswers: 0,
-      joinDate: new Date().toISOString(),
-      quizHistory: [],
-      achievements: []
-    }
-    
-    // Set auth token
-    localStorage.setItem('techkwiz_auth', 'dummy_token_' + guestUser.id)
-    
-    // Save user
-    const allUsers = JSON.parse(localStorage.getItem('techkwiz_user') || '[]')
-    allUsers.push(guestUser)
-    localStorage.setItem('techkwiz_user', JSON.stringify(allUsers))
-    
-    // Authenticate user
-    dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-    
-    // Mark onboarding as completed
-    setOnboardingCompleted(true)
-    setShowOnboarding(false)
-    localStorage.setItem('techkwiz_onboarding_completed', 'true')
-    
-    // Small delay before showing main quiz
-    setTimeout(() => {
-      setOnboardingCompleted(true)
-    }, 500)
-  }
+    loadQuizQuestions()
 
-  const handleOnboardingSkip = () => {
-    console.log('⏭️ Onboarding skipped')
-    setOnboardingSkipped(true)
-    setShowOnboarding(false)
-    localStorage.setItem('techkwiz_onboarding_completed', 'true')
-  }
-
-  // Exit confirmation handlers
-  const handleExitConfirm = () => {
-    setShowExitConfirmation(false)
-    disablePrevention()
-    router.push('/start') // Redirect to categories
-  }
-
-  const handleExitCancel = () => {
-    setShowExitConfirmation(false)
-  }
-
-  // Load questions from admin dashboard
-  const loadQuizQuestions = () => {
-    // Only run on client side
-    if (typeof window === 'undefined') {
-      return
+    const handleQuizSync = () => {
+      loadQuizQuestions()
     }
 
     try {
-      setIsLoadingQuestions(true)
-
-      // Try to load from game sync data first
-      const gameSyncData = localStorage.getItem('game_quiz_data')
-      let questions = []
-
-      if (gameSyncData) {
-        questions = JSON.parse(gameSyncData)
-        console.log('📊 Loaded questions from game sync data:', questions.length)
-      } else {
-        // Fallback to admin data
-        try {
-          questions = quizDataManager.getQuestions() || []
-          console.log('📊 Loaded questions from admin data:', questions.length)
-        } catch (error) {
-          console.error('Error loading admin questions:', error)
-          questions = []
-        }
-      }
-
-      // Filter for homepage section questions first, then beginner difficulty
-      const homepageQuestions = questions.filter(q => q.section === 'homepage')
-      const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
-
-      // Prefer homepage section questions, fallback to beginner questions
-      let questionsToUse = homepageQuestions.length >= 3 ? homepageQuestions : beginnerQuestions
-
-      // If we have admin questions, use them; otherwise use fallback
-      if (questionsToUse.length >= 3) {
-        // Convert admin format to quiz format
-        const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
-          id: q.id,
-          question: q.question,
-          options: q.options,
-          correct_answer: q.correct_answer ?? 0,
-          difficulty: q.difficulty,
-          fun_fact: q.fun_fact || "Thanks for playing!",
-          category: q.category,
-          subcategory: q.subcategory || q.category
-        }))
-        setQuizQuestions(convertedQuestions)
-        console.log(`✅ Using ${homepageQuestions.length >= 3 ? 'homepage section' : 'beginner'} questions for quiz`)
-      } else {
-        // Use fallback questions
-        setQuizQuestions(getFallbackQuestions())
-        console.log('⚠️ Using fallback questions (no admin questions available)')
-      }
+      realTimeSyncService.addEventListener('quiz_updated', handleQuizSync)
     } catch (error) {
-      console.error('❌ Error loading quiz questions:', error)
-      setQuizQuestions(getFallbackQuestions())
-    } finally {
-      setIsLoadingQuestions(false)
+      console.error('Error setting up quiz sync listener:', error)
     }
-  }
 
-  // Fallback questions if admin data is not available
+    return () => {
+      try {
+        realTimeSyncService.removeEventListener('quiz_updated', handleQuizSync)
+      } catch (error) {
+        console.error('Error removing quiz sync listener:', error)
+      }
+    }
+  }, [])
+
   const getFallbackQuestions = () => [
     {
       id: 'fallback-1',
@@ -270,224 +166,118 @@ export default function HomePage() {
       fun_fact: "The first iPhone was released in 2007!",
       category: "technology",
       subcategory: "technology"
-    }
-  ]
-  // Load questions on component mount and set up sync
-  useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return
-
-    loadQuizQuestions()
-
-    // Set up real-time sync listener
-    const handleQuizSync = () => {
-      console.log('🔄 Quiz data synced, reloading questions...')
-      loadQuizQuestions()
-    }
-
-    try {
-      realTimeSyncService.addEventListener('quiz_updated', handleQuizSync)
-    } catch (error) {
-      console.error('Error setting up quiz sync listener:', error)
-    }
-
-    return () => {
-      try {
-        realTimeSyncService.removeEventListener('quiz_updated', handleQuizSync)
-      } catch (error) {
-        console.error('Error removing quiz sync listener:', error)
-      }
-    }
-  }, [])
-
-  // Use dynamic questions or fallback
-  const quickStartQuiz = quizQuestions.length > 0 ? quizQuestions : [
-    {
-      id: 'quick-0',
-      question: "Your vibe check: Pick your aesthetic",
-      options: ["Dark Academia ☕📚", "Soft Girl 🌸✨", "Y2K Cyber 💿🔮", "Cottagecore 🍄🌿"],
-      correct_answer: -1, // No correct answer for personality
-      difficulty: 'beginner' as const,
-      question_type: 'this_or_that' as const,
-      fun_fact: "Your aesthetic choice reflects your inner personality and how you want to be perceived by others!",
-      category: 'swipe-personality',
-      subcategory: 'Aesthetic'
     },
     {
-      id: 'quick-1',
-      question: "Decode this viral trend: 💃🔥🎵",
-      options: ["Buss It Challenge", "Renegade Dance", "WAP Dance", "Savage Challenge"],
-      correct_answer: 0,
-      difficulty: 'beginner' as const,
-      question_type: 'emoji_decode' as const,
-      fun_fact: "The Buss It Challenge went viral during the pandemic, with millions participating worldwide!",
-      category: 'pop-culture-flash',
-      subcategory: 'TikTok'
+      id: 'fallback-4',
+      question: "What does 'URL' stand for?",
+      options: ["Universal Resource Locator", "Uniform Resource Locator", "Unified Resource Locator", "Unique Resource Locator"],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: "The first website was created in 1991 by Tim Berners-Lee!",
+      category: "technology",
+      subcategory: "technology"
+    },
+    {
+      id: 'fallback-5',
+      question: "Which of these is NOT a programming language?",
+      options: ["Python", "Java", "Cobra", "Snake"],
+      correct_answer: 3,
+      difficulty: 'beginner',
+      fun_fact: "Python was named after the comedy group Monty Python!",
+      category: "technology",
+      subcategory: "technology"
     }
-  ]
+  ];
+
+  const quickStartQuiz = quizQuestions.length > 0 ? quizQuestions : getFallbackQuestions();
 
   const handleAnswerSelect = (answerIndex: number) => {
-    console.log('🔧 HomePage: handleAnswerSelect called with answerIndex:', answerIndex, 'currentQuestion:', currentQuestion, 'selectedAnswer:', selectedAnswer)
-    if (selectedAnswer !== null) return
-    setSelectedAnswer(answerIndex)
-    
-    setTimeout(() => {
-      console.log('🔧 HomePage: Processing answer after timeout...')
-      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
-      // For personality questions (correct_answer = -1), all answers are "correct"
-      const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
-      const finalIsCorrect = isPersonalityQuestion || isCorrect
-      
-      console.log('🔧 HomePage: Answer processed - isCorrect:', finalIsCorrect)
-      
-      // Set states for popup
-      setIsLastAnswerCorrect(finalIsCorrect)
-      
-      if (finalIsCorrect) {
-        setScore(score + 1)
-        
-        // Enhanced coin rewards - higher values
-        const baseCoins = 100 // Increased from 25 to 100
-        const enhancedCoins = awardCoins(baseCoins, 'quiz')
-        
-        // Update the coins earned for popup display
-        setLastEarnedCoins(enhancedCoins)
-        
-        console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${enhancedCoins} coins`)
-      } else {
-        setLastEarnedCoins(0)
-        console.log(`❌ Wrong answer, no coins earned`)
-      }
-      
-      // Show reward popup based on configuration
-      const triggerAfterQuestions = rewardConfig?.trigger_after_questions || 1
-      const shouldShowPopup = rewardConfig?.is_active && 
-                              rewardConfig?.show_during_quiz && 
-                              (currentQuestion + 1) % triggerAfterQuestions === 0
-      
-      console.log('🔧 HomePage: Popup trigger check - currentQuestion:', currentQuestion, 
-                  'triggerAfterQuestions:', triggerAfterQuestions, 
-                  'shouldShowPopup:', shouldShowPopup,
-                  'is_active:', rewardConfig?.is_active,
-                  'show_during_quiz:', rewardConfig?.show_during_quiz)
-      
-      if (shouldShowPopup) {
-        console.log('🔧 HomePage: Triggering reward popup after', triggerAfterQuestions, 'questions')
-        setShowRewardPopup(true)
-        return // Don't proceed to next question yet
-      }
-      
-      // Proceed to next question or complete quiz
-      if (currentQuestion < quickStartQuiz.length - 1) {
-        setCurrentQuestion(currentQuestion + 1)
-        setSelectedAnswer(null)
-      } else {
-        setQuizCompleted(true)
-        setShowResult(true)
-        
-        // After 3 seconds, redirect to categories page
-        setTimeout(() => {
-          router.push('/start')
-        }, 3000)
-      }
-    }, 1000)
-  }
+    if (selectedAnswer !== null) return;
+    setSelectedAnswer(answerIndex);
 
-  const handlePopupClose = () => {
-    setShowRewardPopup(false)
-    
-    // After popup closes, proceed to next question
-    if (currentQuestion < quickStartQuiz.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-    } else {
-      setQuizCompleted(true)
-      setShowResult(true)
-      
-      setTimeout(() => {
-        router.push('/start')
-      }, 3000)
+    const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
+    if (isCorrect) {
+      setScore(score + 1);
     }
-  }
 
-  const handleAdWatched = (coinsEarned: number) => {
-    console.log(`📺 Ad watched! Earned ${coinsEarned} coins`)
-    dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-  }
+    if (currentQuestion < quickStartQuiz.length - 1) {
+      setTimeout(() => {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+      }, 1000);
+    } else {
+      setQuizCompleted(true);
+      setShowResult(true);
+      const coinsEarned = score * 50 + (isCorrect ? 50 : 0); // Add coins for current answer
+      const updatedUser = { 
+        ...state.user, 
+        totalQuizzes: state.user.totalQuizzes + 1, 
+        correctAnswers: state.user.correctAnswers + score + (isCorrect ? 1 : 0),
+        streak: isCorrect ? state.user.streak + 1 : 0,
+        coins: state.user.coins + coinsEarned
+      };
+      
+      const unlockedAchievements = getUnlockedAchievements(state.user);
+      const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
+        unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
+      );
 
-  const handleClaimReward = () => {
-    // RewardPopup's onClaimReward doesn't pass parameters, so we use rewardCoins (100)
-    handleAdWatched(100)
-  }
+      if (newlyUnlocked.length > 0) {
+        dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
+      }
 
-  // Show loading state
-  if (state.loading || isLoadingQuestions) {
+      dispatch({ type: 'UPDATE_COINS', payload: coinsEarned });
+      dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score + (isCorrect ? 1 : 0), totalQuestions: quickStartQuiz.length } });
+      // Remove the automatic redirect to profile creation
+      // The user will now stay on the result page with options to proceed
+    }
+  };
+
+  const handleProfileCreated = (username: string, avatar: string) => {
+    const coinsEarned = score * 50;
+    const user = {
+      ...state.user,
+      name: username,
+      avatar: avatar,
+      coins: state.user.coins + coinsEarned, // Add earned coins to user's total
+    };
+    saveUser(user);
+    dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+    setShowCreateProfile(false);
+    router.push('/start');
+  };
+
+  if (isLoadingQuestions) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        {/* Minimal Navigation - No hamburger menu, no coin counter, no user info */}
-        <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-          <div className="px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="text-xl font-bold text-white">
-                <span className="text-orange-400">Tech</span>Kwiz
-              </div>
-              {/* Empty right side - hiding all header elements */}
-            </div>
-          </div>
-        </nav>
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">
-              {isLoadingQuestions ? 'Loading quiz questions...' : 'Loading TechKwiz...'}
-            </p>
-            {isLoadingQuestions && (
-              <p className="text-blue-200 text-sm mt-2">
-                Loading questions...
-              </p>
-            )}
+            <p className="text-white">Loading TechKwiz...</p>
           </div>
         </main>
       </div>
     )
   }
-
-  // Show onboarding flow for new users
-  if (showOnboarding) {
-    return (
-      <OnboardingFlow 
-        onComplete={handleOnboardingComplete}
-        onSkip={handleOnboardingSkip}
-      />
-    )
+  
+  if (showCreateProfile) {
+    return <CreateProfile onProfileCreated={handleProfileCreated} />;
   }
 
-  // Show results
   if (showResult && quizCompleted) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        {/* Minimal Navigation - No hamburger menu, no coin counter, no user info */}
-        <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-          <div className="px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="text-xl font-bold text-white">
-                <span className="text-orange-400">Tech</span>Kwiz
-              </div>
-              {/* Empty right side - hiding all header elements */}
-            </div>
-          </div>
-        </nav>
         <main className="flex-1 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass-effect p-8 rounded-2xl text-center max-w-md"
+            className="glass-effect p-8 rounded-2xl text-center max-w-md w-full"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-white mb-4">
               Quiz Completed!
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-3 mb-6">
               <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-4 border border-green-400/30">
                 <p className="text-green-300 text-sm font-medium">Score</p>
                 <p className="text-white text-2xl font-bold">{score}/{quickStartQuiz.length}</p>
@@ -495,81 +285,61 @@ export default function HomePage() {
               
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-4 border border-orange-400/30">
                 <p className="text-orange-300 text-sm font-medium">Coins Earned</p>
-                <p className="text-white text-2xl font-bold">{score * 100}</p>
+                <p className="text-white text-2xl font-bold">{score * 50}</p>
               </div>
             </div>
-            
-            <p className="text-blue-200 text-sm mt-6">
-              Redirecting to categories...
-            </p>
+
+            <div className="mt-6">
+              <p className="text-blue-200 mb-4">
+                You've earned {score * 50} coins! This is the only way to get free coins in TechKwiz.
+              </p>
+              
+              <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30 mb-6">
+                <p className="text-blue-300 text-sm font-medium">Next Step</p>
+                <p className="text-white">
+                  Create your profile to save your progress and compete on the leaderboard!
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => {
+                    setShowResult(false);
+                    setShowCreateProfile(true);
+                  }}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl transition-colors"
+                >
+                  Create Profile Now
+                </button>
+              </div>
+
+              <p className="text-gray-400 text-sm mt-4">
+                Auto-redirecting to profile setup in {resultCountdown} seconds...
+              </p>
+            </div>
           </motion.div>
         </main>
       </div>
     )
   }
 
-  // Main quiz interface
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        {/* Minimal Navigation - No hamburger menu, no coin counter, no user info */}
-        <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-          <div className="px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="text-xl font-bold text-white">
-                <span className="text-orange-400">Tech</span>Kwiz
-              </div>
-              {/* Empty right side - hiding all header elements */}
-            </div>
-          </div>
-        </nav>
-        
         <main className="flex-1 p-4 flex flex-col items-center justify-center">
-          
-          {/* Welcome Message - Enhanced after onboarding */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-6"
           >
             <h1 className="text-3xl font-bold text-white mb-2">
-              🎉 Welcome to <span className="text-orange-400">Youth Quiz Hub!</span>
+              🎉 Welcome to <span className="text-orange-400">TechKwiz!</span>
             </h1>
             <p className="text-blue-200 text-base mb-2">
-              Level up with interactive quizzes designed for Gen Z!
+              Test your knowledge with this quick quiz!
             </p>
-            {onboardingCompleted && (
-              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl p-3 border border-green-400/30 inline-block">
-                <p className="text-green-200 text-sm">
-                  🚀 Great job! You're all set with <span className="text-yellow-400 font-bold">{state.user?.coins || 0} coins</span>!
-                </p>
-              </div>
-            )}
           </motion.div>
-          
-          {/* Sync Status Indicator */}
-          <div className="w-full max-w-md mb-4">
-            <div className="bg-gray-800/30 backdrop-blur-sm p-3 rounded-lg border border-white/10">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    quizQuestions.length > 0 ? 'bg-green-400' : 'bg-yellow-400'
-                  }`}></div>
-                  <span className="text-blue-200">
-                    {quizQuestions.length > 0
-                      ? `${quizQuestions.length} questions loaded`
-                      : 'Using fallback questions'
-                    }
-                  </span>
-                </div>
-                <span className="text-gray-400">
-                  {realTimeSyncService.isGameInSync() ? '🔄 Synced' : '⚠️ Out of sync'}
-                </span>
-              </div>
-            </div>
-          </div>
 
-          {/* Quiz Interface */}
           <div className="w-full max-w-md">
             <EnhancedQuizInterface
               question={quickStartQuiz[currentQuestion]}
@@ -582,62 +352,17 @@ export default function HomePage() {
               encouragementMessages={true}
             />
           </div>
-          
-          {/* Social Proof Section */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mt-8"
-          >
-            <SocialProofBanner 
-              position="bottom" 
-              variant="detailed" 
-              showLive={true} 
-            />
-          </motion.div>
-          
-          {/* Features teaser - Enhanced messaging */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.0 }}
-            className="mt-8 text-center"
-          >
-            <div className="bg-gray-800/30 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-              <p className="text-blue-200 text-sm mb-2">🚀 <strong>What's Next:</strong></p>
-              <div className="text-xs text-blue-200 space-y-1">
-                <div>💰 Earn more coins in category quizzes (20-45 coins entry)</div>
-                <div>🏆 Get 50 coins per correct answer</div>
-                <div>🎯 Challenge yourself with timer-based questions</div>
-                <div>📺 Watch ads to earn bonus coins</div>
-              </div>
-            </div>
-          </motion.div>
-          
         </main>
       </div>
       
-      {/* Reward Ad Popup */}
-      <NewRewardPopup
-        isOpen={showRewardPopup}
-        onClose={handlePopupClose}
-        coinsEarned={lastEarnedCoins}
-        onClaimReward={handleClaimReward}
-        onSkipReward={handlePopupClose}
-        isCorrect={isLastAnswerCorrect}
-        rewardCoins={100}
-      />
-      
-      {/* Exit Confirmation Modal */}
       <ExitConfirmationModal
         isOpen={showExitConfirmation}
-        onConfirm={handleExitConfirm}
-        onCancel={handleExitCancel}
+        onConfirm={() => router.push('/start')}
+        onCancel={() => setShowExitConfirmation(false)}
         currentProgress={{
           questionNumber: currentQuestion + 1,
           totalQuestions: quickStartQuiz.length,
-          coinsAtRisk: score * 100 // Potential coins from correct answers
+          coinsAtRisk: score * 50
         }}
       />
     </>

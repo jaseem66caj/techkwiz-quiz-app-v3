@@ -130,11 +130,12 @@ export const DEFAULT_REWARD_CONFIG: Omit<RewardConfig, 'id' | 'createdAt' | 'upd
 }
 
 // Default achievement templates
-export const DEFAULT_ACHIEVEMENT_TEMPLATES: Omit<Achievement, 'id' | 'createdAt' | 'updatedAt'>[] = [
+export const DEFAULT_ACHIEVEMENT_TEMPLATES: Achievement[] = [
   {
-    name: 'First Quiz',
+    id: 'first_quiz',
+    name: 'First Steps',
     description: 'Complete your first quiz',
-    icon: '🏆',
+    icon: '🎯',
     requirement: {
       type: 'questions_answered',
       value: 5
@@ -143,48 +144,43 @@ export const DEFAULT_ACHIEVEMENT_TEMPLATES: Omit<Achievement, 'id' | 'createdAt'
       coins: 50,
       badge: true
     },
-    hidden: false
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
   },
   {
-    name: 'Streak Starter',
-    description: 'Answer 3 questions correctly in a row',
+    id: 'quiz_master',
+    name: 'Quiz Master',
+    description: 'Answer 100 questions correctly',
+    icon: '🏆',
+    requirement: {
+      type: 'correct_answers',
+      value: 100
+    },
+    reward: {
+      coins: 500,
+      badge: true
+    },
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  },
+  {
+    id: 'streak_warrior',
+    name: 'Streak Warrior',
+    description: 'Maintain a 7-day streak',
     icon: '🔥',
     requirement: {
       type: 'streak_days',
-      value: 3
-    },
-    reward: {
-      coins: 75,
-      badge: true
-    },
-    hidden: false
-  },
-  {
-    name: 'Quiz Master',
-    description: 'Answer 50 questions correctly',
-    icon: '🧠',
-    requirement: {
-      type: 'correct_answers',
-      value: 50
+      value: 7
     },
     reward: {
       coins: 200,
       badge: true
     },
-    hidden: false
-  },
-  {
-    name: 'Coin Collector',
-    description: 'Earn 1000 coins',
-    icon: '💰',
-    requirement: {
-      type: 'coins_earned',
-      value: 1000
-    },
-    reward: {
-      coins: 150,
-      badge: true
-    },
-    hidden: false
+    hidden: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
   }
 ]
+

@@ -8,37 +8,33 @@ import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
 import { AuthModal } from '../../components/AuthModal'
 import { seoConfig } from '../../utils/seo'
+import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements'
 
 export default function ProfilePage() {
   const router = useRouter()
   const { state, dispatch } = useApp()
-  const [showAuthModal, setShowAuthModal] = useState(false)
   const [activeTab, setActiveTab] = useState('stats')
 
-  // SEO optimization
   useEffect(() => {
-    document.title = seoConfig.profile.title
-    
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', seoConfig.profile.description)
+    // Only create guest user if auth initialization is complete and no user exists
+    if (!state.loading && !state.user) {
+      const guestUser = {
+        id: `guest_${Date.now()}`,
+        name: 'Guest',
+        avatar: '👤',
+        coins: 0,
+        level: 1,
+        totalQuizzes: 0,
+        correctAnswers: 0,
+        joinDate: new Date().toISOString(),
+        quizHistory: [],
+        streak: 0
+      };
+      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser });
     }
-    
-    let metaKeywords = document.querySelector('meta[name="keywords"]')
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta')
-      metaKeywords.setAttribute('name', 'keywords')
-      document.head.appendChild(metaKeywords)
-    }
-    metaKeywords.setAttribute('content', seoConfig.profile.keywords)
-  }, [])
+  }, [state.loading, state.user, dispatch])
 
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
-  }
-
-  // Show loading state
+  // Show loading state while auth is initializing
   if (state.loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
@@ -53,86 +49,24 @@ export default function ProfilePage() {
     )
   }
 
-  // Not authenticated - show login prompt
-  if (!state.isAuthenticated || !state.user) {
-    return (
-      <>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-          <Navigation />
-          
-          <main className="flex-1 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="glass-effect p-8 rounded-2xl text-center max-w-md"
-            >
-              <div className="text-6xl mb-6">👤</div>
-              <h1 className="text-2xl font-bold text-white mb-4">
-                Profile Access
-              </h1>
-              <p className="text-blue-200 mb-6">
-                Please login to view your profile and quiz statistics.
-              </p>
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors"
-              >
-                Login to View Profile
-              </button>
-            </motion.div>
-          </main>
-        </div>
-
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onSuccess={handleLogin}
-        />
-      </>
-    )
-  }
-
   const user = state.user
 
   // Calculate user stats
-  const totalQuizzes = user.totalQuizzes || 0
-  const correctAnswers = user.correctAnswers || 0
+  const totalQuizzes = user?.totalQuizzes || 0
+  const correctAnswers = user?.correctAnswers || 0
   const successRate = totalQuizzes > 0 ? Math.round((correctAnswers / (totalQuizzes * 5)) * 100) : 0 // Assuming 5 questions per quiz on average
-  const level = user.level || 1
+  const level = user?.level || 1
 
-  // Mock achievements
-  const achievements = [
-    { 
-      id: 'first_quiz', 
-      name: 'First Steps', 
-      description: 'Complete your first quiz',
-      icon: '🎯',
-      unlocked: totalQuizzes >= 1
-    },
-    { 
-      id: 'quiz_master', 
-      name: 'Quiz Master', 
-      description: 'Complete 10 quizzes',
-      icon: '🏆',
-      unlocked: totalQuizzes >= 10
-    },
-    { 
-      id: 'coin_collector', 
-      name: 'Coin Collector', 
-      description: 'Earn 1000 coins',
-      icon: '🪙',
-      unlocked: user.coins >= 1000
-    },
-    { 
-      id: 'tech_expert', 
-      name: 'Tech Expert', 
-      description: 'Answer 100 questions correctly',
-      icon: '💻',
-      unlocked: correctAnswers >= 100
-    }
-  ]
+  // Get achievements
+  const allAchievements = getAllAchievements();
+  const unlockedAchievements = user ? getUnlockedAchievements(user) : [];
 
-  const recentActivity = user.quizHistory?.slice(-5) || []
+  const achievements = allAchievements.map(achievement => ({
+    ...achievement,
+    unlocked: unlockedAchievements.some(unlocked => unlocked.id === achievement.id)
+  }));
+
+  const recentActivity = user?.quizHistory?.slice(-5) || []
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
@@ -149,16 +83,16 @@ export default function ProfilePage() {
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
             <div className="w-20 h-20 md:w-24 md:h-24 bg-orange-500 rounded-full flex items-center justify-center text-3xl md:text-4xl text-white font-bold">
-              {user.name.charAt(0).toUpperCase()}
+              {user?.avatar || user?.name?.charAt(0).toUpperCase() || 'G'}
             </div>
             
             {/* User Info */}
             <div className="flex-1 text-center md:text-left">
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                {user.name}
+                {user?.name || 'Guest'}
               </h1>
               <p className="text-blue-200 mb-4">
-                {user.email}
+                Member since {user?.joinDate ? new Date(user.joinDate).toLocaleDateString() : 'Today'}
               </p>
               
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
@@ -167,7 +101,7 @@ export default function ProfilePage() {
                   <div className="text-xs text-blue-200">Tech Enthusiast</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-yellow-400">{user.coins}</div>
+                  <div className="text-xl font-bold text-yellow-400">{user?.coins || 0}</div>
                   <div className="text-xs text-blue-200">Coins</div>
                 </div>
                 <div className="text-center">
@@ -228,7 +162,7 @@ export default function ProfilePage() {
                   <div className="text-blue-200 text-sm">Correct Answers</div>
                 </div>
                 <div className="glass-effect p-4 rounded-xl text-center">
-                  <div className="text-2xl font-bold text-yellow-400 mb-1">{user.coins}</div>
+                  <div className="text-2xl font-bold text-yellow-400 mb-1">{user?.coins || 0}</div>
                   <div className="text-blue-200 text-sm">Total Coins</div>
                 </div>
                 <div className="glass-effect p-4 rounded-xl text-center">

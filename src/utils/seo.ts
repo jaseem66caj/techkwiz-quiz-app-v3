@@ -1,5 +1,3 @@
-import { Metadata } from 'next'
-
 // SEO-optimized metadata for different pages
 export const seoConfig = {
   // Homepage metadata

@@ -1,209 +1,112 @@
-// Simple browser-only authentication utilities
+// Simple browser-only user management utilities
 
 export interface User {
   id: string
-  email: string
   name: string
+  avatar: string
   coins: number
   level: number
   totalQuizzes: number
   correctAnswers: number
   joinDate: string
   quizHistory: any[]
+  streak: number
 }
 
-const STORAGE_KEYS = {
-  USER: 'techkwiz_user',
-  AUTH_TOKEN: 'techkwiz_auth',
-  QUIZ_HISTORY: 'techkwiz_quiz_history',
-  SESSION_COINS: 'techkwiz_session_coins' // Session-only coin storage
-}
+const STORAGE_KEY = 'techkwiz_user';
 
-// Generate a simple user ID
-const generateUserId = () => {
-  return 'user_' + Math.random().toString(36).substr(2, 9)
-}
+// Get current user from localStorage
+export const getCurrentUser = (): User => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('Error parsing stored user:', error);
+  }
 
-// Extract name from email
-const getNameFromEmail = (email: string) => {
-  return email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' ').trim() || 'Tech Enthusiast'
-}
-
-// Create a new user profile
-export const createUserProfile = (email: string, password: string): User => {
-  const user: User = {
-    id: generateUserId(),
-    email: email.toLowerCase(),
-    name: getNameFromEmail(email),
-    coins: 0, // Users start with 0 coins to trigger rewarded ads
+  // If no user, create a guest user
+  const guestUser: User = {
+    id: 'guest',
+    name: 'Guest',
+    avatar: '🤖',
+    coins: 0,
     level: 1,
     totalQuizzes: 0,
     correctAnswers: 0,
     joinDate: new Date().toISOString(),
-    quizHistory: []
-  }
-  
-  return user
-}
+    quizHistory: [],
+    streak: 0
+  };
+  saveUser(guestUser);
+  return guestUser;
+};
 
-// Dummy login - accepts any email/password combination
-export const login = (email: string, password: string): User => {
-  // Check if user exists in localStorage
-  const existingUser = getUserFromStorage(email)
-  
-  if (existingUser) {
-    // User exists, return their data
-    localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dummy_token_' + existingUser.id)
-    return existingUser
-  } else {
-    // New user, create profile
-    const newUser = createUserProfile(email, password)
-    saveUserToStorage(newUser)
-    localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dummy_token_' + newUser.id)
-    return newUser
-  }
-}
-
-// Dummy signup - same as login, just creates new user
-export const signup = (email: string, password: string, name?: string): User => {
-  const user = createUserProfile(email, password)
-  if (name) {
-    user.name = name
-  }
-  
-  saveUserToStorage(user)
-  localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dummy_token_' + user.id)
-  return user
-}
-
-// Logout
-export const logout = (): void => {
-  localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
-}
-
-// Check if user is authenticated
-export const isAuthenticated = (): boolean => {
-  return !!localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
-}
-
-// Session-based coin management
-export const getSessionCoins = (userId: string): number => {
+// Save user data to localStorage
+export const saveUser = (user: User): void => {
   try {
-    const sessionCoins = sessionStorage.getItem(STORAGE_KEYS.SESSION_COINS)
-    if (!sessionCoins) return 0
-    
-    const coinsData = JSON.parse(sessionCoins)
-    return coinsData[userId] || 0
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
   } catch (error) {
-    console.error('Error getting session coins:', error)
-    return 0
+    console.error('Error saving user:', error);
   }
-}
+};
 
-export const setSessionCoins = (userId: string, coins: number): void => {
-  try {
-    const sessionCoins = sessionStorage.getItem(STORAGE_KEYS.SESSION_COINS)
-    const coinsData = sessionCoins ? JSON.parse(sessionCoins) : {}
-    
-    coinsData[userId] = Math.max(0, coins) // Never go below 0
-    sessionStorage.setItem(STORAGE_KEYS.SESSION_COINS, JSON.stringify(coinsData))
-    
-    console.log(`💰 Session coins updated for ${userId}: ${coins}`)
-  } catch (error) {
-    console.error('Error setting session coins:', error)
-  }
-}
-
-export const clearSessionCoins = (): void => {
-  try {
-    sessionStorage.removeItem(STORAGE_KEYS.SESSION_COINS)
-    console.log('🧹 Session coins cleared')
-  } catch (error) {
-    console.error('Error clearing session coins:', error)
-  }
-}
-
-// Get current user from localStorage with session-based coins
-export const getCurrentUser = (): User | null => {
-  const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
-  if (!token) return null
-  
-  const userId = token.replace('dummy_token_', '')
-  const allUsers = getAllUsersFromStorage()
-  const user = allUsers.find(user => user.id === userId)
-  
-  if (user) {
-    // Always get coins from session storage, never from localStorage
-    user.coins = getSessionCoins(userId)
-  }
-  
-  return user || null
-}
-
-// Save user data to localStorage (coins are handled separately in session storage)
-export const saveUserToStorage = (user: User): void => {
-  const allUsers = getAllUsersFromStorage()
-  const existingIndex = allUsers.findIndex(u => u.id === user.id || u.email === user.email)
-  
-  // Store coins in session storage, not localStorage
-  setSessionCoins(user.id, user.coins)
-  
-  // Remove coins from user object before saving to localStorage
-  const userWithoutCoins = { ...user, coins: 0 }
-  
-  if (existingIndex >= 0) {
-    allUsers[existingIndex] = userWithoutCoins
-  } else {
-    allUsers.push(userWithoutCoins)
-  }
-  
-  localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(allUsers))
-}
-
-// Get user by email from localStorage
-export const getUserFromStorage = (email: string): User | null => {
-  const allUsers = getAllUsersFromStorage()
-  return allUsers.find(user => user.email === email.toLowerCase()) || null
-}
-
-// Get all users from localStorage
-const getAllUsersFromStorage = (): User[] => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEYS.USER)
-    return stored ? JSON.parse(stored) : []
-  } catch (error) {
-    console.error('Error parsing stored users:', error)
-    return []
-  }
-}
-
-// Update user coins (session-based)
-export const updateUserCoins = (userId: string, coins: number): void => {
-  setSessionCoins(userId, coins)
-}
+// Update user coins
+export const updateUserCoins = (coins: number): void => {
+  const user = getCurrentUser();
+  user.coins = coins;
+  saveUser(user);
+};
 
 // Add quiz result to user history
-export const addQuizResult = (userId: string, quizResult: any): void => {
-  const allUsers = getAllUsersFromStorage()
-  const userIndex = allUsers.findIndex(user => user.id === userId)
-  
-  if (userIndex >= 0) {
-    allUsers[userIndex].quizHistory.push(quizResult)
-    allUsers[userIndex].totalQuizzes += 1
-    allUsers[userIndex].correctAnswers += quizResult.correctAnswers || 0
-    
-    // Level up logic (every 5 quizzes)
-    const newLevel = Math.floor(allUsers[userIndex].totalQuizzes / 5) + 1
-    allUsers[userIndex].level = newLevel
-    
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(allUsers))
-  }
-}
+export const addQuizResult = (quizResult: any): void => {
+  const user = getCurrentUser();
+  user.quizHistory.push(quizResult);
+  user.totalQuizzes += 1;
+  user.correctAnswers += quizResult.correctAnswers || 0;
+  user.level = Math.floor(user.totalQuizzes / 5) + 1;
+  saveUser(user);
+};
 
-// Clear all user data (including session coins)
-export const clearUserData = (): void => {
-  localStorage.removeItem(STORAGE_KEYS.USER)
-  localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
-  localStorage.removeItem(STORAGE_KEYS.QUIZ_HISTORY)
-  clearSessionCoins()
-}
+// Get all users (in this case, just the one)
+export const getAllUsers = (): User[] => {
+  return [getCurrentUser()];
+};
+
+// Login function (for compatibility)
+export const login = async (email: string, password: string): Promise<User> => {
+  // In a real app, this would authenticate with a server
+  // For now, just return the current user or create a new one
+  const user = getCurrentUser();
+  return user;
+};
+
+// Signup function (for compatibility)
+export const signup = async (name: string, email: string, password: string): Promise<User> => {
+  // In a real app, this would create a new user on the server
+  // For now, just create a local user
+  const newUser: User = {
+    id: `user_${Date.now()}`,
+    name,
+    avatar: name.charAt(0).toUpperCase(),
+    coins: 100, // Welcome bonus
+    level: 1,
+    totalQuizzes: 0,
+    correctAnswers: 0,
+    joinDate: new Date().toISOString(),
+    quizHistory: [],
+    streak: 0
+  };
+  saveUser(newUser);
+  return newUser;
+};
+
+// Logout function (for compatibility)
+export const logout = (): void => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};

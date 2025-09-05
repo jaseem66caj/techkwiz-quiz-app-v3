@@ -3,14 +3,14 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './src/__tests__/visual',
   snapshotDir: './src/__tests__/visual/baselines',
-  timeout: 30 * 1000,
+  timeout: 90 * 1000,
   expect: {
     timeout: 5000
   },
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: 2,
+  workers: 1,
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results.json' }]

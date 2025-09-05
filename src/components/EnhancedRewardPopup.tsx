@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useApp } from '../app/providers'
 
 interface EnhancedRewardPopupProps {
   isOpen: boolean
@@ -32,6 +33,7 @@ export function EnhancedRewardPopup({
   showMandatoryAd = false,
   adSlotCode = ''
 }: EnhancedRewardPopupProps) {
+  const { state } = useApp()
   const [showingAd, setShowingAd] = useState(false)
   const [adCountdown, setAdCountdown] = useState(5)
   const [showClaim, setShowClaim] = useState(false)
@@ -120,6 +122,16 @@ export function EnhancedRewardPopup({
             <div className="relative rounded-[28px] border border-orange-400/30 p-8 text-center overflow-hidden shadow-2xl" style={{ background: 'linear-gradient(145deg, #111827 0%, #0f172a 100%)' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 via-purple-500/20 to-pink-500/20 opacity-20 blur-xl" />
               <div className="relative z-10">
+                {/* User info display */}
+                {state.user && state.user.name !== 'Guest' && (
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700">
+                      <span className="text-2xl mr-2">{state.user.avatar}</span>
+                      <span className="text-white font-medium">{state.user.name}</span>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="text-4xl mb-2">{isCorrect ? '🎉' : '💡'}</div>
                 <h2 className={`text-2xl font-bold mb-1 ${isCorrect ? 'text-green-400' : 'text-yellow-400'}`}>{isCorrect ? 'Hurray!!' : 'Oops!!'}</h2>
                 <p className={`text-base ${isCorrect ? 'text-green-300' : 'text-yellow-300'}`}>{isCorrect ? 'Correct answer' : 'Wrong answer'}</p>

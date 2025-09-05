@@ -91,48 +91,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
 
             {/* Right Side */}
             <div className="flex items-center space-x-3">
-              {/* User Section with Enhanced Coins */}
-              {!hideHeaderElements && state.isAuthenticated && state.user ? (
-                <>
-                  {/* Enhanced Coin Display */}
-                  <EnhancedCoinDisplay
-                    coins={state.user.coins}
-                    multiplier={getCurrentMultiplier()}
-                    showAnimation={true}
-                    compact={true}
-                    onClick={() => setShowReferralModal(true)}
-                  />
-                  
-                  {/* Quick Actions */}
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setShowReferralModal(true)}
-                      className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 px-3 py-1 rounded-lg text-sm font-medium transition-colors border border-purple-400/30"
-                      title="Refer friends and earn coins"
-                    >
-                      👥 Refer
-                    </button>
-                  </div>
-                  
-                  {/* User Menu */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                      className="text-white hover:text-orange-300 transition-colors"
-                    >
-                      <span className="text-sm">Hi, {state.user.name.split(' ')[0]}!</span>
-                      <span className="ml-1">▼</span>
-                    </button>
-                  </div>
-                </>
-              ) : !hideHeaderElements ? (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors"
-                >
-                  Login
-                </button>
-              ) : null}
+              
             </div>
           </div>
           
@@ -180,11 +139,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
       )}
 
       {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleLogin}
-      />
+      
       
       {/* Revenue Optimization Components */}
       {state.isAuthenticated && (

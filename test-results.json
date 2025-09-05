@@ -1,0 +1,456 @@
+{
+  "config": {
+    "configFile": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/playwright.config.ts",
+    "rootDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "tablet",
+        "name": "tablet",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "e2e.spec.js",
+      "file": "e2e.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "End-to-End User Experience Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30051,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js",
+                        "column": 14,
+                        "line": 6
+                      },
+                      "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  4 | test('End-to-End User Experience Test', async ({ page }) => {\n  5 |   // 1. Start the application\n> 6 |   await page.goto('http://localhost:3000');\n    |              ^\n  7 |\n  8 |   // 2. Complete the homepage quiz\n  9 |   await page.click('text=Your vibe check: Pick your aesthetic');\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js:6:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:00.681Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/e2e-End-to-End-User-Experience-Test-mobile/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "616cc0f313d283bb66d2-2959d2b8faa23e1e4b5d",
+          "file": "e2e.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "End-to-End User Experience Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet",
+              "projectName": "tablet",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "timedOut",
+                  "duration": 30064,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js",
+                        "column": 14,
+                        "line": 6
+                      },
+                      "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  4 | test('End-to-End User Experience Test', async ({ page }) => {\n  5 |   // 1. Start the application\n> 6 |   await page.goto('http://localhost:3000');\n    |              ^\n  7 |\n  8 |   // 2. Complete the homepage quiz\n  9 |   await page.click('text=Your vibe check: Pick your aesthetic');\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js:6:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:00.689Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/e2e-End-to-End-User-Experience-Test-tablet/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "616cc0f313d283bb66d2-9b80cb908d2c2206dbc1",
+          "file": "e2e.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "End-to-End User Experience Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "timedOut",
+                  "duration": 36021,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js",
+                        "column": 14,
+                        "line": 6
+                      },
+                      "message": "Error: page.goto: net::ERR_ABORTED; maybe frame was detached?\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  4 | test('End-to-End User Experience Test', async ({ page }) => {\n  5 |   // 1. Start the application\n> 6 |   await page.goto('http://localhost:3000');\n    |              ^\n  7 |\n  8 |   // 2. Complete the homepage quiz\n  9 |   await page.click('text=Your vibe check: Pick your aesthetic');\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/e2e.spec.js:6:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:00.685Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/e2e-End-to-End-User-Experience-Test-desktop/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "616cc0f313d283bb66d2-c4667f0223d2fb7e4ec4",
+          "file": "e2e.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "techkwiz-homepage.spec.js",
+      "file": "techkwiz-homepage.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "TechKwiz Homepage Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 30051,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js",
+                        "column": 14,
+                        "line": 5
+                      },
+                      "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  3 |\n  4 | test('TechKwiz Homepage Test', async ({ page }) => {\n> 5 |   await page.goto('http://localhost:3000');\n    |              ^\n  6 |   await page.waitForTimeout(2000); // Wait for animations\n  7 |   \n  8 |   // Check that the page has loaded\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js:5:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:00.687Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/techkwiz-homepage-TechKwiz-Homepage-Test-mobile/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7b16effb54cc07bf975f-0562a2e077c84135a50e",
+          "file": "techkwiz-homepage.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "TechKwiz Homepage Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet",
+              "projectName": "tablet",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "timedOut",
+                  "duration": 30098,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js",
+                        "column": 14,
+                        "line": 5
+                      },
+                      "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  3 |\n  4 | test('TechKwiz Homepage Test', async ({ page }) => {\n> 5 |   await page.goto('http://localhost:3000');\n    |              ^\n  6 |   await page.waitForTimeout(2000); // Wait for animations\n  7 |   \n  8 |   // Check that the page has loaded\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js:5:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:00.686Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/techkwiz-homepage-TechKwiz-Homepage-Test-tablet/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7b16effb54cc07bf975f-cc938f2c3e5047062059",
+          "file": "techkwiz-homepage.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "TechKwiz Homepage Test",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 35957,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js",
+                        "column": 14,
+                        "line": 5
+                      },
+                      "message": "Error: page.goto: net::ERR_ABORTED; maybe frame was detached?\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"load\"\u001b[22m\n\n\n  3 |\n  4 | test('TechKwiz Homepage Test', async ({ page }) => {\n> 5 |   await page.goto('http://localhost:3000');\n    |              ^\n  6 |   await page.waitForTimeout(2000); // Wait for animations\n  7 |   \n  8 |   // Check that the page has loaded\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/src/__tests__/visual/techkwiz-homepage.spec.js:5:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-09-03T12:51:31.430Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/techkwiz-homepage-TechKwiz-Homepage-Test-desktop/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7b16effb54cc07bf975f-76f2f204d34887bab6a8",
+          "file": "techkwiz-homepage.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-03T12:51:00.250Z",
+    "duration": 67251.869,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

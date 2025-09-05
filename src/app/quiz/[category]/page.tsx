@@ -7,6 +7,7 @@ import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface
 import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
+import { RewardPopup } from '../../../components/RewardPopup'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
@@ -27,7 +28,7 @@ interface QuizQuestion {
 }
 
 export default function QuizPage({ params }: { params: Promise<{ category: string }> }) {
-  const { dispatch } = useApp()
+  const { state, dispatch } = useApp()
   const router = useRouter()
   const [categoryId, setCategoryId] = useState<string>('')
 
@@ -55,10 +56,16 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
   // Load config + questions
   useEffect(() => {
-    if (!categoryId) return
+    if (!categoryId) return;
 
     const init = async () => {
       try {
+        const { QUIZ_CATEGORIES } = await import('../../../data/quizDatabase');
+        const categoryInfo = (QUIZ_CATEGORIES as any)[categoryId];
+        const entryFee = categoryInfo ? categoryInfo.entry_fee : 0;
+
+        dispatch({ type: 'START_QUIZ', payload: { quiz: { category: categoryId }, entryFee } });
+
         // Use default timer configuration
         setTimerEnabled(true)
         setTimerSeconds(30)
@@ -102,7 +109,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       }
     }
     init()
-  }, [categoryId])
+  }, [categoryId, dispatch])
 
   // Fetch popup interstitial ad code - using default ad code
   useEffect(() => {
@@ -121,35 +128,34 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   }
 
   const handleAnswer = (answerIndex: number) => {
-    if (selected !== null) return
-    setSelected(answerIndex)
+    if (selected !== null) return;
+    setSelected(answerIndex);
 
-    const correct = questions[current].correct_answer === answerIndex
-    setIsCorrect(correct)
+    const correct = questions[current].correct_answer === answerIndex;
+    setIsCorrect(correct);
     if (correct) {
-      setScore(s => s + 1)
-      dispatch({ type: 'UPDATE_COINS', payload: 25 })
+      setScore(s => s + 1);
     }
 
     // Qureka-style popup for both correct & wrong
-    setTimeout(() => setShowReward(true), 400)
-  }
+    setTimeout(() => setShowReward(true), 400);
+  };
 
   const handleAdCompleted = (coinsFromAd: number) => {
-    dispatch({ type: 'UPDATE_COINS', payload: coinsFromAd })
-  }
+    dispatch({ type: 'UPDATE_COINS', payload: coinsFromAd });
+  };
 
   const advance = () => {
-    setShowReward(false)
-    setShowTimeUp(false)
+    setShowReward(false);
+    setShowTimeUp(false);
     if (current < questions.length - 1) {
-      setCurrent(c => c + 1)
-      setSelected(null)
+      setCurrent(c => c + 1);
+      setSelected(null);
     } else {
-      dispatch({ type: 'END_QUIZ', payload: { score, total: questions.length, coinsEarned: 0 } })
-      router.push('/start')
+      dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions: questions.length } });
+      router.push('/start');
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -178,6 +184,21 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl">
         {/* Header */}
         <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 mb-6">
+          {/* User info */}
+          {state.user && state.user.name !== 'Guest' && (
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700">
+                <span className="text-2xl mr-2">{state.user.avatar}</span>
+                <span className="text-white font-medium">{state.user.name}</span>
+              </div>
+              <div className="flex items-center bg-orange-500/20 rounded-full px-4 py-2 border border-orange-400/30">
+                <span className="text-2xl mr-2">🪙</span>
+                <span className="text-orange-300 font-medium">Coins: </span>
+                <span className="text-white font-bold ml-1">{state.user.coins}</span>
+              </div>
+            </div>
+          )}
+          
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-orange-100">Question {current + 1} of {questions.length}</h1>
             <div className="text-orange-300 font-bold">Score: {score}</div>
@@ -204,15 +225,16 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       </div>
 
       {showReward && (
-        <EnhancedRewardPopup 
+        <RewardPopup
           isOpen={showReward}
           onClose={advance}
           isCorrect={isCorrect}
           coinsEarned={isCorrect ? 25 : 0}
-          onAdCompleted={handleAdCompleted}
-          autoClose={true}
-          showMandatoryAd={true}
-          adSlotCode={adSlotCode}
+          onClaimReward={() => {
+            handleAdCompleted(isCorrect ? 25 : 0);
+            advance();
+          }}
+          onSkipReward={advance}
         />
       )}
 

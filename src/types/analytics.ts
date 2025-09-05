@@ -134,6 +134,7 @@ export interface ExportOptions {
   format: 'json' | 'csv' | 'excel'
   includeCharts: boolean
   dateRange: TimeRange
+  sections?: string[]
 }
 
 // Analytics storage keys
