@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './src/__tests__/visual',
-  snapshotDir: './src/__tests__/visual/baselines',
+  testDir: './tests/e2e',
+  snapshotDir: './tests/e2e/baselines',
   timeout: 90 * 1000,
   expect: {
     timeout: 5000
@@ -45,4 +45,12 @@ export default defineConfig({
     },
   ],
   outputDir: 'test-results/',
+
+  /* Run your local dev server before starting the tests */
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });

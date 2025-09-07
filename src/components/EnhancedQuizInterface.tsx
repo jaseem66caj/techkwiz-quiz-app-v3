@@ -132,7 +132,7 @@ export function EnhancedQuizInterface({
   const renderThisOrThatQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
+        <h3 className="text-lg font-semibold text-white mb-4 leading-tight" data-testid="question-text">
           {question.question}
         </h3>
         {question.emoji_clue && (
@@ -144,13 +144,14 @@ export function EnhancedQuizInterface({
         {question.options.map((option, index) => (
           <motion.button
             key={index}
+            data-testid="answer-option"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onAnswerSelect(index)}
             disabled={selectedAnswer !== null}
             className={`p-4 rounded-xl text-center font-medium transition-all duration-300 border-2 ${
-              selectedAnswer === index 
-                ? 'bg-purple-500 text-white border-purple-400 shadow-lg shadow-purple-500/30' 
+              selectedAnswer === index
+                ? 'bg-purple-500 text-white border-purple-400 shadow-lg shadow-purple-500/30'
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-purple-400/50'
             }`}
           >
@@ -170,7 +171,7 @@ export function EnhancedQuizInterface({
   const renderMultipleChoiceQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-6 leading-tight">
+        <h3 className="text-lg font-semibold text-white mb-6 leading-tight" data-testid="question-text">
           {question.question}
         </h3>
       </div>
@@ -179,6 +180,7 @@ export function EnhancedQuizInterface({
         {question.options.map((option, index) => (
           <motion.button
             key={index}
+            data-testid="answer-option"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onAnswerSelect(index)}
@@ -214,7 +216,7 @@ export function EnhancedQuizInterface({
   }
 
   return (
-    <div className="relative">
+    <div className="relative" data-testid="quiz-interface">
       {/* Encouragement Message Overlay */}
       {showEncouragement && (
         <motion.div

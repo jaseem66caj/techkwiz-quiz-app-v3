@@ -91,6 +91,7 @@ export function EnhancedCoinDisplay({
         <motion.div
           whileHover={{ scale: 1.05 }}
           onClick={onClick}
+          data-testid="coin-display"
           className={`
             flex items-center space-x-1 px-2 py-1 rounded-lg cursor-pointer
             bg-gray-800/50 backdrop-blur-sm border border-gray-700/50
