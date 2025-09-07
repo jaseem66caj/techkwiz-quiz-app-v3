@@ -216,22 +216,7 @@ export function useRevenueOptimization() {
       })
     }
 
-    // Weekend special - only on weekends
-    const dayOfWeek = new Date().getDay()
-    if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday or Saturday
-      offers.push({
-        id: 'weekend_special',
-        title: '🎉 Weekend Special!',
-        description: 'Unlimited quiz attempts + premium features for 48h',
-        discount: 70,
-        originalPrice: 800,
-        finalPrice: 240,
-        endTime: now + (6 * 60 * 60 * 1000), // 6 hours
-        icon: '🎁',
-        shown: false,
-        claimed: false
-      })
-    }
+    // Weekend special - REMOVED per user request
 
     setCurrentOffers(offers)
   }, [state.user?.coins, revenueMetrics])
