@@ -28,6 +28,7 @@ export default function HomePage() {
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   const [resultCountdown, setResultCountdown] = useState(90);
+  const [isNavigating, setIsNavigating] = useState(false);
 
 
   // Auto-redirect timer effect
@@ -260,7 +261,12 @@ export default function HomePage() {
     };
     saveUser(user);
     dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+
+    // Set navigation state to prevent quiz interface from showing
+    setIsNavigating(true);
     setShowCreateProfile(false);
+
+    // Navigate to start page
     router.push('/start');
   };
 
@@ -279,6 +285,20 @@ export default function HomePage() {
   
   if (showCreateProfile) {
     return <CreateProfile onProfileCreated={handleProfileCreated} />;
+  }
+
+  // Show loading screen during navigation to prevent quiz interface flash
+  if (isNavigating) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <main className="flex-1 flex items-center justify-center">
+          <div className="glass-effect p-8 rounded-2xl text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400 mx-auto mb-4"></div>
+            <p className="text-white">Redirecting to categories...</p>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   if (showResult && quizCompleted) {
