@@ -226,15 +226,29 @@ export default function HomePage() {
           const finalScore = score + (isCorrect ? 1 : 0);
           const totalCoinsEarned = finalScore * 25; // Total coins from all correct answers
 
-          const updatedUser = {
-            ...state.user,
-            totalQuizzes: state.user.totalQuizzes + 1,
-            correctAnswers: state.user.correctAnswers + finalScore,
-            streak: isCorrect ? state.user.streak + 1 : 0,
-            coins: state.user.coins + totalCoinsEarned
+          // Create updated user with null safety
+          const currentUser = state.user || {
+            id: `guest_${Date.now()}`,
+            name: 'Guest',
+            avatar: '🤖',
+            coins: 0,
+            level: 1,
+            totalQuizzes: 0,
+            correctAnswers: 0,
+            joinDate: new Date().toISOString(),
+            quizHistory: [],
+            streak: 0
           };
 
-          const unlockedAchievements = getUnlockedAchievements(state.user);
+          const updatedUser = {
+            ...currentUser,
+            totalQuizzes: currentUser.totalQuizzes + 1,
+            correctAnswers: currentUser.correctAnswers + finalScore,
+            streak: isCorrect ? currentUser.streak + 1 : 0,
+            coins: currentUser.coins + totalCoinsEarned
+          };
+
+          const unlockedAchievements = getUnlockedAchievements(currentUser);
           const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
             unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
           );
@@ -253,12 +267,22 @@ export default function HomePage() {
 
   const handleProfileCreated = (username: string, avatar: string) => {
     const coinsEarned = score * 50;
+
+    // Create user object with fallback for null state.user, matching User interface
+    const currentCoins = state.user?.coins || 0;
     const user = {
-      ...state.user,
+      id: state.user?.id || `user_${Date.now()}`,
       name: username,
       avatar: avatar,
-      coins: state.user.coins + coinsEarned, // Add earned coins to user's total
+      coins: currentCoins + coinsEarned,
+      level: state.user?.level || 1,
+      totalQuizzes: (state.user?.totalQuizzes || 0) + 1, // Increment quiz count
+      correctAnswers: (state.user?.correctAnswers || 0) + score, // Add correct answers from this quiz
+      joinDate: state.user?.joinDate || new Date().toISOString(),
+      quizHistory: state.user?.quizHistory || [],
+      streak: state.user?.streak || 0
     };
+
     saveUser(user);
     dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 
