@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { Navigation } from '../../components/Navigation'
 import { AdBanner } from '../../components/AdBanner'
-import { AuthModal } from '../../components/AuthModal'
+
 import { seoConfig } from '../../utils/seo'
 import { getAllUsers, User } from '../../utils/auth'
 

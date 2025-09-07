@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { QuizInterface } from './QuizInterface'
 import { MinimalNavigation } from './MinimalNavigation'
-import { NewRewardPopup } from './NewRewardPopup'
+
 
 export default function ClientHomePage() {
   const { state, dispatch } = useApp()
@@ -18,9 +18,7 @@ export default function ClientHomePage() {
   const [score, setScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
-  const [showRewardPopup, setShowRewardPopup] = useState(false)
-  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false)
-  const [lastEarnedCoins, setLastEarnedCoins] = useState(0)
+
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
@@ -112,9 +110,7 @@ export default function ClientHomePage() {
       const finalIsCorrect = isPersonalityQuestion || isCorrect
       const coinsEarned = finalIsCorrect ? 25 : 0 // 25 coins per correct answer
       
-      // Set states for popup
-      setIsLastAnswerCorrect(finalIsCorrect)
-      setLastEarnedCoins(coinsEarned)
+
       
       if (finalIsCorrect) {
         setScore(score + 1)
@@ -127,38 +123,27 @@ export default function ClientHomePage() {
         console.log(`❌ Wrong answer, no coins earned`)
       }
       
-      // Show reward popup for all questions (consistent user experience)
-      setShowRewardPopup(true)
-      // Don't proceed to next question yet - let handlePopupClose handle the transition
+      // Proceed to next question after delay
+      setTimeout(() => {
+        if (currentQuestion < quickStartQuiz.length - 1) {
+          setCurrentQuestion(currentQuestion + 1)
+          setSelectedAnswer(null)
+        } else {
+          setShowResult(true)
+          setQuizCompleted(true)
+        }
+      }, 1500)
     }, 1000)
   }
 
-  const handlePopupClose = () => {
-    setShowRewardPopup(false)
-    
-    // After popup closes, proceed to next question
-    if (currentQuestion < quickStartQuiz.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-    } else {
-      setQuizCompleted(true)
-      setShowResult(true)
-      
-      setTimeout(() => {
-        router.push('/start')
-      }, 3000)
-    }
-  }
+
 
   const handleAdWatched = (coinsEarned: number) => {
     console.log(`📺 Ad watched! Earned ${coinsEarned} coins`)
     dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
   }
 
-  const handleClaimReward = () => {
-    // RewardPopup's onClaimReward doesn't pass parameters, so we use rewardCoins (100)
-    handleAdWatched(100)
-  }
+
 
   // Show loading state
   if (state.loading) {
@@ -267,16 +252,7 @@ export default function ClientHomePage() {
         </main>
       </div>
       
-      {/* Reward Ad Popup */}
-      <NewRewardPopup
-        isOpen={showRewardPopup}
-        onClose={handlePopupClose}
-        coinsEarned={lastEarnedCoins}
-        onClaimReward={handleClaimReward}
-        onSkipReward={handlePopupClose}
-        isCorrect={isLastAnswerCorrect}
-        rewardCoins={100}
-      />
+
     </>
   )
 }

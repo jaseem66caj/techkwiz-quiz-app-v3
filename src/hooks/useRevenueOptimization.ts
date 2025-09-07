@@ -50,8 +50,7 @@ export function useRevenueOptimization() {
 
   const [activeMultipliers, setActiveMultipliers] = useState<CoinMultiplier[]>([])
   const [currentOffers, setCurrentOffers] = useState<LimitedOffer[]>([])
-  const [showDailyBonus, setShowDailyBonus] = useState(false)
-  const [showReferralModal, setShowReferralModal] = useState(false)
+
 
   // Load revenue data from localStorage
   useEffect(() => {
@@ -170,7 +169,7 @@ export function useRevenueOptimization() {
       }))
       
       localStorage.setItem('techkwiz_last_login', today)
-      setShowDailyBonus(true)
+      // Daily bonus modal removed - bonus automatically applied
       
       return currentStreak
     }
@@ -237,18 +236,7 @@ export function useRevenueOptimization() {
     setCurrentOffers(offers)
   }, [state.user?.coins, revenueMetrics])
 
-  // Claim daily bonus
-  const claimDailyBonus = useCallback((bonusAmount: number) => {
-    const enhancedBonus = awardCoins(bonusAmount, 'daily')
-    setShowDailyBonus(false)
-    
-    // Add daily bonus multiplier
-    if (revenueMetrics.dailyStreak >= 7) {
-      addMultiplier('daily_bonus', 2, 60) // 2x multiplier for 1 hour if 7-day streak
-    }
-    
-    return enhancedBonus
-  }, [awardCoins, revenueMetrics.dailyStreak, addMultiplier])
+
 
   // Handle referral
   const processReferral = useCallback((referralCode: string) => {
@@ -320,12 +308,8 @@ export function useRevenueOptimization() {
     revenueMetrics,
     activeMultipliers,
     currentOffers,
-    showDailyBonus,
-    showReferralModal,
-    setShowReferralModal,
     awardCoins,
     trackAdView,
-    claimDailyBonus,
     processReferral,
     addMultiplier,
     getCurrentMultiplier,

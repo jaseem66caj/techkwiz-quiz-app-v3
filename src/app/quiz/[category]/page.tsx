@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface'
-import { EnhancedRewardPopup } from '../../../components/EnhancedRewardPopup'
+
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
 import { RewardPopup } from '../../../components/RewardPopup'

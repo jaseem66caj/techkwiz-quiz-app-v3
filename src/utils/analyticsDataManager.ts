@@ -113,7 +113,7 @@ class AnalyticsDataManager {
       const answered = Math.floor(Math.random() * 20) + 5
       const correct = Math.floor(answered * (0.6 + Math.random() * 0.3))
       return {
-        category: category.name,
+        category: typeof category === 'string' ? category : category.name,
         questionsAnswered: answered,
         correctAnswers: correct,
         successRate: answered > 0 ? (correct / answered) * 100 : 0,

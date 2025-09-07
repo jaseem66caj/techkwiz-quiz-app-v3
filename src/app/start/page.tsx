@@ -6,9 +6,7 @@ import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { Navigation } from '../../components/Navigation'
 import { CategoryPageTopAd, CategoryPageBottomAd, HeaderBannerAd, SidebarRightAd } from '../../components/AdBanner'
-import { AuthModal } from '../../components/AuthModal'
 import { NewsSection } from '../../components/NewsSection'
-import { NewRewardPopup } from '../../components/NewRewardPopup'
 import { CategoryShare, SocialShare } from '../../components/SocialShare'
 import { FortuneCookie } from '../../components/FortuneCookie'
 import { seoConfig } from '../../utils/seo'
@@ -28,9 +26,7 @@ export default function StartPage() {
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [selectedCategory, setSelectedCategory] = useState('ALL')
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  const [showRewardPopup, setShowRewardPopup] = useState(false)
-  const [selectedCategoryForReward, setSelectedCategoryForReward] = useState<string | null>(null)
+
   const [categories, setCategories] = useState<QuizCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -90,8 +86,8 @@ export default function StartPage() {
 
     // Check if user is authenticated and has completed profile
     if (!state.isAuthenticated || !state.user) {
-      // Show auth modal for unauthenticated users
-      setShowAuthModal(true)
+      // Redirect to homepage for unauthenticated users
+      router.push('/')
       return
     }
 
@@ -104,49 +100,13 @@ export default function StartPage() {
       // User can afford, proceed to quiz
       router.push(`/quiz/${categoryId}`)
     } else {
-      // User can't afford, show reward popup
+      // User can't afford, redirect to homepage to earn coins
       console.log(`💰 Insufficient coins: ${userCoins}/${category.entry_fee}`)
-      setSelectedCategoryForReward(categoryId)
-      setShowRewardPopup(true)
+      router.push('/')
     }
   }
 
-  const handleClaimReward = () => {
-    // Give user 100 coins for watching rewarded ad
-    const coinsEarned = 100
-    dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-    setShowRewardPopup(false)
-    
-    console.log(`📺 Watched rewarded ad! Earned ${coinsEarned} coins`)
-    
-    // Check if they can now afford the category
-    if (selectedCategoryForReward) {
-      const category = categories.find(cat => cat.id === selectedCategoryForReward)
-      const newCoinTotal = (state.user?.coins || 0) + coinsEarned
-      
-      if (category && newCoinTotal >= category.entry_fee) {
-        console.log(`✅ Can now afford ${category.name}! (${newCoinTotal}/${category.entry_fee})`)
-        router.push(`/quiz/${selectedCategoryForReward}`)
-      } else if (category) {
-        console.log(`❌ Still can't afford ${category.name} (${newCoinTotal}/${category.entry_fee})`)
-        // Could show another reward popup or message here
-      }
-    }
-    setSelectedCategoryForReward(null)
-  }
 
-  const handleSkipReward = () => {
-    setShowRewardPopup(false)
-    setSelectedCategoryForReward(null)
-  }
-
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
-  
-    // For now, we'll assume the profile is completed since we can't import the function
-    // In a real implementation, we would check this properly
-  }
 
   const filteredCategories = selectedCategory === 'ALL' 
     ? categories 
@@ -343,21 +303,7 @@ export default function StartPage() {
         </main>
       </div>
 
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleLogin}
-      />
 
-      <NewRewardPopup
-        isOpen={showRewardPopup}
-        onClose={() => setShowRewardPopup(false)}
-        coinsEarned={0}
-        onClaimReward={handleClaimReward}
-        onSkipReward={handleSkipReward}
-        isCorrect={false}
-        rewardCoins={100}
-      />
     </>
   )
 }

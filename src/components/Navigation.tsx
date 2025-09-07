@@ -6,12 +6,9 @@ import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { EnhancedCoinDisplay } from './EnhancedCoinDisplay'
-import { DailyBonusModal } from './DailyBonusModal'
-import { ReferralSystemModal } from './ReferralSystemModal'
 import { LimitedTimeOfferBanner } from './LimitedTimeOfferBanner'
 import { StreakMultiplierDisplay } from './StreakMultiplierDisplay'
 import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
-import { AuthModal } from './AuthModal'
 import { logout } from '../utils/auth'
 
 interface NavigationProps {
@@ -23,22 +20,14 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
   const router = useRouter()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  
   // Revenue optimization hooks
   const {
     revenueMetrics,
     activeMultipliers,
     currentOffers,
-    showDailyBonus,
-    showReferralModal,
-    setShowReferralModal,
-    claimDailyBonus,
     getCurrentMultiplier,
     processReferral
   } = useRevenueOptimization()
-  
-  const [userReferralCode] = useState(`TK${Math.random().toString(36).substr(2, 6).toUpperCase()}`)
 
   // Debug logging
   console.log('Navigation component: hideHeaderElements =', hideHeaderElements)
@@ -50,10 +39,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
     { name: 'Profile', href: '/profile', icon: '👤' },
   ]
 
-  const handleLogin = (user: any) => {
-    dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    setShowAuthModal(false)
-  }
+
 
   const handleLogout = () => {
     logout()
@@ -138,33 +124,9 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
         </motion.div>
       )}
 
-      {/* Auth Modal */}
-      
-      
       {/* Revenue Optimization Components */}
       {state.isAuthenticated && (
         <>
-          {/* Daily Bonus Modal */}
-          <DailyBonusModal
-            isOpen={showDailyBonus}
-            onClose={() => {}}
-            onClaimBonus={claimDailyBonus}
-            dayStreak={revenueMetrics.dailyStreak}
-          />
-          
-          {/* Referral System Modal */}
-          <ReferralSystemModal
-            isOpen={showReferralModal}
-            onClose={() => setShowReferralModal(false)}
-            onGenerateCode={() => {}}
-            userReferralCode={userReferralCode}
-            referralStats={{
-              totalReferrals: revenueMetrics.referrals,
-              coinsEarned: Math.floor(revenueMetrics.referrals * 100),
-              pendingRewards: 0
-            }}
-          />
-          
           {/* Streak Multiplier Display */}
           {getCurrentMultiplier() > 1 && (
             <StreakMultiplierDisplay

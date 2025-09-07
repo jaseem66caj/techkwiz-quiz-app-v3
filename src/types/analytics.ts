@@ -9,6 +9,75 @@ export interface AnalyticsData {
   updatedAt: number
 }
 
+// Additional analytics interfaces
+export interface CategoryPerformance {
+  category: string
+  questionsAnswered: number
+  correctAnswers: number
+  successRate: number
+  averageTime: number
+}
+
+export interface DifficultyDistribution {
+  beginner: number
+  intermediate: number
+  advanced: number
+}
+
+export interface TimeBasedPerformance {
+  date: string
+  questionsAnswered: number
+  successRate: number
+  activeUsers: number
+}
+
+export interface AchievementStats {
+  totalAchievements: number
+  mostCommonAchievements: string[]
+  achievementDistribution: { [key: string]: number }
+}
+
+export interface CoinDistribution {
+  correct: number
+  incorrect: number
+  bonus: number
+  achievements: number
+}
+
+export interface RewardTrend {
+  date: string
+  coinsEarned: number
+  achievementsUnlocked: number
+  activeUsers: number
+}
+
+export interface DeviceBreakdown {
+  mobile: number
+  desktop: number
+  tablet: number
+}
+
+export interface SessionDistribution {
+  morning: number
+  afternoon: number
+  evening: number
+  night: number
+}
+
+export interface UserJourneyStep {
+  step: string
+  completionRate: number
+  dropOffRate: number
+}
+
+export interface ExportOptions {
+  format: 'csv' | 'json' | 'xlsx'
+  dateRange: TimeRange
+  includeUserData: boolean
+  includeQuizData: boolean
+  includeMetrics: boolean
+}
+
 // Quiz metrics interface
 export interface QuizMetrics {
   totalQuestions: number
@@ -129,13 +198,7 @@ export interface UserJourneyStep {
   dropOffRate: number
 }
 
-// Export options interface
-export interface ExportOptions {
-  format: 'json' | 'csv' | 'excel'
-  includeCharts: boolean
-  dateRange: TimeRange
-  sections?: string[]
-}
+
 
 // Analytics storage keys
 export const ANALYTICS_STORAGE_KEYS = {
