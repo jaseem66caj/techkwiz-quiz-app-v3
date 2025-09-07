@@ -13,6 +13,7 @@ import { CreateProfile } from '../components/CreateProfile';
 import { saveUser } from '../utils/auth';
 import { getUnlockedAchievements } from '../utils/achievements';
 
+
 export default function HomePage() {
   const { state, dispatch } = useApp()
   const router = useRouter()
@@ -27,6 +28,7 @@ export default function HomePage() {
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   const [resultCountdown, setResultCountdown] = useState(90);
+
 
   // Auto-redirect timer effect
   useEffect(() => {
@@ -195,43 +197,58 @@ export default function HomePage() {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(answerIndex);
 
-    const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
-    if (isCorrect) {
-      setScore(score + 1);
-    }
+    setTimeout(() => {
+      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
+      const coinsEarned = isCorrect ? 25 : 0; // 25 coins per correct answer
 
-    if (currentQuestion < quickStartQuiz.length - 1) {
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedAnswer(null);
-      }, 1000);
-    } else {
-      setQuizCompleted(true);
-      setShowResult(true);
-      const coinsEarned = score * 50 + (isCorrect ? 50 : 0); // Add coins for current answer
-      const updatedUser = { 
-        ...state.user, 
-        totalQuizzes: state.user.totalQuizzes + 1, 
-        correctAnswers: state.user.correctAnswers + score + (isCorrect ? 1 : 0),
-        streak: isCorrect ? state.user.streak + 1 : 0,
-        coins: state.user.coins + coinsEarned
-      };
-      
-      const unlockedAchievements = getUnlockedAchievements(state.user);
-      const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
-        unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
-      );
-
-      if (newlyUnlocked.length > 0) {
-        dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
+      if (isCorrect) {
+        setScore(score + 1);
+        // Award coins for correct answers on homepage quiz
+        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned });
+        console.log(`✅ Correct answer! Earned ${coinsEarned} coins`);
+      } else {
+        console.log(`❌ Wrong answer, no coins earned`);
       }
 
-      dispatch({ type: 'UPDATE_COINS', payload: coinsEarned });
-      dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score + (isCorrect ? 1 : 0), totalQuestions: quickStartQuiz.length } });
-      // Remove the automatic redirect to profile creation
-      // The user will now stay on the result page with options to proceed
-    }
+      // Show answer feedback for 1 second, then proceed
+      setTimeout(() => {
+        if (currentQuestion < quickStartQuiz.length - 1) {
+          // Move to next question
+          setCurrentQuestion(currentQuestion + 1);
+          setSelectedAnswer(null);
+        } else {
+          // Complete the quiz
+          setQuizCompleted(true);
+          setShowResult(true);
+
+          // Calculate final stats for achievements and user updates
+          const finalScore = score + (isCorrect ? 1 : 0);
+          const totalCoinsEarned = finalScore * 25; // Total coins from all correct answers
+
+          const updatedUser = {
+            ...state.user,
+            totalQuizzes: state.user.totalQuizzes + 1,
+            correctAnswers: state.user.correctAnswers + finalScore,
+            streak: isCorrect ? state.user.streak + 1 : 0,
+            coins: state.user.coins + totalCoinsEarned
+          };
+
+          const unlockedAchievements = getUnlockedAchievements(state.user);
+          const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
+            unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
+          );
+
+          if (newlyUnlocked.length > 0) {
+            dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
+          }
+
+          dispatch({ type: 'END_QUIZ', payload: { correctAnswers: finalScore, totalQuestions: quickStartQuiz.length } });
+        }
+      }, 1500); // Show answer feedback for 1.5 seconds
+    }, 1000); // Wait 1 second after selection to show answer
   };
+
+
 
   const handleProfileCreated = (username: string, avatar: string) => {
     const coinsEarned = score * 50;
@@ -368,6 +385,8 @@ export default function HomePage() {
           coinsAtRisk: score * 50
         }}
       />
+
+
     </>
   )
 }

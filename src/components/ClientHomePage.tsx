@@ -65,6 +65,39 @@ export default function ClientHomePage() {
       fun_fact: "The Buss It Challenge went viral during the pandemic, with millions participating worldwide!",
       category: 'pop-culture-flash',
       subcategory: 'TikTok'
+    },
+    {
+      id: 'quick-2',
+      question: "Which Gen Z slang means 'absolutely amazing'?",
+      options: ["Salty", "Bussin", "Cap", "Mid"],
+      correct_answer: 1,
+      difficulty: 'beginner' as const,
+      question_type: 'multiple_choice' as const,
+      fun_fact: "Bussin originated from AAVE and became mainstream through social media, especially when describing good food!",
+      category: 'pop-culture-flash',
+      subcategory: 'Slang'
+    },
+    {
+      id: 'quick-3',
+      question: "What's your ideal Friday night?",
+      options: ["Netflix & chill 📺", "Gaming with friends 🎮", "Going out dancing 💃", "Reading a good book 📚"],
+      correct_answer: -1, // No correct answer for personality
+      difficulty: 'beginner' as const,
+      question_type: 'this_or_that' as const,
+      fun_fact: "Your ideal Friday night reveals whether you're more introverted or extroverted in your social preferences!",
+      category: 'swipe-personality',
+      subcategory: 'Social'
+    },
+    {
+      id: 'quick-4',
+      question: "Which app was NOT owned by Meta (Facebook) in 2023?",
+      options: ["Instagram", "WhatsApp", "TikTok", "Threads"],
+      correct_answer: 2,
+      difficulty: 'intermediate' as const,
+      question_type: 'multiple_choice' as const,
+      fun_fact: "TikTok is owned by ByteDance, a Chinese company, which has been a major point of discussion in tech policy!",
+      category: 'pop-culture-flash',
+      subcategory: 'Tech'
     }
   ]
 
@@ -94,25 +127,9 @@ export default function ClientHomePage() {
         console.log(`❌ Wrong answer, no coins earned`)
       }
       
-      // Show reward popup for both correct and wrong answers on first question
-      if (currentQuestion === 0) {
-        setShowRewardPopup(true)
-        return // Don't proceed to next question yet
-      }
-      
-      // Proceed to next question or complete quiz
-      if (currentQuestion < quickStartQuiz.length - 1) {
-        setCurrentQuestion(currentQuestion + 1)
-        setSelectedAnswer(null)
-      } else {
-        setQuizCompleted(true)
-        setShowResult(true)
-        
-        // After 3 seconds, redirect to categories page
-        setTimeout(() => {
-          router.push('/start')
-        }, 3000)
-      }
+      // Show reward popup for all questions (consistent user experience)
+      setShowRewardPopup(true)
+      // Don't proceed to next question yet - let handlePopupClose handle the transition
     }, 1000)
   }
 
