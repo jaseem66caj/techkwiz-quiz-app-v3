@@ -77,7 +77,27 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
 
             {/* Right Side */}
             <div className="flex items-center space-x-3">
-              
+              {/* Coin Balance Display - Only show for authenticated users */}
+              {state.isAuthenticated && state.user && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-orange-500/20 backdrop-blur-sm border border-orange-400/30">
+                    <motion.span
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                      className="text-lg"
+                    >
+                      🪙
+                    </motion.span>
+                    <span className="text-orange-300 font-medium text-sm">
+                      {state.user.coins}
+                    </span>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </div>
           
