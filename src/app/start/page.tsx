@@ -10,6 +10,7 @@ import { NewsSection } from '../../components/NewsSection'
 import { CategoryShare, SocialShare } from '../../components/SocialShare'
 import { FortuneCookie } from '../../components/FortuneCookie'
 import { seoConfig } from '../../utils/seo'
+import * as Sentry from '@sentry/nextjs'
 
 interface QuizCategory {
   id: string;
@@ -33,14 +34,55 @@ export default function StartPage() {
 
   const fetchCategories = async () => {
     try {
+      setLoading(true);
+      setError('');
+
+      console.log('🔄 Loading quiz categories...');
       const { QUIZ_CATEGORIES } = await import('../../data/quizDatabase');
-      
+
+      if (!QUIZ_CATEGORIES || typeof QUIZ_CATEGORIES !== 'object') {
+        throw new Error('Invalid quiz categories data structure');
+      }
+
       const categoriesArray = Object.values(QUIZ_CATEGORIES);
+
+      if (categoriesArray.length === 0) {
+        throw new Error('No quiz categories found');
+      }
+
       setCategories(categoriesArray);
       console.log('✅ Loaded categories from local database:', categoriesArray.length);
     } catch (error) {
-      console.error('Error loading local categories:', error);
-      setError('Failed to load quiz categories');
+      console.error('❌ Error loading local categories:', error);
+
+      // Report error to Sentry with context
+      Sentry.captureException(error, {
+        tags: {
+          component: 'StartPage',
+          action: 'fetchCategories'
+        },
+        extra: {
+          userAuthenticated: state.isAuthenticated,
+          userId: state.user?.id,
+          timestamp: new Date().toISOString()
+        }
+      });
+
+      setError(`Failed to load quiz categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
+      // Provide fallback categories if main data fails
+      setCategories([
+        {
+          id: 'programming',
+          name: 'Programming Basics',
+          icon: '💻',
+          color: 'from-blue-500 to-purple-600',
+          description: 'Test your programming knowledge',
+          subcategories: ['JavaScript', 'Python', 'Web Development'],
+          entry_fee: 25,
+          prize_pool: 100
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -81,28 +123,70 @@ export default function StartPage() {
   ]
 
   const handleCategorySelect = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId)
-    if (!category) return
+    try {
+      const category = categories.find(cat => cat.id === categoryId)
+      if (!category) {
+        console.error('Category not found:', categoryId)
+        Sentry.captureMessage('Category not found', {
+          level: 'error',
+          tags: { component: 'StartPage', action: 'categorySelect' },
+          extra: { categoryId, availableCategories: categories.map(c => c.id) }
+        });
+        setError('Category not found')
+        return
+      }
 
-    // Check if user is authenticated and has completed profile
-    if (!state.isAuthenticated || !state.user) {
-      // Redirect to homepage for unauthenticated users
-      router.push('/')
-      return
-    }
+      // Check if user is authenticated and has completed profile
+      if (!state.isAuthenticated || !state.user) {
+        // Store intended destination and redirect to homepage for authentication
+        console.log('User not authenticated, redirecting to homepage for login')
+        localStorage.setItem('intended_destination', `/quiz/${categoryId}`)
 
-    // For now, we'll assume the profile is completed since we can't import the function
-    // In a real implementation, we would check this properly
-    
-    // Check if user can afford the category
-    const userCoins = state.user?.coins || 0
-    if (userCoins >= category.entry_fee) {
-      // User can afford, proceed to quiz
-      router.push(`/quiz/${categoryId}`)
-    } else {
-      // User can't afford, redirect to homepage to earn coins
-      console.log(`💰 Insufficient coins: ${userCoins}/${category.entry_fee}`)
-      router.push('/')
+        Sentry.addBreadcrumb({
+          message: 'User redirected to homepage for authentication',
+          category: 'navigation',
+          data: { categoryId, intended_destination: `/quiz/${categoryId}` }
+        });
+
+        router.push('/')
+        return
+      }
+
+      // For now, we'll assume the profile is completed since we can't import the function
+      // In a real implementation, we would check this properly
+
+      // Check if user can afford the category
+      const userCoins = state.user?.coins || 0
+      if (userCoins >= category.entry_fee) {
+        // User can afford, proceed to quiz
+        console.log(`✅ User can afford category: ${userCoins}/${category.entry_fee} coins`)
+
+        Sentry.addBreadcrumb({
+          message: 'User navigating to quiz',
+          category: 'navigation',
+          data: { categoryId, userCoins, entryFee: category.entry_fee }
+        });
+
+        router.push(`/quiz/${categoryId}`)
+      } else {
+        // User can't afford, show error message instead of redirecting
+        console.log(`💰 Insufficient coins: ${userCoins}/${category.entry_fee}`)
+
+        Sentry.captureMessage('Insufficient coins for category', {
+          level: 'info',
+          tags: { component: 'StartPage', action: 'insufficientCoins' },
+          extra: { categoryId, userCoins, requiredCoins: category.entry_fee }
+        });
+
+        setError(`You need ${category.entry_fee} coins to play this category. You have ${userCoins} coins. Complete more quizzes to earn coins!`)
+      }
+    } catch (error) {
+      console.error('Error in handleCategorySelect:', error);
+      Sentry.captureException(error, {
+        tags: { component: 'StartPage', action: 'categorySelect' },
+        extra: { categoryId, userState: state.user }
+      });
+      setError('An error occurred while selecting the category. Please try again.');
     }
   }
 
