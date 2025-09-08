@@ -10,6 +10,7 @@ A modern, responsive quiz application built with Next.js 15, React 19, and TypeS
 - 📱 **Responsive Design** - Optimized for mobile, tablet, and desktop
 - 🎨 **Modern UI/UX** - Built with Tailwind CSS and Framer Motion animations
 - 📊 **Analytics Integration** - Google Analytics 4 support
+- 🚨 **Error Monitoring** - Sentry integration for production error tracking
 - 🔐 **User Management** - Local storage-based user profiles
 - 🎯 **Performance Optimized** - Fast loading and smooth interactions
 
@@ -90,6 +91,7 @@ Key environment variables (see `.env.example` for full list):
 
 - `NEXT_PUBLIC_APP_URL` - Application URL
 - `NEXT_PUBLIC_ANALYTICS_ID` - Google Analytics measurement ID
+- `NEXT_PUBLIC_SENTRY_DSN` - Sentry error monitoring DSN
 - `NEXT_PUBLIC_ENABLE_TEST_PAGES` - Enable/disable test pages
 
 ### Features Configuration

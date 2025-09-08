@@ -125,3 +125,7 @@ claude_desktop_config*.json
 
 # Dependency graphs (generated files)
 dependency-graphs/
+
+# Sentry
+.sentryclirc
+sentry.properties
