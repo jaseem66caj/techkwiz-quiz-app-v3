@@ -1,28 +1,58 @@
-// Comprehensive Quiz Database with Original Content
-// 50+ questions across 8 categories with multiple difficulty levels
+// ===================================================================
+// TechKwiz Comprehensive Quiz Database
+// ===================================================================
+// This file contains the complete quiz database with original content
+// featuring 50+ questions across 8 categories with multiple difficulty levels.
+// It provides the core quiz content for the application including:
+// - Quiz questions with multiple choice options
+// - Category definitions with metadata
+// - Utility functions for retrieving quiz content
 
+// Interface defining the structure of a quiz question
 export interface QuizQuestion {
+  // Unique identifier for the question
   id: string
+  // The question text to display to the user
   question: string
+  // Array of answer options (typically 4 options)
   options: string[]
+  // Index of the correct answer in the options array (-1 for personality questions with no correct answer)
   correct_answer: number
+  // Difficulty level of the question (beginner, intermediate, advanced)
   difficulty: 'beginner' | 'intermediate' | 'advanced'
+  // Interesting fact related to the question to enhance learning
   fun_fact: string
+  // Category identifier this question belongs to
   category: string
+  // Subcategory within the main category for more granular organization
   subcategory: string
 }
 
+// Interface defining the structure of a quiz category
 export interface QuizCategory {
+  // Unique identifier for the category
   id: string
+  // Display name of the category
   name: string
+  // Emoji icon representing the category
   icon: string
+  // Tailwind CSS gradient classes for visual styling
   color: string
+  // Brief description of what the category covers
   description: string
+  // Array of subcategories within this category
   subcategories: string[]
+  // Coin cost to enter a quiz in this category
   entry_fee: number
+  // Total coins available as prize pool for this category
   prize_pool: number
 }
 
+// ===================================================================
+// Quiz Categories Configuration
+// ===================================================================
+// Defines all available quiz categories with their metadata and settings
+// Each category has unique visual styling, entry costs, and prize pools
 export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
   'swipe-personality': {
     id: 'swipe-personality',
@@ -106,7 +136,12 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
   },
 }
 
-// Quiz Database - 50+ questions across 8 categories
+// ===================================================================
+// Quiz Database Content
+// ===================================================================
+// Complete collection of quiz questions organized by category
+// Contains 50+ original questions across 8 categories
+// Each question includes educational content and fun facts
 export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
   'swipe-personality': [
     {
@@ -526,26 +561,55 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
   ]
 }
 
-// Utility functions
+// ===================================================================
+// Quiz Database Utility Functions
+// ===================================================================
+// Helper functions for retrieving and managing quiz content
+
+// Retrieve questions for a specific category with optional filtering
+// Parameters:
+// - categoryId: The ID of the category to retrieve questions from
+// - difficulty: Optional difficulty filter (beginner, intermediate, advanced)
+// - count: Optional limit on number of questions to return
+// Returns: Array of QuizQuestion objects
 export const getQuestionsForCategory = (categoryId: string, difficulty?: string, count?: number): QuizQuestion[] => {
+  // Get all questions for the specified category or return empty array if not found
   const categoryQuestions = QUIZ_DATABASE[categoryId] || []
   
+  // Filter questions by difficulty if specified
   let filteredQuestions = categoryQuestions
   if (difficulty) {
     filteredQuestions = categoryQuestions.filter(q => q.difficulty === difficulty)
   }
   
-  // Shuffle questions and return requested count
+  // Shuffle questions randomly to provide variety
   const shuffled = filteredQuestions.sort(() => Math.random() - 0.5)
+  
+  // Return requested count or all questions if count not specified
   return count ? shuffled.slice(0, count) : shuffled
 }
 
+// Get a random selection of questions from a category
+// Parameters:
+// - categoryId: The ID of the category to retrieve questions from
+// - count: Number of questions to return (default: 5)
+// Returns: Array of randomly selected QuizQuestion objects
 export const getRandomQuestions = (categoryId: string, count: number = 5): QuizQuestion[] => {
+  // Get all questions for the specified category or return empty array if not found
   const allQuestions = QUIZ_DATABASE[categoryId] || []
+  
+  // Shuffle questions randomly
   const shuffled = allQuestions.sort(() => Math.random() - 0.5)
+  
+  // Return the requested number of questions
   return shuffled.slice(0, count)
 }
 
+// Get information about a specific quiz category
+// Parameters:
+// - categoryId: The ID of the category to retrieve information for
+// Returns: QuizCategory object with category metadata
 export const getCategoryInfo = (categoryId: string) => {
+  // Return the requested category information or default to programming category if not found
   return QUIZ_CATEGORIES[categoryId] || QUIZ_CATEGORIES.programming
 }
