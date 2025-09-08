@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { EnhancedCoinDisplay } from './EnhancedCoinDisplay'
-import { LimitedTimeOfferBanner } from './LimitedTimeOfferBanner'
+
 import { StreakMultiplierDisplay } from './StreakMultiplierDisplay'
 import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
 import { logout } from '../utils/auth'
@@ -24,7 +24,6 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
   const {
     revenueMetrics,
     activeMultipliers,
-    currentOffers,
     getCurrentMultiplier,
     processReferral
   } = useRevenueOptimization()
@@ -157,22 +156,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
             />
           )}
           
-          {/* Limited Time Offers */}
-          {currentOffers.length > 0 && currentOffers.map((offer) => (
-            <LimitedTimeOfferBanner
-              key={offer.id}
-              offer={offer}
-              onClaim={(offerId) => {
-                console.log('Claimed offer:', offerId)
-                // Handle offer claim logic here
-              }}
-              onDismiss={(offerId) => {
-                console.log('Dismissed offer:', offerId)
-                // Handle offer dismiss logic here
-              }}
-              position="floating"
-            />
-          ))}
+
         </>
       )}
     </>

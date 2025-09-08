@@ -22,18 +22,7 @@ interface CoinMultiplier {
   active: boolean
 }
 
-interface LimitedOffer {
-  id: string
-  title: string
-  description: string
-  discount: number
-  originalPrice: number
-  finalPrice: number
-  endTime: number
-  icon: string
-  shown: boolean
-  claimed: boolean
-}
+
 
 export function useRevenueOptimization() {
   const { state, dispatch } = useApp()
@@ -49,7 +38,6 @@ export function useRevenueOptimization() {
   })
 
   const [activeMultipliers, setActiveMultipliers] = useState<CoinMultiplier[]>([])
-  const [currentOffers, setCurrentOffers] = useState<LimitedOffer[]>([])
 
 
   // Load revenue data from localStorage
@@ -76,7 +64,6 @@ export function useRevenueOptimization() {
     }
 
     checkDailyBonus()
-    generateLimitedTimeOffers()
   }, [])
 
   // Save revenue data whenever it changes
@@ -177,49 +164,7 @@ export function useRevenueOptimization() {
     return revenueMetrics.dailyStreak
   }, [revenueMetrics.dailyStreak])
 
-  // Generate limited-time offers based on user behavior
-  const generateLimitedTimeOffers = useCallback(() => {
-    const now = Date.now()
-    const userCoins = state.user?.coins || 0
-    
-    const offers: LimitedOffer[] = []
 
-    // Low coins offer - only show if user has less than 50 coins
-    if (userCoins < 50 && revenueMetrics.adViews < 5) {
-      offers.push({
-        id: 'coin_boost_starter',
-        title: '🚀 Starter Coin Boost!',
-        description: 'Get 500 coins instantly + 2x multiplier for 1 hour',
-        discount: 60,
-        originalPrice: 250,
-        finalPrice: 100,
-        endTime: now + (2 * 60 * 60 * 1000), // 2 hours
-        icon: '💰',
-        shown: false,
-        claimed: false
-      })
-    }
-
-    // High engagement offer - for users with good streak
-    if (revenueMetrics.dailyStreak >= 3) {
-      offers.push({
-        id: 'streak_master_deal',
-        title: '🔥 Streak Master Deal!',
-        description: '3x coin multiplier for 24 hours + 1000 bonus coins',
-        discount: 50,
-        originalPrice: 1000,
-        finalPrice: 500,
-        endTime: now + (4 * 60 * 60 * 1000), // 4 hours
-        icon: '👑',
-        shown: false,
-        claimed: false
-      })
-    }
-
-    // Weekend special - REMOVED per user request
-
-    setCurrentOffers(offers)
-  }, [state.user?.coins, revenueMetrics])
 
 
 
@@ -292,14 +237,12 @@ export function useRevenueOptimization() {
   return {
     revenueMetrics,
     activeMultipliers,
-    currentOffers,
     awardCoins,
     trackAdView,
     processReferral,
     addMultiplier,
     getCurrentMultiplier,
     calculateCoinsWithMultipliers,
-    getRevenueRecommendations,
-    generateLimitedTimeOffers
+    getRevenueRecommendations
   }
 }
