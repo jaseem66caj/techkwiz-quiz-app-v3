@@ -1,0 +1,426 @@
+{
+  "config": {
+    "configFile": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/playwright.production.config.ts",
+    "rootDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report-production"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results-production.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results-production",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production-desktop",
+        "name": "production-desktop",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/production-*.spec.ts",
+          "**/homepage-quiz-*.spec.ts",
+          "**/quiz-completion-*.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results-production",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production-mobile",
+        "name": "production-mobile",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/production-*.spec.ts",
+          "**/homepage-quiz-*.spec.ts",
+          "**/quiz-completion-*.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results-production",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production-tablet",
+        "name": "production-tablet",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/production-*.spec.ts",
+          "**/homepage-quiz-*.spec.ts",
+          "**/quiz-completion-*.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "quiz-completion-flow.spec.ts",
+      "file": "quiz-completion-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Quiz Completion Flow - Critical Navigation Issue",
+          "file": "quiz-completion-flow.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete Homepage Quiz and Test Navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-desktop",
+                  "projectName": "production-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 28011,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🎯 Testing complete homepage quiz flow...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "✅ Homepage loaded\n"
+                        },
+                        {
+                          "text": "🔘 Found 4 buttons on homepage\n"
+                        },
+                        {
+                          "text": "📝 Found 3 quiz questions in localStorage\n"
+                        },
+                        {
+                          "text": "❓ Question 1: Which social media platform is known for short-form videos?\n"
+                        },
+                        {
+                          "text": "✅ Correct answer: TikTok\n"
+                        },
+                        {
+                          "text": "🎯 Clicking correct answer: TikTok\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Correct answer! Earned 25 coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 💰 COINS UPDATE: 0 + 25 = 25\n"
+                        },
+                        {
+                          "text": "🪙 User coins after question 1: 25\n"
+                        },
+                        {
+                          "text": "❓ Question 2: What does \"AI\" stand for?\n"
+                        },
+                        {
+                          "text": "✅ Correct answer: Artificial Intelligence\n"
+                        },
+                        {
+                          "text": "❌ Could not find button for answer: Artificial Intelligence\n"
+                        },
+                        {
+                          "text": "❓ Question 3: Which company created the iPhone?\n"
+                        },
+                        {
+                          "text": "✅ Correct answer: Apple\n"
+                        },
+                        {
+                          "text": "❌ Could not find button for answer: Apple\n"
+                        },
+                        {
+                          "text": "🏁 Final user state: {\n  id: \u001b[32m'guest'\u001b[39m,\n  name: \u001b[32m'Guest'\u001b[39m,\n  avatar: \u001b[32m'🤖'\u001b[39m,\n  coins: \u001b[33m25\u001b[39m,\n  level: \u001b[33m1\u001b[39m,\n  totalQuizzes: \u001b[33m0\u001b[39m,\n  correctAnswers: \u001b[33m0\u001b[39m,\n  joinDate: \u001b[32m'2025-09-08T09:52:51.656Z'\u001b[39m,\n  quizHistory: [],\n  streak: \u001b[33m0\u001b[39m\n}\n"
+                        },
+                        {
+                          "text": "🔍 Looking for navigation elements after quiz completion...\n"
+                        },
+                        {
+                          "text": "📄 Page contains navigation text: false\n"
+                        },
+                        {
+                          "text": "❌ CRITICAL ISSUE: No navigation options found after quiz completion\n"
+                        },
+                        {
+                          "text": "🔍 This confirms the reported issue - users cannot progress beyond homepage quiz\n"
+                        },
+                        {
+                          "text": "🔄 Testing direct navigation to /start as fallback...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 beforeunload event triggered, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚨 beforeunload: Preventing exit and calling onExitAttempt\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔄 Loading quiz categories...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 25 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Loaded categories from local database: 8\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [warning]: WordPress REST API failed: AbortError: signal is aborted without reason\n    at https://play.techkwiz.com/_next/static/chunks/app/start/page-da90f63b533cf047.js:1:860\n    at n (https://play.techkwiz.com/_next/static/chunks/vendors-d25bf7323d93242f.js:30:3674)\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: WordPress REST API failed, trying RSS feed...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from RSS feed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from WordPress REST API\n"
+                        },
+                        {
+                          "text": "✅ Direct navigation to /start works\n"
+                        },
+                        {
+                          "text": "👤 Auth state on /start page: {\n  id: \u001b[32m'guest'\u001b[39m,\n  name: \u001b[32m'Guest'\u001b[39m,\n  avatar: \u001b[32m'🤖'\u001b[39m,\n  coins: \u001b[33m25\u001b[39m,\n  level: \u001b[33m1\u001b[39m,\n  totalQuizzes: \u001b[33m0\u001b[39m,\n  correctAnswers: \u001b[33m0\u001b[39m,\n  joinDate: \u001b[32m'2025-09-08T09:52:51.656Z'\u001b[39m,\n  quizHistory: [],\n  streak: \u001b[33m0\u001b[39m\n}\n"
+                        },
+                        {
+                          "text": "❌ Error messages on /start page: 0\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-08T09:52:51.365Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-6ef9b066d00ac15f5805",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Without Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production-desktop",
+                  "projectName": "production-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8692,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing navigation without completing quiz...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 beforeunload event triggered, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚨 beforeunload: Preventing exit and calling onExitAttempt\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: Blocked attempt to show a 'beforeunload' confirmation panel for a frame that never had a user gesture since its load. https://www.chromestatus.com/feature/5082396709879808\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔄 Loading quiz categories...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Loaded categories from local database: 8\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from WordPress REST API\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from WordPress REST API\n"
+                        },
+                        {
+                          "text": "🔗 Navigation without quiz completion result: https://play.techkwiz.com/start\n"
+                        },
+                        {
+                          "text": "✅ Can access /start without quiz completion\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-08T09:53:19.478Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-1823f7e35b0908bbb511",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 203,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-08T09:52:51.145Z",
+    "duration": 37050.592000000004,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
