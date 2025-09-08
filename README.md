@@ -119,7 +119,23 @@ Key environment variables (see `.env.example` for full list):
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### GitHub Actions (Automated)
+
+The repository includes automated deployment via GitHub Actions:
+
+1. **Set up GitHub Secrets** (see [GitHub Deployment Guide](docs/GITHUB_DEPLOYMENT.md)):
+   - `NEXT_PUBLIC_SENTRY_DSN` - Sentry error monitoring
+   - `NEXT_PUBLIC_ANALYTICS_ID` - Google Analytics (optional)
+   - `NEXT_PUBLIC_APP_URL` - Your domain (optional)
+
+2. **Deploy automatically**:
+   ```bash
+   git push origin main
+   ```
+
+3. **Download build artifacts** from GitHub Actions and upload to your hosting provider
+
+### Vercel (Alternative)
 
 1. Connect your GitHub repository to Vercel
 2. Configure environment variables in Vercel dashboard
@@ -136,6 +152,8 @@ Key environment variables (see `.env.example` for full list):
    ```bash
    npm start
    ```
+
+For detailed deployment instructions, see [GitHub Deployment Guide](docs/GITHUB_DEPLOYMENT.md).
 
 ## 📊 Analytics
 

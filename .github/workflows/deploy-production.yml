@@ -8,43 +8,155 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
+    environment: production
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
-        
+
     - name: Install dependencies
       run: npm ci
-      
+
+    - name: Create production environment file
+      run: |
+        echo "Creating production environment configuration..."
+        echo "NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL || 'https://play.techkwiz.com' }}" >> .env.production
+        echo "NEXT_PUBLIC_APP_VERSION=8.0.0" >> .env.production
+        echo "NEXT_PUBLIC_SENTRY_DSN=${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}" >> .env.production
+        echo "NEXT_PUBLIC_ANALYTICS_ID=${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}" >> .env.production
+        echo "NEXT_PUBLIC_ENABLE_TEST_PAGES=false" >> .env.production
+        echo "NODE_ENV=production" >> .env.production
+
+        # Optional Sentry configuration for source maps
+        if [ -n "${{ secrets.SENTRY_ORG }}" ]; then
+          echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> .env.production
+        fi
+        if [ -n "${{ secrets.SENTRY_PROJECT }}" ]; then
+          echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> .env.production
+        fi
+        if [ -n "${{ secrets.SENTRY_AUTH_TOKEN }}" ]; then
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env.production
+        fi
+
+        echo "✅ Environment configuration created"
+
     - name: Build application
       run: npm run build
+      env:
+        NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://play.techkwiz.com' }}
+        NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+        NEXT_PUBLIC_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
+        NEXT_PUBLIC_ENABLE_TEST_PAGES: false
+        NODE_ENV: production
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       
+    - name: Verify build artifacts
+      run: |
+        echo "🔍 Verifying build artifacts..."
+
+        # Check if build directory exists
+        if [ -d ".next" ]; then
+          echo "✅ .next directory created successfully"
+          echo "📁 Build size: $(du -sh .next | cut -f1)"
+        else
+          echo "❌ .next directory not found"
+          exit 1
+        fi
+
+        # Check if static files exist
+        if [ -d ".next/static" ]; then
+          echo "✅ Static assets generated"
+        else
+          echo "❌ Static assets missing"
+          exit 1
+        fi
+
+        # Verify Sentry integration
+        if [ -n "${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}" ]; then
+          echo "✅ Sentry error monitoring configured"
+        else
+          echo "⚠️  Sentry DSN not configured - error monitoring disabled"
+        fi
+
     - name: Deploy to hosting
       run: |
         echo "🚀 Production build completed successfully!"
         echo "📦 Build artifacts ready for deployment"
         echo "🌐 Next.js application optimized for production"
-        
+
         # Display build summary
         echo "📊 Build Summary:"
         echo "- Static pages: Generated successfully"
         echo "- Bundle optimization: Complete"
         echo "- Assets: Optimized and ready"
-        
+        echo "- Error monitoring: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN && 'Enabled' || 'Disabled' }}"
+        echo "- Analytics: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID && 'Enabled' || 'Disabled' }}"
+
         # Note: Actual deployment would require hosting provider credentials
         echo "⚠️  Manual deployment step required:"
         echo "   Upload .next/ and public/ directories to hosting provider"
         echo "   Ensure Node.js environment is configured on server"
-        echo "   Update environment variables if needed"
-        
+        echo "   Set environment variables on hosting platform"
+
+    - name: Generate deployment report
+      run: |
+        echo "📋 Deployment Report" > deployment-report.md
+        echo "===================" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "**Build Date:** $(date)" >> deployment-report.md
+        echo "**Commit:** ${{ github.sha }}" >> deployment-report.md
+        echo "**Branch:** ${{ github.ref_name }}" >> deployment-report.md
+        echo "**Node Version:** $(node --version)" >> deployment-report.md
+        echo "**NPM Version:** $(npm --version)" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "## Features Included" >> deployment-report.md
+        echo "- ✅ Next.js 15 with App Router" >> deployment-report.md
+        echo "- ✅ TypeScript support" >> deployment-report.md
+        echo "- ✅ Tailwind CSS styling" >> deployment-report.md
+        echo "- ✅ Framer Motion animations" >> deployment-report.md
+        echo "- ✅ Sentry error monitoring" >> deployment-report.md
+        echo "- ✅ Google Analytics integration" >> deployment-report.md
+        echo "- ✅ Responsive design" >> deployment-report.md
+        echo "- ✅ PWA capabilities" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "## Environment Configuration" >> deployment-report.md
+        echo "- App URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://play.techkwiz.com' }}" >> deployment-report.md
+        echo "- Sentry: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN && 'Configured' || 'Not configured' }}" >> deployment-report.md
+        echo "- Analytics: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID && 'Configured' || 'Not configured' }}" >> deployment-report.md
+        echo "- Test pages: Disabled in production" >> deployment-report.md
+
+        cat deployment-report.md
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: techkwiz-v8-build-${{ github.sha }}
+        path: |
+          .next/
+          public/
+          package.json
+          next.config.js
+          deployment-report.md
+        retention-days: 30
+
     - name: Notify deployment status
       run: |
-        echo "✅ Deployment workflow completed"
-        echo "🔗 Site should be available at: https://play.techkwiz.com/"
+        echo "✅ Deployment workflow completed successfully"
+        echo "🔗 Site ready for: https://play.techkwiz.com/"
+        echo "📦 Build artifacts uploaded for manual deployment"
         echo "🧪 Run post-deployment tests to verify functionality"
+        echo ""
+        echo "🚨 Next Steps:"
+        echo "1. Download build artifacts from GitHub Actions"
+        echo "2. Upload to your hosting provider"
+        echo "3. Configure environment variables on hosting platform"
+        echo "4. Test the deployed application"
