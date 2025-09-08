@@ -2,6 +2,11 @@
   "name": "techkwiz-v8",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.0.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,7 +21,7 @@
     "pm2:restart": "pm2 restart ecosystem.config.js",
     "pm2:logs": "pm2 logs",
     "pm2:status": "pm2 status",
-    "vercel-build": "npm ci --registry=https://registry.npmjs.org/ --force && npm run build"
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
