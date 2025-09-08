@@ -97,6 +97,15 @@ archive-*/
 deployment-readiness-*/
 techkwiz-v8-production-validation-*/
 
+# Documentation archives
+docs/archive/
+
+# Script artifacts
+scripts/inventory/
+scripts/*.csv
+scripts/*.json
+scripts/*.log
+
 # Test artifacts (keep only essential ones)
 test-results/
 playwright-report/

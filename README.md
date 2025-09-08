@@ -1,175 +1,155 @@
-# 🎯 TechKwiz-v7 - Interactive Tech Quiz Game
+# 🎯 TechKwiz v8 - Interactive Tech Quiz Application
 
-[![Deploy to Hostinger](https://github.com/jaseem66caj/Techkwiz-v7/actions/workflows/deploy-hostinger.yml/badge.svg)](https://github.com/jaseem66caj/Techkwiz-v7/actions/workflows/deploy-hostinger.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Next.js](https://img.shields.io/badge/Next.js-15.4.4-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+A modern, responsive quiz application built with Next.js 15, React 19, and TypeScript. Features real-time coin rewards, achievements, and an engaging user experience.
 
-A modern, interactive quiz application built with Next.js that runs entirely in the browser. Test your knowledge across Movies, Social Media, and Influencers categories with engaging animations and a reward system.
+## ✨ Features
 
-> **🧹 Recently Cleaned**: This codebase has been systematically optimized with legacy component removal, duplicate code elimination, and modern React patterns implementation for improved maintainability.
+- 🎮 **Interactive Quiz System** - Multiple categories with varying difficulty levels
+- 🪙 **Coin Reward System** - Earn coins for correct answers and achievements
+- 🏆 **Achievement System** - Unlock achievements and track progress
+- 📱 **Responsive Design** - Optimized for mobile, tablet, and desktop
+- 🎨 **Modern UI/UX** - Built with Tailwind CSS and Framer Motion animations
+- 📊 **Analytics Integration** - Google Analytics 4 support
+- 🔐 **User Management** - Local storage-based user profiles
+- 🎯 **Performance Optimized** - Fast loading and smooth interactions
 
-## 🌟 Features
-
-- **Pure Client-Side**: No backend server required - runs entirely in the browser
-- **Three Quiz Categories**: Movies, Social Media, and Influencers
-- **Interactive UI**: Modern design with smooth animations using Framer Motion
-- **Reward System**: Earn coins for correct answers and track your progress
-- **Responsive Design**: Works perfectly on mobile and desktop
-- **Local Storage**: All user data and progress saved locally in the browser
-- **Guest Mode**: Start playing immediately without registration
-
-## 🌐 Automated Deployment to Hostinger
-
-This project includes **automated GitHub Actions deployment** to Hostinger hosting. Deploy with just a few clicks!
-
-### 🚀 Quick Deployment Setup:
-
-1. **Fork this repository** to your GitHub account
-
-2. **Configure GitHub Secrets** in your repository:
-   - Go to Settings → Secrets and variables → Actions
-   - Add the following secrets:
-
-| Secret Name | Description | Example |
-|-------------|-------------|---------|
-| `FTP_HOST` | Hostinger FTP host | `your-domain.com` |
-| `FTP_USERNAME` | FTP username | `u123456789` |
-| `FTP_PASSWORD` | FTP password | `your-password` |
-| `APP_URL` | Your website URL | `https://your-domain.com` |
-| `APP_DOMAIN` | Domain name | `your-domain.com` |
-| `ANALYTICS_ID` | Google Analytics ID | `G-XXXXXXXXXX` |
-| `ADSENSE_PUBLISHER_ID` | AdSense Publisher ID | `ca-pub-1234567890123456` |
-
-3. **Trigger Deployment**:
-   - Go to Actions tab → "Deploy TechKwiz-v7 to Hostinger"
-   - Click "Run workflow"
-   - Your site will be live in 3-5 minutes! 🎉
-
-📖 **Detailed deployment guide**: [GITHUB_DEPLOYMENT_GUIDE.md](frontend/GITHUB_DEPLOYMENT_GUIDE.md)
-
-## 🚀 Local Development
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+
+
+- Node.js 18+ 
 - npm or yarn
 
-### Installation & Setup
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd Techkwiz-v7
+   git clone https://github.com/jaseem66caj/techkwiz-quiz-app-v2.git
+   cd techkwiz-v8
    ```
 
 2. **Install dependencies**
    ```bash
-   cd frontend
    npm install
    ```
 
-3. **Start the development server**
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:3000`
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-### Alternative: Use the startup script
-```bash
-./start_frontend.sh
+## 🛠️ Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run test:visual` - Run Playwright visual tests
+- `npm run test:e2e:stable` - Run stable E2E tests
+
+### Project Structure
+
+```
+src/
+├── app/                 # Next.js 13+ app directory
+│   ├── layout.tsx      # Root layout
+│   ├── page.tsx        # Homepage
+│   ├── quiz/           # Quiz pages
+│   └── start/          # Category selection
+├── components/         # Reusable components
+├── data/              # Quiz database and static data
+├── hooks/             # Custom React hooks
+├── types/             # TypeScript type definitions
+└── utils/             # Utility functions
 ```
 
 ## 🎮 How to Play
 
-1. **Start**: Visit the homepage and click "Start Quiz"
-2. **Choose Category**: Select from Movies, Social Media, or Influencers
-3. **Answer Questions**: You have 30 seconds per question
-4. **Earn Coins**: Get 25 coins for each correct answer
-5. **Track Progress**: View your stats and quiz history
-
-## 🏗️ Architecture
-
-This is a **client-side only** application built with:
-
-- **Frontend**: Next.js 15 with TypeScript
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Data Storage**: Browser localStorage/sessionStorage
-- **State Management**: React Context API
-
-### Key Components
-
-- `frontend/src/data/quizDatabase.ts` - All quiz questions and categories
-- `frontend/src/utils/auth.ts` - Client-side authentication and user management
-- `frontend/src/components/` - Reusable UI components
-- `frontend/src/app/` - Next.js app router pages
-
-## 📝 Adding New Questions
-
-Edit `frontend/src/data/quizDatabase.ts` to add new questions:
-
-```typescript
-{
-  id: 'unique-id',
-  question: 'Your question here?',
-  options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-  correct_answer: 0, // Index of correct option
-  difficulty: 'beginner', // 'beginner' | 'intermediate' | 'advanced'
-  fun_fact: 'Interesting fact about the answer',
-  category: 'movies', // 'movies' | 'social-media' | 'influencers'
-  subcategory: 'Disney'
-}
-```
-
-## 🚀 Deployment
-
-Since this is a client-side only application, you can deploy it to any static hosting service:
-
-### Vercel (Recommended)
-```bash
-npm run build
-npx vercel --prod
-```
-
-### Netlify
-```bash
-npm run build
-# Upload the 'out' folder to Netlify
-```
-
-### GitHub Pages
-```bash
-npm run build
-# Push the 'out' folder to gh-pages branch
-```
+1. **Start Quiz** - Choose a category from the start page
+2. **Answer Questions** - Select your answer from multiple choices
+3. **Earn Coins** - Get 25 coins for each correct answer
+4. **Unlock Achievements** - Complete challenges to earn special rewards
+5. **Track Progress** - View your stats and coin balance
 
 ## 🔧 Configuration
 
-### Quiz Settings
-Edit `frontend/src/data/quizDatabase.ts` to modify:
-- Timer duration (default: 30 seconds)
-- Coins per correct answer (default: 25)
-- Number of questions per quiz (default: 5)
+### Environment Variables
 
-### Styling
-- Colors and themes: `frontend/tailwind.config.js`
-- Global styles: `frontend/src/app/globals.css`
+Key environment variables (see `.env.example` for full list):
 
-## 📱 Browser Compatibility
+- `NEXT_PUBLIC_APP_URL` - Application URL
+- `NEXT_PUBLIC_ANALYTICS_ID` - Google Analytics measurement ID
+- `NEXT_PUBLIC_ENABLE_TEST_PAGES` - Enable/disable test pages
 
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+### Features Configuration
+
+- **Test Pages**: Automatically disabled in production
+- **Analytics**: Configurable Google Analytics integration
+- **Coin System**: Customizable reward amounts and limits
+
+## 📱 Responsive Design
+
+- **Mobile First** - Optimized for mobile devices
+- **Tablet Support** - Enhanced experience on tablets
+- **Desktop** - Full-featured desktop interface
+- **Touch Friendly** - Optimized for touch interactions
+
+## 🎨 Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Frontend**: React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Heroicons
+- **Testing**: Playwright
+- **Deployment**: Vercel-ready
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Manual Deployment
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server:
+   ```bash
+   npm start
+   ```
+
+## 📊 Analytics
+
+The application supports Google Analytics 4 integration:
+
+1. Create a GA4 property
+2. Get your Measurement ID (G-XXXXXXXXXX)
+3. Add it to your environment variables
+4. Enable analytics in your configuration
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Add tests if applicable
 5. Submit a pull request
 
 ## 📄 License
@@ -178,8 +158,16 @@ This project is licensed under the MIT License.
 
 ## 🆘 Support
 
-If you encounter any issues:
-1. Check the browser console for errors
-2. Clear browser cache and localStorage
-3. Ensure you're using a supported browser
-4. Create an issue on GitHub with details
+For support and questions:
+- Create an issue on GitHub
+- Check the documentation in the `docs/` folder
+
+## 🔄 Version History
+
+- **v8.0.0** - Major refactor with improved architecture
+- **v7.x** - Previous stable version
+- **v6.x** - Legacy version
+
+---
+
+Built with ❤️ by [Jaseem Abdul Jaleel](https://github.com/jaseem66caj)
