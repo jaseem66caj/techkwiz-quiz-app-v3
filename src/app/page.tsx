@@ -1,3 +1,11 @@
+// ===================================================================
+// TechKwiz Home Page Component
+// ===================================================================
+// This is the main entry point for the TechKwiz application. It renders the
+// homepage with an interactive quiz experience, user profile creation, and
+// exit prevention functionality. The component manages the complete quiz flow
+// including question display, answer selection, scoring, and result handling.
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -13,11 +21,14 @@ import { CreateProfile } from '../components/CreateProfile';
 import { saveUser } from '../utils/auth';
 import { getUnlockedAchievements } from '../utils/achievements';
 
-
+// Main Home Page component that serves as the primary user interface
 export default function HomePage() {
+  // Access global application state and dispatch function
   const { state, dispatch } = useApp()
+  // Next.js router for navigation
   const router = useRouter()
   
+  // State management for UI components and quiz flow
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -30,12 +41,17 @@ export default function HomePage() {
   const [resultCountdown, setResultCountdown] = useState(90);
   const [isNavigating, setIsNavigating] = useState(false);
 
+  // ===================================================================
+  // Auto-redirect Timer Effect
+  // ===================================================================
+  // Effect to handle automatic redirection after quiz completion
 
-  // Auto-redirect timer effect
+  // Effect to manage auto-redirect timer after quiz completion
   useEffect(() => {
     let timer: NodeJS.Timeout;
     let interval: NodeJS.Timeout;
     
+    // Set up auto-redirect and countdown when quiz is completed and results are shown
     if (showResult && quizCompleted) {
       // Auto-redirect to profile creation after 90 seconds
       timer = setTimeout(() => {
@@ -43,7 +59,7 @@ export default function HomePage() {
         setShowCreateProfile(true);
       }, 90000); // 90 seconds
 
-      // Countdown timer
+      // Countdown timer for UI display
       interval = setInterval(() => {
         setResultCountdown(prev => {
           if (prev <= 1) {
@@ -55,12 +71,19 @@ export default function HomePage() {
       }, 1000);
     }
 
+    // Cleanup timers on component unmount or state change
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
     };
   }, [showResult, quizCompleted]);
 
+  // ===================================================================
+  // Exit Prevention Hook
+  // ===================================================================
+  // Hook to prevent accidental exit during quiz
+
+  // Setup exit prevention to warn users about losing progress
   const { disablePrevention } = useExitPrevention({
     isActive: !quizCompleted && !showResult,
     onExitAttempt: () => {
@@ -69,17 +92,27 @@ export default function HomePage() {
     customMessage: "Are you sure you want to leave? Your progress will be lost!"
   })
 
+  // ===================================================================
+  // Quiz Question Loading Effect
+  // ===================================================================
+  // Effect to load quiz questions on component mount
+
+  // Effect to load quiz questions when component mounts
   useEffect(() => {
+    // Function to load quiz questions from various sources
     const loadQuizQuestions = () => {
+      // Guard clause for server-side rendering
       if (typeof window === 'undefined') {
         return
       }
 
       try {
         setIsLoadingQuestions(true)
+        // Try to get game sync data from localStorage
         const gameSyncData = localStorage.getItem('game_quiz_data')
         let questions = []
 
+        // Load questions from localStorage or fallback to data manager
         if (gameSyncData) {
           questions = JSON.parse(gameSyncData)
         } else {
@@ -91,10 +124,12 @@ export default function HomePage() {
           }
         }
 
+        // Filter questions for homepage display
         const homepageQuestions = questions.filter(q => q.section === 'homepage')
         const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
         let questionsToUse = homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
 
+        // Set quiz questions or fallback to default questions
         if (questionsToUse.length >= 5) {
           const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
             id: q.id,
@@ -118,18 +153,22 @@ export default function HomePage() {
       }
     }
 
+    // Load questions when component mounts
     loadQuizQuestions()
 
+    // Handler for real-time quiz updates
     const handleQuizSync = () => {
       loadQuizQuestions()
     }
 
+    // Setup real-time sync listener
     try {
       realTimeSyncService.addEventListener('quiz_updated', handleQuizSync)
     } catch (error) {
       console.error('Error setting up quiz sync listener:', error)
     }
 
+    // Cleanup listener on component unmount
     return () => {
       try {
         realTimeSyncService.removeEventListener('quiz_updated', handleQuizSync)
@@ -139,6 +178,12 @@ export default function HomePage() {
     }
   }, [])
 
+  // ===================================================================
+  // Fallback Questions
+  // ===================================================================
+  // Default questions to use when no other questions are available
+
+  // Provide fallback questions when no questions are available
   const getFallbackQuestions = () => [
     {
       id: 'fallback-1',
@@ -192,16 +237,26 @@ export default function HomePage() {
     }
   ];
 
+  // Quick start quiz with available questions or fallback
   const quickStartQuiz = quizQuestions.length > 0 ? quizQuestions : getFallbackQuestions();
 
+  // ===================================================================
+  // Quiz Answer Handling
+  // ===================================================================
+  // Functions to handle user interactions during the quiz
+
+  // Handle user selecting an answer
   const handleAnswerSelect = (answerIndex: number) => {
+    // Prevent multiple selections
     if (selectedAnswer !== null) return;
     setSelectedAnswer(answerIndex);
 
+    // Delay to show answer feedback
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
       const coinsEarned = isCorrect ? 25 : 0; // 25 coins per correct answer
 
+      // Update score and coins for correct answers
       if (isCorrect) {
         setScore(score + 1);
         // Award coins for correct answers on homepage quiz
@@ -263,8 +318,12 @@ export default function HomePage() {
     }, 1000); // Wait 1 second after selection to show answer
   };
 
+  // ===================================================================
+  // Profile Creation Handling
+  // ===================================================================
+  // Functions to handle user profile creation after quiz completion
 
-
+  // Handle user creating a profile after quiz completion
   const handleProfileCreated = (username: string, avatar: string) => {
     const coinsEarned = score * 50;
 
@@ -294,6 +353,12 @@ export default function HomePage() {
     router.push('/start');
   };
 
+  // ===================================================================
+  // UI Rendering
+  // ===================================================================
+  // Conditional rendering based on component state
+
+  // Show loading screen while questions are loading
   if (isLoadingQuestions) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
@@ -307,6 +372,7 @@ export default function HomePage() {
     )
   }
   
+  // Show profile creation screen after quiz completion
   if (showCreateProfile) {
     return <CreateProfile onProfileCreated={handleProfileCreated} />;
   }
@@ -325,6 +391,7 @@ export default function HomePage() {
     )
   }
 
+  // Show quiz result screen after quiz completion
   if (showResult && quizCompleted) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
@@ -384,6 +451,7 @@ export default function HomePage() {
     )
   }
 
+  // Show quiz interface for active quiz
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">

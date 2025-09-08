@@ -11,30 +11,50 @@ import { RewardPopup } from '../../../components/RewardPopup'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
+// Interface defining the structure of quiz questions for this page
 interface QuizQuestion {
+  // Unique identifier for the question
   id: string
+  // The question text to display to users
   question: string
+  // Array of answer options
   options: string[]
+  // Index of the correct answer in the options array
   correct_answer: number
+  // Difficulty level of the question
   difficulty: 'beginner' | 'intermediate' | 'advanced'
+  // Optional question type for special rendering
   question_type?: string
+  // Educational fun fact related to the question
   fun_fact: string
+  // Category identifier this question belongs to
   category: string
+  // Subcategory within the main category
   subcategory: string
+  // Optional emoji clue for emoji decode questions
   emoji_clue?: string
+  // Optional visual elements for "This or That" questions
   visual_options?: string[]
+  // Optional personality trait for personality questions
   personality_trait?: string
+  // Optional year for prediction questions
   prediction_year?: string
 }
 
+// Main Quiz Page component for a specific category
 export default function QuizPage({ params }: { params: Promise<{ category: string }> }) {
+  // Access global application state and dispatch function
   const { state, dispatch } = useApp()
+  // Next.js router for navigation
   const router = useRouter()
+  // State for the current category ID
   const [categoryId, setCategoryId] = useState<string>('')
 
+  // Loading and error state management
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // Quiz state management
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
@@ -43,37 +63,53 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const [isCorrect, setIsCorrect] = useState(false)
   const [adSlotCode, setAdSlotCode] = useState<string>('')
 
+  // Timer state management
   const [timerEnabled, setTimerEnabled] = useState(true)
   const [timerSeconds, setTimerSeconds] = useState(30)
   const [showTimeUp, setShowTimeUp] = useState(false)
 
-  // Resolve params Promise
+  // ===================================================================
+  // Parameter Resolution Effect
+  // ===================================================================
+  // Effect to resolve the category parameter from the URL
+
+  // Resolve the category parameter from the URL path
   useEffect(() => {
     params.then(resolvedParams => {
       setCategoryId(resolvedParams.category)
     })
   }, [params])
 
-  // Load config + questions
+  // ===================================================================
+  // Quiz Initialization Effect
+  // ===================================================================
+  // Effect to load quiz configuration and questions when category changes
+
+  // Load quiz configuration and questions when category ID is available
   useEffect(() => {
+    // Guard clause - exit if no category ID
     if (!categoryId) return;
 
+    // Async initialization function
     const init = async () => {
       try {
+        // Load category information
         const { QUIZ_CATEGORIES } = await import('../../../data/quizDatabase');
         const categoryInfo = (QUIZ_CATEGORIES as any)[categoryId];
         const entryFee = categoryInfo ? categoryInfo.entry_fee : 0;
 
+        // Dispatch action to start quiz and deduct entry fee
         dispatch({ type: 'START_QUIZ', payload: { quiz: { category: categoryId }, entryFee } });
 
-        // Use default timer configuration
+        // Enable timer with default configuration
         setTimerEnabled(true)
         setTimerSeconds(30)
 
         try {
-          // First try to load from admin dashboard
+          // First try to load questions from admin dashboard
           const adminQuestions = quizDataManager.getQuestionsByCategoryAndSection(categoryId, 'category')
 
+          // Use admin questions if enough are available
           if (adminQuestions.length >= 3) {
             // Convert admin format to quiz format
             const convertedQuestions = adminQuestions.slice(0, 5).map(q => ({
@@ -89,27 +125,35 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
             setQuestions(convertedQuestions)
             console.log(`✅ Using admin questions for category: ${categoryId}`)
           } else {
-            // Fallback to quiz database
+            // Fallback to quiz database if not enough admin questions
             const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
             const fallback = (QUIZ_DATABASE as any)[categoryId] || []
             setQuestions(fallback.slice(0, 5))
             console.log(`⚠️ Using fallback questions for category: ${categoryId}`)
           }
         } catch (error) {
+          // Handle errors in loading questions
           console.error('Error loading questions:', error)
           const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
           const fallback = (QUIZ_DATABASE as any)[categoryId] || []
           setQuestions(fallback.slice(0, 5))
         }
 
+        // Set loading state to false when initialization is complete
         setLoading(false)
       } catch (err: any) {
+        // Handle initialization errors
         setError(err?.message || 'Failed to load quiz')
         setLoading(false)
       }
     }
     init()
   }, [categoryId, dispatch])
+
+  // ===================================================================
+  // Ad Slot Loading Effect
+  // ===================================================================
+  // Effect to load ad configuration (currently using default)
 
   // Fetch popup interstitial ad code - using default ad code
   useEffect(() => {
@@ -118,45 +162,74 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     setAdSlotCode('')
   }, [])
 
+  // ===================================================================
+  // Quiz Event Handlers
+  // ===================================================================
+  // Functions to handle various quiz events and user interactions
+
+  // Handle timer expiration
   const handleTimeUp = () => {
+    // Guard clause - exit if answer already selected
     if (selected !== null) return
+    // Show time up modal
     setShowTimeUp(true)
+    // Mark as incorrect
     setIsCorrect(false)
+    // Set selected to indicate time expired
     setSelected(-1)
-    // Trigger reward on timeout as well
+    // Trigger reward popup after delay
     setTimeout(() => setShowReward(true), 400)
   }
 
+  // Handle user answer selection
   const handleAnswer = (answerIndex: number) => {
+    // Guard clause - exit if answer already selected
     if (selected !== null) return;
+    // Set selected answer
     setSelected(answerIndex);
 
+    // Check if answer is correct
     const correct = questions[current].correct_answer === answerIndex;
     setIsCorrect(correct);
+    // Update score if correct
     if (correct) {
       setScore(s => s + 1);
     }
 
-    // Qureka-style popup for both correct & wrong
+    // Show Qureka-style reward popup for both correct and wrong answers
     setTimeout(() => setShowReward(true), 400);
   };
 
+  // Handle ad completion and reward distribution
   const handleAdCompleted = (coinsFromAd: number) => {
+    // Dispatch action to update user coins
     dispatch({ type: 'UPDATE_COINS', payload: coinsFromAd });
   };
 
+  // Advance to next question or complete quiz
   const advance = () => {
+    // Hide reward popup and time up modal
     setShowReward(false);
     setShowTimeUp(false);
+    
+    // Check if there are more questions
     if (current < questions.length - 1) {
+      // Advance to next question
       setCurrent(c => c + 1);
       setSelected(null);
     } else {
+      // Quiz completed - dispatch end quiz action and navigate
       dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions: questions.length } });
       router.push('/start');
     }
   };
 
+  // ===================================================================
+  // Loading and Error States
+  // ===================================================================
+  // Render loading and error states
+
+  // Render loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
@@ -168,6 +241,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     )
   }
 
+  // Render error state
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
@@ -179,12 +253,17 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     )
   }
 
+  // ===================================================================
+  // Main Quiz Interface Render
+  // ===================================================================
+  // Render the complete quiz interface with all components
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
       <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl">
-        {/* Header */}
+        {/* Header with user information and coin balance */}
         <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 mb-6">
-          {/* User info */}
+          {/* User info display for authenticated users */}
           {state.user && state.user.name !== 'Guest' && (
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700">
