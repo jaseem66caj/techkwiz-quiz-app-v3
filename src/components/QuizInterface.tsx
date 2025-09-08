@@ -1,31 +1,48 @@
+// ===================================================================
+// TechKwiz Quiz Interface Component
+// ===================================================================
+// This component renders the interactive quiz interface where users answer questions.
+// It supports multiple question types including multiple choice, "This or That", 
+// emoji decode, personality, and prediction questions with unique visual styling
+// for each type. The component handles user interactions, answer selection,
+// and visual feedback for correct/incorrect answers.
+
 'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
+// Interface defining the structure of quiz question data
 interface QuizInterfaceProps {
+  // The current question object containing all question data
   question: {
-    id: string;
-    question: string;
-    options: string[];
-    correct_answer: number;
-    difficulty: 'beginner' | 'intermediate' | 'advanced';
-    question_type?: string;
-    fun_fact: string;
-    category: string;
-    subcategory: string;
-    emoji_clue?: string;
-    visual_options?: string[];
-    personality_trait?: string;
-    prediction_year?: string;
+    id: string;                    // Unique identifier for the question
+    question: string;             // The question text to display
+    options: string[];            // Array of answer options
+    correct_answer: number;       // Index of correct answer in options array (-1 for personality questions)
+    difficulty: 'beginner' | 'intermediate' | 'advanced'; // Difficulty level
+    question_type?: string;       // Optional question type for special rendering
+    fun_fact: string;             // Educational fun fact related to the question
+    category: string;             // Category this question belongs to
+    subcategory: string;          // Subcategory within the main category
+    emoji_clue?: string;          // Optional emoji clue for emoji decode questions
+    visual_options?: string[];    // Optional visual elements for "This or That" questions
+    personality_trait?: string;   // Optional personality trait for personality questions
+    prediction_year?: string;     // Optional year for prediction questions
   }
+  // Index of the currently selected answer (-1 if none selected)
   selectedAnswer: number | null
+  // Callback function triggered when user selects an answer
   onAnswerSelect: (answerIndex: number) => void
+  // Flag indicating if the current question has been answered
   questionAnswered: boolean
+  // Current question number in the quiz sequence
   questionNumber: number
+  // Total number of questions in the quiz
   totalQuestions: number
 }
 
+// Main Quiz Interface component that renders questions with appropriate styling
 export function QuizInterface({
   question,
   selectedAnswer,
@@ -34,14 +51,17 @@ export function QuizInterface({
   questionNumber,
   totalQuestions
 }: QuizInterfaceProps) {
+  // State to control animation when questions change
   const [animateIn, setAnimateIn] = useState(false)
 
+  // Effect to trigger animation when question number changes
   useEffect(() => {
     setAnimateIn(true)
     const timer = setTimeout(() => setAnimateIn(false), 500)
     return () => clearTimeout(timer)
   }, [questionNumber])
 
+  // Determine question type with fallback to multiple choice
   const questionType = question?.question_type || 'multiple_choice'
 
   // Safety check - don't render if question is undefined
@@ -56,7 +76,12 @@ export function QuizInterface({
     )
   }
 
-  // Youth-friendly headers based on question type
+  // ===================================================================
+  // Question Header Generation Functions
+  // ===================================================================
+  // Generate engaging headers based on question type to enhance user experience
+
+  // Get youth-friendly header text based on question type
   const getQuestionHeader = () => {
     switch (questionType) {
       case 'this_or_that':
@@ -72,6 +97,7 @@ export function QuizInterface({
     }
   }
 
+  // Get descriptive subtext based on question type
   const getQuestionSubtext = () => {
     switch (questionType) {
       case 'this_or_that':
@@ -87,7 +113,12 @@ export function QuizInterface({
     }
   }
 
-  // Render "This or That" style question
+  // ===================================================================
+  // Question Rendering Functions
+  // ===================================================================
+  // Each function renders a specific question type with unique styling and interactions
+
+  // Render "This or That" style question with visual options in a grid layout
   const renderThisOrThatQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -128,7 +159,7 @@ export function QuizInterface({
     </div>
   )
 
-  // Render emoji decode question
+  // Render emoji decode question with special styling for emoji clues
   const renderEmojiDecodeQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -178,7 +209,7 @@ export function QuizInterface({
     </div>
   )
 
-  // Render personality question
+  // Render personality question with special styling (no correct answers)
   const renderPersonalityQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -217,7 +248,7 @@ export function QuizInterface({
     </div>
   )
 
-  // Render prediction question
+  // Render prediction question with futuristic styling
   const renderPredictionQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -268,7 +299,7 @@ export function QuizInterface({
     </div>
   )
 
-  // Render regular multiple choice question
+  // Render standard multiple choice question with basic styling
   const renderMultipleChoiceQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -307,6 +338,7 @@ export function QuizInterface({
     </div>
   )
 
+  // Select appropriate rendering function based on question type
   const renderQuestionContent = () => {
     switch (questionType) {
       case 'this_or_that':
@@ -322,6 +354,10 @@ export function QuizInterface({
     }
   }
 
+  // ===================================================================
+  // Main Component Render
+  // ===================================================================
+  // Renders the complete quiz interface with question content and progress indicators
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
