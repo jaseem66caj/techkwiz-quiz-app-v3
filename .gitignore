@@ -92,11 +92,14 @@ frontend/node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
 *.pid
 
 # Archive and backup folders
+archive/
 archive-*/
 deployment-readiness-*/
 techkwiz-v8-production-validation-*/
 
 # Test artifacts (keep only essential ones)
+test-results/
+playwright-report/
 test-results/.playwright-artifacts-*/
 test-results/*-retry*/
 
