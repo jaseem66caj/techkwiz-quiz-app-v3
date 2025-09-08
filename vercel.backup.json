@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "npm install --registry=https://registry.npmjs.org/ --prefer-online",
+  "buildCommand": "npm run build",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
