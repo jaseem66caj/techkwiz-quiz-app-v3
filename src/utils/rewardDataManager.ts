@@ -1,3 +1,10 @@
+// ===================================================================
+// TechKwiz Reward Data Management System
+// ===================================================================
+// This file contains the RewardDataManager class responsible for handling
+// all reward-related data operations including CRUD operations for achievements,
+// reward configurations, and preview data generation. It uses localStorage for persistence.
+
 import { 
   RewardConfig, 
   Achievement, 
@@ -9,25 +16,25 @@ import {
   DEFAULT_ACHIEVEMENT_TEMPLATES 
 } from '@/types/reward'
 
-// Validation rules for reward configuration
+// Validation rules to ensure reward configuration data integrity
 export const REWARD_VALIDATION_RULES = {
-  COIN_MIN_VALUE: 1,
-  COIN_MAX_VALUE: 1000,
-  STREAK_MIN_MULTIPLIER: 1,
-  STREAK_MAX_MULTIPLIER: 10,
-  POPUP_MIN_DURATION: 1,
-  POPUP_MAX_DURATION: 10,
-  AD_MIN_FREQUENCY: 1,
-  AD_MAX_FREQUENCY: 20,
-  ACHIEVEMENT_NAME_MIN_LENGTH: 3,
-  ACHIEVEMENT_NAME_MAX_LENGTH: 50,
-  ACHIEVEMENT_DESC_MIN_LENGTH: 10,
-  ACHIEVEMENT_DESC_MAX_LENGTH: 200,
-  REQUIREMENT_MIN_VALUE: 1,
-  REQUIREMENT_MAX_VALUE: 1000
+  COIN_MIN_VALUE: 1,                    // Minimum coin value
+  COIN_MAX_VALUE: 1000,                 // Maximum coin value
+  STREAK_MIN_MULTIPLIER: 1,             // Minimum streak multiplier
+  STREAK_MAX_MULTIPLIER: 10,            // Maximum streak multiplier
+  POPUP_MIN_DURATION: 1,                // Minimum popup duration (seconds)
+  POPUP_MAX_DURATION: 10,               // Maximum popup duration (seconds)
+  AD_MIN_FREQUENCY: 1,                  // Minimum ad frequency
+  AD_MAX_FREQUENCY: 20,                 // Maximum ad frequency
+  ACHIEVEMENT_NAME_MIN_LENGTH: 3,       // Minimum achievement name length
+  ACHIEVEMENT_NAME_MAX_LENGTH: 50,      // Maximum achievement name length
+  ACHIEVEMENT_DESC_MIN_LENGTH: 10,      // Minimum achievement description length
+  ACHIEVEMENT_DESC_MAX_LENGTH: 200,     // Maximum achievement description length
+  REQUIREMENT_MIN_VALUE: 1,             // Minimum requirement value
+  REQUIREMENT_MAX_VALUE: 1000           // Maximum requirement value
 } as const
 
-// Error types
+// Custom error class for reward data operations
 export class RewardDataError extends Error {
   constructor(message: string, public code: string) {
     super(message)
@@ -35,10 +42,13 @@ export class RewardDataError extends Error {
   }
 }
 
-// Utility functions for localStorage operations
+// Singleton class for managing all reward-related data operations
+// Uses localStorage for client-side data persistence
 class RewardDataManager {
+  // Singleton instance
   private static instance: RewardDataManager
 
+  // Get singleton instance of RewardDataManager
   static getInstance(): RewardDataManager {
     if (!RewardDataManager.instance) {
       RewardDataManager.instance = new RewardDataManager()
@@ -46,21 +56,28 @@ class RewardDataManager {
     return RewardDataManager.instance
   }
 
-  // Safe localStorage operations with error handling
+  // Safe localStorage getItem with error handling
+  // Returns null if operation fails
   private safeGetItem(key: string): string | null {
     try {
+      // Attempt to retrieve item from localStorage
       return localStorage.getItem(key)
     } catch (error) {
+      // Log error and return null if operation fails
       console.error(`Error reading from localStorage key ${key}:`, error)
       return null
     }
   }
 
+  // Safe localStorage setItem with error handling
+  // Returns boolean indicating success/failure
   private safeSetItem(key: string, value: string): boolean {
     try {
+      // Attempt to save item to localStorage
       localStorage.setItem(key, value)
       return true
     } catch (error) {
+      // Log error and handle storage quota exceeded error
       console.error(`Error writing to localStorage key ${key}:`, error)
       if (error instanceof DOMException && error.code === 22) {
         throw new RewardDataError('Storage quota exceeded. Please clear some data.', 'QUOTA_EXCEEDED')
@@ -69,36 +86,58 @@ class RewardDataManager {
     }
   }
 
-  // Reward Configuration CRUD operations
+  // ===================================================================
+  // Reward Configuration CRUD Operations
+  // ===================================================================
+  
+  // Retrieve reward configuration from localStorage
+  // If no data exists, initializes with default configuration
   getRewardConfig(): RewardConfig {
     const data = this.safeGetItem(REWARD_STORAGE_KEYS.CONFIG)
     if (!data) return this.initializeWithDefaults()
     
     try {
       const config = JSON.parse(data)
+      // Validate and migrate config to ensure compatibility
       return this.validateAndMigrateConfig(config)
     } catch (error) {
       console.error('Error parsing reward config data:', error)
+      // Return default configuration if parsing fails
       return this.initializeWithDefaults()
     }
   }
 
+  // Save updated reward configuration
+  // Merges provided config with existing config and validates
   saveRewardConfig(config: Partial<Omit<RewardConfig, 'id' | 'createdAt'>>): RewardConfig {
+    // Get current configuration
     const currentConfig = this.getRewardConfig()
+    
+    // Create updated configuration by merging current with provided updates
     const updatedConfig: RewardConfig = {
-      ...currentConfig,
-      ...config,
-      updatedAt: Date.now()
+      ...currentConfig,           // Start with current config
+      ...config,                  // Apply updates
+      updatedAt: Date.now()       // Update timestamp
     }
     
+    // Validate updated configuration
     this.validateRewardConfig(updatedConfig)
+    
+    // Save updated configuration to localStorage
     this.safeSetItem(REWARD_STORAGE_KEYS.CONFIG, JSON.stringify(updatedConfig))
+    
+    // Return the updated configuration
     return updatedConfig
   }
 
-  // Achievement CRUD operations
+  // ===================================================================
+  // Achievement CRUD Operations
+  // ===================================================================
+  
+  // Retrieve all achievements from reward configuration
   getAchievements(): Achievement[] {
     const config = this.getRewardConfig()
+    // Return achievements array or empty array if none exist
     return config.achievements || []
   }
 
@@ -107,94 +146,151 @@ class RewardDataManager {
     return this.getAchievements()
   }
 
+  // Save a new achievement to the achievements list
+  // Validates achievement before saving and assigns ID/timestamps
   saveAchievement(achievement: Omit<Achievement, 'id' | 'createdAt' | 'updatedAt'>): Achievement {
+    // Validate achievement data before saving
     this.validateAchievement(achievement)
     
+    // Get current reward configuration
     const config = this.getRewardConfig()
+    
+    // Create timestamp for new achievement
     const now = Date.now()
+    
+    // Create new achievement object with ID and timestamps
     const newAchievement: Achievement = {
-      ...achievement,
-      id: this.generateId('ach'),
-      createdAt: now,
-      updatedAt: now
+      ...achievement,             // Achievement data
+      id: this.generateId('ach'), // Generate unique ID with 'ach' prefix
+      createdAt: now,             // Set creation timestamp
+      updatedAt: now              // Set update timestamp
     }
     
+    // Add new achievement to achievements array
     config.achievements.push(newAchievement)
+    
+    // Save updated configuration
     this.saveRewardConfig({ achievements: config.achievements })
+    
+    // Return the newly created achievement
     return newAchievement
   }
 
+  // Update an existing achievement by ID
+  // Throws error if achievement not found
   updateAchievement(id: string, updates: Partial<Omit<Achievement, 'id' | 'createdAt'>>): Achievement {
+    // Get current reward configuration
     const config = this.getRewardConfig()
+    
+    // Find index of achievement to update
     const index = config.achievements.findIndex(a => a.id === id)
     
+    // Throw error if achievement not found
     if (index === -1) {
       throw new RewardDataError(`Achievement with id ${id} not found`, 'NOT_FOUND')
     }
     
+    // Create updated achievement object
     const updatedAchievement = {
-      ...config.achievements[index],
-      ...updates,
-      updatedAt: Date.now()
+      ...config.achievements[index],  // Start with existing achievement data
+      ...updates,                     // Apply updates
+      updatedAt: Date.now()           // Update timestamp
     }
     
+    // Validate updated achievement
     this.validateAchievement(updatedAchievement)
+    
+    // Replace old achievement with updated achievement
     config.achievements[index] = updatedAchievement
+    
+    // Save updated configuration
     this.saveRewardConfig({ achievements: config.achievements })
+    
+    // Return the updated achievement
     return updatedAchievement
   }
 
+  // Delete an achievement by ID
+  // Returns true if successful, throws error if achievement not found
   deleteAchievement(id: string): boolean {
+    // Get current reward configuration
     const config = this.getRewardConfig()
+    
+    // Filter out achievement with matching ID
     const filteredAchievements = config.achievements.filter(a => a.id !== id)
     
+    // Throw error if no achievement was removed (not found)
     if (filteredAchievements.length === config.achievements.length) {
       throw new RewardDataError(`Achievement with id ${id} not found`, 'NOT_FOUND')
     }
     
+    // Save updated configuration with filtered achievements
     this.saveRewardConfig({ achievements: filteredAchievements })
+    
+    // Return success
     return true
   }
 
-  // Achievement template operations
+  // ===================================================================
+  // Achievement Template Operations
+  // ===================================================================
+  
+  // Create a new achievement from a predefined template
+  // Returns the newly created achievement
   createAchievementFromTemplate(templateIndex: number): Achievement {
+    // Validate template index
     if (templateIndex < 0 || templateIndex >= DEFAULT_ACHIEVEMENT_TEMPLATES.length) {
       throw new RewardDataError('Invalid template index', 'INVALID_TEMPLATE')
     }
     
+    // Get template from default templates
     const template = DEFAULT_ACHIEVEMENT_TEMPLATES[templateIndex]
+    
+    // Save and return new achievement based on template
     return this.saveAchievement(template)
   }
 
-  // Preview data generation
+  // ===================================================================
+  // Preview Data Generation
+  // ===================================================================
+  
+  // Generate preview data for different reward types
+  // Used for admin interface previews
   generatePreviewData(type: RewardPreviewData['type'], customCoins?: number): RewardPreviewData {
+    // Get current reward configuration
     const config = this.getRewardConfig()
     
+    // Generate preview data based on type
     switch (type) {
+      // Correct answer preview
       case 'correct':
         return {
           type: 'correct',
-          coins: customCoins || config.coinValues.correct,
+          coins: customCoins || config.coinValues.correct,  // Use custom coins or default
           message: config.popupSettings.customMessages.correct.replace('{coins}', (customCoins || config.coinValues.correct).toString()),
           funFact: config.popupSettings.showFunFact ? 'This is a sample fun fact for preview!' : undefined
         }
       
+      // Incorrect answer preview
       case 'incorrect':
         return {
           type: 'incorrect',
-          coins: customCoins || config.coinValues.incorrect,
+          coins: customCoins || config.coinValues.incorrect,  // Use custom coins or default
           message: config.popupSettings.customMessages.incorrect.replace('{coins}', (customCoins || config.coinValues.incorrect).toString())
         }
       
+      // Bonus reward preview
       case 'bonus':
         return {
           type: 'bonus',
-          coins: customCoins || config.coinValues.bonus,
+          coins: customCoins || config.coinValues.bonus,  // Use custom coins or default
           message: config.popupSettings.customMessages.bonus.replace('{coins}', (customCoins || config.coinValues.bonus).toString()),
           funFact: config.popupSettings.showFunFact ? 'Bonus questions often contain interesting trivia!' : undefined
         }
       
+      // Achievement unlock preview
       case 'achievement':
+        // Get sample achievement template from config or defaults
         const sampleAchievementTemplate = config.achievements[0] || DEFAULT_ACHIEVEMENT_TEMPLATES[0]
         const sampleAchievement = {
           ...sampleAchievementTemplate,

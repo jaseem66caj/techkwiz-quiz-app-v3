@@ -1,96 +1,147 @@
-// Comprehensive data synchronization service for TechKwiz admin dashboard
+// ===================================================================
+// TechKwiz Comprehensive Data Synchronization Service
+// ===================================================================
+// This service handles comprehensive data synchronization between the frontend
+// quiz application and the admin dashboard. It collects, processes, and consolidates
+// data from multiple sources including quiz performance, user activity, and analytics
+// to provide a unified view for administrators. The service supports both manual
+// and automatic synchronization with real-time update capabilities.
+
 import { realTimeSyncService } from './realTimeSync'
 import { quizDataManager } from './quizDataManager'
 import { rewardDataManager } from './rewardDataManager'
 import { analyticsDataManager } from './analyticsDataManager'
 import { settingsDataManager } from './settingsDataManager'
 
+// Interface defining the structure of frontend quiz data
 export interface FrontendQuizData {
+  // Total number of questions answered by all users
   totalQuestionsAnswered: number
+  // Number of correct answers
   correctAnswers: number
+  // Number of incorrect answers
   incorrectAnswers: number
+  // Percentage of correct answers (success rate)
   successRate: number
+  // Average time users spend per session
   averageSessionTime: number
+  // Total coins earned by all users
   totalCoinsEarned: number
+  // Number of achievements unlocked by users
   achievementsUnlocked: number
+  // Total number of user sessions
   userSessions: number
+  // Timestamp of last user activity
   lastActivity: number
+  // Performance metrics broken down by category
   categoryPerformance: Record<string, {
-    answered: number
-    correct: number
-    successRate: number
+    answered: number        // Questions answered in this category
+    correct: number         // Correct answers in this category
+    successRate: number     // Success rate for this category
   }>
 }
 
+// Interface defining the structure of frontend user activity data
 export interface FrontendUserActivity {
+  // Unique identifier for the session
   sessionId: string
+  // Timestamp when session started
   startTime: number
+  // Timestamp when session ended (optional)
   endTime?: number
+  // Number of questions answered in this session
   questionsAnswered: number
+  // Coins earned during this session
   coinsEarned: number
+  // Achievements unlocked during this session
   achievements: string[]
+  // Number of page views during this session
   pageViews: number
+  // User interactions recorded during session
   interactions: {
-    type: string
-    timestamp: number
-    data: any
+    type: string      // Type of interaction (e.g., 'click', 'scroll')
+    timestamp: number // When the interaction occurred
+    data: any         // Additional data about the interaction
   }[]
 }
 
+// Interface defining the structure of frontend analytics data
 export interface FrontendAnalytics {
+  // Page view counts keyed by page path
   pageViews: Record<string, number>
+  // User engagement metrics
   userEngagement: {
-    totalSessions: number
-    averageSessionDuration: number
-    bounceRate: number
-    conversionRate: number
+    totalSessions: number              // Total number of sessions
+    averageSessionDuration: number     // Average time spent per session
+    bounceRate: number                 // Percentage of single-page sessions
+    conversionRate: number             // Percentage of users who complete desired actions
   }
+  // Quiz-specific metrics
   quizMetrics: {
-    completionRate: number
-    averageScore: number
-    popularCategories: string[]
-    difficultyDistribution: Record<string, number>
+    completionRate: number                    // Percentage of quizzes completed
+    averageScore: number                      // Average score across all quizzes
+    popularCategories: string[]               // Most frequently played categories
+    difficultyDistribution: Record<string, number> // Distribution of questions by difficulty
   }
 }
 
+// Interface defining the structure of synchronized dashboard data
 export interface SyncedDashboardData {
+  // Quiz performance metrics
   quizMetrics: {
-    totalQuestions: number
-    questionsAnswered: number
-    successRate: number
-    totalCoinsEarned: number
-    averageSessionTime: number
+    totalQuestions: number      // Total number of questions in the system
+    questionsAnswered: number   // Total questions answered by users
+    successRate: number         // Overall success rate percentage
+    totalCoinsEarned: number    // Total coins earned by all users
+    averageSessionTime: number  // Average time spent per session
   }
+  // User activity information
   userActivity: {
-    activeSessions: number
-    totalUsers: number
-    recentActivity: Array<{
-      id: string
-      type: string
-      description: string
-      timestamp: number
+    activeSessions: number      // Number of currently active sessions
+    totalUsers: number          // Total number of users
+    recentActivity: Array<{     // Recent user activities
+      id: string                // Activity identifier
+      type: string              // Type of activity
+      description: string       // Description of the activity
+      timestamp: number         // When the activity occurred
     }>
   }
+  // Analytics data for the dashboard
   analytics: {
-    pageViews: number
-    engagement: number
-    conversionRate: number
+    pageViews: number           // Total page views
+    engagement: number          // User engagement score
+    conversionRate: number      // Conversion rate percentage
   }
+  // System status information
   systemStatus: {
-    lastSyncTime: number
-    syncStatus: 'idle' | 'syncing' | 'error'
-    dataIntegrity: boolean
+    lastSyncTime: number                    // Timestamp of last successful sync
+    syncStatus: 'idle' | 'syncing' | 'error' // Current synchronization status
+    dataIntegrity: boolean                  // Whether data integrity is maintained
   }
 }
 
+// ===================================================================
+// Comprehensive Data Synchronization Service Class
+// ===================================================================
+// Singleton class that manages all data synchronization operations between
+// frontend and backend systems. Handles automatic syncing, real-time updates,
+// error management, and data consolidation for the admin dashboard.
+
 class ComprehensiveDataSyncService {
+  // Singleton instance of the service
   private static instance: ComprehensiveDataSyncService
+  // Flag to prevent concurrent sync operations
   private syncInProgress = false
+  // Timestamp of last successful synchronization
   private lastSyncTime = 0
+  // Collection of synchronization errors
   private syncErrors: string[] = []
+  // Listeners to notify when data is synchronized
   private syncListeners: ((data: SyncedDashboardData) => void)[] = []
+  // Interval timer for automatic synchronization
   private autoSyncInterval: NodeJS.Timeout | null = null
 
+  // Get singleton instance of the ComprehensiveDataSyncService
   static getInstance(): ComprehensiveDataSyncService {
     if (!ComprehensiveDataSyncService.instance) {
       ComprehensiveDataSyncService.instance = new ComprehensiveDataSyncService()
@@ -98,6 +149,7 @@ class ComprehensiveDataSyncService {
     return ComprehensiveDataSyncService.instance
   }
 
+  // Constructor initializes the service and starts automatic synchronization
   constructor() {
     if (typeof window !== 'undefined') {
       this.startAutoSync()
@@ -105,19 +157,24 @@ class ComprehensiveDataSyncService {
     }
   }
 
-  // Start automatic sync every 5 seconds
+  // ===================================================================
+  // Initialization and Setup Methods
+  // ===================================================================
+
+  // Start automatic synchronization every 5 seconds
   private startAutoSync(): void {
     this.autoSyncInterval = setInterval(() => {
       this.syncFromFrontend()
     }, 5000)
   }
 
-  // Setup storage listeners for real-time updates
+  // Setup storage listeners for real-time updates from frontend
   private setupStorageListeners(): void {
     if (typeof window === 'undefined') return
 
-    // Listen for frontend data changes
+    // Listen for frontend data changes in localStorage
     window.addEventListener('storage', (e) => {
+      // Trigger sync when relevant data changes
       if (e.key?.startsWith('quiz_') || 
           e.key?.startsWith('user_') || 
           e.key?.startsWith('analytics_') ||
@@ -127,27 +184,35 @@ class ComprehensiveDataSyncService {
       }
     })
 
-    // Listen for real-time sync events
+    // Listen for real-time sync events from other services
     realTimeSyncService.addEventListener('quiz_updated', () => this.syncFromFrontend())
     realTimeSyncService.addEventListener('reward_updated', () => this.syncFromFrontend())
     realTimeSyncService.addEventListener('analytics_updated', () => this.syncFromFrontend())
   }
 
-  // Pull data from frontend quiz application
+  // ===================================================================
+  // Data Synchronization Methods
+  // ===================================================================
+
+  // Pull comprehensive data from frontend quiz application
   async syncFromFrontend(): Promise<SyncedDashboardData> {
+    // Prevent concurrent synchronization operations
     if (this.syncInProgress) {
       console.log('🔄 Sync already in progress, skipping...')
       return this.getLastSyncedData()
     }
 
+    // Record start time for performance monitoring
     const startTime = performance.now()
     console.log('🔄 Starting comprehensive data sync from frontend...')
     
+    // Set sync in progress flag
     this.syncInProgress = true
+    // Clear previous sync errors
     this.syncErrors = []
 
     try {
-      // Pull quiz performance data
+      // Pull quiz performance data from various sources
       const quizData = await this.pullQuizData()
       
       // Pull user activity data
@@ -156,7 +221,7 @@ class ComprehensiveDataSyncService {
       // Pull analytics data
       const analyticsData = await this.pullAnalyticsData()
       
-      // Combine all data
+      // Combine all data into a unified dashboard structure
       const syncedData: SyncedDashboardData = {
         quizMetrics: {
           totalQuestions: quizDataManager.getQuestions().length,
@@ -182,32 +247,30 @@ class ComprehensiveDataSyncService {
         }
       }
 
-      // Store synced data
+      // Store the synchronized data for future reference
       this.storeSyncedData(syncedData)
       
-      // Notify listeners
+      // Notify all registered listeners of the new data
       this.notifyListeners(syncedData)
       
+      // Update last sync time
       this.lastSyncTime = Date.now()
       
+      // Log sync completion with performance metrics
       const syncTime = performance.now() - startTime
       console.log(`🔄 Comprehensive sync completed in ${syncTime.toFixed(2)}ms`)
       
       return syncedData
 
     } catch (error) {
+      // Handle synchronization errors
       console.error('🔄 Sync error:', error)
       this.syncErrors.push(error instanceof Error ? error.message : 'Unknown sync error')
       
-      return {
-        ...this.getLastSyncedData(),
-        systemStatus: {
-          lastSyncTime: this.lastSyncTime,
-          syncStatus: 'error',
-          dataIntegrity: false
-        }
-      }
+      // Return last known good data or empty structure
+      return this.getLastSyncedData()
     } finally {
+      // Always reset sync in progress flag
       this.syncInProgress = false
     }
   }
@@ -337,6 +400,10 @@ class ComprehensiveDataSyncService {
       }
     }
   }
+
+  // ===================================================================
+  // Utility Methods
+  // ===================================================================
 
   // Helper method to safely get data from localStorage
   private getStorageData(key: string, defaultValue: any): any {
