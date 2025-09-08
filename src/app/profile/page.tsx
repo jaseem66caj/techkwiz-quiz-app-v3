@@ -242,7 +242,21 @@ export default function ProfilePage() {
                   <div className="text-4xl mb-4">📝</div>
                   <p className="text-blue-200">No quiz history yet.</p>
                   <button
-                    onClick={() => router.push('/start')}
+                    onClick={() => {
+                      try {
+                        router.push('/start');
+                      } catch (error) {
+                        console.error('Error navigating to start from profile:', error);
+                        // Report to Sentry
+                        import('@sentry/nextjs').then(Sentry => {
+                          Sentry.captureException(error, {
+                            tags: { component: 'ProfilePage', action: 'navigateToStart' }
+                          });
+                        });
+                        // Fallback navigation
+                        window.location.href = '/start';
+                      }
+                    }}
                     className="mt-4 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors"
                   >
                     Take Your First Quiz

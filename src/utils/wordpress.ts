@@ -53,6 +53,22 @@ export async function fetchWordPressPosts(
     
   } catch (error) {
     console.warn('WordPress REST API failed:', error)
+
+    // Report to Sentry with context
+    import('@sentry/nextjs').then(Sentry => {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'WordPressAPI',
+          action: 'fetchPosts',
+          apiUrl: siteUrl
+        },
+        extra: {
+          perPage,
+          requestUrl: apiUrl
+        }
+      })
+    })
+
     throw error
   }
 }
@@ -89,6 +105,21 @@ export async function fetchWordPressRSS(
     
   } catch (error) {
     console.warn('RSS feed parsing failed:', error)
+
+    // Report to Sentry with context
+    import('@sentry/nextjs').then(Sentry => {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'WordPressRSS',
+          action: 'fetchRSS',
+          feedUrl
+        },
+        extra: {
+          rssApiUrl: `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`
+        }
+      })
+    })
+
     throw error
   }
 }

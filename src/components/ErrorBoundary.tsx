@@ -27,13 +27,59 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to Sentry
+    // Enhanced error logging to console
+    console.error('🚨 ErrorBoundary caught an error:', {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString(),
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'SSR',
+      url: typeof window !== 'undefined' ? window.location.href : 'SSR'
+    })
+
+    // Enhanced Sentry reporting
     Sentry.withScope((scope) => {
       scope.setTag('component', 'ErrorBoundary')
+      scope.setTag('errorType', 'componentError')
       scope.setLevel('error')
+
+      // Add detailed context
       scope.setContext('errorInfo', {
-        componentStack: errorInfo.componentStack
+        componentStack: errorInfo.componentStack,
+        errorMessage: error.message,
+        errorStack: error.stack,
+        timestamp: new Date().toISOString()
       })
+
+      // Add browser context if available
+      if (typeof window !== 'undefined') {
+        scope.setContext('browserInfo', {
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+          referrer: document.referrer,
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight
+          }
+        })
+      }
+
+      // Add user context from localStorage if available
+      try {
+        if (typeof window !== 'undefined') {
+          const userStr = localStorage.getItem('techkwiz_user')
+          if (userStr) {
+            const user = JSON.parse(userStr)
+            scope.setUser({
+              id: user.id,
+              username: user.name
+            })
+          }
+        }
+      } catch (userError) {
+        // Ignore user context errors
+      }
+
       Sentry.captureException(error)
     })
 
@@ -43,11 +89,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       error,
       errorInfo
     })
-
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo)
-    }
   }
 
   resetError = () => {

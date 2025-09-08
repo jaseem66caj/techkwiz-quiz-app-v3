@@ -40,39 +40,103 @@ export function useRevenueOptimization() {
   const [activeMultipliers, setActiveMultipliers] = useState<CoinMultiplier[]>([])
 
 
-  // Load revenue data from localStorage
+  // Load revenue data from localStorage with enhanced error handling
   useEffect(() => {
-    const savedMetrics = localStorage.getItem('techkwiz_revenue_metrics')
-    if (savedMetrics) {
-      try {
-        setRevenueMetrics(JSON.parse(savedMetrics))
-      } catch (error) {
-        console.error('Error loading revenue metrics:', error)
+    try {
+      const savedMetrics = localStorage.getItem('techkwiz_revenue_metrics')
+      if (savedMetrics) {
+        try {
+          setRevenueMetrics(JSON.parse(savedMetrics))
+        } catch (parseError) {
+          console.error('Error parsing revenue metrics:', parseError)
+          // Report to Sentry
+          import('@sentry/nextjs').then(Sentry => {
+            Sentry.captureException(parseError, {
+              tags: { component: 'useRevenueOptimization', action: 'loadMetrics' }
+            })
+          })
+        }
       }
+    } catch (storageError) {
+      console.error('Error accessing localStorage for revenue metrics:', storageError)
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(storageError, {
+          tags: { component: 'useRevenueOptimization', action: 'accessStorage' }
+        })
+      })
     }
 
-    const savedMultipliers = localStorage.getItem('techkwiz_multipliers')
-    if (savedMultipliers) {
-      try {
-        const multipliers = JSON.parse(savedMultipliers)
-        // Filter out expired multipliers
-        const activeOnes = multipliers.filter((m: CoinMultiplier) => m.expiresAt > Date.now())
-        setActiveMultipliers(activeOnes)
-      } catch (error) {
-        console.error('Error loading multipliers:', error)
+    try {
+      const savedMultipliers = localStorage.getItem('techkwiz_multipliers')
+      if (savedMultipliers) {
+        try {
+          const multipliers = JSON.parse(savedMultipliers)
+          // Filter out expired multipliers
+          const activeOnes = multipliers.filter((m: CoinMultiplier) => m.expiresAt > Date.now())
+          setActiveMultipliers(activeOnes)
+        } catch (parseError) {
+          console.error('Error parsing multipliers:', parseError)
+          // Report to Sentry
+          import('@sentry/nextjs').then(Sentry => {
+            Sentry.captureException(parseError, {
+              tags: { component: 'useRevenueOptimization', action: 'loadMultipliers' }
+            })
+          })
+        }
       }
+    } catch (storageError) {
+      console.error('Error accessing localStorage for multipliers:', storageError)
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(storageError, {
+          tags: { component: 'useRevenueOptimization', action: 'accessStorage' }
+        })
+      })
     }
 
-    checkDailyBonus()
+    try {
+      checkDailyBonus()
+    } catch (error) {
+      console.error('Error checking daily bonus:', error)
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'useRevenueOptimization', action: 'checkDailyBonus' }
+        })
+      })
+    }
   }, [])
 
-  // Save revenue data whenever it changes
+  // Save revenue data whenever it changes with error handling
   useEffect(() => {
-    localStorage.setItem('techkwiz_revenue_metrics', JSON.stringify(revenueMetrics))
+    try {
+      localStorage.setItem('techkwiz_revenue_metrics', JSON.stringify(revenueMetrics))
+    } catch (error) {
+      console.error('Error saving revenue metrics to localStorage:', error)
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'useRevenueOptimization', action: 'saveMetrics' },
+          extra: { dataSize: JSON.stringify(revenueMetrics).length }
+        })
+      })
+    }
   }, [revenueMetrics])
 
   useEffect(() => {
-    localStorage.setItem('techkwiz_multipliers', JSON.stringify(activeMultipliers))
+    try {
+      localStorage.setItem('techkwiz_multipliers', JSON.stringify(activeMultipliers))
+    } catch (error) {
+      console.error('Error saving multipliers to localStorage:', error)
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'useRevenueOptimization', action: 'saveMultipliers' },
+          extra: { dataSize: JSON.stringify(activeMultipliers).length }
+        })
+      })
+    }
   }, [activeMultipliers])
 
   // Enhanced coin calculation with multipliers

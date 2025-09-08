@@ -349,8 +349,20 @@ export default function HomePage() {
     setIsNavigating(true);
     setShowCreateProfile(false);
 
-    // Navigate to start page
-    router.push('/start');
+    // Navigate to start page with error handling
+    try {
+      router.push('/start');
+    } catch (error) {
+      console.error('Error navigating to start page:', error);
+      // Report to Sentry
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'HomePage', action: 'navigateToStart' }
+        });
+      });
+      // Fallback: try window.location as backup
+      window.location.href = '/start';
+    }
   };
 
   // ===================================================================
@@ -489,7 +501,21 @@ export default function HomePage() {
       
       <ExitConfirmationModal
         isOpen={showExitConfirmation}
-        onConfirm={() => router.push('/start')}
+        onConfirm={() => {
+          try {
+            router.push('/start');
+          } catch (error) {
+            console.error('Error navigating from exit confirmation:', error);
+            // Report to Sentry
+            import('@sentry/nextjs').then(Sentry => {
+              Sentry.captureException(error, {
+                tags: { component: 'HomePage', action: 'exitConfirmNavigation' }
+              });
+            });
+            // Fallback navigation
+            window.location.href = '/start';
+          }
+        }}
         onCancel={() => setShowExitConfirmation(false)}
         currentProgress={{
           questionNumber: currentQuestion + 1,
