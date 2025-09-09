@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { QuizInterface } from './QuizInterface'
 import { MinimalNavigation } from './MinimalNavigation'
+import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator'
 
 
 export default function ClientHomePage() {
   const { state, dispatch } = useApp()
   const router = useRouter()
-  
+
   // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -19,24 +20,52 @@ export default function ClientHomePage() {
   const [showResult, setShowResult] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
 
+  // Refs for cleanup
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([])
+  const isMountedRef = useRef(true)
+
+
+  // Cleanup function for timeouts
+  const clearAllTimeouts = useCallback(() => {
+    timeoutRefs.current.forEach(timeout => clearTimeout(timeout))
+    timeoutRefs.current = []
+  }, [])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+      clearAllTimeouts()
+    }
+  }, [clearAllTimeouts])
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
     if (!state.isAuthenticated) {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        name: 'Guest User', 
-        email: `guest_${Date.now()}@techkwiz.com`,
-        coins: 0,
-        level: 1,
-        totalQuizzes: 0,
-        correctAnswers: 0,
-        joinDate: new Date().toISOString(),
-        quizHistory: [],
-        achievements: []
+      try {
+        const guestUser = {
+          id: `guest_${Date.now()}`,
+          name: 'Guest User',
+          email: `guest_${Date.now()}@techkwiz.com`,
+          coins: 0,
+          level: 1,
+          totalQuizzes: 0,
+          correctAnswers: 0,
+          joinDate: new Date().toISOString(),
+          quizHistory: [],
+          achievements: []
+        }
+
+        dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
+      } catch (error) {
+        console.error('Error creating guest user:', error)
+        // Import Sentry dynamically to avoid SSR issues
+        import('@sentry/nextjs').then(Sentry => {
+          Sentry.captureException(error, {
+            tags: { component: 'ClientHomePage', action: 'createGuestUser' }
+          })
+        })
       }
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
     }
   }, [state.isAuthenticated, dispatch])
 
@@ -99,42 +128,63 @@ export default function ClientHomePage() {
     }
   ]
 
-  const handleAnswerSelect = (answerIndex: number) => {
+  const handleAnswerSelect = useCallback((answerIndex: number) => {
     if (selectedAnswer !== null) return
     setSelectedAnswer(answerIndex)
-    
-    setTimeout(() => {
-      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
-      // For personality questions (correct_answer = -1), all answers are "correct"
-      const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
-      const finalIsCorrect = isPersonalityQuestion || isCorrect
-      const coinsEarned = finalIsCorrect ? 25 : 0 // 25 coins per correct answer
-      
 
-      
-      if (finalIsCorrect) {
-        setScore(score + 1)
-        
-        // Award coins for correct answers on homepage quiz
-        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-        
-        console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins`)
-      } else {
-        console.log(`❌ Wrong answer, no coins earned`)
-      }
-      
-      // Proceed to next question after delay
-      setTimeout(() => {
-        if (currentQuestion < quickStartQuiz.length - 1) {
-          setCurrentQuestion(currentQuestion + 1)
-          setSelectedAnswer(null)
+    const timeout1 = setTimeout(() => {
+      if (!isMountedRef.current) return
+
+      try {
+        const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer
+        // For personality questions (correct_answer = -1), all answers are "correct"
+        const isPersonalityQuestion = quickStartQuiz[currentQuestion].correct_answer === -1
+        const finalIsCorrect = isPersonalityQuestion || isCorrect
+        const rewardResult = finalIsCorrect ? calculateCorrectAnswerReward() : { coins: 0 };
+        const coinsEarned = rewardResult.coins;
+
+        if (finalIsCorrect) {
+          setScore(prevScore => {
+            const newScore = prevScore + 1
+            console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins (Score: ${newScore})`)
+            return newScore
+          })
+
+          // Award coins for correct answers on homepage quiz
+          dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         } else {
-          setShowResult(true)
-          setQuizCompleted(true)
+          console.log(`❌ Wrong answer, no coins earned`)
         }
-      }, 1500)
+
+        // Proceed to next question after delay
+        const timeout2 = setTimeout(() => {
+          if (!isMountedRef.current) return
+
+          setCurrentQuestion(prevQuestion => {
+            if (prevQuestion < quickStartQuiz.length - 1) {
+              setSelectedAnswer(null)
+              return prevQuestion + 1
+            } else {
+              setShowResult(true)
+              setQuizCompleted(true)
+              return prevQuestion
+            }
+          })
+        }, 1500)
+
+        timeoutRefs.current.push(timeout2)
+      } catch (error) {
+        console.error('Error in handleAnswerSelect:', error)
+        import('@sentry/nextjs').then(Sentry => {
+          Sentry.captureException(error, {
+            tags: { component: 'ClientHomePage', action: 'handleAnswerSelect' }
+          })
+        })
+      }
     }, 1000)
-  }
+
+    timeoutRefs.current.push(timeout1)
+  }, [selectedAnswer, currentQuestion, dispatch])
 
 
 
@@ -185,7 +235,7 @@ export default function ClientHomePage() {
               
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-4 border border-orange-400/30">
                 <p className="text-orange-300 text-sm font-medium">Coins Earned</p>
-                <p className="text-white text-2xl font-bold">{score * 25}</p>
+                <p className="text-white text-2xl font-bold">{calculateQuizReward(score, quickStartQuiz.length).totalCoins}</p>
               </div>
             </div>
             
@@ -243,7 +293,7 @@ export default function ClientHomePage() {
               <p className="text-blue-200 text-sm mb-2">🚀 <strong>What's New:</strong></p>
               <div className="text-xs text-blue-200 space-y-1">
                 <div>💰 Lower entry fees (20-45 coins)</div>
-                <div>🏆 25 coins per correct answer</div>
+                <div>🏆 50 coins per correct answer</div>
                 <div>🎯 Interactive formats & Gen Z vibes</div>
               </div>
             </div>

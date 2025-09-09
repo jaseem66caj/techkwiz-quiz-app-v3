@@ -1,0 +1,2171 @@
+{
+  "config": {
+    "configFile": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/playwright.config.ts",
+    "rootDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "tablet",
+        "name": "tablet",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "homepage-quiz-detailed.spec.ts",
+      "file": "homepage-quiz-detailed.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Homepage Quiz Flow - Detailed Analysis",
+          "file": "homepage-quiz-detailed.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Detailed Homepage Quiz Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11629,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 Starting detailed homepage quiz analysis...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "📊 Analyzing page structure...\n"
+                        },
+                        {
+                          "text": "🔘 Interactive elements: 4 buttons, 0 links, 0 inputs\n"
+                        },
+                        {
+                          "text": "📝 Content analysis: Quiz content: true, Start content: true\n"
+                        },
+                        {
+                          "text": "💾 LocalStorage analysis:\n"
+                        },
+                        {
+                          "text": "   🔑 setItem: string \n"
+                        },
+                        {
+                          "text": "   🔑 techkwiz_user: object \n"
+                        },
+                        {
+                          "text": "   🔑 admin_quiz_questions: object (3 items)\n"
+                        },
+                        {
+                          "text": "👤 User state: Guest, Coins: 0, Level: 1\n"
+                        },
+                        {
+                          "text": "🎯 Testing direct navigation to /start...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 beforeunload event triggered, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚨 beforeunload: Preventing exit and calling onExitAttempt\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔄 Loading quiz categories...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Loaded categories from local database: 8\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Navigation component: hideHeaderElements = false\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [warning]: WordPress REST API failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: WordPress REST API failed, trying RSS feed...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from RSS feed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "🖥️ Console [error]: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [warning]: WordPress REST API failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: WordPress REST API failed, trying RSS feed...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Successfully fetched from RSS feed\n"
+                        },
+                        {
+                          "text": "🔗 /start page URL: https://play.techkwiz.com/start\n"
+                        },
+                        {
+                          "text": "✅ Successfully reached /start page\n"
+                        },
+                        {
+                          "text": "📊 /start page analysis: Categories: true, Loading: false, Error: true\n"
+                        },
+                        {
+                          "text": "📄 /start page has 6900 characters of content\n"
+                        },
+                        {
+                          "text": "📄 First 200 characters: \"🥠✨🔮Lucky Fortune!Tap for wisdomTechKwiz🪙0Hi, Guest!LogoutChoose CategorySelect a category to start your quiz journey8 categories • 50+ questions • Multiple levelsAll(8)Programming(2)AI & ML(1)Web(1...\"\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "📸 Screenshots saved for detailed analysis\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "Stack: \n"
+                        },
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "Stack: \n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:12:43.784Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-277262ad5c2951514ec5",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "Quiz Interaction Simulation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2421,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🎮 Testing quiz interaction simulation...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🔘 Found 4 interactive elements\n"
+                        },
+                        {
+                          "text": "🔘 Element 1: BUTTON - \"Instagram\" \n"
+                        },
+                        {
+                          "text": "🔘 Element 2: BUTTON - \"TikTok\" \n"
+                        },
+                        {
+                          "text": "🔘 Element 3: BUTTON - \"Twitter\" \n"
+                        },
+                        {
+                          "text": "🔘 Element 4: BUTTON - \"Snapchat\" \n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:12:55.764Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-74bafd332831be911098",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 186,
+              "column": 7
+            },
+            {
+              "title": "Detailed Homepage Quiz Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-706d0fd14c4e92a3fc52",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "Quiz Interaction Simulation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-c4a2e19e3906c0274461",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 186,
+              "column": 7
+            },
+            {
+              "title": "Detailed Homepage Quiz Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-09186028906c87b455f4",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "Quiz Interaction Simulation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba4ad3983b5074480ba9-ea91646b2a4c9142adbb",
+              "file": "homepage-quiz-detailed.spec.ts",
+              "line": 186,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "navigation-fix-verification.spec.ts",
+      "file": "navigation-fix-verification.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Navigation Fix Verification",
+          "file": "navigation-fix-verification.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Verify Navigation Button Appears After Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4425,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 Testing navigation fix after deployment...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "✅ Homepage loaded\n"
+                        },
+                        {
+                          "text": "📝 Found 3 quiz questions\n"
+                        },
+                        {
+                          "text": "❓ Answering: Which social media platform is known for short-form videos?\n"
+                        },
+                        {
+                          "text": "✅ Correct answer: TikTok\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Correct answer! Earned 25 coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 💰 COINS UPDATE: 0 + 25 = 25\n"
+                        },
+                        {
+                          "text": "🎯 Answered first question, checking for navigation options...\n"
+                        },
+                        {
+                          "text": "❌ ISSUE PERSISTS: No navigation button found after quiz completion\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:12:58.201Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-8b4fc651f08a36d37795",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Verify Both Navigation Options Available",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5078,
+                      "error": {
+                        "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?",
+                        "stack": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                          "column": 124,
+                          "line": 142
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                            "column": 124,
+                            "line": 142
+                          },
+                          "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n\n\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🔍 Testing both navigation options after quiz completion...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ❌ Wrong answer, no coins earned\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:02.630Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/navigation-fix-verificatio-8f326-avigation-Options-Available-mobile/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                        "column": 124,
+                        "line": 142
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5181,
+                      "error": {
+                        "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?",
+                        "stack": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                          "column": 124,
+                          "line": 142
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                            "column": 124,
+                            "line": 142
+                          },
+                          "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n\n\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🔍 Testing both navigation options after quiz completion...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ❌ Wrong answer, no coins earned\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-09T15:13:08.080Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/navigation-fix-verificatio-8f326-avigation-Options-Available-mobile-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/navigation-fix-verificatio-8f326-avigation-Options-Available-mobile-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                        "column": 124,
+                        "line": 142
+                      }
+                    },
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5102,
+                      "error": {
+                        "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?",
+                        "stack": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                          "column": 124,
+                          "line": 142
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                            "column": 124,
+                            "line": 142
+                          },
+                          "message": "Error: locator.count: Unexpected token \"=\" while parsing css selector \"button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"\". Did you mean to CSS.escape it?\n\n\u001b[0m \u001b[90m 140 |\u001b[39m       \n \u001b[90m 141 |\u001b[39m       \u001b[90m// Check for both navigation options\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m       \u001b[36mconst\u001b[39m startQuizButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Start Quiz Categories\"), text=\"Start Quiz Categories\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m       \u001b[36mconst\u001b[39m createProfileButton \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Create Profile\"), text=\"Create Profile\"'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 144 |\u001b[39m       \n \u001b[90m 145 |\u001b[39m       console\u001b[33m.\u001b[39mlog(\u001b[32m`🚀 \"Start Quiz Categories\" buttons found: ${startQuizButton}`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts:142:124\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🔍 Testing both navigation options after quiz completion...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ❌ Wrong answer, no coins earned\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-09T15:13:13.735Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/navigation-fix-verificatio-8f326-avigation-Options-Available-mobile-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/navigation-fix-verification.spec.ts",
+                        "column": 124,
+                        "line": 142
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-3d4184a177d3599eba1b",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Button Functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5489,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 Testing navigation button functionality...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
+                        },
+                        {
+                          "text": "🖥️ Console [log]: ❌ Wrong answer, no coins earned\n"
+                        },
+                        {
+                          "text": "❌ Start Quiz Categories button not found\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:19.236Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-618946b6993b2a51f2f8",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 163,
+              "column": 7
+            },
+            {
+              "title": "Verify Navigation Button Appears After Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-2f6c071a272ef31a3cd1",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Verify Both Navigation Options Available",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-96b17ebf7e6d741f93a8",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Button Functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-09cd00db1f0ebc73ec3b",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 163,
+              "column": 7
+            },
+            {
+              "title": "Verify Navigation Button Appears After Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-153473dae3048d9a1a79",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Verify Both Navigation Options Available",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-62c1b4cb4f09a6361279",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Button Functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4ea6c8f2dddae51a1ee9-0d923f2d9d2e86ba5c89",
+              "file": "navigation-fix-verification.spec.ts",
+              "line": 163,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "production-navigation.spec.ts",
+      "file": "production-navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "TechKwiz v8 Production Navigation Tests",
+          "file": "production-navigation.spec.ts",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "1. Homepage Quiz Flow - Complete User Journey",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8424,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing: Homepage Quiz Flow\n"
+                        },
+                        {
+                          "text": "📍 Step 1: Loading homepage...\n"
+                        },
+                        {
+                          "text": "✅ Homepage loaded successfully\n"
+                        },
+                        {
+                          "text": "📍 Step 2: Checking for quiz elements...\n"
+                        },
+                        {
+                          "text": "📊 Found 0 quiz-related elements\n"
+                        },
+                        {
+                          "text": "🧭 Found 0 navigation elements\n"
+                        },
+                        {
+                          "text": "📍 Step 3: Looking for quiz start elements...\n"
+                        },
+                        {
+                          "text": "🎯 Found 0 start-related buttons/links\n"
+                        },
+                        {
+                          "text": "📍 Step 4: Attempting navigation to /start...\n"
+                        },
+                        {
+                          "text": "🔗 Current URL: https://play.techkwiz.com/start\n"
+                        },
+                        {
+                          "text": "✅ Successfully navigated to /start page\n"
+                        },
+                        {
+                          "text": "📂 Found 0 category elements\n"
+                        },
+                        {
+                          "text": "⏳ Found 0 loading elements\n"
+                        },
+                        {
+                          "text": "❌ Found 0 error elements\n"
+                        },
+                        {
+                          "text": "📸 Screenshot saved: homepage-quiz-flow.png\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "❌ Console Error: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "❌ Network Error: https://techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed - Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "⚠️ Console Warning: WordPress REST API failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "❌ Network Error: https://techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed - Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "⚠️ Console Warning: WordPress REST API failed: TypeError: Load failed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:24.861Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-06701ad813ffd3654d7c",
+              "file": "production-navigation.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "2. Authentication State Testing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2388,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing: Authentication State\n"
+                        },
+                        {
+                          "text": "💾 User State: {\n  \"localStorage\": {\n    \"setItem\": \"function(e,r){try{t.call(this,e,r)}catch(i){if(console.error(\\\"\\\\uD83D\\\\uDCBE localStorage Error:\\\",i),o.Cp(i,{tags:{errorType:\\\"localStorageError\\\",component:\\\"globalErrorHandler\\\"},extra:{key:e,valueSize:r.length,timestamp:new Date().toISOString()}}),i instanceof DOMException&&22===i.code){console.warn(\\\"\\\\uD83D\\\\uDCBE localStorage quota exceeded, attempting cleanup...\\\");try{[\\\"old_quiz_data\\\",\\\"temp_data\\\",\\\"cache_data\\\"].forEach(e=>{localStorage.getItem(e)&&localStorage.removeItem(e)}),t.call(this,e,r)}catch(e){throw console.error(\\\"\\\\uD83D\\\\uDCBE localStorage cleanup failed:\\\",e),e}}else throw i}}\",\n    \"techkwiz_user\": \"{\\\"id\\\":\\\"guest\\\",\\\"name\\\":\\\"Guest\\\",\\\"avatar\\\":\\\"🤖\\\",\\\"coins\\\":0,\\\"level\\\":1,\\\"totalQuizzes\\\":0,\\\"correctAnswers\\\":0,\\\"joinDate\\\":\\\"2025-09-09T15:13:33.569Z\\\",\\\"quizHistory\\\":[],\\\"streak\\\":0}\",\n    \"admin_quiz_questions\": \"[{\\\"id\\\":\\\"sample-1\\\",\\\"question\\\":\\\"Which social media platform is known for short-form videos?\\\",\\\"options\\\":[\\\"Instagram\\\",\\\"TikTok\\\",\\\"Twitter\\\",\\\"Snapchat\\\"],\\\"correct_answer\\\":1,\\\"difficulty\\\":\\\"beginner\\\",\\\"fun_fact\\\":\\\"TikTok was originally called Musical.ly!\\\",\\\"category\\\":\\\"social-media\\\",\\\"subcategory\\\":\\\"Platforms\\\",\\\"section\\\":\\\"homepage\\\",\\\"createdAt\\\":1757430813569,\\\"updatedAt\\\":1757430813569},{\\\"id\\\":\\\"sample-2\\\",\\\"question\\\":\\\"What does \\\\\\\"AI\\\\\\\" stand for?\\\",\\\"options\\\":[\\\"Artificial Intelligence\\\",\\\"Automated Internet\\\",\\\"Advanced Interface\\\",\\\"Algorithmic Integration\\\"],\\\"correct_answer\\\":0,\\\"difficulty\\\":\\\"beginner\\\",\\\"fun_fact\\\":\\\"The term \\\\\\\"Artificial Intelligence\\\\\\\" was first coined in 1956!\\\",\\\"category\\\":\\\"technology\\\",\\\"subcategory\\\":\\\"Acronyms\\\",\\\"section\\\":\\\"homepage\\\",\\\"createdAt\\\":1757430813569,\\\"updatedAt\\\":1757430813569},{\\\"id\\\":\\\"sample-3\\\",\\\"question\\\":\\\"Which company created the iPhone?\\\",\\\"options\\\":[\\\"Google\\\",\\\"Samsung\\\",\\\"Apple\\\",\\\"Microsoft\\\"],\\\"correct_answer\\\":2,\\\"difficulty\\\":\\\"beginner\\\",\\\"fun_fact\\\":\\\"The first iPhone was released in 2007!\\\",\\\"category\\\":\\\"technology\\\",\\\"subcategory\\\":\\\"Companies\\\",\\\"section\\\":\\\"homepage\\\",\\\"createdAt\\\":1757430813569,\\\"updatedAt\\\":1757430813569}]\"\n  },\n  \"sessionStorage\": {\n    \"sentryReplaySession\": \"{\\\"id\\\":\\\"36719a6be75340aa835c0fab74e9f802\\\",\\\"started\\\":1757430813538,\\\"lastActivity\\\":1757430813569,\\\"segmentId\\\":0,\\\"sampled\\\":\\\"buffer\\\"}\"\n  }\n}\n"
+                        },
+                        {
+                          "text": "👤 Found 0 authentication-related elements\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:33.292Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-f769be0a50f738c462b5",
+              "file": "production-navigation.spec.ts",
+              "line": 113,
+              "column": 7
+            },
+            {
+              "title": "3. Error Boundary and Error Handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 10950,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing: Error Boundary and Error Handling\n"
+                        },
+                        {
+                          "text": "📍 Testing route: /\n"
+                        },
+                        {
+                          "text": "🛡️ Route /: Error boundary elements: 0, Error messages: 0\n"
+                        },
+                        {
+                          "text": "✅ Route /: Page loaded with content\n"
+                        },
+                        {
+                          "text": "📍 Testing route: /start\n"
+                        },
+                        {
+                          "text": "🛡️ Route /start: Error boundary elements: 0, Error messages: 0\n"
+                        },
+                        {
+                          "text": "✅ Route /start: Page loaded with content\n"
+                        },
+                        {
+                          "text": "📍 Testing route: /profile\n"
+                        },
+                        {
+                          "text": "🛡️ Route /profile: Error boundary elements: 0, Error messages: 0\n"
+                        },
+                        {
+                          "text": "✅ Route /profile: Page loaded with content\n"
+                        },
+                        {
+                          "text": "📍 Testing route: /leaderboard\n"
+                        },
+                        {
+                          "text": "🛡️ Route /leaderboard: Error boundary elements: 0, Error messages: 0\n"
+                        },
+                        {
+                          "text": "✅ Route /leaderboard: Page loaded with content\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "text": "❌ Console Error: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "❌ Network Error: https://techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed - Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "⚠️ Console Warning: WordPress REST API failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Page Error: /techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed due to access control checks.\n"
+                        },
+                        {
+                          "text": "❌ Network Error: https://techkwiz.com/wp-json/wp/v2/posts?per_page=6&_embed - Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Failed to load resource: Request header field User-Agent is not allowed by Access-Control-Allow-Headers.\n"
+                        },
+                        {
+                          "text": "❌ Console Error: 🌐 Network Request Failed: TypeError: Load failed\n"
+                        },
+                        {
+                          "text": "⚠️ Console Warning: WordPress REST API failed: TypeError: Load failed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:35.689Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-7256598002a9138b29e4",
+              "file": "production-navigation.spec.ts",
+              "line": 146,
+              "column": 7
+            },
+            {
+              "title": "4. Network and Performance Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2383,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing: Network and Performance\n"
+                        },
+                        {
+                          "text": "⏱️ Page load time: 1887ms\n"
+                        },
+                        {
+                          "text": "📡 Total requests: 13\n"
+                        },
+                        {
+                          "text": "❌ Failed requests: 0\n"
+                        },
+                        {
+                          "text": "🔧 Critical resources loaded: 10\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:46.645Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-7ce79b075e7eb76a1d68",
+              "file": "production-navigation.spec.ts",
+              "line": 184,
+              "column": 7
+            },
+            {
+              "title": "5. Mobile Responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "interrupted",
+                      "duration": 240,
+                      "error": {
+                        "message": "Error: page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://play.techkwiz.com/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://play.techkwiz.com/\", waiting until \"load\"\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/production-navigation.spec.ts:231:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/production-navigation.spec.ts",
+                          "column": 16,
+                          "line": 231
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 229 |\u001b[39m     \u001b[90m// Test mobile viewport\u001b[39m\n \u001b[90m 230 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39msetViewportSize({ width\u001b[33m:\u001b[39m \u001b[35m375\u001b[39m\u001b[33m,\u001b[39m height\u001b[33m:\u001b[39m \u001b[35m667\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 231 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[33mPRODUCTION_URL\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 232 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 233 |\u001b[39m     \n \u001b[90m 234 |\u001b[39m     \u001b[90m// Check for mobile-specific elements\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/production-navigation.spec.ts",
+                            "column": 16,
+                            "line": 231
+                          },
+                          "message": "Error: page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://play.techkwiz.com/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 229 |\u001b[39m     \u001b[90m// Test mobile viewport\u001b[39m\n \u001b[90m 230 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39msetViewportSize({ width\u001b[33m:\u001b[39m \u001b[35m375\u001b[39m\u001b[33m,\u001b[39m height\u001b[33m:\u001b[39m \u001b[35m667\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 231 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[33mPRODUCTION_URL\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 232 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 233 |\u001b[39m     \n \u001b[90m 234 |\u001b[39m     \u001b[90m// Check for mobile-specific elements\u001b[39m\u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/production-navigation.spec.ts:231:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🧪 Testing: Mobile Responsiveness\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-09T15:13:49.034Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/test-results/production-navigation-Tech-09625-sts-5-Mobile-Responsiveness-mobile/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/Techkwiz-v8/tests/e2e/production-navigation.spec.ts",
+                        "column": 16,
+                        "line": 231
+                      }
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-bf93f35a94a6aca04e81",
+              "file": "production-navigation.spec.ts",
+              "line": 226,
+              "column": 7
+            },
+            {
+              "title": "1. Homepage Quiz Flow - Complete User Journey",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-2c0d2a067f1f685f94ea",
+              "file": "production-navigation.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "2. Authentication State Testing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-0af035caa9517002453c",
+              "file": "production-navigation.spec.ts",
+              "line": 113,
+              "column": 7
+            },
+            {
+              "title": "3. Error Boundary and Error Handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-f6ac9ad541ac8a274953",
+              "file": "production-navigation.spec.ts",
+              "line": 146,
+              "column": 7
+            },
+            {
+              "title": "4. Network and Performance Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-c6a9e399d61a633bc14b",
+              "file": "production-navigation.spec.ts",
+              "line": 184,
+              "column": 7
+            },
+            {
+              "title": "5. Mobile Responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-0829636497521c597507",
+              "file": "production-navigation.spec.ts",
+              "line": 226,
+              "column": 7
+            },
+            {
+              "title": "1. Homepage Quiz Flow - Complete User Journey",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-960716722f2b3dee71a9",
+              "file": "production-navigation.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "2. Authentication State Testing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-9f26119bd24f5323f400",
+              "file": "production-navigation.spec.ts",
+              "line": 113,
+              "column": 7
+            },
+            {
+              "title": "3. Error Boundary and Error Handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-9c83b44b6addca475e79",
+              "file": "production-navigation.spec.ts",
+              "line": 146,
+              "column": 7
+            },
+            {
+              "title": "4. Network and Performance Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-74056d8aea0db686410b",
+              "file": "production-navigation.spec.ts",
+              "line": 184,
+              "column": 7
+            },
+            {
+              "title": "5. Mobile Responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5294e9593cdbea7ee78c-35c185d09a0be8b25163",
+              "file": "production-navigation.spec.ts",
+              "line": 226,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "quiz-completion-flow.spec.ts",
+      "file": "quiz-completion-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Quiz Completion Flow - Critical Navigation Issue",
+          "file": "quiz-completion-flow.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete Homepage Quiz and Test Navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-a6158716cf46e639cafe",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Without Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-66ec9cf68c6c6c508418",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 203,
+              "column": 7
+            },
+            {
+              "title": "Complete Homepage Quiz and Test Navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-21da4d87d696f8ea6f40",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Without Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-cf47bd1717867e4e7118",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 203,
+              "column": 7
+            },
+            {
+              "title": "Complete Homepage Quiz and Test Navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-239c547417404e599d73",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "Test Navigation Without Quiz Completion",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "63a806a2c51fdd38a81a-44594fd664ad6eb2c0bf",
+              "file": "quiz-completion-flow.spec.ts",
+              "line": 203,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "quiz-flow.spec.ts",
+      "file": "quiz-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "TechKwiz Quiz Flow E2E Tests",
+          "file": "quiz-flow.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Homepage loads and displays quiz interface",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-ff0fdb6a79ca1aaefb24",
+              "file": "quiz-flow.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Complete full quiz flow with correct answers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-8185c89c15f1feb656b4",
+              "file": "quiz-flow.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "Exit confirmation modal works correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-a95a10ab9ce23ed39b38",
+              "file": "quiz-flow.spec.ts",
+              "line": 90,
+              "column": 7
+            },
+            {
+              "title": "Navigation elements are present and functional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-1d58abd33409be2300ff",
+              "file": "quiz-flow.spec.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "Responsive design works on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-e389b27a8395251f1a65",
+              "file": "quiz-flow.spec.ts",
+              "line": 153,
+              "column": 7
+            },
+            {
+              "title": "Error handling and loading states",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-4ee1586195fa3744dd2a",
+              "file": "quiz-flow.spec.ts",
+              "line": 181,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads and displays quiz interface",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-3ef322eaf577ffcd70c0",
+              "file": "quiz-flow.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Complete full quiz flow with correct answers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-ed1020a57b74eede3f1f",
+              "file": "quiz-flow.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "Exit confirmation modal works correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-3f92f3e5b369b1aef45e",
+              "file": "quiz-flow.spec.ts",
+              "line": 90,
+              "column": 7
+            },
+            {
+              "title": "Navigation elements are present and functional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-bf7806c50200da0131e2",
+              "file": "quiz-flow.spec.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "Responsive design works on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-867d2bc9975e77696514",
+              "file": "quiz-flow.spec.ts",
+              "line": 153,
+              "column": 7
+            },
+            {
+              "title": "Error handling and loading states",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "tablet",
+                  "projectName": "tablet",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-5c8301cd0cfa3c836f3f",
+              "file": "quiz-flow.spec.ts",
+              "line": 181,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads and displays quiz interface",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-1db924ef8f61c1e1a1d0",
+              "file": "quiz-flow.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Complete full quiz flow with correct answers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-cde8002a058b54ce0135",
+              "file": "quiz-flow.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "Exit confirmation modal works correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-eb8211244c0c6765d0c3",
+              "file": "quiz-flow.spec.ts",
+              "line": 90,
+              "column": 7
+            },
+            {
+              "title": "Navigation elements are present and functional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-a357276afca904884b1a",
+              "file": "quiz-flow.spec.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "Responsive design works on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-cc3848d574debe2be9ae",
+              "file": "quiz-flow.spec.ts",
+              "line": 153,
+              "column": 7
+            },
+            {
+              "title": "Error handling and loading states",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6bcfd22fe2baf7643eb-5d6f58b5f27621c12cb8",
+              "file": "quiz-flow.spec.ts",
+              "line": 181,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-09T15:12:42.920Z",
+    "duration": 66389.004,
+    "expected": 8,
+    "skipped": 45,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

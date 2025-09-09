@@ -8,15 +8,16 @@
 'use client'
 
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
-import { 
-  getCurrentUser, 
-  saveUser, 
-  updateUserCoins, 
+import {
+  getCurrentUser,
+  saveUser,
+  updateUserCoins,
   addQuizResult,
-  type User 
+  type User
 } from '../utils/auth'
 import { getUnlockedAchievements } from '../utils/achievements';
 import { Achievement } from '../types/reward';
+import { calculateQuizReward } from '../utils/rewardCalculator';
 
 // Types
 // AppState represents the complete application state
@@ -79,23 +80,22 @@ function appReducer(state: AppState, action: any) {
     case 'UPDATE_COINS':
       // Guard clause: only update coins if user exists
       if (!state.user) return state
-      
+
       const currentCoins = state.user.coins
       let newCoins = currentCoins + action.payload
-      
-      // Ensure coins stay within valid range (0-500)
+
+      // Ensure coins stay within valid range (minimum 0, no maximum cap)
       newCoins = Math.max(0, newCoins)
-      newCoins = Math.min(500, newCoins)
-      
+
       // Create updated user object with new coin balance
       const updatedUser = { ...state.user, coins: newCoins }
-      
+
       // Persist changes to localStorage
       saveUser(updatedUser)
       updateUserCoins(newCoins)
-      
+
       console.log(`💰 COINS UPDATE: ${currentCoins} + ${action.payload} = ${newCoins}`)
-      
+
       return {
         ...state,
         user: updatedUser,
@@ -131,10 +131,10 @@ function appReducer(state: AppState, action: any) {
     case 'END_QUIZ':
       // Guard clause: only proceed if user exists
       if (!state.user) return state
-      
+
       const quizResult = action.payload
-      
-      // Update user statistics
+
+      // Update user statistics (coins are already awarded per correct answer via UPDATE_COINS)
       const updatedUserWithQuiz = {
         ...state.user,
         totalQuizzes: state.user.totalQuizzes + 1,
@@ -142,12 +142,10 @@ function appReducer(state: AppState, action: any) {
         // Update streak: increment if all answers correct, reset otherwise
         streak: quizResult.correctAnswers === quizResult.totalQuestions ? state.user.streak + 1 : 0
       }
-      
-      // Calculate coins earned based on correct answers (50 coins per correct answer)
-      const coinsEarned = quizResult.correctAnswers * 50;
-      updatedUserWithQuiz.coins = state.user.coins + coinsEarned
-      
-      console.log(`🎉 Quiz completed! Earned ${coinsEarned} coins (${quizResult.correctAnswers} correct × 50)`)
+
+      // Log quiz completion (coins already awarded individually per correct answer)
+      const expectedCoins = quizResult.correctAnswers * 50; // For logging purposes only
+      console.log(`🎉 Quiz completed! ${quizResult.correctAnswers} correct answers (${expectedCoins} coins already awarded). Current balance: ${state.user.coins}`)
       
       // Calculate and update user level (1 level per 5 quizzes)
       const newLevel = Math.floor(updatedUserWithQuiz.totalQuizzes / 5) + 1

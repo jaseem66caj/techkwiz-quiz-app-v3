@@ -8,6 +8,8 @@
 // - Category definitions with metadata
 // - Utility functions for retrieving quiz content
 
+import { calculateCategoryMaxCoins } from '../utils/rewardCalculator'
+
 // Interface defining the structure of a quiz question
 export interface QuizQuestion {
   // Unique identifier for the question
@@ -62,7 +64,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Discover your vibe through rapid-fire choices',
     subcategories: ['Aesthetic', 'Lifestyle', 'Values', 'Preferences'],
     entry_fee: 100,
-    prize_pool: 500,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'pop-culture-flash': {
     id: 'pop-culture-flash',
@@ -72,7 +74,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Decode trends and viral moments',
     subcategories: ['TikTok', 'Music', 'Celebrities', 'Memes'],
     entry_fee: 100,
-    prize_pool: 600,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'micro-trivia': {
     id: 'micro-trivia',
@@ -82,7 +84,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Lightning-fast knowledge battles',
     subcategories: ['Random Facts', 'Quick Fire', 'Brain Teasers', 'Speed Round'],
     entry_fee: 100,
-    prize_pool: 400,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'social-identity': {
     id: 'social-identity',
@@ -92,7 +94,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Find your digital persona match',
     subcategories: ['Influencer Type', 'Content Style', 'Social Vibe', 'Online Persona'],
     entry_fee: 100,
-    prize_pool: 700,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'trend-vibes': {
     id: 'trend-vibes',
@@ -102,7 +104,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Stay plugged into what\'s viral',
     subcategories: ['TikTok Slang', 'Viral Trends', 'Local Culture', 'Gen Z Language'],
     entry_fee: 100,
-    prize_pool: 800,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'future-you': {
     id: 'future-you',
@@ -112,7 +114,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Predict your path and tech trends',
     subcategories: ['Career Paths', 'Tech Future', 'Life Predictions', 'AI vs Human'],
     entry_fee: 100,
-    prize_pool: 900,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'programming': {
     id: 'programming',
@@ -122,7 +124,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Test your coding knowledge',
     subcategories: ['JavaScript', 'Python', 'HTML', 'Algorithms'],
     entry_fee: 100,
-    prize_pool: 500,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
   'ai': {
     id: 'ai',
@@ -132,7 +134,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     description: 'Explore AI and machine learning',
     subcategories: ['Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision'],
     entry_fee: 100,
-    prize_pool: 600,
+    get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates based on QUIZ_DATABASE[this.id].length × 50 coins
   },
 }
 

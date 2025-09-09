@@ -25,6 +25,7 @@ export function CountdownTimer({
   const [timeLeft, setTimeLeft] = useState(totalSeconds)
   const [isWarning, setIsWarning] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const hasCalledTimeUp = useRef(false)
 
   // Reset timer when question changes or when totalSeconds changes
@@ -36,40 +37,65 @@ export function CountdownTimer({
 
   // Timer countdown logic
   useEffect(() => {
-    if (isActive && timeLeft > 0) {
-      intervalRef.current = setInterval(() => {
-        setTimeLeft(prev => {
-          const newTime = prev - 1
-          
-          // Show warning when time is running low
-          if (showWarning && newTime <= warningThreshold && newTime > 0) {
-            setIsWarning(true)
-          }
-          
-          // Time's up
-          if (newTime <= 0 && !hasCalledTimeUp.current) {
-            hasCalledTimeUp.current = true
-            if (autoAdvance) {
-              setTimeout(() => {
-                onTimeUp()
-              }, 100) // Small delay to ensure state updates
+    try {
+      if (isActive && timeLeft > 0) {
+        intervalRef.current = setInterval(() => {
+          setTimeLeft(prev => {
+            const newTime = prev - 1
+
+            // Show warning when time is running low
+            if (showWarning && newTime <= warningThreshold && newTime > 0) {
+              setIsWarning(true)
             }
-            return 0
-          }
-          
-          return newTime
-        })
-      }, 1000)
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-        intervalRef.current = null
+
+            // Time's up
+            if (newTime <= 0 && !hasCalledTimeUp.current) {
+              hasCalledTimeUp.current = true
+              if (autoAdvance) {
+                try {
+                  timeoutRef.current = setTimeout(() => {
+                    if (onTimeUp) {
+                      onTimeUp()
+                    }
+                  }, 100) // Small delay to ensure state updates
+                } catch (error) {
+                  console.error('Error calling onTimeUp:', error)
+                  import('@sentry/nextjs').then(Sentry => {
+                    Sentry.captureException(error, {
+                      tags: { component: 'CountdownTimer', action: 'onTimeUp' }
+                    })
+                  })
+                }
+              }
+              return 0
+            }
+
+            return newTime
+          })
+        }, 1000)
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current)
+          intervalRef.current = null
+        }
       }
+    } catch (error) {
+      console.error('Error in CountdownTimer useEffect:', error)
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'CountdownTimer', action: 'timerEffect' }
+        })
+      })
     }
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
       }
     }
   }, [isActive, timeLeft, showWarning, warningThreshold, autoAdvance, onTimeUp])

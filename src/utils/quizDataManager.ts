@@ -5,16 +5,22 @@
 // all quiz-related data operations including CRUD operations for questions,
 // categories, drafts, and settings. It uses localStorage for persistence.
 
-import { 
-  QuizQuestion, 
-  QuizCategory, 
-  SearchFilters, 
-  BulkOperationResult, 
+import {
+  QuizQuestion,
+  QuizCategory,
+  SearchFilters,
+  BulkOperationResult,
   QuestionDraft,
   QuizManagementSettings,
   QUIZ_STORAGE_KEYS,
-  DEFAULT_CATEGORIES 
+  DEFAULT_CATEGORIES
 } from '@/types/quiz'
+import {
+  autoMigrateQuestion,
+  batchMigrateLegacyQuestions,
+  validateQuizQuestion,
+  DataMigrationError
+} from './quizDataMigration'
 
 // Data validation rules to ensure data integrity
 export const VALIDATION_RULES = {
@@ -31,9 +37,37 @@ export const VALIDATION_RULES = {
 
 // Custom error class for quiz data operations
 export class QuizDataError extends Error {
-  constructor(message: string, public code: string) {
+  constructor(message: string, public code: string, public context?: any) {
     super(message)
     this.name = 'QuizDataError'
+    this.logError()
+  }
+
+  private logError() {
+    const errorData = {
+      message: this.message,
+      code: this.code,
+      context: this.context,
+      stack: this.stack,
+      timestamp: new Date().toISOString()
+    }
+
+    console.group('🚨 QuizDataError')
+    console.error('Code:', this.code)
+    console.error('Message:', this.message)
+    if (this.context) console.error('Context:', this.context)
+    console.error('Stack:', this.stack)
+    console.groupEnd()
+
+    // Store error for debugging
+    try {
+      const existingErrors = JSON.parse(localStorage.getItem('quiz_data_errors') || '[]')
+      existingErrors.push(errorData)
+      const recentErrors = existingErrors.slice(-20) // Keep last 20 errors
+      localStorage.setItem('quiz_data_errors', JSON.stringify(recentErrors))
+    } catch (storageError) {
+      console.warn('Failed to store QuizDataError:', storageError)
+    }
   }
 }
 
@@ -42,9 +76,18 @@ export class QuizDataError extends Error {
 class QuizDataManager {
   // Singleton instance
   private static instance: QuizDataManager
-  
+
   // Timer for auto-save functionality
   private autoSaveTimer: NodeJS.Timeout | null = null
+
+  // Cache for frequently accessed data
+  private questionCache = new Map<string, { questions: QuizQuestion[], timestamp: number }>()
+  private staticDatabaseCache: Record<string, QuizQuestion[]> | null = null
+  private categoryCache = new Map<string, string[]>()
+
+  // Cache configuration
+  private readonly CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+  private readonly MAX_CACHE_SIZE = 50 // Maximum cached categories
 
   // Get singleton instance of QuizDataManager
   static getInstance(): QuizDataManager {
@@ -111,6 +154,379 @@ class QuizDataManager {
       console.error('Error parsing questions data:', error)
       return this.initializeWithSampleData()
     }
+  }
+
+  // ===================================================================
+  // Unified Question Access with Fallback Logic
+  // ===================================================================
+
+  /**
+   * Get questions for a specific category with intelligent fallback
+   * Priority: Admin questions -> Static database -> Sample data
+   * @param categoryId - The category to retrieve questions for
+   * @param count - Maximum number of questions to return (default: 5)
+   * @param section - Optional section filter
+   * @returns Array of QuizQuestion objects
+   */
+  async getUnifiedQuestions(
+    categoryId: string,
+    count: number = 5,
+    section?: 'onboarding' | 'homepage' | 'category' | 'general'
+  ): Promise<QuizQuestion[]> {
+    const startTime = Date.now()
+    const cacheKey = `${categoryId}-${section || 'all'}-${count}`
+
+    try {
+      // Input validation
+      if (!categoryId || typeof categoryId !== 'string') {
+        throw new QuizDataError(
+          'Invalid category ID provided',
+          'INVALID_CATEGORY_ID',
+          { categoryId, count, section }
+        )
+      }
+
+      if (count < 1 || count > 50) {
+        throw new QuizDataError(
+          'Question count must be between 1 and 50',
+          'INVALID_COUNT',
+          { categoryId, count, section }
+        )
+      }
+
+      // Check cache first
+      const cachedQuestions = this.getCachedQuestions(cacheKey)
+      if (cachedQuestions && cachedQuestions.length >= count) {
+        console.log(`⚡ Cache hit for ${categoryId}: returning ${cachedQuestions.length} cached questions`)
+        return cachedQuestions.slice(0, count)
+      }
+
+      console.log(`🔄 Loading ${count} questions for category: ${categoryId}${section ? ` (section: ${section})` : ''}`)
+
+      // Step 1: Try to get admin-created questions
+      let adminQuestions: QuizQuestion[] = []
+      try {
+        adminQuestions = this.getQuestionsByCategoryAndSection(categoryId, section)
+        console.log(`📊 Found ${adminQuestions.length} admin questions for category: ${categoryId}`)
+      } catch (adminError) {
+        console.warn('Failed to load admin questions:', adminError)
+        // Continue to fallback - don't throw here
+      }
+
+      if (adminQuestions.length >= Math.min(count, 3)) {
+        const selectedQuestions = adminQuestions.slice(0, count)
+        console.log(`✅ Using ${selectedQuestions.length} admin questions for category: ${categoryId}`)
+
+        // Cache the results
+        this.setCachedQuestions(cacheKey, selectedQuestions)
+
+        this.logQuestionLoadSuccess('admin', categoryId, selectedQuestions.length, Date.now() - startTime)
+        return selectedQuestions
+      }
+
+      // Step 2: Fallback to static database (with caching)
+      console.log(`⚠️ Insufficient admin questions (${adminQuestions.length}), falling back to static database`)
+
+      try {
+        // Use cached static database if available
+        if (!this.staticDatabaseCache) {
+          const { QUIZ_DATABASE } = await import('../data/quizDatabase')
+          this.staticDatabaseCache = QUIZ_DATABASE as Record<string, QuizQuestion[]>
+          console.log('📦 Static database cached for future use')
+        }
+
+        const staticQuestions = this.staticDatabaseCache[categoryId] || []
+
+        if (staticQuestions.length > 0) {
+          console.log(`📊 Found ${staticQuestions.length} static questions for category: ${categoryId}`)
+
+          // Validate and migrate static questions if needed (with caching)
+          const migrationCacheKey = `migration-${categoryId}`
+          let validatedQuestions = this.getCachedQuestions(migrationCacheKey)
+
+          if (!validatedQuestions) {
+            validatedQuestions = []
+            let migrationErrors = 0
+
+            for (const q of staticQuestions) {
+              try {
+                const migratedQuestion = autoMigrateQuestion(q)
+                validatedQuestions.push(migratedQuestion)
+              } catch (migrationError) {
+                migrationErrors++
+                console.warn(`Failed to migrate question ${q.id}:`, migrationError)
+              }
+            }
+
+            if (migrationErrors > 0) {
+              console.warn(`⚠️ ${migrationErrors} questions failed migration for category: ${categoryId}`)
+            }
+
+            // Cache migrated questions
+            if (validatedQuestions.length > 0) {
+              this.setCachedQuestions(migrationCacheKey, validatedQuestions)
+            }
+          }
+
+          if (validatedQuestions.length > 0) {
+            const selectedQuestions = validatedQuestions.slice(0, count)
+            console.log(`✅ Using ${selectedQuestions.length} static questions for category: ${categoryId}`)
+
+            // Cache the final results
+            this.setCachedQuestions(cacheKey, selectedQuestions)
+
+            this.logQuestionLoadSuccess('static', categoryId, selectedQuestions.length, Date.now() - startTime)
+            return selectedQuestions
+          }
+        }
+      } catch (importError) {
+        console.error('Failed to import static quiz database:', importError)
+        throw new QuizDataError(
+          'Failed to load static quiz database',
+          'STATIC_IMPORT_FAILED',
+          { categoryId, importError: importError.message }
+        )
+      }
+
+      // Step 3: Final fallback to sample data
+      console.log(`⚠️ No questions found for category: ${categoryId}, using sample data`)
+      const sampleQuestions = this.initializeWithSampleData()
+      const selectedQuestions = sampleQuestions.slice(0, count)
+
+      // Cache sample data as well
+      this.setCachedQuestions(cacheKey, selectedQuestions)
+
+      this.logQuestionLoadSuccess('sample', categoryId, selectedQuestions.length, Date.now() - startTime)
+      return selectedQuestions
+
+    } catch (error) {
+      const loadTime = Date.now() - startTime
+      console.error(`❌ Error in getUnifiedQuestions after ${loadTime}ms:`, error)
+
+      // Log the error with context
+      this.logQuestionLoadError(categoryId, error, loadTime)
+
+      // Emergency fallback - return sample data but don't throw
+      try {
+        const sampleQuestions = this.initializeWithSampleData()
+        const emergencyQuestions = sampleQuestions.slice(0, count)
+        console.log(`🆘 Emergency fallback: returning ${emergencyQuestions.length} sample questions`)
+        return emergencyQuestions
+      } catch (emergencyError) {
+        // If even sample data fails, return empty array
+        console.error('Emergency fallback failed:', emergencyError)
+        return []
+      }
+    }
+  }
+
+  /**
+   * Get random questions from any available source
+   * @param categoryId - Category to get questions from
+   * @param count - Number of questions to return
+   * @returns Promise resolving to array of questions
+   */
+  async getRandomUnifiedQuestions(categoryId: string, count: number = 5): Promise<QuizQuestion[]> {
+    const questions = await this.getUnifiedQuestions(categoryId, count * 2) // Get more to randomize
+
+    // Shuffle questions randomly
+    const shuffled = questions.sort(() => Math.random() - 0.5)
+
+    return shuffled.slice(0, count)
+  }
+
+  /**
+   * Get all available categories from both admin and static sources
+   * @returns Promise resolving to array of category IDs
+   */
+  async getAvailableCategories(): Promise<string[]> {
+    const categories = new Set<string>()
+
+    // Add admin categories
+    const adminQuestions = this.getQuestions()
+    adminQuestions.forEach(q => categories.add(q.category))
+
+    // Add static categories
+    try {
+      const { QUIZ_DATABASE } = await import('../data/quizDatabase')
+      Object.keys(QUIZ_DATABASE).forEach(cat => categories.add(cat))
+    } catch (error) {
+      console.warn('Could not load static categories:', error)
+    }
+
+    return Array.from(categories)
+  }
+
+  /**
+   * Check if a category has sufficient questions for a quiz
+   * @param categoryId - Category to check
+   * @param minQuestions - Minimum number of questions required (default: 3)
+   * @returns Promise resolving to boolean
+   */
+  async hasSufficientQuestions(categoryId: string, minQuestions: number = 3): Promise<boolean> {
+    try {
+      const questions = await this.getUnifiedQuestions(categoryId, minQuestions)
+      return questions.length >= minQuestions
+    } catch (error) {
+      console.error(`Error checking sufficient questions for ${categoryId}:`, error)
+      return false
+    }
+  }
+
+  // ===================================================================
+  // Logging and Analytics Methods
+  // ===================================================================
+
+  /**
+   * Log successful question loading for analytics
+   */
+  private logQuestionLoadSuccess(
+    source: 'admin' | 'static' | 'sample',
+    categoryId: string,
+    questionCount: number,
+    loadTime: number
+  ) {
+    const logData = {
+      event: 'question_load_success',
+      source,
+      categoryId,
+      questionCount,
+      loadTime,
+      timestamp: new Date().toISOString()
+    }
+
+    console.log(`📈 Question Load Success: ${source} source, ${questionCount} questions, ${loadTime}ms`)
+
+    // Store analytics data
+    try {
+      const existingLogs = JSON.parse(localStorage.getItem('quiz_analytics') || '[]')
+      existingLogs.push(logData)
+      const recentLogs = existingLogs.slice(-100) // Keep last 100 events
+      localStorage.setItem('quiz_analytics', JSON.stringify(recentLogs))
+    } catch (error) {
+      console.warn('Failed to store analytics data:', error)
+    }
+  }
+
+  /**
+   * Log question loading errors for debugging
+   */
+  private logQuestionLoadError(categoryId: string, error: any, loadTime: number) {
+    const errorData = {
+      event: 'question_load_error',
+      categoryId,
+      error: error.message || 'Unknown error',
+      errorCode: error.code || 'UNKNOWN',
+      loadTime,
+      timestamp: new Date().toISOString()
+    }
+
+    console.error(`📉 Question Load Error: ${categoryId}, ${loadTime}ms`)
+
+    // Store error data
+    try {
+      const existingErrors = JSON.parse(localStorage.getItem('quiz_load_errors') || '[]')
+      existingErrors.push(errorData)
+      const recentErrors = existingErrors.slice(-50) // Keep last 50 errors
+      localStorage.setItem('quiz_load_errors', JSON.stringify(recentErrors))
+    } catch (storageError) {
+      console.warn('Failed to store error data:', storageError)
+    }
+  }
+
+  /**
+   * Get analytics data for debugging and monitoring
+   */
+  getAnalyticsData() {
+    try {
+      return {
+        analytics: JSON.parse(localStorage.getItem('quiz_analytics') || '[]'),
+        errors: JSON.parse(localStorage.getItem('quiz_load_errors') || '[]'),
+        dataErrors: JSON.parse(localStorage.getItem('quiz_data_errors') || '[]')
+      }
+    } catch (error) {
+      console.warn('Failed to retrieve analytics data:', error)
+      return { analytics: [], errors: [], dataErrors: [] }
+    }
+  }
+
+  /**
+   * Clear all analytics and error data
+   */
+  clearAnalyticsData() {
+    try {
+      localStorage.removeItem('quiz_analytics')
+      localStorage.removeItem('quiz_load_errors')
+      localStorage.removeItem('quiz_data_errors')
+      console.log('Analytics data cleared')
+    } catch (error) {
+      console.warn('Failed to clear analytics data:', error)
+    }
+  }
+
+  // ===================================================================
+  // Cache Management Methods
+  // ===================================================================
+
+  /**
+   * Get cached questions for a category
+   */
+  private getCachedQuestions(cacheKey: string): QuizQuestion[] | null {
+    const cached = this.questionCache.get(cacheKey)
+    if (!cached) return null
+
+    // Check if cache is still valid
+    if (Date.now() - cached.timestamp > this.CACHE_TTL) {
+      this.questionCache.delete(cacheKey)
+      return null
+    }
+
+    return cached.questions
+  }
+
+  /**
+   * Cache questions for a category
+   */
+  private setCachedQuestions(cacheKey: string, questions: QuizQuestion[]) {
+    // Implement LRU cache behavior
+    if (this.questionCache.size >= this.MAX_CACHE_SIZE) {
+      // Remove oldest entry
+      const oldestKey = this.questionCache.keys().next().value
+      this.questionCache.delete(oldestKey)
+    }
+
+    this.questionCache.set(cacheKey, {
+      questions: [...questions], // Create copy to prevent mutations
+      timestamp: Date.now()
+    })
+  }
+
+  /**
+   * Clear all caches
+   */
+  clearCache() {
+    this.questionCache.clear()
+    this.staticDatabaseCache = null
+    this.categoryCache.clear()
+    console.log('🧹 All caches cleared')
+  }
+
+  /**
+   * Get cache statistics for monitoring
+   */
+  getCacheStats() {
+    return {
+      questionCacheSize: this.questionCache.size,
+      staticDatabaseCached: this.staticDatabaseCache !== null,
+      categoryCacheSize: this.categoryCache.size,
+      cacheHitRate: this.calculateCacheHitRate()
+    }
+  }
+
+  private calculateCacheHitRate(): number {
+    // This would need to be tracked over time in a real implementation
+    // For now, return a placeholder
+    return 0
   }
 
   // Get filtered questions based on provided criteria

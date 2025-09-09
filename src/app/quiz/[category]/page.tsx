@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface'
+import { QuizResult } from '../../../components/QuizResult'
 
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
@@ -11,44 +12,26 @@ import { RewardPopup } from '../../../components/RewardPopup'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
-// Interface defining the structure of quiz questions for this page
-interface QuizQuestion {
-  // Unique identifier for the question
-  id: string
-  // The question text to display to users
-  question: string
-  // Array of answer options
-  options: string[]
-  // Index of the correct answer in the options array
-  correct_answer: number
-  // Difficulty level of the question
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
-  // Optional question type for special rendering
-  question_type?: string
-  // Educational fun fact related to the question
-  fun_fact: string
-  // Category identifier this question belongs to
-  category: string
-  // Subcategory within the main category
-  subcategory: string
-  // Optional emoji clue for emoji decode questions
-  emoji_clue?: string
-  // Optional visual elements for "This or That" questions
-  visual_options?: string[]
-  // Optional personality trait for personality questions
-  personality_trait?: string
-  // Optional year for prediction questions
-  prediction_year?: string
-}
+// Import unified QuizQuestion interface
+import { QuizQuestion } from '@/types/quiz'
+import { calculateCorrectAnswerReward, calculateQuizReward } from '../../../utils/rewardCalculator'
 
 // Main Quiz Page component for a specific category
 export default function QuizPage({ params }: { params: Promise<{ category: string }> }) {
+  // Unwrap the params Promise for Next.js 15+ compatibility
+  // React.use() must not be wrapped in try/catch to avoid Suspense violations
+  const resolvedParams = React.use(params)
+
   // Access global application state and dispatch function
   const { state, dispatch } = useApp()
   // Next.js router for navigation
   const router = useRouter()
   // State for the current category ID
-  const [categoryId, setCategoryId] = useState<string>('')
+  const [categoryId, setCategoryId] = useState<string>(resolvedParams.category || '')
+
+  // Refs for cleanup and mounted state
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([])
+  const isMountedRef = useRef(true)
 
   // Loading and error state management
   const [loading, setLoading] = useState(true)
@@ -62,23 +45,40 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const [showReward, setShowReward] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [adSlotCode, setAdSlotCode] = useState<string>('')
+  // Results & streak tracking
+  const [showResult, setShowResult] = useState(false)
+  const [currentStreak, setCurrentStreak] = useState(0)
+  const [maxStreak, setMaxStreak] = useState(0)
 
   // Timer state management
   const [timerEnabled, setTimerEnabled] = useState(true)
   const [timerSeconds, setTimerSeconds] = useState(30)
   const [showTimeUp, setShowTimeUp] = useState(false)
 
-  // ===================================================================
-  // Parameter Resolution Effect
-  // ===================================================================
-  // Effect to resolve the category parameter from the URL
+  // Cleanup function for timeouts
+  const clearAllTimeouts = useCallback(() => {
+    timeoutRefs.current.forEach(timeout => clearTimeout(timeout))
+    timeoutRefs.current = []
+  }, [])
 
-  // Resolve the category parameter from the URL path
+  // Cleanup on unmount
   useEffect(() => {
-    params.then(resolvedParams => {
+    return () => {
+      isMountedRef.current = false
+      clearAllTimeouts()
+    }
+  }, [clearAllTimeouts])
+
+  // ===================================================================
+  // Parameter Resolution
+  // ===================================================================
+  // Category ID is now resolved at component initialization via React.use()
+  // This useEffect is kept for any additional parameter validation if needed
+  useEffect(() => {
+    if (resolvedParams.category && categoryId !== resolvedParams.category) {
       setCategoryId(resolvedParams.category)
-    })
-  }, [params])
+    }
+  }, [resolvedParams, categoryId])
 
   // ===================================================================
   // Quiz Initialization Effect
@@ -106,37 +106,14 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         setTimerSeconds(30)
 
         try {
-          // First try to load questions from admin dashboard
-          const adminQuestions = quizDataManager.getQuestionsByCategoryAndSection(categoryId, 'category')
-
-          // Use admin questions if enough are available
-          if (adminQuestions.length >= 3) {
-            // Convert admin format to quiz format
-            const convertedQuestions = adminQuestions.slice(0, 5).map(q => ({
-              id: q.id,
-              question: q.question,
-              options: q.options,
-              correct_answer: q.correct_answer ?? 0,
-              difficulty: q.difficulty,
-              fun_fact: q.fun_fact || '',
-              category: q.category,
-              subcategory: q.subcategory || categoryId
-            }))
-            setQuestions(convertedQuestions)
-            console.log(`✅ Using admin questions for category: ${categoryId}`)
-          } else {
-            // Fallback to quiz database if not enough admin questions
-            const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
-            const fallback = (QUIZ_DATABASE as any)[categoryId] || []
-            setQuestions(fallback.slice(0, 5))
-            console.log(`⚠️ Using fallback questions for category: ${categoryId}`)
-          }
+          // Use unified question manager with intelligent fallback
+          const unifiedQuestions = await quizDataManager.getUnifiedQuestions(categoryId, 5, 'category')
+          setQuestions(unifiedQuestions)
         } catch (error) {
           // Handle errors in loading questions
           console.error('Error loading questions:', error)
-          const { QUIZ_DATABASE } = await import('../../../data/quizDatabase')
-          const fallback = (QUIZ_DATABASE as any)[categoryId] || []
-          setQuestions(fallback.slice(0, 5))
+          // Emergency fallback - this should rarely happen due to built-in fallbacks
+          setQuestions([])
         }
 
         // Set loading state to false when initialization is complete
@@ -175,6 +152,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     setShowTimeUp(true)
     // Mark as incorrect
     setIsCorrect(false)
+    // Reset streak on timeout
+    setCurrentStreak(0)
     // Set selected to indicate time expired
     setSelected(-1)
     // Trigger reward popup after delay
@@ -182,23 +161,54 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   }
 
   // Handle user answer selection
-  const handleAnswer = (answerIndex: number) => {
+  const handleAnswer = useCallback((answerIndex: number) => {
     // Guard clause - exit if answer already selected
     if (selected !== null) return;
-    // Set selected answer
-    setSelected(answerIndex);
 
-    // Check if answer is correct
-    const correct = questions[current].correct_answer === answerIndex;
-    setIsCorrect(correct);
-    // Update score if correct
-    if (correct) {
-      setScore(s => s + 1);
+    try {
+      // Set selected answer
+      setSelected(answerIndex);
+
+      // Check if answer is correct
+      const correct = questions[current].correct_answer === answerIndex;
+      setIsCorrect(correct);
+
+      // Update score, streak, and award coins for correct answers
+      if (correct) {
+        setScore(s => s + 1);
+        setCurrentStreak(cs => {
+          const next = cs + 1
+          setMaxStreak(ms => Math.max(ms, next))
+          return next
+        })
+
+        // Award coins immediately for correct answers
+        const rewardResult = calculateCorrectAnswerReward();
+        dispatch({ type: 'UPDATE_COINS', payload: rewardResult.coins });
+        console.log(`✅ Correct answer! Earned ${rewardResult.coins} coins`);
+      } else {
+        setCurrentStreak(0)
+        console.log(`❌ Wrong answer, no coins earned`);
+      }
+
+      // Show Qureka-style reward popup for both correct and wrong answers
+      const timeout = setTimeout(() => {
+        if (isMountedRef.current) {
+          setShowReward(true);
+        }
+      }, 400);
+
+      timeoutRefs.current.push(timeout);
+    } catch (error) {
+      console.error('Error in handleAnswer:', error)
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'CategoryQuiz', action: 'handleAnswer' },
+          extra: { answerIndex, currentQuestion: current, categoryId }
+        })
+      })
     }
-
-    // Show Qureka-style reward popup for both correct and wrong answers
-    setTimeout(() => setShowReward(true), 400);
-  };
+  }, [selected, questions, current, dispatch, categoryId]);
 
   // Handle ad completion and reward distribution
   const handleAdCompleted = (coinsFromAd: number) => {
@@ -207,22 +217,55 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   };
 
   // Advance to next question or complete quiz
-  const advance = () => {
-    // Hide reward popup and time up modal
-    setShowReward(false);
-    setShowTimeUp(false);
-    
-    // Check if there are more questions
-    if (current < questions.length - 1) {
-      // Advance to next question
-      setCurrent(c => c + 1);
-      setSelected(null);
-    } else {
-      // Quiz completed - dispatch end quiz action and navigate
-      dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions: questions.length } });
-      router.push('/start');
+  const advance = useCallback(() => {
+    try {
+      // Hide reward popup and time up modal
+      setShowReward(false);
+      setShowTimeUp(false);
+
+      // Check if there are more questions
+      if (current < questions.length - 1) {
+        // Advance to next question
+        setCurrent(c => c + 1);
+        setSelected(null);
+      } else {
+        // Quiz completed - dispatch end quiz action, show results, then navigate
+        const totalQuestions = questions.length
+        dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions } });
+        setShowResult(true)
+
+        // Maintain navigation pattern: redirect after short delay
+        const timeout = setTimeout(() => {
+          if (!isMountedRef.current) return;
+
+          try {
+            router.push('/start')
+          } catch (error) {
+            console.error('Error navigating after results:', error)
+            import('@sentry/nextjs').then(Sentry => {
+              Sentry.captureException(error, {
+                tags: { component: 'CategoryQuiz', action: 'postResultsRedirect' },
+                extra: { categoryId, score, totalQuestions }
+              })
+            })
+            if (typeof window !== 'undefined') {
+              window.location.href = '/start'
+            }
+          }
+        }, 1800)
+
+        timeoutRefs.current.push(timeout);
+      }
+    } catch (error) {
+      console.error('Error in advance function:', error)
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'CategoryQuiz', action: 'advance' },
+          extra: { current, questionsLength: questions.length, categoryId }
+        })
+      })
     }
-  };
+  }, [current, questions.length, score, dispatch, router, categoryId]);
 
   // ===================================================================
   // Loading and Error States
@@ -287,20 +330,44 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
           </div>
         </div>
 
-        {timerEnabled && (
-          <CountdownTimer totalSeconds={timerSeconds} isActive={selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
-        )}
+        {showResult ? (
+          <QuizResult
+            score={score}
+            totalQuestions={questions.length}
+            category={categoryId}
+            coinsEarned={calculateQuizReward(score, questions.length).totalCoins}
+            maxStreak={maxStreak}
+            onPlayAgain={() => {
+              try { router.push('/start') } catch (e) {
+                import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
+                if (typeof window !== 'undefined') window.location.href = '/start'
+              }
+            }}
+            onBackToCategories={() => {
+              try { router.push('/start') } catch (e) {
+                import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
+                if (typeof window !== 'undefined') window.location.href = '/start'
+              }
+            }}
+          />
+        ) : (
+          <>
+            {timerEnabled && (
+              <CountdownTimer totalSeconds={timerSeconds} isActive={selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
+            )}
 
-        <EnhancedQuizInterface
-          question={questions[current]}
-          selectedAnswer={selected}
-          onAnswerSelect={handleAnswer}
-          questionAnswered={selected !== null}
-          questionNumber={current + 1}
-          totalQuestions={questions.length}
-          showProgress={false}
-          encouragementMessages={true}
-        />
+            <EnhancedQuizInterface
+              question={questions[current]}
+              selectedAnswer={selected}
+              onAnswerSelect={handleAnswer}
+              questionAnswered={selected !== null}
+              questionNumber={current + 1}
+              totalQuestions={questions.length}
+              showProgress={false}
+              encouragementMessages={true}
+            />
+          </>
+        )}
       </div>
 
       {showReward && (
@@ -308,9 +375,10 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
           isOpen={showReward}
           onClose={advance}
           isCorrect={isCorrect}
-          coinsEarned={isCorrect ? 25 : 0}
+          coinsEarned={isCorrect ? calculateCorrectAnswerReward().coins : 0}
           onClaimReward={() => {
-            handleAdCompleted(isCorrect ? 25 : 0);
+            const rewardCoins = isCorrect ? calculateCorrectAnswerReward().coins : 0;
+            handleAdCompleted(rewardCoins);
             advance();
           }}
           onSkipReward={advance}

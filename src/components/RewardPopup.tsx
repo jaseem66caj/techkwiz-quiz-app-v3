@@ -10,6 +10,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getAdRewardAmount } from '../utils/rewardCalculator'
 
 // Interface defining the props for the Reward Popup component
 interface RewardPopupProps {
@@ -34,16 +35,16 @@ interface RewardPopupProps {
 }
 
 // Reward Popup component that displays after quiz answers with ad reward opportunities
-export function RewardPopup({ 
-  isOpen, 
-  onClose, 
-  coinsEarned, 
-  onClaimReward, 
+export function RewardPopup({
+  isOpen,
+  onClose,
+  coinsEarned,
+  onClaimReward,
   onSkipReward,
   canWatchAgain = false,
   onWatchAgain,
   isCorrect = true,
-  rewardCoins = 100
+  rewardCoins = getAdRewardAmount()
 }: RewardPopupProps) {
   // State to track if user is currently watching an ad
   const [isWatchingAd, setIsWatchingAd] = useState(false)
@@ -73,11 +74,10 @@ export function RewardPopup({
       setIsWatchingAd(false)
       setHasWatchedOnce(true)
       onClaimReward()
-      
-      // Don't close immediately if user can watch again
-      if (!canWatchAgain) {
-        onClose()
-      }
+
+      // Parent controls closing/advancing; avoid double-calling advance
+      // Do not call onClose() here to prevent double-advance
+      // If needed, parent can pass a handler that closes/advances once.
     }, 5000)
   }
 
@@ -97,8 +97,8 @@ export function RewardPopup({
 
   // Handle closing the popup (user skips reward)
   const handleClose = () => {
+    // Only notify skip once; parent will close/advance
     onSkipReward()
-    onClose()
   }
 
   // ===================================================================

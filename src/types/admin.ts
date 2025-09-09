@@ -1,5 +1,8 @@
 // Admin types file to resolve import errors
 
+// Import unified QuizQuestion interface
+export type { QuizQuestion } from './quiz';
+
 // System Settings Types
 export interface SystemSettings {
   id: string;
@@ -20,22 +23,9 @@ export interface GoogleAnalyticsConfig {
   customCode?: string;
 }
 
-// Quiz Question Types
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  funFact: string;
-  category: string;
-  subcategory: string;
-  section?: 'onboarding' | 'homepage' | 'category' | 'general';
-  tags?: string[];
-  type?: 'regular' | 'bonus';
-  createdAt?: number;
-  updatedAt?: number;
-}
+// Quiz Question Types - Import from unified types
+// Note: QuizQuestion interface moved to src/types/quiz.ts for consistency
+// This ensures all components use the same interface definition
 
 // Quiz Category Types
 export interface QuizCategory {
@@ -71,14 +61,14 @@ export interface BulkOperationResult {
   errors: string[];
 }
 
-// Question Draft
+// Question Draft - Updated to use unified interface format
 export interface QuestionDraft {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
+  correct_answer: number; // Changed from correctAnswer to match unified interface
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  funFact: string;
+  fun_fact: string; // Changed from funFact to match unified interface
   category: string;
   subcategory: string;
   section?: 'onboarding' | 'homepage' | 'category' | 'general';

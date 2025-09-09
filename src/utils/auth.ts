@@ -29,8 +29,16 @@ export const getCurrentUser = (): User => {
     // Attempt to retrieve user data from localStorage
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      // Parse and return stored user data
-      return JSON.parse(stored);
+      // Parse and normalize stored user data (handle older schemas safely)
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed.quizHistory)) parsed.quizHistory = [];
+      if (typeof parsed.coins !== 'number') parsed.coins = 0;
+      if (typeof parsed.level !== 'number') parsed.level = 1;
+      if (typeof parsed.totalQuizzes !== 'number') parsed.totalQuizzes = 0;
+      if (typeof parsed.correctAnswers !== 'number') parsed.correctAnswers = 0;
+      if (!parsed.joinDate) parsed.joinDate = new Date().toISOString();
+      if (typeof parsed.streak !== 'number') parsed.streak = 0;
+      return parsed as User;
     }
   } catch (error) {
     // Log error if parsing fails
@@ -87,7 +95,8 @@ export const addQuizResult = (quizResult: any): void => {
   // Get current user data
   const user = getCurrentUser();
   
-  // Add quiz result to history
+  // Add quiz result to history (guard against undefined from legacy data)
+  if (!Array.isArray(user.quizHistory)) user.quizHistory = [];
   user.quizHistory.push(quizResult);
   
   // Update user statistics

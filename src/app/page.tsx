@@ -18,6 +18,7 @@ import { useExitPrevention } from '../hooks/useExitPrevention'
 import { quizDataManager } from '../utils/quizDataManager'
 import { realTimeSyncService } from '../utils/realTimeSync'
 import { CreateProfile } from '../components/CreateProfile';
+import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator';
 import { saveUser } from '../utils/auth';
 import { getUnlockedAchievements } from '../utils/achievements';
 
@@ -254,7 +255,8 @@ export default function HomePage() {
     // Delay to show answer feedback
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
-      const coinsEarned = isCorrect ? 25 : 0; // 25 coins per correct answer
+      const rewardResult = isCorrect ? calculateCorrectAnswerReward() : { coins: 0 };
+      const coinsEarned = rewardResult.coins;
 
       // Update score and coins for correct answers
       if (isCorrect) {
@@ -279,7 +281,8 @@ export default function HomePage() {
 
           // Calculate final stats for achievements and user updates
           const finalScore = score + (isCorrect ? 1 : 0);
-          const totalCoinsEarned = finalScore * 25; // Total coins from all correct answers
+          const quizRewardResult = calculateQuizReward(finalScore, quickStartQuiz.length);
+          const totalCoinsEarned = quizRewardResult.totalCoins;
 
           // Create updated user with null safety
           const currentUser = state.user || {
@@ -325,18 +328,15 @@ export default function HomePage() {
 
   // Handle user creating a profile after quiz completion
   const handleProfileCreated = (username: string, avatar: string) => {
-    const coinsEarned = score * 50;
-
-    // Create user object with fallback for null state.user, matching User interface
-    const currentCoins = state.user?.coins || 0;
+    // Create user object preserving existing coins and statistics (already updated via quiz flow)
     const user = {
       id: state.user?.id || `user_${Date.now()}`,
       name: username,
       avatar: avatar,
-      coins: currentCoins + coinsEarned,
+      coins: state.user?.coins || 0, // Preserve existing coins (already awarded during quiz)
       level: state.user?.level || 1,
-      totalQuizzes: (state.user?.totalQuizzes || 0) + 1, // Increment quiz count
-      correctAnswers: (state.user?.correctAnswers || 0) + score, // Add correct answers from this quiz
+      totalQuizzes: state.user?.totalQuizzes || 0, // Preserve existing stats (already updated via END_QUIZ)
+      correctAnswers: state.user?.correctAnswers || 0, // Preserve existing stats (already updated via END_QUIZ)
       joinDate: state.user?.joinDate || new Date().toISOString(),
       quizHistory: state.user?.quizHistory || [],
       streak: state.user?.streak || 0
@@ -425,13 +425,13 @@ export default function HomePage() {
               
               <div className="bg-orange-500/20 backdrop-blur-sm rounded-xl p-4 border border-orange-400/30">
                 <p className="text-orange-300 text-sm font-medium">Coins Earned</p>
-                <p className="text-white text-2xl font-bold">{score * 50}</p>
+                <p className="text-white text-2xl font-bold">{calculateQuizReward(score, quickStartQuiz.length).totalCoins}</p>
               </div>
             </div>
 
             <div className="mt-6">
               <p className="text-blue-200 mb-4">
-                You've earned {score * 50} coins! This is the only way to get free coins in TechKwiz.
+                You've earned {calculateQuizReward(score, quickStartQuiz.length).totalCoins} coins! This is the only way to get free coins in TechKwiz.
               </p>
               
               <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30 mb-6">
@@ -520,7 +520,7 @@ export default function HomePage() {
         currentProgress={{
           questionNumber: currentQuestion + 1,
           totalQuestions: quickStartQuiz.length,
-          coinsAtRisk: score * 50
+          coinsAtRisk: calculateQuizReward(score, quickStartQuiz.length).totalCoins
         }}
       />
 

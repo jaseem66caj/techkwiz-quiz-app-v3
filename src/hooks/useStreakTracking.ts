@@ -23,19 +23,39 @@ export function useStreakTracking() {
 
   // Load streak data from localStorage on mount
   useEffect(() => {
-    const savedStreak = localStorage.getItem('techkwiz_streak_data')
-    if (savedStreak) {
-      try {
-        setStreakData(JSON.parse(savedStreak))
-      } catch (error) {
-        console.error('Error loading streak data:', error)
+    try {
+      const savedStreak = localStorage.getItem('techkwiz_streak_data')
+      if (savedStreak) {
+        try {
+          setStreakData(JSON.parse(savedStreak))
+        } catch (error) {
+          console.error('Error parsing streak data:', error)
+          import('@sentry/nextjs').then(Sentry => {
+            Sentry.captureException(error, { tags: { component: 'useStreakTracking', action: 'parseStreak' } })
+          })
+        }
       }
+    } catch (error) {
+      console.error('Error accessing localStorage for streak data:', error)
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, { tags: { component: 'useStreakTracking', action: 'loadStreak' } })
+      })
     }
   }, [])
 
   // Save streak data to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('techkwiz_streak_data', JSON.stringify(streakData))
+    try {
+      localStorage.setItem('techkwiz_streak_data', JSON.stringify(streakData))
+    } catch (error) {
+      console.error('Error saving streak data to localStorage:', error)
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.captureException(error, {
+          tags: { component: 'useStreakTracking', action: 'saveStreak' },
+          extra: { dataSize: JSON.stringify(streakData).length }
+        })
+      })
+    }
   }, [streakData])
 
   // Record a correct answer

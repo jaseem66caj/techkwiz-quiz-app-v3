@@ -97,10 +97,10 @@ export const REWARD_STORAGE_KEYS = {
 // Default reward configuration
 export const DEFAULT_REWARD_CONFIG: Omit<RewardConfig, 'id' | 'createdAt' | 'updatedAt'> = {
   coinValues: {
-    correct: 25,
+    correct: 50,
     incorrect: 0,
     bonus: 50,
-    dailyBonus: 100,
+    dailyBonus: 0,
     streakBonus: 10
   },
   streakSettings: {
@@ -121,10 +121,10 @@ export const DEFAULT_REWARD_CONFIG: Omit<RewardConfig, 'id' | 'createdAt' | 'upd
     }
   },
   adSettings: {
-    enabled: true,
+    enabled: false,
     frequency: 3,
     minQuestionsBetweenAds: 2,
-    rewardCoins: 100
+    rewardCoins: 0
   },
   achievements: []
 }

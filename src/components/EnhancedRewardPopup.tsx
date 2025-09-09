@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '../app/providers'
+import { getAdRewardAmount } from '../utils/rewardCalculator'
 
 interface EnhancedRewardPopupProps {
   isOpen: boolean
@@ -42,10 +43,10 @@ export function EnhancedRewardPopup({
   const [sparkles, setSparkles] = useState<Array<{ id: number, x: number, y: number }>>([])
   const adContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // Load config - now using default values instead of API call
+  // Load config - now using centralized reward configuration
   useEffect(() => {
-    // Removed backend API call and using default config
-    setConfig({ coin_reward: 100, is_active: true, show_during_quiz: true, trigger_after_questions: 1, enable_analytics: false })
+    const adRewardAmount = getAdRewardAmount()
+    setConfig({ coin_reward: adRewardAmount, is_active: true, show_during_quiz: true, trigger_after_questions: 1, enable_analytics: false })
   }, [])
 
   // Init effects
@@ -97,7 +98,7 @@ export function EnhancedRewardPopup({
   }
 
   const completeAdExperience = async () => {
-    const adCoins = config?.coin_reward || 100
+    const adCoins = config?.coin_reward || getAdRewardAmount()
     setShowingAd(false)
     onAdCompleted(adCoins)
     await sendAnalytics('complete')

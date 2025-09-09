@@ -1,9 +1,9 @@
 {
-  "timestamp": "2025-09-08T11:19:23.877Z",
+  "timestamp": "2025-09-09T11:22:21.924Z",
   "summary": {
-    "totalIssues": 56,
-    "highSeverity": 32,
-    "mediumSeverity": 24,
+    "totalIssues": 54,
+    "highSeverity": 31,
+    "mediumSeverity": 23,
     "lowSeverity": 0
   },
   "errorsByType": {
@@ -14,13 +14,6 @@
         "severity": "HIGH",
         "description": "Async function without error handling",
         "code": "async function generateBaselines() {\n  console.log('🔍 Generating baseline images for TechKwiz...');..."
-      },
-      {
-        "type": "UNHANDLED_PROMISE",
-        "file": "/app/api/health/route.ts",
-        "severity": "HIGH",
-        "description": "Async function without error handling",
-        "code": "async function GET() {\n  return NextResponse.json({ status: 'ok' }..."
       },
       {
         "type": "UNHANDLED_PROMISE",
@@ -204,27 +197,6 @@
         "file": "/hooks/useRevenueOptimization.ts",
         "severity": "MEDIUM",
         "description": "localStorage access without error handling",
-        "code": "localStorage.getItem('techkwiz_revenue_metrics')\n    if (savedMetrics) {\n      try {\n        setRevenueMetrics(JSON.parse(savedMetrics))\n      "
-      },
-      {
-        "type": "LOCALSTORAGE_ERROR",
-        "file": "/hooks/useRevenueOptimization.ts",
-        "severity": "MEDIUM",
-        "description": "localStorage access without error handling",
-        "code": "localStorage.setItem('techkwiz_revenue_metrics', JSON.stringify(revenueMetrics))\n  "
-      },
-      {
-        "type": "LOCALSTORAGE_ERROR",
-        "file": "/hooks/useRevenueOptimization.ts",
-        "severity": "MEDIUM",
-        "description": "localStorage access without error handling",
-        "code": "localStorage.setItem('techkwiz_multipliers', JSON.stringify(activeMultipliers))\n  "
-      },
-      {
-        "type": "LOCALSTORAGE_ERROR",
-        "file": "/hooks/useRevenueOptimization.ts",
-        "severity": "MEDIUM",
-        "description": "localStorage access without error handling",
         "code": "localStorage.getItem('techkwiz_last_login')\n    \n    if (lastLogin !== today) {\n      // Calculate streak\n      const yesterday = new Date()\n      yesterday.setDate(yesterday.getDate() - 1)\n      const isConsecutive = lastLogin === yesterday.toDateString()\n      \n      const currentStreak = isConsecutive ? revenueMetrics.dailyStreak + 1 : 1\n      \n      setRevenueMetrics(prev => ({\n        ...prev,\n        dailyStreak: currentStreak,\n        lastLoginDate: today\n      "
       },
       {
@@ -380,6 +352,20 @@
       },
       {
         "type": "NAVIGATION_ERROR",
+        "file": "/app/quiz/[category]/page.tsx",
+        "severity": "MEDIUM",
+        "description": "Router navigation without error handling",
+        "code": "router.push('/start')"
+      },
+      {
+        "type": "NAVIGATION_ERROR",
+        "file": "/app/quiz/[category]/page.tsx",
+        "severity": "MEDIUM",
+        "description": "Router navigation without error handling",
+        "code": "router.push('/start')"
+      },
+      {
+        "type": "NAVIGATION_ERROR",
         "file": "/app/start/page.tsx",
         "severity": "MEDIUM",
         "description": "Router navigation without error handling",
@@ -415,13 +401,6 @@
       "severity": "HIGH",
       "description": "Async function without error handling",
       "code": "async function generateBaselines() {\n  console.log('🔍 Generating baseline images for TechKwiz...');..."
-    },
-    {
-      "type": "UNHANDLED_PROMISE",
-      "file": "/app/api/health/route.ts",
-      "severity": "HIGH",
-      "description": "Async function without error handling",
-      "code": "async function GET() {\n  return NextResponse.json({ status: 'ok' }..."
     },
     {
       "type": "UNHANDLED_PROMISE",
@@ -603,27 +582,6 @@
       "file": "/hooks/useRevenueOptimization.ts",
       "severity": "MEDIUM",
       "description": "localStorage access without error handling",
-      "code": "localStorage.getItem('techkwiz_revenue_metrics')\n    if (savedMetrics) {\n      try {\n        setRevenueMetrics(JSON.parse(savedMetrics))\n      "
-    },
-    {
-      "type": "LOCALSTORAGE_ERROR",
-      "file": "/hooks/useRevenueOptimization.ts",
-      "severity": "MEDIUM",
-      "description": "localStorage access without error handling",
-      "code": "localStorage.setItem('techkwiz_revenue_metrics', JSON.stringify(revenueMetrics))\n  "
-    },
-    {
-      "type": "LOCALSTORAGE_ERROR",
-      "file": "/hooks/useRevenueOptimization.ts",
-      "severity": "MEDIUM",
-      "description": "localStorage access without error handling",
-      "code": "localStorage.setItem('techkwiz_multipliers', JSON.stringify(activeMultipliers))\n  "
-    },
-    {
-      "type": "LOCALSTORAGE_ERROR",
-      "file": "/hooks/useRevenueOptimization.ts",
-      "severity": "MEDIUM",
-      "description": "localStorage access without error handling",
       "code": "localStorage.getItem('techkwiz_last_login')\n    \n    if (lastLogin !== today) {\n      // Calculate streak\n      const yesterday = new Date()\n      yesterday.setDate(yesterday.getDate() - 1)\n      const isConsecutive = lastLogin === yesterday.toDateString()\n      \n      const currentStreak = isConsecutive ? revenueMetrics.dailyStreak + 1 : 1\n      \n      setRevenueMetrics(prev => ({\n        ...prev,\n        dailyStreak: currentStreak,\n        lastLoginDate: today\n      "
     },
     {
@@ -755,6 +713,20 @@
     {
       "type": "NAVIGATION_ERROR",
       "file": "/app/profile/page.tsx",
+      "severity": "MEDIUM",
+      "description": "Router navigation without error handling",
+      "code": "router.push('/start')"
+    },
+    {
+      "type": "NAVIGATION_ERROR",
+      "file": "/app/quiz/[category]/page.tsx",
+      "severity": "MEDIUM",
+      "description": "Router navigation without error handling",
+      "code": "router.push('/start')"
+    },
+    {
+      "type": "NAVIGATION_ERROR",
+      "file": "/app/quiz/[category]/page.tsx",
       "severity": "MEDIUM",
       "description": "Router navigation without error handling",
       "code": "router.push('/start')"

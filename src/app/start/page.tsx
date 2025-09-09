@@ -71,6 +71,7 @@ export default function StartPage() {
       setError(`Failed to load quiz categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
 
       // Provide fallback categories if main data fails
+      const { calculateCategoryMaxCoins } = await import('../../utils/rewardCalculator');
       setCategories([
         {
           id: 'programming',
@@ -80,7 +81,7 @@ export default function StartPage() {
           description: 'Test your programming knowledge',
           subcategories: ['JavaScript', 'Python', 'Web Development'],
           entry_fee: 25,
-          prize_pool: 100
+          prize_pool: calculateCategoryMaxCoins('programming') // Automatically calculates based on QUIZ_DATABASE['programming'].length × 50 coins
         }
       ]);
     } finally {

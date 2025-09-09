@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getDailyBonusAmount } from '../utils/rewardCalculator'
 
 interface DailyBonusModalProps {
   isOpen: boolean
@@ -23,15 +24,16 @@ export function DailyBonusModal({ isOpen, onClose, onClaimBonus, dayStreak }: Da
   const [claimingBonus, setClaimingBonus] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
 
-  // Define 7-day bonus cycle
+  // Define 7-day bonus cycle using centralized configuration
+  const baseDailyBonus = getDailyBonusAmount()
   const dailyBonuses: DailyBonus[] = [
-    { day: 1, reward: 100, type: 'coins', icon: '🪙', claimed: dayStreak > 0 },
-    { day: 2, reward: 150, type: 'coins', icon: '💰', claimed: dayStreak > 1 },
-    { day: 3, reward: 200, type: 'coins', icon: '💎', claimed: dayStreak > 2 },
-    { day: 4, reward: 2, type: 'multiplier', icon: '⚡', claimed: dayStreak > 3 },
-    { day: 5, reward: 300, type: 'coins', icon: '🏆', claimed: dayStreak > 4 },
-    { day: 6, reward: 400, type: 'coins', icon: '👑', claimed: dayStreak > 5 },
-    { day: 7, reward: 500, type: 'premium', icon: '🎁', claimed: dayStreak > 6 }
+    { day: 1, reward: baseDailyBonus, type: 'coins', icon: '🪙', claimed: dayStreak > 0 },
+    { day: 2, reward: baseDailyBonus, type: 'coins', icon: '💰', claimed: dayStreak > 1 },
+    { day: 3, reward: baseDailyBonus, type: 'coins', icon: '💎', claimed: dayStreak > 2 },
+    { day: 4, reward: baseDailyBonus > 0 ? 2 : 0, type: 'multiplier', icon: '⚡', claimed: dayStreak > 3 },
+    { day: 5, reward: baseDailyBonus, type: 'coins', icon: '🏆', claimed: dayStreak > 4 },
+    { day: 6, reward: baseDailyBonus, type: 'coins', icon: '👑', claimed: dayStreak > 5 },
+    { day: 7, reward: baseDailyBonus, type: 'premium', icon: '🎁', claimed: dayStreak > 6 }
   ]
 
   const handleClaimBonus = async () => {

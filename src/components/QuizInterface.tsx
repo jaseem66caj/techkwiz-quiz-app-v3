@@ -12,24 +12,13 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
+// Import unified QuizQuestion interface
+import { QuizQuestion } from '@/types/quiz'
+
 // Interface defining the structure of quiz question data
 interface QuizInterfaceProps {
   // The current question object containing all question data
-  question: {
-    id: string;                    // Unique identifier for the question
-    question: string;             // The question text to display
-    options: string[];            // Array of answer options
-    correct_answer: number;       // Index of correct answer in options array (-1 for personality questions)
-    difficulty: 'beginner' | 'intermediate' | 'advanced'; // Difficulty level
-    question_type?: string;       // Optional question type for special rendering
-    fun_fact: string;             // Educational fun fact related to the question
-    category: string;             // Category this question belongs to
-    subcategory: string;          // Subcategory within the main category
-    emoji_clue?: string;          // Optional emoji clue for emoji decode questions
-    visual_options?: string[];    // Optional visual elements for "This or That" questions
-    personality_trait?: string;   // Optional personality trait for personality questions
-    prediction_year?: string;     // Optional year for prediction questions
-  }
+  question: QuizQuestion
   // Index of the currently selected answer (-1 if none selected)
   selectedAnswer: number | null
   // Callback function triggered when user selects an answer
