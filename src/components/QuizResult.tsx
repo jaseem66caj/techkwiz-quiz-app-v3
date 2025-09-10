@@ -245,16 +245,8 @@ export function QuizResult({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
-        className="space-y-3"
+        className="flex justify-center"
       >
-        <button
-          onClick={onPlayAgain}
-          className="w-full button-primary py-3 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:scale-105 transition-transform"
-        >
-          <span>🔄</span>
-          <span>Play Again</span>
-        </button>
-        
         <button
           onClick={onBackToCategories}
           className="w-full button-secondary py-3 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:scale-105 transition-transform"
