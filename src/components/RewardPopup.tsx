@@ -50,6 +50,8 @@ export function RewardPopup({
   const [isWatchingAd, setIsWatchingAd] = useState(false)
   // State to track if user has watched an ad at least once
   const [hasWatchedOnce, setHasWatchedOnce] = useState(false)
+  // State to track auto-close countdown
+  const [countdown, setCountdown] = useState(10)
 
   // Effect to prevent body scrolling when popup is open
   useEffect(() => {
@@ -64,6 +66,34 @@ export function RewardPopup({
       document.body.style.overflow = 'unset'
     }
   }, [isOpen])
+
+  // Effect to handle auto-close functionality
+  useEffect(() => {
+    if (isOpen && !isWatchingAd) {
+      setCountdown(10)
+      
+      // Start countdown
+      const countdownInterval = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      // Auto close after 10 seconds
+      const closeTimer = setTimeout(() => {
+        onSkipReward()
+      }, 10000)
+
+      return () => {
+        clearInterval(countdownInterval)
+        clearTimeout(closeTimer)
+      }
+    }
+  }, [isOpen, isWatchingAd, onSkipReward])
 
   // Handle user clicking the "Claim Reward" button
   const handleClaimReward = () => {
@@ -253,12 +283,17 @@ export function RewardPopup({
                       </button>
                     )}
                     
+                    {/* Auto Close Countdown */}
+                    <div className="text-center text-gray-400 text-sm mt-2">
+                      Auto-continuing in {countdown} seconds...
+                    </div>
+
                     {/* Skip button - always available */}
                     <button
                       onClick={handleClose}
-                      className="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-300"
+                      className="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-300 mt-2"
                     >
-                      Skip
+                      Skip Now
                     </button>
                   </motion.div>
                 </>
