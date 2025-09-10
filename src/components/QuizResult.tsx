@@ -240,22 +240,6 @@ export function QuizResult({
       {/* Standardized Timer Slot (optional) */}
       {timerSlot}
 
-      {/* Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="flex justify-center"
-      >
-        <button
-          onClick={onBackToCategories}
-          className="w-full button-secondary py-3 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:scale-105 transition-transform"
-        >
-          <span>📚</span>
-          <span>Back to Categories</span>
-        </button>
-      </motion.div>
-
       {/* Bottom Ad */}
       <motion.div
         initial={{ opacity: 0 }}
