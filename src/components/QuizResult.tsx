@@ -14,6 +14,8 @@ interface QuizResultProps {
   maxStreak?: number
   onPlayAgain: () => void
   onBackToCategories: () => void
+  // Optional slot to render custom content below results but above action buttons (e.g., standardized timer)
+  timerSlot?: React.ReactNode
 }
 
 export function QuizResult({
@@ -24,7 +26,8 @@ export function QuizResult({
   coinsEarned = 0,
   maxStreak = 0,
   onPlayAgain,
-  onBackToCategories
+  onBackToCategories,
+  timerSlot
 }: QuizResultProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const percentage = Math.round((score / totalQuestions) * 100)
@@ -226,13 +229,16 @@ export function QuizResult({
         transition={{ duration: 0.6, delay: 0.7 }}
         className="mb-6"
       >
-        <QuizResultShare 
+        <QuizResultShare
           score={score}
           totalQuestions={totalQuestions}
           category={category}
           className="mb-4"
         />
       </motion.div>
+
+      {/* Standardized Timer Slot (optional) */}
+      {timerSlot}
 
       {/* Action Buttons */}
       <motion.div

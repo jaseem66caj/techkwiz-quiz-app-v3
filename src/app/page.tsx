@@ -39,45 +39,41 @@ export default function HomePage() {
   const [quizQuestions, setQuizQuestions] = useState<any[]>([])
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
   const [showCreateProfile, setShowCreateProfile] = useState(false);
+  // 90-second redirect to categories (standardized)
   const [resultCountdown, setResultCountdown] = useState(90);
+  const [srAnnouncement, setSrAnnouncement] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
 
   // ===================================================================
-  // Auto-redirect Timer Effect
+  // Auto-redirect Timer Effect (Homepage Results)
   // ===================================================================
-  // Effect to handle automatic redirection after quiz completion
-
-  // Effect to manage auto-redirect timer after quiz completion
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    let interval: NodeJS.Timeout;
-    
-    // Set up auto-redirect and countdown when quiz is completed and results are shown
-    if (showResult && quizCompleted) {
-      // Auto-redirect to profile creation after 90 seconds
-      timer = setTimeout(() => {
-        setShowResult(false);
-        setShowCreateProfile(true);
-      }, 90000); // 90 seconds
+    if (!(showResult && quizCompleted)) return;
 
-      // Countdown timer for UI display
-      interval = setInterval(() => {
-        setResultCountdown(prev => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+    const interval = setInterval(() => {
+      setResultCountdown(prev => {
+        const next = Math.max(prev - 1, 0);
+        // Update ARIA live region every 10 seconds to avoid spam
+        if (next % 10 === 0) setSrAnnouncement(`Redirecting to categories in ${next} seconds`);
+        return next;
+      });
+    }, 1000);
 
-    // Cleanup timers on component unmount or state change
+    const timeout = setTimeout(() => {
+      try {
+        setIsNavigating(true);
+        router.push('/start'); // preserve history
+      } catch (e) {
+        import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any));
+        if (typeof window !== 'undefined') window.location.href = '/start';
+      }
+    }, 90000);
+
     return () => {
-      clearTimeout(timer);
       clearInterval(interval);
+      clearTimeout(timeout);
     };
-  }, [showResult, quizCompleted]);
+  }, [showResult, quizCompleted, router]);
 
   // ===================================================================
   // Exit Prevention Hook
@@ -413,6 +409,9 @@ export default function HomePage() {
             animate={{ opacity: 1, scale: 1 }}
             className="glass-effect p-8 rounded-2xl text-center max-w-md w-full"
           >
+            {/* Accessible timer live region (updates every 10s) */}
+            <div aria-live="polite" role="timer" className="sr-only">{srAnnouncement}</div>
+
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-white mb-4">
               Quiz Completed!
@@ -441,6 +440,36 @@ export default function HomePage() {
                 </p>
               </div>
 
+              {/* Standardized completion timer (90s) */}
+              <div className="glass-effect p-4 rounded-xl mb-4">
+                <p className="text-blue-200 text-base font-medium mb-3 text-center">
+                  Redirecting to categories in {resultCountdown} seconds...
+                </p>
+                <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-linear rounded-full"
+                    style={{ width: `${Math.min(100, Math.round(((90 - resultCountdown) / 90) * 100))}%` }}
+                  />
+                </div>
+                <div className="flex justify-center mt-4">
+                  <button
+                    aria-label="Back to Categories"
+                    onClick={() => {
+                      try {
+                        setIsNavigating(true);
+                        router.push('/start');
+                      } catch (e) {
+                        import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any));
+                        if (typeof window !== 'undefined') window.location.href = '/start';
+                      }
+                    }}
+                    className="button-secondary py-3 px-6 rounded-xl"
+                  >
+                    Back to Categories
+                  </button>
+                </div>
+              </div>
+
               <div className="flex justify-center">
                 <button
                   onClick={() => {
@@ -452,10 +481,6 @@ export default function HomePage() {
                   Create Profile Now
                 </button>
               </div>
-
-              <p className="text-gray-400 text-sm mt-4">
-                Auto-redirecting to profile setup in {resultCountdown} seconds...
-              </p>
             </div>
           </motion.div>
         </main>

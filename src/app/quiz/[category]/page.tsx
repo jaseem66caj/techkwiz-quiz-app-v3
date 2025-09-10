@@ -52,7 +52,11 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const [showResult, setShowResult] = useState(false)
   const [currentStreak, setCurrentStreak] = useState(0)
   const [maxStreak, setMaxStreak] = useState(0)
-  // Insufficient coins redirection state
+
+  // Standardized 90s completion redirect (Category Results)
+  const [resultCountdown, setResultCountdown] = useState(90)
+  const [srAnnouncement, setSrAnnouncement] = useState('')
+
   const [insufficientCoins, setInsufficientCoins] = useState(false)
   const [redirectCountdown, setRedirectCountdown] = useState(5)
   const [earningPotential, setEarningPotential] = useState<number>(0)
@@ -104,6 +108,33 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   useEffect(() => {
     currentRef.current = current
   }, [current])
+
+  // 90s auto-redirect to categories when results are shown (category quiz)
+  useEffect(() => {
+    if (!showResult) return;
+
+    const interval = setInterval(() => {
+      setResultCountdown(prev => {
+        const next = Math.max(prev - 1, 0)
+        if (next % 10 === 0) setSrAnnouncement(`Redirecting to categories in ${next} seconds`)
+        return next
+      })
+    }, 1000)
+
+    const timeout = setTimeout(() => {
+      try {
+        router.push('/start')
+      } catch (e) {
+        import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any))
+        if (typeof window !== 'undefined') window.location.href = '/start'
+      }
+    }, 90000)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
+  }, [showResult, router])
 
   useEffect(() => {
     // Guard clause - exit if no category ID or user state not loaded yet
@@ -336,27 +367,9 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions } });
         setShowResult(true)
 
-        // Maintain navigation pattern: redirect after short delay
-        const timeout = setTimeout(() => {
-          if (!isMountedRef.current) return;
+        // Standardized behavior: results remain visible; 90s timer handles redirect to categories
+        // (See effect: 90s auto-redirect when showResult is true)
 
-          try {
-            router.push('/start')
-          } catch (error) {
-            console.error('Error navigating after results:', error)
-            import('@sentry/nextjs').then(Sentry => {
-              Sentry.captureException(error, {
-                tags: { component: 'CategoryQuiz', action: 'postResultsRedirect' },
-                extra: { categoryId, score, totalQuestions }
-              })
-            })
-            if (typeof window !== 'undefined') {
-              window.location.href = '/start'
-            }
-          }
-        }, 1800)
-
-        timeoutRefs.current.push(timeout);
       }
     } catch (error) {
       console.error('Error in advance function:', error)
@@ -477,6 +490,39 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
                 if (typeof window !== 'undefined') window.location.href = '/start'
               }
             }}
+            timerSlot={
+              <>
+                {/* Accessible timer live region (updates every 10s) */}
+                <div aria-live="polite" role="timer" className="sr-only">{srAnnouncement}</div>
+
+                {/* Standardized completion timer (90s) */}
+                <div className="glass-effect p-4 rounded-xl mb-6">
+                  <p className="text-blue-200 text-base font-medium mb-3 text-center">
+                    Redirecting to categories in {resultCountdown} seconds...
+                  </p>
+                  <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-linear rounded-full"
+                      style={{ width: `${Math.min(100, Math.round(((90 - resultCountdown) / 90) * 100))}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      aria-label="Back to Categories"
+                      onClick={() => {
+                        try { router.push('/start') } catch (e) {
+                          import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
+                          if (typeof window !== 'undefined') window.location.href = '/start'
+                        }
+                      }}
+                      className="button-secondary py-3 px-6 rounded-xl"
+                    >
+                      Back to Categories
+                    </button>
+                  </div>
+                </div>
+              </>
+            }
           />
         ) : (
           <>
