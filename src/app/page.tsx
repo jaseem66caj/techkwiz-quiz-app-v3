@@ -246,13 +246,14 @@ export default function HomePage() {
   // ===================================================================
   // Functions to handle user interactions during the quiz
 
-  // Handle user selecting an answer
+  // Handle user selecting an answer (Homepage Quiz - Automatic Progression Flow)
   const handleAnswerSelect = (answerIndex: number) => {
     // Prevent multiple selections
     if (selectedAnswer !== null) return;
     setSelectedAnswer(answerIndex);
 
-    // Delay to show answer feedback
+    // Apply immediate visual feedback styling (consistent with category quizzes)
+    // Enhanced timing: 400ms visual feedback + 250ms natural pause before progression
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
       const rewardResult = isCorrect ? calculateCorrectAnswerReward() : { coins: 0 };
@@ -268,57 +269,56 @@ export default function HomePage() {
         console.log(`❌ Wrong answer, no coins earned`);
       }
 
-      // Show answer feedback for 1 second, then proceed
-      setTimeout(() => {
-        if (currentQuestion < quickStartQuiz.length - 1) {
-          // Move to next question
-          setCurrentQuestion(currentQuestion + 1);
-          setSelectedAnswer(null);
-        } else {
-          // Complete the quiz
-          setQuizCompleted(true);
-          setShowResult(true);
+      // Automatic progression after visual feedback + brief pause (no RewardPopup for homepage quiz)
+      // Brief pause makes progression feel more natural while maintaining automatic flow
+      if (currentQuestion < quickStartQuiz.length - 1) {
+        // Move to next question automatically after natural pause
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+      } else {
+        // Complete the quiz automatically after natural pause
+        setQuizCompleted(true);
+        setShowResult(true);
 
-          // Calculate final stats for achievements and user updates
-          const finalScore = score + (isCorrect ? 1 : 0);
-          const quizRewardResult = calculateQuizReward(finalScore, quickStartQuiz.length);
-          const totalCoinsEarned = quizRewardResult.totalCoins;
+        // Calculate final stats for achievements and user updates
+        const finalScore = score + (isCorrect ? 1 : 0);
+        const quizRewardResult = calculateQuizReward(finalScore, quickStartQuiz.length);
+        const totalCoinsEarned = quizRewardResult.totalCoins;
 
-          // Create updated user with null safety
-          const currentUser = state.user || {
-            id: `guest_${Date.now()}`,
-            name: 'Guest',
-            avatar: '🤖',
-            coins: 0,
-            level: 1,
-            totalQuizzes: 0,
-            correctAnswers: 0,
-            joinDate: new Date().toISOString(),
-            quizHistory: [],
-            streak: 0
-          };
+        // Create updated user with null safety
+        const currentUser = state.user || {
+          id: `guest_${Date.now()}`,
+          name: 'Guest',
+          avatar: '🤖',
+          coins: 0,
+          level: 1,
+          totalQuizzes: 0,
+          correctAnswers: 0,
+          joinDate: new Date().toISOString(),
+          quizHistory: [],
+          streak: 0
+        };
 
-          const updatedUser = {
-            ...currentUser,
-            totalQuizzes: currentUser.totalQuizzes + 1,
-            correctAnswers: currentUser.correctAnswers + finalScore,
-            streak: isCorrect ? currentUser.streak + 1 : 0,
-            coins: currentUser.coins + totalCoinsEarned
-          };
+        const updatedUser = {
+          ...currentUser,
+          totalQuizzes: currentUser.totalQuizzes + 1,
+          correctAnswers: currentUser.correctAnswers + finalScore,
+          streak: isCorrect ? currentUser.streak + 1 : 0,
+          coins: currentUser.coins + totalCoinsEarned
+        };
 
-          const unlockedAchievements = getUnlockedAchievements(currentUser);
-          const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
-            unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
-          );
+        const unlockedAchievements = getUnlockedAchievements(currentUser);
+        const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
+          unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
+        );
 
-          if (newlyUnlocked.length > 0) {
-            dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
-          }
-
-          dispatch({ type: 'END_QUIZ', payload: { correctAnswers: finalScore, totalQuestions: quickStartQuiz.length } });
+        if (newlyUnlocked.length > 0) {
+          dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
         }
-      }, 1500); // Show answer feedback for 1.5 seconds
-    }, 1000); // Wait 1 second after selection to show answer
+
+        dispatch({ type: 'END_QUIZ', payload: { correctAnswers: finalScore, totalQuestions: quickStartQuiz.length } });
+      }
+    }, 650); // Enhanced timing: 400ms visual feedback + 250ms natural pause = 650ms total
   };
 
   // ===================================================================

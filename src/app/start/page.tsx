@@ -31,6 +31,7 @@ export default function StartPage() {
   const [categories, setCategories] = useState<QuizCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [navigating, setNavigating] = useState<string | null>(null) // Track which category is being navigated to
 
   const fetchCategories = async () => {
     try {
@@ -125,6 +126,9 @@ export default function StartPage() {
 
   const handleCategorySelect = (categoryId: string) => {
     try {
+      // PERFORMANCE OPTIMIZATION: Provide immediate visual feedback
+      setNavigating(categoryId);
+
       const category = categories.find(cat => cat.id === categoryId)
       if (!category) {
         console.error('Category not found:', categoryId)
@@ -134,6 +138,7 @@ export default function StartPage() {
           extra: { categoryId, availableCategories: categories.map(c => c.id) }
         });
         setError('Category not found')
+        setNavigating(null)
         return
       }
 
@@ -156,31 +161,17 @@ export default function StartPage() {
       // For now, we'll assume the profile is completed since we can't import the function
       // In a real implementation, we would check this properly
 
-      // Check if user can afford the category
-      const userCoins = state.user?.coins || 0
-      if (userCoins >= category.entry_fee) {
-        // User can afford, proceed to quiz
-        console.log(`✅ User can afford category: ${userCoins}/${category.entry_fee} coins`)
+      // Always navigate to the category page - let it handle coin validation and redirection
+      // This ensures consistent behavior with the new insufficient coins redirection flow
+      console.log(`🚀 Navigating to category: ${categoryId} (user has ${state.user?.coins || 0} coins, entry fee: ${category.entry_fee})`)
 
-        Sentry.addBreadcrumb({
-          message: 'User navigating to quiz',
-          category: 'navigation',
-          data: { categoryId, userCoins, entryFee: category.entry_fee }
-        });
+      Sentry.addBreadcrumb({
+        message: 'User navigating to quiz category',
+        category: 'navigation',
+        data: { categoryId, userCoins: state.user?.coins || 0, entryFee: category.entry_fee }
+      });
 
-        router.push(`/quiz/${categoryId}`)
-      } else {
-        // User can't afford, show error message instead of redirecting
-        console.log(`💰 Insufficient coins: ${userCoins}/${category.entry_fee}`)
-
-        Sentry.captureMessage('Insufficient coins for category', {
-          level: 'info',
-          tags: { component: 'StartPage', action: 'insufficientCoins' },
-          extra: { categoryId, userCoins, requiredCoins: category.entry_fee }
-        });
-
-        setError(`You need ${category.entry_fee} coins to play this category. You have ${userCoins} coins. Complete more quizzes to earn coins!`)
-      }
+      router.push(`/quiz/${categoryId}`)
     } catch (error) {
       console.error('Error in handleCategorySelect:', error);
       Sentry.captureException(error, {
@@ -360,15 +351,27 @@ export default function StartPage() {
                       Live
                     </span>
                     
-                    {/* PLAY Button */}
+                    {/* PLAY Button with loading state */}
                     <button
-                      className="px-4 py-2 rounded-lg font-bold text-sm transition-all bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+                      className={`px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-lg ${
+                        navigating === category.id
+                          ? 'bg-orange-600 cursor-wait'
+                          : 'bg-orange-500 hover:bg-orange-600'
+                      } text-white`}
                       onClick={(e) => {
                         e.stopPropagation()
                         handleCategorySelect(category.id)
                       }}
+                      disabled={navigating === category.id}
                     >
-                      PLAY
+                      {navigating === category.id ? (
+                        <div className="flex items-center space-x-1">
+                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                          <span>Loading...</span>
+                        </div>
+                      ) : (
+                        'PLAY'
+                      )}
                     </button>
                   </div>
                 </div>
