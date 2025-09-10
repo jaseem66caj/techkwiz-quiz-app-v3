@@ -451,23 +451,6 @@ export default function HomePage() {
                     style={{ width: `${Math.min(100, Math.round(((90 - resultCountdown) / 90) * 100))}%` }}
                   />
                 </div>
-                <div className="flex justify-center mt-4">
-                  <button
-                    aria-label="Back to Categories"
-                    onClick={() => {
-                      try {
-                        setIsNavigating(true);
-                        router.push('/start');
-                      } catch (e) {
-                        import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any));
-                        if (typeof window !== 'undefined') window.location.href = '/start';
-                      }
-                    }}
-                    className="button-secondary py-3 px-6 rounded-xl"
-                  >
-                    Back to Categories
-                  </button>
-                </div>
               </div>
 
               <div className="flex justify-center">

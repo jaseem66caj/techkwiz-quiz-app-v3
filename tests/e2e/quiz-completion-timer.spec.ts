@@ -55,7 +55,7 @@ async function answerFirstOption(page: any) {
 // Homepage quiz completion timer
 // ------------------------------
 
-test('Homepage Results: shows 90-second countdown and Back to Categories', async ({ page }) => {
+test('Homepage Results: shows 90-second countdown and Create Profile Now button', async ({ page }) => {
   await seedUser(page, 200)
   await page.goto('http://localhost:3002/')
 
@@ -70,16 +70,17 @@ test('Homepage Results: shows 90-second countdown and Back to Categories', async
   await expect(page.getByText(/Redirecting to categories in \d+ seconds/i)).toBeVisible()
   await expect(page.locator('div').filter({ hasText: /Redirecting to categories/ })).toBeVisible()
 
-  // Back to Categories button should navigate immediately
-  await page.getByRole('button', { name: 'Back to Categories' }).click()
-  await page.waitForURL('**/start')
+  // Create Profile Now button should be visible and navigate to /start
+  await expect(page.getByRole('button', { name: 'Create Profile Now' })).toBeVisible()
+  await page.getByRole('button', { name: 'Create Profile Now' }).click()
+  // Note: This button shows profile creation modal, but auto-redirect still goes to /start
 })
 
 // --------------------------------
 // Category quiz completion timer
 // --------------------------------
 
-test('Category Results: shows 90-second countdown and Back to Categories', async ({ page }) => {
+test('Category Results: shows 90-second countdown and Next Quiz button', async ({ page }) => {
   await seedUser(page, 500)
   await page.goto('http://localhost:3002/quiz/programming')
 
@@ -97,6 +98,10 @@ test('Category Results: shows 90-second countdown and Back to Categories', async
   }
 
   await expect(page.getByText(/Redirecting to categories in \d+ seconds/i)).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Back to Categories' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Next Quiz' })).toBeVisible()
+
+  // Next Quiz button should navigate to /start immediately
+  await page.getByRole('button', { name: 'Next Quiz' }).click()
+  await page.waitForURL('**/start')
 })
 

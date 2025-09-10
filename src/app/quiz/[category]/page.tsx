@@ -508,7 +508,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
                   </div>
                   <div className="flex justify-center mt-4">
                     <button
-                      aria-label="Back to Categories"
+                      aria-label="Next Quiz"
                       onClick={() => {
                         try { router.push('/start') } catch (e) {
                           import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
@@ -517,7 +517,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
                       }}
                       className="button-secondary py-3 px-6 rounded-xl"
                     >
-                      Back to Categories
+                      Next Quiz
                     </button>
                   </div>
                 </div>
