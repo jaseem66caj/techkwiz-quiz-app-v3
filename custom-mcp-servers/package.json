@@ -1,0 +1,14 @@
+{
+  "name": "custom-redis-mcp-server",
+  "version": "1.0.0",
+  "description": "Custom Redis MCP Server",
+  "main": "redis-mcp-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node redis-mcp-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.5",
+    "redis": "^4.0.0"
+  }
+}

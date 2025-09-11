@@ -6,20 +6,24 @@ import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '../app/providers'
 import { EnhancedCoinDisplay } from './EnhancedCoinDisplay'
-
 import { StreakMultiplierDisplay } from './StreakMultiplierDisplay'
 import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
 import { logout } from '../utils/auth'
 
-interface NavigationProps {
+interface UnifiedNavigationProps {
   hideHeaderElements?: boolean;
+  mode?: 'full' | 'simple' | 'minimal';
 }
 
-export function Navigation({ hideHeaderElements = false }: NavigationProps) {
+export function UnifiedNavigation({ 
+  hideHeaderElements = false,
+  mode = 'full'
+}: UnifiedNavigationProps) {
   const { state, dispatch } = useApp()
   const router = useRouter()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  
   // Revenue optimization hooks
   const {
     revenueMetrics,
@@ -29,7 +33,7 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
   } = useRevenueOptimization()
 
   // Debug logging
-  console.log('Navigation component: hideHeaderElements =', hideHeaderElements)
+  console.log('UnifiedNavigation component: hideHeaderElements =', hideHeaderElements, 'mode =', mode)
 
   const navigationItems = [
     { name: 'Home', href: '/', icon: '🏠' },
@@ -37,8 +41,6 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
     { name: 'Leaderboard', href: '/leaderboard', icon: '🏆' },
     { name: 'Profile', href: '/profile', icon: '👤' },
   ]
-
-
 
   const handleLogout = () => {
     logout()
@@ -62,6 +64,61 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
     )
   }
 
+  // Minimal mode - logo only
+  if (mode === 'minimal') {
+    return (
+      <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="text-xl font-bold text-white">
+                <span className="text-orange-400">Tech</span>Kwiz
+              </div>
+            </Link>
+
+            {/* Empty right side - no hamburger menu, no coin counter, no user info */}
+            <div className="flex items-center space-x-3">
+              {/* Intentionally empty - hiding all header elements on home page */}
+            </div>
+          </div>
+        </div>
+      </nav>
+    )
+  }
+
+  // Simple mode - logo + basic navigation links
+  if (mode === 'simple') {
+    return (
+      <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="text-xl font-bold text-white">
+                <span className="text-orange-400">Tech</span>Kwiz
+              </div>
+            </Link>
+
+            {/* Simple navigation links */}
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="text-white hover:text-orange-400 transition-colors text-sm">
+                Home
+              </Link>
+              <Link href="/start" className="text-white hover:text-orange-400 transition-colors text-sm">
+                Categories
+              </Link>
+              <Link href="/about" className="text-white hover:text-orange-400 transition-colors text-sm">
+                About
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+    )
+  }
+
+  // Full mode - all features (default)
   return (
     <>
       <nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
@@ -155,8 +212,6 @@ export function Navigation({ hideHeaderElements = false }: NavigationProps) {
               position="top-right"
             />
           )}
-          
-
         </>
       )}
     </>

@@ -1,11 +1,11 @@
 'use client'
 
-import { SimpleNavigation } from '../../components/SimpleNavigation'
+import { UnifiedNavigation } from '../../components/UnifiedNavigation'
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      <SimpleNavigation />
+      <UnifiedNavigation mode="simple" />
       
       <main className="flex-1 p-4 max-w-4xl mx-auto">
         <div className="glass-effect p-8 rounded-2xl">

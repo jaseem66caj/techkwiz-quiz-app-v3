@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { Navigation } from '../../components/Navigation'
+import { UnifiedNavigation } from '../../components/UnifiedNavigation'
 import { CategoryPageTopAd, CategoryPageBottomAd, HeaderBannerAd, SidebarRightAd } from '../../components/AdBanner'
 import { NewsSection } from '../../components/NewsSection'
 import { CategoryShare, SocialShare } from '../../components/SocialShare'
@@ -213,7 +213,7 @@ export default function StartPage() {
   if (loading || state.loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
+        <UnifiedNavigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
@@ -228,7 +228,7 @@ export default function StartPage() {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
+        <UnifiedNavigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="text-red-400 text-xl mb-4">⚠️</div>
@@ -251,7 +251,7 @@ export default function StartPage() {
       <FortuneCookie />
       
       <div className="min-h-screen bg-transparent">
-        <Navigation />
+        <UnifiedNavigation />
         
         <main className="px-4 py-4">
           {/* Mobile-web Header */}

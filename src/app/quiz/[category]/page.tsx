@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { EnhancedQuizInterface } from '../../../components/EnhancedQuizInterface'
+import { UnifiedQuizInterface } from '../../../components/UnifiedQuizInterface'
 import { QuizResult } from '../../../components/QuizResult'
 
 import { CountdownTimer } from '../../../components/CountdownTimer'
@@ -530,7 +530,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
               <CountdownTimer totalSeconds={timerSeconds} isActive={selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
             )}
 
-            <EnhancedQuizInterface
+            <UnifiedQuizInterface
               question={questions[current]}
               selectedAnswer={selected}
               onAnswerSelect={handleAnswer}
@@ -539,6 +539,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
               totalQuestions={questions.length}
               showProgress={false}
               encouragementMessages={true}
+              mode="enhanced"
             />
           </>
         )}

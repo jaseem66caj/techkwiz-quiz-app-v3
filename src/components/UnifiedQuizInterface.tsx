@@ -1,11 +1,12 @@
 // ===================================================================
-// TechKwiz Quiz Interface Component
+// TechKwiz Unified Quiz Interface Component
 // ===================================================================
 // This component renders the interactive quiz interface where users answer questions.
 // It supports multiple question types including multiple choice, "This or That", 
 // emoji decode, personality, and prediction questions with unique visual styling
 // for each type. The component handles user interactions, answer selection,
-// and visual feedback for correct/incorrect answers.
+// and visual feedback for correct/incorrect answers. It also includes enhanced
+// features like progress tracking and encouragement messages.
 
 'use client'
 
@@ -16,7 +17,7 @@ import { motion } from 'framer-motion'
 import { QuizQuestion } from '@/types/quiz'
 
 // Interface defining the structure of quiz question data
-interface QuizInterfaceProps {
+interface UnifiedQuizInterfaceProps {
   // The current question object containing all question data
   question: QuizQuestion
   // Index of the currently selected answer (-1 if none selected)
@@ -29,26 +30,55 @@ interface QuizInterfaceProps {
   questionNumber: number
   // Total number of questions in the quiz
   totalQuestions: number
+  // Flag to control whether to show progress indicators (default: true)
+  showProgress?: boolean
+  // Flag to control whether to show encouragement messages (default: true)
+  encouragementMessages?: boolean
+  // Flag to control whether to show question headers (default: true)
+  showQuestionHeaders?: boolean
+  // Mode to preset configurations
+  mode?: 'basic' | 'enhanced'
 }
 
-// Main Quiz Interface component that renders questions with appropriate styling
-export function QuizInterface({
+// Unified Quiz Interface component that renders questions with appropriate styling
+export function UnifiedQuizInterface({
   question,
   selectedAnswer,
   onAnswerSelect,
   questionAnswered,
   questionNumber,
-  totalQuestions
-}: QuizInterfaceProps) {
+  totalQuestions,
+  showProgress = true,
+  encouragementMessages = true,
+  showQuestionHeaders = true,
+  mode = 'enhanced'
+}: UnifiedQuizInterfaceProps) {
+  // Apply mode-based defaults
+  const isEnhancedMode = mode === 'enhanced'
+  const shouldShowProgress = isEnhancedMode ? showProgress : false
+  const shouldShowEncouragement = isEnhancedMode ? encouragementMessages : false
+  const shouldShowHeaders = showQuestionHeaders
+
   // State to control animation when questions change
   const [animateIn, setAnimateIn] = useState(false)
+  // State to control visibility of encouragement messages
+  const [showEncouragementMessage, setShowEncouragementMessage] = useState(false)
 
-  // Effect to trigger animation when question number changes
+  // Effect to handle animations and encouragement messages when question changes
   useEffect(() => {
     setAnimateIn(true)
     const timer = setTimeout(() => setAnimateIn(false), 500)
+    
+    // Show encouragement messages at strategic points in the quiz (only in enhanced mode)
+    if (shouldShowEncouragement && (questionNumber === 2 || questionNumber === 4)) {
+      setTimeout(() => {
+        setShowEncouragementMessage(true)
+        setTimeout(() => setShowEncouragementMessage(false), 3000)
+      }, 500)
+    }
+    
     return () => clearTimeout(timer)
-  }, [questionNumber])
+  }, [questionNumber, shouldShowEncouragement])
 
   // Determine question type with fallback to multiple choice
   const questionType = question?.question_type || 'multiple_choice'
@@ -63,6 +93,38 @@ export function QuizInterface({
         </div>
       </div>
     )
+  }
+
+  // ===================================================================
+  // Progress and Encouragement Functions
+  // ===================================================================
+  // Functions to generate dynamic progress and encouragement messages
+
+  // Generate progress message based on current quiz completion percentage
+  const getProgressMessage = () => {
+    const progress = questionNumber / totalQuestions
+    
+    if (progress <= 0.3) {
+      return "Just getting started! 🚀"
+    } else if (progress <= 0.6) {
+      return "You're doing great! 🔥"
+    } else if (progress <= 0.9) {
+      return "Almost there! 💪"
+    } else {
+      return "Final question! 🎯"
+    }
+  }
+
+  // Generate random encouragement messages to boost user engagement
+  const getEncouragementMessage = () => {
+    const messages = [
+      "Awesome! You're on fire! 🔥",
+      "Keep it up! You're crushing it! 💪", 
+      "Brilliant! You're really smart! 🧠",
+      "Fantastic! You're doing amazing! ⭐",
+      "Incredible! You're a quiz master! 👑"
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
   }
 
   // ===================================================================
@@ -111,7 +173,7 @@ export function QuizInterface({
   const renderThisOrThatQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
+        <h3 className="text-lg font-semibold text-white mb-4 leading-tight" data-testid="question-text">
           {question.question}
         </h3>
         {question.emoji_clue && (
@@ -123,6 +185,7 @@ export function QuizInterface({
         {question.options.map((option, index) => (
           <motion.button
             key={index}
+            data-testid="answer-option"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
@@ -131,8 +194,8 @@ export function QuizInterface({
             }}
             disabled={selectedAnswer !== null}
             className={`p-4 rounded-xl text-center font-medium transition-all duration-300 border-2 ${
-              selectedAnswer === index 
-                ? 'bg-purple-500 text-white border-purple-400 shadow-lg shadow-purple-500/30' 
+              selectedAnswer === index
+                ? 'bg-purple-500 text-white border-purple-400 shadow-lg shadow-purple-500/30'
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-purple-400/50'
             }`}
           >
@@ -292,15 +355,18 @@ export function QuizInterface({
   const renderMultipleChoiceQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-6 leading-tight">
+        <h3 className="text-lg font-semibold text-white mb-6 leading-tight" data-testid="question-text">
           {question.question}
         </h3>
       </div>
       
       <div className="space-y-3">
         {question.options.map((option, index) => (
-          <button
+          <motion.button
             key={index}
+            data-testid="answer-option"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => {
               console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
               onAnswerSelect(index)
@@ -321,7 +387,7 @@ export function QuizInterface({
             }`}
           >
             {option}
-          </button>
+          </motion.button>
         ))}
       </div>
     </div>
@@ -348,28 +414,69 @@ export function QuizInterface({
   // ===================================================================
   // Renders the complete quiz interface with question content and progress indicators
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-bounce-in' : ''}`}
-    >
-      <div className="text-center mb-6">
-        <h2 className="text-xl font-bold text-white mb-3">
-          {getQuestionHeader()}
-        </h2>
-        <p className="text-sm text-blue-200 mb-4">
-          {getQuestionSubtext()}
-        </p>
-        
-        <div className="bg-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-blue-400/30 mb-6">
-          <span className="text-sm font-bold text-white">
-            {questionNumber}/{totalQuestions} Question
-          </span>
-        </div>
-      </div>
+    <div className="relative">
+      {/* Encouragement message overlay (only in enhanced mode) */}
+      {showEncouragementMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg text-center font-bold mb-4"
+        >
+          {getEncouragementMessage()}
+        </motion.div>
+      )}
       
-      {renderQuestionContent()}
-    </motion.div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-bounce-in' : ''}`}
+        data-testid="quiz-interface"
+      >
+        {/* Progress indicator section (only in enhanced mode) */}
+        {shouldShowProgress && (
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-300 mb-2">
+              <span>Question {questionNumber} of {totalQuestions}</span>
+              <span>{Math.round((questionNumber / totalQuestions) * 100)}% Complete</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+              ></div>
+            </div>
+            <div className="text-center mt-2 text-sm text-blue-200">
+              {getProgressMessage()}
+            </div>
+          </div>
+        )}
+        
+        {/* Question headers (optional) */}
+        {shouldShowHeaders && (
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-bold text-white mb-3">
+              {getQuestionHeader()}
+            </h2>
+            <p className="text-sm text-blue-200 mb-4">
+              {getQuestionSubtext()}
+            </p>
+            
+            {/* Question counter for basic mode */}
+            {!isEnhancedMode && (
+              <div className="bg-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-blue-400/30 mb-6">
+                <span className="text-sm font-bold text-white">
+                  {questionNumber}/{totalQuestions} Question
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Question content based on type */}
+        {renderQuestionContent()}
+      </motion.div>
+    </div>
   )
 }

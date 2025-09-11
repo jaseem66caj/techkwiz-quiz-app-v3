@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../app/providers'
-import { QuizInterface } from './QuizInterface'
-import { MinimalNavigation } from './MinimalNavigation'
+import { UnifiedQuizInterface } from './UnifiedQuizInterface'
+import { UnifiedNavigation } from './UnifiedNavigation'
 import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator'
 
 
@@ -199,7 +199,7 @@ export default function ClientHomePage() {
   if (state.loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <MinimalNavigation />
+        <UnifiedNavigation mode="minimal" />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
@@ -216,7 +216,7 @@ export default function ClientHomePage() {
   if (showResult && quizCompleted) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <MinimalNavigation />
+        <UnifiedNavigation mode="minimal" />
         <main className="flex-1 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -252,7 +252,7 @@ export default function ClientHomePage() {
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <MinimalNavigation />
+        <UnifiedNavigation mode="minimal" />
         
         <main className="flex-1 p-4 flex flex-col items-center justify-center">
           
@@ -272,13 +272,14 @@ export default function ClientHomePage() {
           
           {/* Quiz Interface */}
           <div className="w-full max-w-md">
-            <QuizInterface
+            <UnifiedQuizInterface
               question={quickStartQuiz[currentQuestion]}
               selectedAnswer={selectedAnswer}
               onAnswerSelect={handleAnswerSelect}
               questionAnswered={selectedAnswer !== null}
               questionNumber={currentQuestion + 1}
               totalQuestions={quickStartQuiz.length}
+              mode="basic"
             />
           </div>
           

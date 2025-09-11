@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { EnhancedQuizInterface } from '../components/EnhancedQuizInterface'
+import { UnifiedQuizInterface } from '../components/UnifiedQuizInterface'
 import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { quizDataManager } from '../utils/quizDataManager'
@@ -493,7 +493,7 @@ export default function HomePage() {
           </motion.div>
 
           <div className="w-full max-w-md">
-            <EnhancedQuizInterface
+            <UnifiedQuizInterface
               question={quickStartQuiz[currentQuestion]}
               selectedAnswer={selectedAnswer}
               onAnswerSelect={handleAnswerSelect}
@@ -502,6 +502,7 @@ export default function HomePage() {
               totalQuestions={quickStartQuiz.length}
               showProgress={true}
               encouragementMessages={true}
+              mode="enhanced"
             />
           </div>
         </main>

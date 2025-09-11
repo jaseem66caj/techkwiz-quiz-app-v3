@@ -1,10 +1,9 @@
 ---
-type: "always_apply"
+trigger: always_on
+alwaysApply: true
 ---
-
 # Automated Prize Pool Calculation System for Quiz Categories
 
-**Type:** always_apply  
 **Priority:** High  
 **Scope:** All quiz category and reward calculation code changes  
 **File Locations:** `src/utils/rewardCalculator.ts`, `src/data/quizDatabase.ts`, `.augment/rules/`

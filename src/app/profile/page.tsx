@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { Navigation } from '../../components/Navigation'
+import { UnifiedNavigation } from '../../components/UnifiedNavigation'
 import { AdBanner } from '../../components/AdBanner'
 
 import { seoConfig } from '../../utils/seo'
@@ -38,7 +38,7 @@ export default function ProfilePage() {
   if (state.loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <Navigation />
+        <UnifiedNavigation />
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
@@ -70,7 +70,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      <Navigation />
+      <UnifiedNavigation />
       
       <main className="flex-1 p-4 max-w-4xl mx-auto">
         {/* Profile Header */}
