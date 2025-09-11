@@ -1,7 +1,7 @@
 'use client'
 
 import { useApp } from '@/app/providers'
-import { AchievementNotification } from '@/components/AchievementNotification'
+import { AchievementNotification } from '../../components/user'
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const { state, dispatch } = useApp();

@@ -4,16 +4,20 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { UnifiedNavigation } from '../../components/UnifiedNavigation'
-import { AdBanner } from '../../components/AdBanner'
+import { UnifiedNavigation } from '../../components/navigation'
+import { AdBanner } from '../../components/ads'
+import { AvatarSelector } from '../../components/user/AvatarSelector'
+import { getAvatarEmojiById } from '../../utils/avatar'
 
 import { seoConfig } from '../../utils/seo'
 import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements'
+import { saveUser } from '../../utils/auth'
 
 export default function ProfilePage() {
   const router = useRouter()
   const { state, dispatch } = useApp()
   const [activeTab, setActiveTab] = useState('stats')
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false)
 
   useEffect(() => {
     // Only create guest user if auth initialization is complete and no user exists
@@ -21,7 +25,7 @@ export default function ProfilePage() {
       const guestUser = {
         id: `guest_${Date.now()}`,
         name: 'Guest',
-        avatar: '👤',
+        avatar: 'robot',
         coins: 0,
         level: 1,
         totalQuizzes: 0,
@@ -51,6 +55,16 @@ export default function ProfilePage() {
 
   const user = state.user
 
+  // Handle avatar selection
+  const handleAvatarSelect = (avatarId: string) => {
+    if (user) {
+      const updatedUser = { ...user, avatar: avatarId }
+      saveUser(updatedUser)
+      dispatch({ type: 'LOGIN_SUCCESS', payload: updatedUser })
+    }
+    setShowAvatarSelector(false)
+  }
+
   // Calculate user stats
   const totalQuizzes = user?.totalQuizzes || 0
   const correctAnswers = user?.correctAnswers || 0
@@ -70,6 +84,14 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      {showAvatarSelector && (
+        <AvatarSelector 
+          selectedAvatar={user?.avatar || 'robot'}
+          onAvatarSelect={handleAvatarSelect}
+          onClose={() => setShowAvatarSelector(false)}
+        />
+      )}
+      
       <UnifiedNavigation />
       
       <main className="flex-1 p-4 max-w-4xl mx-auto">
@@ -82,8 +104,19 @@ export default function ProfilePage() {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-orange-500 rounded-full flex items-center justify-center text-3xl md:text-4xl text-white font-bold">
-              {user?.avatar || user?.name?.charAt(0).toUpperCase() || 'G'}
+            <div className="relative">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-orange-500 rounded-full flex items-center justify-center text-3xl md:text-4xl text-white font-bold">
+                {getAvatarEmojiById(user?.avatar || 'robot')}
+              </div>
+              <button 
+                onClick={() => setShowAvatarSelector(true)}
+                className="absolute -bottom-2 -right-2 bg-orange-500 rounded-full p-2 shadow-lg hover:bg-orange-600 transition-colors"
+                aria-label="Change avatar"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+              </button>
             </div>
             
             {/* User Info */}

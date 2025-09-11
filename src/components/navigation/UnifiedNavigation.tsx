@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useApp } from '../app/providers'
-import { EnhancedCoinDisplay } from './EnhancedCoinDisplay'
-import { StreakMultiplierDisplay } from './StreakMultiplierDisplay'
-import { useRevenueOptimization } from '../hooks/useRevenueOptimization'
-import { logout } from '../utils/auth'
+import { useApp } from '../../app/providers'
+import { EnhancedCoinDisplay } from '../../components/ui'
+import { StreakMultiplierDisplay } from '../../components/ui'
+import { useRevenueOptimization } from '../../hooks/useRevenueOptimization'
+import { logout } from '../../utils/auth'
 
 interface UnifiedNavigationProps {
   hideHeaderElements?: boolean;

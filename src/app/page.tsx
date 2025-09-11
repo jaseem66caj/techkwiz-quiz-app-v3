@@ -12,15 +12,16 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { UnifiedQuizInterface } from '../components/UnifiedQuizInterface'
-import { ExitConfirmationModal } from '../components/ExitConfirmationModal'
+import { UnifiedQuizInterface } from '../components/quiz'
+import { ExitConfirmationModal } from '../components/modals'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { quizDataManager } from '../utils/quizDataManager'
 import { realTimeSyncService } from '../utils/realTimeSync'
-import { CreateProfile } from '../components/CreateProfile';
+import { CreateProfile } from '../components/user';
 import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator';
 import { saveUser } from '../utils/auth';
 import { getUnlockedAchievements } from '../utils/achievements';
+import { getAvatarEmojiById } from '../utils/avatar';
 
 // Main Home Page component that serves as the primary user interface
 export default function HomePage() {
@@ -96,82 +97,55 @@ export default function HomePage() {
 
   // Effect to load quiz questions when component mounts
   useEffect(() => {
-    // Function to load quiz questions from various sources
-    const loadQuizQuestions = () => {
-      // Guard clause for server-side rendering
-      if (typeof window === 'undefined') {
-        return
-      }
-
-      try {
-        setIsLoadingQuestions(true)
-        // Try to get game sync data from localStorage
-        const gameSyncData = localStorage.getItem('game_quiz_data')
-        let questions = []
-
-        // Load questions from localStorage or fallback to data manager
-        if (gameSyncData) {
-          questions = JSON.parse(gameSyncData)
-        } else {
-          try {
-            questions = quizDataManager.getQuestions() || []
-          } catch (error) {
-            console.error('Error loading admin questions:', error)
-            questions = []
-          }
-        }
-
-        // Filter questions for homepage display
-        const homepageQuestions = questions.filter(q => q.section === 'homepage')
-        const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
-        let questionsToUse = homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
-
-        // Set quiz questions or fallback to default questions
-        if (questionsToUse.length >= 5) {
-          const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
-            id: q.id,
-            question: q.question,
-            options: q.options,
-            correct_answer: q.correct_answer ?? 0,
-            difficulty: q.difficulty,
-            fun_fact: q.fun_fact || "Thanks for playing!",
-            category: q.category,
-            subcategory: q.subcategory || q.category
-          }))
-          setQuizQuestions(convertedQuestions)
-        } else {
-          setQuizQuestions(getFallbackQuestions())
-        }
-      } catch (error) {
-        console.error('❌ Error loading quiz questions:', error)
-        setQuizQuestions(getFallbackQuestions())
-      } finally {
-        setIsLoadingQuestions(false)
-      }
+    // Guard clause for server-side rendering
+    if (typeof window === 'undefined') {
+      return
     }
 
-    // Load questions when component mounts
-    loadQuizQuestions()
-
-    // Handler for real-time quiz updates
-    const handleQuizSync = () => {
-      loadQuizQuestions()
-    }
-
-    // Setup real-time sync listener
     try {
-      realTimeSyncService.addEventListener('quiz_updated', handleQuizSync)
-    } catch (error) {
-      console.error('Error setting up quiz sync listener:', error)
-    }
+      setIsLoadingQuestions(true)
+      // Try to get game sync data from localStorage
+      const gameSyncData = localStorage.getItem('game_quiz_data')
+      let questions = []
 
-    // Cleanup listener on component unmount
-    return () => {
-      try {
-        realTimeSyncService.removeEventListener('quiz_updated', handleQuizSync)
-      } catch (error) {
-        console.error('Error removing quiz sync listener:', error)
+      // Load questions from localStorage or fallback to data manager
+      if (gameSyncData) {
+        questions = JSON.parse(gameSyncData)
+      } else {
+        try {
+          questions = quizDataManager.getQuestions() || []
+        } catch (error) {
+          console.error('Error loading admin questions:', error)
+          questions = []
+        }
       }
+
+      // Filter questions for homepage display
+      const homepageQuestions = questions.filter(q => q.section === 'homepage')
+      const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
+      let questionsToUse = homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
+
+      // Set quiz questions or fallback to default questions
+      if (questionsToUse.length >= 5) {
+        const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
+          id: q.id,
+          question: q.question,
+          options: q.options,
+          correct_answer: q.correct_answer ?? 0,
+          difficulty: q.difficulty,
+          fun_fact: q.fun_fact || "Thanks for playing!",
+          category: q.category,
+          subcategory: q.subcategory || q.category
+        }))
+        setQuizQuestions(convertedQuestions)
+      } else {
+        setQuizQuestions(getFallbackQuestions())
+      }
+    } catch (error) {
+      console.error('❌ Error loading quiz questions:', error)
+      setQuizQuestions(getFallbackQuestions())
+    } finally {
+      setIsLoadingQuestions(false)
     }
   }, [])
 
@@ -285,7 +259,7 @@ export default function HomePage() {
         const currentUser = state.user || {
           id: `guest_${Date.now()}`,
           name: 'Guest',
-          avatar: '🤖',
+          avatar: 'robot',
           coins: 0,
           level: 1,
           totalQuizzes: 0,

@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { useApp } from '../app/providers'
-import { UnifiedQuizInterface } from './UnifiedQuizInterface'
-import { UnifiedNavigation } from './UnifiedNavigation'
-import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator'
+import { useApp } from '../../app/providers'
+import { UnifiedQuizInterface } from '../../components/quiz'
+import { UnifiedNavigation } from '../../components/navigation'
+import { calculateCorrectAnswerReward, calculateQuizReward } from '../../utils/rewardCalculator'
 
 
 export default function ClientHomePage() {

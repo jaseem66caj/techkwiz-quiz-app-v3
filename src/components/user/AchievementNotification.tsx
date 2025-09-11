@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Achievement } from '../types/reward'
+import { Achievement } from '../../types/reward'
 
 interface AchievementNotificationProps {
   achievement: Achievement | null;

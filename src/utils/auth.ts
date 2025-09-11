@@ -5,11 +5,13 @@
 // and data persistence using browser localStorage. It handles user creation,
 // login/logout, and data storage for the client-side only application.
 
+import { getAvatarEmojiById, getDefaultAvatar } from './avatar';
+
 // User interface defining the structure of user data
 export interface User {
   id: string              // Unique user identifier
   name: string            // User's display name
-  avatar: string          // User's avatar character/emoji
+  avatar: string          // User's avatar identifier
   coins: number           // User's current coin balance
   level: number           // User's current level (based on quizzes completed)
   totalQuizzes: number    // Total number of quizzes completed
@@ -38,6 +40,16 @@ export const getCurrentUser = (): User => {
       if (typeof parsed.correctAnswers !== 'number') parsed.correctAnswers = 0;
       if (!parsed.joinDate) parsed.joinDate = new Date().toISOString();
       if (typeof parsed.streak !== 'number') parsed.streak = 0;
+      
+      // Handle avatar migration from emoji to ID
+      if (parsed.avatar && parsed.avatar.length > 10) {
+        // This is likely an emoji, convert to default avatar ID
+        parsed.avatar = 'robot';
+      } else if (!parsed.avatar) {
+        // No avatar set, use default
+        parsed.avatar = 'robot';
+      }
+      
       return parsed as User;
     }
   } catch (error) {
@@ -49,7 +61,7 @@ export const getCurrentUser = (): User => {
   const guestUser: User = {
     id: 'guest',
     name: 'Guest',
-    avatar: '🤖',
+    avatar: 'robot',
     coins: 0,
     level: 1,
     totalQuizzes: 0,
@@ -131,7 +143,7 @@ export const signup = async (name: string, email: string, password: string): Pro
   const newUser: User = {
     id: `user_${Date.now()}`,           // Unique ID based on timestamp
     name,                               // User's chosen name
-    avatar: name.charAt(0).toUpperCase(), // Avatar based on first letter of name
+    avatar: 'robot',                    // Default avatar
     coins: 100,                         // Welcome bonus coins
     level: 1,                           // Starting level
     totalQuizzes: 0,                    // No quizzes completed yet

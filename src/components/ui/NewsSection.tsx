@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '../utils/wordpress'
+import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '../../utils/wordpress'
 
 interface NewsSectionProps {
   className?: string

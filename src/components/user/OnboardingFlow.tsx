@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useApp } from '../app/providers'
-import { quizDataManager } from '../utils/quizDataManager'
+import { useApp } from '../../app/providers'
+import { quizDataManager } from '../../utils/quizDataManager'
 
 interface OnboardingQuestion {
   id: string

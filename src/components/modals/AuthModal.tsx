@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { login, signup } from '../utils/auth'
+import { login, signup } from '../../utils/auth'
 
 interface AuthModalProps {
   isOpen: boolean

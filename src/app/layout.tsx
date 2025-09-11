@@ -1,9 +1,9 @@
 import { Inter } from 'next/font/google'
 import { Providers } from './providers'
-import { GoogleAnalytics } from '@/components/GoogleAnalytics'
-import { LayoutWrapper } from '@/components/LayoutWrapper'
-import ErrorBoundary from '@/components/ErrorBoundary'
-import { GlobalErrorInitializer } from '@/components/GlobalErrorInitializer'
+import { GoogleAnalytics } from '@/components/analytics'
+import { LayoutWrapper } from '@/components/layout'
+import { ErrorBoundary } from '@/components/layout'
+import { GlobalErrorInitializer } from '@/components/layout'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })

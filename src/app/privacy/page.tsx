@@ -1,6 +1,6 @@
 'use client'
 
-import { UnifiedNavigation } from '../../components/UnifiedNavigation'
+import { UnifiedNavigation } from '../../components/navigation'
 
 export default function PrivacyPolicyPage() {
   return (

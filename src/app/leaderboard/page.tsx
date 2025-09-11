@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { UnifiedNavigation } from '../../components/UnifiedNavigation'
-import { AdBanner } from '../../components/AdBanner'
+import { UnifiedNavigation } from '../../components/navigation'
+import { AdBanner } from '../../components/ads'
 
 import { seoConfig } from '../../utils/seo'
 import { getAllUsers, User } from '../../utils/auth'

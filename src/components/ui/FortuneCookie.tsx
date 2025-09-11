@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PopupInterstitialAd } from './AdBanner'
+import { PopupInterstitialAd } from '../../components/ads'
 
 interface FortuneMessage {
   id: number
@@ -310,10 +310,11 @@ export function FortuneCookie({ className }: { className?: string }) {
                 borderImage: 'linear-gradient(135deg, #f59e0b, #d97706, #92400e) 1'
               }}
             >
-              {/* Animated Background Pattern */}
+              {/* Animated Background Pattern - Reduced animations for performance */}
               <div className="absolute inset-0 opacity-10 rounded-3xl overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-200 to-orange-200 animate-pulse"></div>
-                {[...Array(8)].map((_, i) => (
+                {/* Reduced from 8 to 4 animated elements for better performance */}
+                {[...Array(4)].map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute w-8 h-8 bg-yellow-300 rounded-full opacity-20"
@@ -322,15 +323,15 @@ export function FortuneCookie({ className }: { className?: string }) {
                       left: `${Math.random() * 100}%`,
                     }}
                     animate={{
-                      y: [0, -20, 0],
-                      x: [0, 10, 0],
-                      scale: [1, 1.2, 1],
-                      opacity: [0.2, 0.4, 0.2]
+                      y: [0, -10, 0],
+                      x: [0, 5, 0],
+                      scale: [1, 1.1, 1],
+                      opacity: [0.2, 0.3, 0.2]
                     }}
                     transition={{
-                      duration: 3 + Math.random() * 2,
+                      duration: 2 + Math.random() * 1,
                       repeat: Infinity,
-                      delay: Math.random() * 2
+                      delay: Math.random() * 1
                     }}
                   />
                 ))}
@@ -341,11 +342,11 @@ export function FortuneCookie({ className }: { className?: string }) {
                 <motion.div
                   className="text-7xl mb-3 drop-shadow-lg"
                   animate={{ 
-                    rotate: [0, -10, 10, 0],
-                    scale: [1, 1.1, 1]
+                    rotate: [0, -5, 5, 0],
+                    scale: [1, 1.05, 1]
                   }}
                   transition={{ 
-                    duration: 2, 
+                    duration: 1, 
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
@@ -442,23 +443,21 @@ export function FortuneCookie({ className }: { className?: string }) {
                 </motion.button>
               </motion.div>
 
-              {/* Floating Decorative Elements */}
+              {/* Floating Decorative Elements - Reduced for performance */}
               {[
                 { emoji: '✨', position: 'top-6 left-6', delay: 0 },
-                { emoji: '🌟', position: 'top-8 right-8', delay: 0.5 },
-                { emoji: '💫', position: 'bottom-8 left-8', delay: 1 },
-                { emoji: '⭐', position: 'bottom-6 right-6', delay: 1.5 }
+                { emoji: '🌟', position: 'top-8 right-8', delay: 0.5 }
               ].map((item, index) => (
                 <motion.div
                   key={index}
                   className={`absolute ${item.position} text-2xl opacity-60`}
                   animate={{
-                    y: [0, -10, 0],
-                    rotate: [0, 180, 360],
-                    scale: [1, 1.2, 1]
+                    y: [0, -5, 0],
+                    rotate: [0, 90, 180],
+                    scale: [1, 1.1, 1]
                   }}
                   transition={{
-                    duration: 3,
+                    duration: 2,
                     repeat: Infinity,
                     delay: item.delay,
                     ease: "easeInOut"
@@ -472,7 +471,7 @@ export function FortuneCookie({ className }: { className?: string }) {
               <motion.button
                 onClick={closeFortune}
                 className="absolute top-4 right-4 w-10 h-10 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg transition-all duration-200"
-                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileHover={{ scale: 1.1, rotate: 45 }}
                 whileTap={{ scale: 0.9 }}
               >
                 ×

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getDailyBonusAmount } from '../utils/rewardCalculator'
+import { getDailyBonusAmount } from '../../utils/rewardCalculator'
 
 interface DailyBonusModalProps {
   isOpen: boolean

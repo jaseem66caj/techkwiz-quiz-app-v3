@@ -3,14 +3,12 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { UnifiedQuizInterface } from '../../../components/UnifiedQuizInterface'
-import { QuizResult } from '../../../components/QuizResult'
-
-import { CountdownTimer } from '../../../components/CountdownTimer'
-import { TimeUpModal } from '../../../components/TimeUpModal'
-import { UnifiedRewardPopup } from '../../../components/UnifiedRewardPopup'
+import { UnifiedQuizInterface, QuizResult, CountdownTimer } from '../../../components/quiz'
+import { TimeUpModal } from '../../../components/modals'
+import { UnifiedRewardPopup } from '../../../components/rewards'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
+import { getAvatarEmojiById } from '../../../utils/avatar';
 
 // Import unified QuizQuestion interface
 import { QuizQuestion } from '@/types/quiz'
@@ -451,7 +449,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
           {state.user && state.user.name !== 'Guest' && (
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700">
-                <span className="text-2xl mr-2">{state.user.avatar}</span>
+                <span className="text-2xl mr-2">{getAvatarEmojiById(state.user.avatar)}</span>
                 <span className="text-white font-medium">{state.user.name}</span>
               </div>
               <div className="flex items-center bg-orange-500/20 rounded-full px-4 py-2 border border-orange-400/30">

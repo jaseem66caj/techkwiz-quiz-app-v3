@@ -199,101 +199,74 @@ export function UnifiedQuizInterface({
                 : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-purple-400/50'
             }`}
           >
-            <div className="text-2xl mb-2">
-              {question.visual_options?.[index] || '✨'}
-            </div>
-            <div className="text-sm font-medium">
-              {option}
-            </div>
+            <span className="block text-sm leading-tight">{option}</span>
           </motion.button>
         ))}
       </div>
     </div>
   )
 
-  // Render emoji decode question with special styling for emoji clues
+  // Render emoji decode question with large emoji display
   const renderEmojiDecodeQuestion = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
+    <div className="space-y-6">
+      <div className="text-center">
+        <div className="text-6xl mb-6" data-testid="emoji-clue">
+          {question.emoji_clue}
+        </div>
+        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
           {question.question}
         </h3>
-        {question.emoji_clue && (
-          <div className="bg-purple-500/20 backdrop-blur-sm rounded-2xl px-6 py-4 inline-block border border-purple-400/30 mb-4">
-            <div className="text-4xl mb-2">{question.emoji_clue}</div>
-            <div className="text-xs text-purple-200">Decode the emojis!</div>
-          </div>
-        )}
+        <p className="text-blue-200 text-sm">Crack the emoji code!</p>
       </div>
       
       <div className="space-y-3">
         {question.options.map((option, index) => (
           <motion.button
             key={index}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
-              onAnswerSelect(index)
-            }}
+            data-testid="answer-option"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => onAnswerSelect(index)}
             disabled={selectedAnswer !== null}
-            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
-              selectedAnswer === index 
-                ? 'bg-pink-500 text-white border-pink-400' 
-                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
-            } ${
-              selectedAnswer !== null && index === question.correct_answer 
-                ? 'bg-green-500 border-green-400' 
-                : ''
-            } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
-                ? 'bg-red-500 border-red-400' 
-                : ''
+            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border-2 ${
+              selectedAnswer === index
+                ? 'bg-green-500 text-white border-green-400 shadow-lg shadow-green-500/30'
+                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-green-400/50'
             }`}
           >
-            <div className="flex items-center justify-between">
-              <span>{option}</span>
-              <span className="text-xl">🎯</span>
-            </div>
+            <span className="block">{option}</span>
           </motion.button>
         ))}
       </div>
     </div>
   )
 
-  // Render personality question with special styling (no correct answers)
+  // Render personality question with visual options
   const renderPersonalityQuestion = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
+        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
           {question.question}
         </h3>
-        <div className="text-xs text-blue-200 mb-4">
-          No wrong answers - just discover yourself! ✨
-        </div>
+        <p className="text-blue-200 text-sm">Choose what resonates with you!</p>
       </div>
       
       <div className="space-y-3">
         {question.options.map((option, index) => (
           <motion.button
             key={index}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
-              onAnswerSelect(index)
-            }}
+            data-testid="answer-option"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => onAnswerSelect(index)}
             disabled={selectedAnswer !== null}
-            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
-              selectedAnswer === index 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-purple-400' 
-                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
+            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border-2 ${
+              selectedAnswer === index
+                ? 'bg-pink-500 text-white border-pink-400 shadow-lg shadow-pink-500/30'
+                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-pink-400/50'
             }`}
           >
-            <div className="flex items-center justify-between">
-              <span>{option}</span>
-              <span className="text-xl">🌟</span>
-            </div>
+            <span className="block">{option}</span>
           </motion.button>
         ))}
       </div>
@@ -302,60 +275,42 @@ export function UnifiedQuizInterface({
 
   // Render prediction question with futuristic styling
   const renderPredictionQuestion = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight">
+        <div className="text-4xl mb-4">🔮</div>
+        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
           {question.question}
         </h3>
-        {question.prediction_year && (
-          <div className="bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-green-400/30 mb-4">
-            <span className="text-sm font-bold text-green-200">
-              Prediction for {question.prediction_year}
-            </span>
-          </div>
-        )}
+        <p className="text-blue-200 text-sm">Predict the future!</p>
       </div>
       
       <div className="space-y-3">
         {question.options.map((option, index) => (
           <motion.button
             key={index}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
-              onAnswerSelect(index)
-            }}
+            data-testid="answer-option"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => onAnswerSelect(index)}
             disabled={selectedAnswer !== null}
-            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
-              selectedAnswer === index 
-                ? 'bg-green-500 text-white border-green-400' 
-                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
-            } ${
-              selectedAnswer !== null && index === question.correct_answer 
-                ? 'bg-green-500 border-green-400' 
-                : ''
-            } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
-                ? 'bg-red-500 border-red-400' 
-                : ''
+            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border-2 ${
+              selectedAnswer === index
+                ? 'bg-blue-500 text-white border-blue-400 shadow-lg shadow-blue-500/30'
+                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-blue-400/50'
             }`}
           >
-            <div className="flex items-center justify-between">
-              <span>{option}</span>
-              <span className="text-xl">🔮</span>
-            </div>
+            <span className="block">{option}</span>
           </motion.button>
         ))}
       </div>
     </div>
   )
 
-  // Render standard multiple choice question with basic styling
+  // Render standard multiple choice question
   const renderMultipleChoiceQuestion = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-6 leading-tight" data-testid="question-text">
+        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
           {question.question}
         </h3>
       </div>
@@ -365,35 +320,52 @@ export function UnifiedQuizInterface({
           <motion.button
             key={index}
             data-testid="answer-option"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
-              onAnswerSelect(index)
-            }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => onAnswerSelect(index)}
             disabled={selectedAnswer !== null}
-            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border ${
-              selectedAnswer === index 
-                ? 'bg-blue-500 text-white border-blue-400' 
-                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50'
+            className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 border-2 ${
+              selectedAnswer === index
+                ? question.correct_answer === index
+                  ? 'bg-green-500 text-white border-green-400 shadow-lg shadow-green-500/30'
+                  : 'bg-red-500 text-white border-red-400 shadow-lg shadow-red-500/30'
+                : 'bg-gray-700/50 text-white border-gray-600 hover:bg-gray-600/50 hover:border-purple-400/50'
             } ${
-              selectedAnswer !== null && index === question.correct_answer 
-                ? 'bg-green-500 border-green-400' 
-                : ''
-            } ${
-              selectedAnswer !== null && selectedAnswer === index && index !== question.correct_answer 
-                ? 'bg-red-500 border-red-400' 
+              questionAnswered && question.correct_answer === index
+                ? 'bg-green-500 text-white border-green-400 shadow-lg shadow-green-500/30'
                 : ''
             }`}
           >
-            {option}
+            <div className="flex items-center">
+              <div className="w-6 h-6 rounded-full border-2 border-white/30 flex items-center justify-center mr-3 flex-shrink-0">
+                {String.fromCharCode(65 + index)}
+              </div>
+              <span className="block">{option}</span>
+            </div>
           </motion.button>
         ))}
       </div>
+      
+      {/* Fun fact display for answered questions */}
+      {questionAnswered && question.fun_fact && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30"
+        >
+          <div className="flex items-start">
+            <div className="text-2xl mr-3">💡</div>
+            <div>
+              <h4 className="font-semibold text-blue-200 mb-1">Fun Fact!</h4>
+              <p className="text-white text-sm">{question.fun_fact}</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </div>
   )
 
-  // Select appropriate rendering function based on question type
+  // Render question content based on question type
   const renderQuestionContent = () => {
     switch (questionType) {
       case 'this_or_that':
@@ -415,12 +387,13 @@ export function UnifiedQuizInterface({
   // Renders the complete quiz interface with question content and progress indicators
   return (
     <div className="relative">
-      {/* Encouragement message overlay (only in enhanced mode) */}
+      {/* Encouragement message overlay (only in enhanced mode) - Simplified animation */}
       {showEncouragementMessage && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
           className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg text-center font-bold mb-4"
         >
           {getEncouragementMessage()}
@@ -428,10 +401,10 @@ export function UnifiedQuizInterface({
       )}
       
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-bounce-in' : ''}`}
+        transition={{ duration: 0.3 }}
+        className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-fade-in' : ''}`}
         data-testid="quiz-interface"
       >
         {/* Progress indicator section (only in enhanced mode) */}
@@ -443,7 +416,7 @@ export function UnifiedQuizInterface({
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
               ></div>
             </div>

@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AvatarSelector } from './AvatarSelector';
+import { getAvatarEmojiById } from '../../utils/avatar';
 
 interface CreateProfileProps {
   onProfileCreated: (username: string, avatar: string) => void;
 }
 
-const avatars = ['🤖', '🧑‍💻', '🚀', '🧠', '🧙‍♂️', '👾'];
-
 export function CreateProfile({ onProfileCreated }: CreateProfileProps) {
   const [username, setUsername] = useState('');
-  const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
+  const [selectedAvatar, setSelectedAvatar] = useState('robot');
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,14 @@ export function CreateProfile({ onProfileCreated }: CreateProfileProps) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      {showAvatarSelector && (
+        <AvatarSelector 
+          selectedAvatar={selectedAvatar}
+          onAvatarSelect={setSelectedAvatar}
+          onClose={() => setShowAvatarSelector(false)}
+        />
+      )}
+      
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -50,24 +59,21 @@ export function CreateProfile({ onProfileCreated }: CreateProfileProps) {
 
           <div>
             <label className="block text-blue-200 text-sm font-semibold mb-3">Choose Your Avatar</label>
-            <div className="grid grid-cols-6 gap-3 justify-items-center">
-              {avatars.map((avatar) => (
-                <button
-                  key={avatar}
-                  type="button"
-                  aria-label={`Select avatar ${avatar}`}
-                  aria-pressed={selectedAvatar === avatar}
-                  onClick={() => setSelectedAvatar(avatar)}
-                  className={`text-2xl sm:text-4xl p-2 sm:p-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-4 ${
-                    selectedAvatar === avatar
-                      ? 'bg-orange-500/90 text-white ring-orange-400/50 scale-110 shadow-lg'
-                      : 'bg-white/10 hover:bg-white/20 ring-transparent'
-                  }`}
-                >
-                  {avatar}
-                </button>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowAvatarSelector(true)}
+              className="w-full flex items-center justify-between p-4 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              <div className="flex items-center">
+                <span className="text-3xl mr-3">
+                  {getAvatarEmojiById(selectedAvatar)}
+                </span>
+                <span className="text-white font-medium">Select Avatar</span>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
           </div>
 
           <button
