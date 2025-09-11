@@ -8,7 +8,7 @@ import { QuizResult } from '../../../components/QuizResult'
 
 import { CountdownTimer } from '../../../components/CountdownTimer'
 import { TimeUpModal } from '../../../components/TimeUpModal'
-import { RewardPopup } from '../../../components/RewardPopup'
+import { UnifiedRewardPopup } from '../../../components/UnifiedRewardPopup'
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 
@@ -546,17 +546,15 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       </div>
 
       {showReward && (
-        <RewardPopup
+        <UnifiedRewardPopup
           isOpen={showReward}
           onClose={advance}
           isCorrect={isCorrect}
           coinsEarned={isCorrect ? calculateCorrectAnswerReward().coins : 0}
-          onClaimReward={() => {
-            const rewardCoins = isCorrect ? calculateCorrectAnswerReward().coins : 0;
-            handleAdCompleted(rewardCoins);
+          onAdCompleted={(coinsFromAd) => {
+            handleAdCompleted(coinsFromAd);
             advance();
           }}
-          onSkipReward={advance}
         />
       )}
 
