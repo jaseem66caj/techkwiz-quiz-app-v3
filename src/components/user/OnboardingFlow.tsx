@@ -11,6 +11,7 @@ interface OnboardingQuestion {
   options: string[]
   correct_answer: number
   reward_coins: number
+  fun_fact?: string
 }
 
 interface OnboardingFlowProps {
@@ -44,8 +45,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
             question: q.question,
             options: q.options,
             correct_answer: q.correct_answer ?? 0,
-            reward_coins: 150,
-            fun_fact: q.fun_fact || "Great job!"
+            reward_coins: 150
           }))
 
           setOnboardingQuestions(convertedQuestions)
@@ -73,14 +73,16 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
       question: "Which tech company created the iPhone?",
       options: ["Apple 🍎", "Google 🔍", "Samsung 📱", "Microsoft 💻"],
       correct_answer: 0,
-      reward_coins: 150
+      reward_coins: 150,
+      fun_fact: "Apple Inc. is an American multinational technology company headquartered in Cupertino, California."
     },
     {
       id: 'onboard-2', 
       question: "What does 'www' stand for in website URLs?",
       options: ["World Wide Web 🌐", "World Web Works 🔧", "Web World Wide 🌍", "Wide Web World 📡"],
       correct_answer: 0,
-      reward_coins: 150
+      reward_coins: 150,
+      fun_fact: "The World Wide Web was invented by Tim Berners-Lee in 1989."
     }
   ]
 

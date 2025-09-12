@@ -230,6 +230,7 @@ class QuizDataManager {
       try {
         // Use cached static database if available
         if (!this.staticDatabaseCache) {
+          console.log('📦 Importing static quiz database...');
           const { QUIZ_DATABASE } = await import('../data/quizDatabase')
           this.staticDatabaseCache = QUIZ_DATABASE as Record<string, QuizQuestion[]>
           console.log('📦 Static database cached for future use')
@@ -281,11 +282,7 @@ class QuizDataManager {
         }
       } catch (importError) {
         console.error('Failed to import static quiz database:', importError)
-        throw new QuizDataError(
-          'Failed to load static quiz database',
-          'STATIC_IMPORT_FAILED',
-          { categoryId, importError: importError.message }
-        )
+        // Don't throw here, continue to sample data fallback
       }
 
       // Step 3: Final fallback to sample data
@@ -348,135 +345,44 @@ class QuizDataManager {
 
     // Add static categories
     try {
-      const { QUIZ_DATABASE } = await import('../data/quizDatabase')
-      Object.keys(QUIZ_DATABASE).forEach(cat => categories.add(cat))
-    } catch (error) {
-      console.warn('Could not load static categories:', error)
+      if (!this.staticDatabaseCache) {
+        const { QUIZ_DATABASE } = await import('../data/quizDatabase')
+        this.staticDatabaseCache = QUIZ_DATABASE as Record<string, QuizQuestion[]>
+      }
+
+      Object.keys(this.staticDatabaseCache).forEach(categoryId => {
+        categories.add(categoryId)
+      })
+    } catch (importError) {
+      console.warn('Failed to import static database for categories:', importError)
     }
 
     return Array.from(categories)
   }
 
-  /**
-   * Check if a category has sufficient questions for a quiz
-   * @param categoryId - Category to check
-   * @param minQuestions - Minimum number of questions required (default: 3)
-   * @returns Promise resolving to boolean
-   */
-  async hasSufficientQuestions(categoryId: string, minQuestions: number = 3): Promise<boolean> {
-    try {
-      const questions = await this.getUnifiedQuestions(categoryId, minQuestions)
-      return questions.length >= minQuestions
-    } catch (error) {
-      console.error(`Error checking sufficient questions for ${categoryId}:`, error)
-      return false
-    }
+  // Get questions by category and optional section filter
+  getQuestionsByCategoryAndSection(categoryId: string, section?: string): QuizQuestion[] {
+    const allQuestions = this.getQuestions()
+    return allQuestions.filter(q => 
+      q.category === categoryId && 
+      (!section || q.section === section)
+    )
   }
 
-  // ===================================================================
-  // Logging and Analytics Methods
-  // ===================================================================
-
-  /**
-   * Log successful question loading for analytics
-   */
-  private logQuestionLoadSuccess(
-    source: 'admin' | 'static' | 'sample',
-    categoryId: string,
-    questionCount: number,
-    loadTime: number
-  ) {
-    const logData = {
-      event: 'question_load_success',
-      source,
-      categoryId,
-      questionCount,
-      loadTime,
-      timestamp: new Date().toISOString()
-    }
-
-    console.log(`📈 Question Load Success: ${source} source, ${questionCount} questions, ${loadTime}ms`)
-
-    // Store analytics data
-    try {
-      const existingLogs = JSON.parse(localStorage.getItem('quiz_analytics') || '[]')
-      existingLogs.push(logData)
-      const recentLogs = existingLogs.slice(-100) // Keep last 100 events
-      localStorage.setItem('quiz_analytics', JSON.stringify(recentLogs))
-    } catch (error) {
-      console.warn('Failed to store analytics data:', error)
-    }
+  // Get questions by section
+  getQuestionsBySection(section: string): QuizQuestion[] {
+    const allQuestions = this.getQuestions()
+    return allQuestions.filter(q => q.section === section)
   }
 
-  /**
-   * Log question loading errors for debugging
-   */
-  private logQuestionLoadError(categoryId: string, error: any, loadTime: number) {
-    const errorData = {
-      event: 'question_load_error',
-      categoryId,
-      error: error.message || 'Unknown error',
-      errorCode: error.code || 'UNKNOWN',
-      loadTime,
-      timestamp: new Date().toISOString()
-    }
-
-    console.error(`📉 Question Load Error: ${categoryId}, ${loadTime}ms`)
-
-    // Store error data
-    try {
-      const existingErrors = JSON.parse(localStorage.getItem('quiz_load_errors') || '[]')
-      existingErrors.push(errorData)
-      const recentErrors = existingErrors.slice(-50) // Keep last 50 errors
-      localStorage.setItem('quiz_load_errors', JSON.stringify(recentErrors))
-    } catch (storageError) {
-      console.warn('Failed to store error data:', storageError)
-    }
-  }
-
-  /**
-   * Get analytics data for debugging and monitoring
-   */
-  getAnalyticsData() {
-    try {
-      return {
-        analytics: JSON.parse(localStorage.getItem('quiz_analytics') || '[]'),
-        errors: JSON.parse(localStorage.getItem('quiz_load_errors') || '[]'),
-        dataErrors: JSON.parse(localStorage.getItem('quiz_data_errors') || '[]')
-      }
-    } catch (error) {
-      console.warn('Failed to retrieve analytics data:', error)
-      return { analytics: [], errors: [], dataErrors: [] }
-    }
-  }
-
-  /**
-   * Clear all analytics and error data
-   */
-  clearAnalyticsData() {
-    try {
-      localStorage.removeItem('quiz_analytics')
-      localStorage.removeItem('quiz_load_errors')
-      localStorage.removeItem('quiz_data_errors')
-      console.log('Analytics data cleared')
-    } catch (error) {
-      console.warn('Failed to clear analytics data:', error)
-    }
-  }
-
-  // ===================================================================
-  // Cache Management Methods
-  // ===================================================================
-
-  /**
-   * Get cached questions for a category
-   */
+  // Get cached questions with TTL check
   private getCachedQuestions(cacheKey: string): QuizQuestion[] | null {
     const cached = this.questionCache.get(cacheKey)
     if (!cached) return null
 
     // Check if cache is still valid
-    if (Date.now() - cached.timestamp > this.CACHE_TTL) {
+    const now = Date.now()
+    if (now - cached.timestamp > this.CACHE_TTL) {
       this.questionCache.delete(cacheKey)
       return null
     }
@@ -484,519 +390,53 @@ class QuizDataManager {
     return cached.questions
   }
 
-  /**
-   * Cache questions for a category
-   */
-  private setCachedQuestions(cacheKey: string, questions: QuizQuestion[]) {
-    // Implement LRU cache behavior
+  // Set cached questions
+  private setCachedQuestions(cacheKey: string, questions: QuizQuestion[]): void {
+    // Limit cache size
     if (this.questionCache.size >= this.MAX_CACHE_SIZE) {
       // Remove oldest entry
-      const oldestKey = this.questionCache.keys().next().value
-      this.questionCache.delete(oldestKey)
+      const firstKey = this.questionCache.keys().next().value
+      if (firstKey) this.questionCache.delete(firstKey)
     }
 
     this.questionCache.set(cacheKey, {
-      questions: [...questions], // Create copy to prevent mutations
+      questions,
       timestamp: Date.now()
     })
   }
 
-  /**
-   * Clear all caches
-   */
-  clearCache() {
-    this.questionCache.clear()
-    this.staticDatabaseCache = null
-    this.categoryCache.clear()
-    console.log('🧹 All caches cleared')
+  // Log successful question loading
+  private logQuestionLoadSuccess(
+    source: 'admin' | 'static' | 'sample',
+    categoryId: string,
+    count: number,
+    loadTime: number
+  ): void {
+    console.log(`✅ Loaded ${count} questions from ${source} for category ${categoryId} in ${loadTime}ms`)
   }
 
-  /**
-   * Get cache statistics for monitoring
-   */
-  getCacheStats() {
-    return {
-      questionCacheSize: this.questionCache.size,
-      staticDatabaseCached: this.staticDatabaseCache !== null,
-      categoryCacheSize: this.categoryCache.size,
-      cacheHitRate: this.calculateCacheHitRate()
-    }
-  }
-
-  private calculateCacheHitRate(): number {
-    // This would need to be tracked over time in a real implementation
-    // For now, return a placeholder
-    return 0
-  }
-
-  // Get filtered questions based on provided criteria
-  // Returns all questions if no filters provided
-  getFilteredQuestions(filters?: {
-    category?: string                      // Filter by category
-    difficulty?: 'beginner' | 'intermediate' | 'advanced'  // Filter by difficulty
-    type?: 'regular' | 'bonus'            // Filter by question type
-    section?: 'onboarding' | 'homepage' | 'category' | 'general'  // Filter by section
-    subcategory?: string                  // Filter by subcategory
-    tags?: string[]                       // Filter by tags
-  }): QuizQuestion[] {
-    const questions = this.getQuestions()
-
-    // Return all questions if no filters provided
-    if (!filters) return questions
-
-    // Apply filters to questions
-    return questions.filter(question => {
-      // Category filter
-      if (filters.category && question.category !== filters.category) return false
-      
-      // Difficulty filter
-      if (filters.difficulty && question.difficulty !== filters.difficulty) return false
-      
-      // Type filter
-      if (filters.type && question.type !== filters.type) return false
-      
-      // Section filter
-      if (filters.section && question.section !== filters.section) return false
-      
-      // Subcategory filter
-      if (filters.subcategory && question.subcategory !== filters.subcategory) return false
-      
-      // Tags filter - check if any of the provided tags exist in question tags
-      if (filters.tags && !filters.tags.some(tag => question.tags?.includes(tag))) return false
-      
-      // If all filters pass, include this question
-      return true
-    })
-  }
-
-  // Get questions filtered by section
-  getQuestionsBySection(section: 'onboarding' | 'homepage' | 'category' | 'general'): QuizQuestion[] {
-    return this.getFilteredQuestions({ section })
-  }
-
-  // Get questions filtered by category and optionally by section
-  getQuestionsByCategoryAndSection(category: string, section?: 'onboarding' | 'homepage' | 'category' | 'general'): QuizQuestion[] {
-    return this.getFilteredQuestions({ category, section })
-  }
-
-  // Save a new question to the question bank
-  // Validates question before saving and assigns ID/timestamps
-  saveQuestion(question: Omit<QuizQuestion, 'id' | 'createdAt' | 'updatedAt'>): QuizQuestion {
-    // Validate question data before saving
-    this.validateQuestion(question)
-    
-    // Get existing questions
-    const questions = this.getQuestions()
-    
-    // Create timestamp for new question
-    const now = Date.now()
-    
-    // Create new question object with ID and timestamps
-    const newQuestion: QuizQuestion = {
-      ...question,
-      id: this.generateId(),      // Generate unique ID
-      createdAt: now,             // Set creation timestamp
-      updatedAt: now              // Set update timestamp
-    }
-    
-    // Add new question to questions array
-    questions.push(newQuestion)
-    
-    // Save updated questions array
-    this.saveQuestions(questions)
-    
-    // Return the newly created question
-    return newQuestion
-  }
-
-  // Update an existing question by ID
-  // Throws error if question not found
-  updateQuestion(id: string, updates: Partial<Omit<QuizQuestion, 'id' | 'createdAt'>>): QuizQuestion {
-    // Get all questions
-    const questions = this.getQuestions()
-    
-    // Find index of question to update
-    const index = questions.findIndex(q => q.id === id)
-    
-    // Throw error if question not found
-    if (index === -1) {
-      throw new QuizDataError(`Question with id ${id} not found`, 'NOT_FOUND')
-    }
-    
-    // Create updated question object
-    const updatedQuestion = {
-      ...questions[index],         // Start with existing question data
-      ...updates,                  // Apply updates
-      updatedAt: Date.now()        // Update timestamp
-    }
-    
-    // Validate updated question
-    this.validateQuestion(updatedQuestion)
-    
-    // Replace old question with updated question
-    questions[index] = updatedQuestion
-    
-    // Save updated questions array
-    this.saveQuestions(questions)
-    
-    // Return the updated question
-    return updatedQuestion
-  }
-
-  // Delete a question by ID
-  // Returns true if successful, throws error if question not found
-  deleteQuestion(id: string): boolean {
-    // Get all questions
-    const questions = this.getQuestions()
-    
-    // Filter out question with matching ID
-    const filteredQuestions = questions.filter(q => q.id !== id)
-    
-    // Throw error if no question was removed (not found)
-    if (filteredQuestions.length === questions.length) {
-      throw new QuizDataError(`Question with id ${id} not found`, 'NOT_FOUND')
-    }
-    
-    // Save filtered questions array
-    this.saveQuestions(filteredQuestions)
-    
-    // Return success
-    return true
-  }
-
-  // Delete multiple questions by ID in a single operation
-  // Returns result object with operation details
-  bulkDelete(ids: string[]): BulkOperationResult {
-    // Check if trying to delete more questions than allowed in one operation
-    if (ids.length > VALIDATION_RULES.MAX_BULK_OPERATIONS) {
-      throw new QuizDataError(
-        `Cannot delete more than ${VALIDATION_RULES.MAX_BULK_OPERATIONS} questions at once`,
-        'BULK_LIMIT_EXCEEDED'
-      )
-    }
-
-    // Get all questions
-    const questions = this.getQuestions()
-    
-    // Store initial count for calculating deleted count
-    const initialCount = questions.length
-    
-    // Filter out questions with matching IDs
-    const filteredQuestions = questions.filter(q => !ids.includes(q.id))
-    
-    // Calculate how many questions were actually deleted
-    const deletedCount = initialCount - filteredQuestions.length
-    
-    // Save filtered questions array
-    this.saveQuestions(filteredQuestions)
-    
-    // Return result object with operation details
-    return {
-      success: true,                                  // Operation success status
-      processedCount: deletedCount,                   // Number of questions deleted
-      errorCount: ids.length - deletedCount,          // Number of IDs that weren't found
-      errors: ids.length > deletedCount ? ['Some questions were not found'] : []  // Error messages
-    }
+  // Log question loading error
+  private logQuestionLoadError(
+    categoryId: string,
+    error: any,
+    loadTime: number
+  ): void {
+    console.error(`❌ Failed to load questions for category ${categoryId} after ${loadTime}ms:`, error)
   }
 
   // ===================================================================
-  // Search and Filter Operations
+  // Sample Data Initialization
   // ===================================================================
-  
-  // Advanced search and filter functionality for quiz questions
-  // Supports text search, category filtering, difficulty filtering, and sorting
-  searchQuestions(filters: SearchFilters): QuizQuestion[] {
-    // Get all questions
-    const questions = this.getQuestions()
-    
-    // Return all questions if no filters provided
-    if (!filters || Object.keys(filters).length === 0) {
-      return questions
-    }
-    
-    // Filter questions based on provided criteria
-    return questions.filter(question => {
-      // Text search across question, options, category, subcategory, and tags
-      if (filters.query) {
-        const query = filters.query.toLowerCase()
-        
-        // Check if query matches question text
-        const matchesQuestion = question.question.toLowerCase().includes(query)
-        
-        // Check if query matches any option text
-        const matchesOptions = question.options.some(option => 
-          option.toLowerCase().includes(query)
-        )
-        
-        // Check if query matches category
-        const matchesCategory = question.category.toLowerCase().includes(query)
-        
-        // Check if query matches subcategory
-        const matchesSubcategory = question.subcategory.toLowerCase().includes(query)
-        
-        // Check if query matches any tags
-        const matchesTags = question.tags?.some(tag => 
-          tag.toLowerCase().includes(query)
-        )
-        
-        // If no matches found in any field, exclude this question
-        if (!matchesQuestion && !matchesOptions && !matchesCategory && 
-            !matchesSubcategory && !matchesTags) {
-          return false
-        }
-      }
-      
-      // Category filter - exclude if category doesn't match
-      if (filters.category && question.category !== filters.category) {
-        return false
-      }
-      
-      // Difficulty filter - exclude if difficulty doesn't match
-      if (filters.difficulty && question.difficulty !== filters.difficulty) {
-        return false
-      }
-      
-      // Type filter - exclude if type doesn't match
-      if (filters.type && question.type !== filters.type) {
-        return false
-      }
-      
-      // Section filter - exclude if section doesn't match
-      if (filters.section && question.section !== filters.section) {
-        return false
-      }
-      
-      // Subcategory filter - exclude if subcategory doesn't match
-      if (filters.subcategory && question.subcategory !== filters.subcategory) {
-        return false
-      }
-      
-      // Tags filter - exclude if none of the provided tags match
-      if (filters.tags && filters.tags.length > 0) {
-        const hasMatchingTag = filters.tags.some(tag => 
-          question.tags?.includes(tag)
-        )
-        if (!hasMatchingTag) {
-          return false
-        }
-      }
-      
-      // If all filters pass, include this question
-      return true
-    }).sort((a, b) => {
-      // Sort results based on sortBy parameter
-      switch (filters.sortBy) {
-        // Sort by creation date
-        case 'createdAt':
-          return filters.sortOrder === 'desc' 
-            ? (b.createdAt || 0) - (a.createdAt || 0)  // Descending order
-            : (a.createdAt || 0) - (b.createdAt || 0)  // Ascending order
-        
-        // Sort by last update date
-        case 'updatedAt':
-          return filters.sortOrder === 'desc' 
-            ? (b.updatedAt || 0) - (a.updatedAt || 0)  // Descending order
-            : (a.updatedAt || 0) - (b.updatedAt || 0)  // Ascending order
-        
-        // Sort by difficulty level
-        case 'difficulty':
-          // Define difficulty order (beginner < intermediate < advanced)
-          const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3 }
-          return filters.sortOrder === 'desc' 
-            ? (difficultyOrder[b.difficulty] || 0) - (difficultyOrder[a.difficulty] || 0)  // Descending
-            : (difficultyOrder[a.difficulty] || 0) - (difficultyOrder[b.difficulty] || 0)  // Ascending
-        
-        // Default sorting (no sorting)
-        default:
-          return 0
-      }
-    })
-  }
 
-  // ===================================================================
-  // Import/Export Operations
-  // ===================================================================
-  
-  // Import questions from JSON string
-  // Validates questions and merges with existing data
-  importQuestions(jsonData: string): BulkOperationResult {
-    try {
-      // Parse JSON data
-      const parsedData = JSON.parse(jsonData)
-      
-      // Ensure we have an array of questions
-      const questions: QuizQuestion[] = Array.isArray(parsedData) ? parsedData : [parsedData]
-      
-      // Check if trying to import more questions than allowed in one operation
-      if (questions.length > VALIDATION_RULES.MAX_BULK_OPERATIONS) {
-        throw new QuizDataError(
-          `Cannot import more than ${VALIDATION_RULES.MAX_BULK_OPERATIONS} questions at once`,
-          'BULK_LIMIT_EXCEEDED'
-        )
-      }
-      
-      // Validate each question before importing
-      questions.forEach(question => this.validateQuestion(question))
-      
-      // Get existing questions
-      const existingQuestions = this.getQuestions()
-      
-      // Merge imported questions with existing questions
-      const allQuestions = [...existingQuestions, ...questions.map(q => ({
-        ...q,
-        // Generate ID if not provided
-        id: q.id || this.generateId(),
-        // Set creation timestamp if not provided
-        createdAt: q.createdAt || Date.now(),
-        // Set update timestamp if not provided
-        updatedAt: q.updatedAt || Date.now()
-      }))]
-      
-      // Save merged questions
-      this.saveQuestions(allQuestions)
-      
-      // Return success result
-      return {
-        success: true,
-        processedCount: questions.length,
-        errorCount: 0,
-        errors: []
-      }
-    } catch (error) {
-      if (error instanceof QuizDataError) {
-        throw error
-      }
-      
-      throw new QuizDataError(
-        `Failed to import questions: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        'IMPORT_FAILED'
-      )
-    }
-  }
-
-  // Export questions to JSON string
-  // Optionally filter questions before exporting
-  exportQuestions(filters?: SearchFilters): string {
-    // Get questions, optionally filtered
-    const questions = filters 
-      ? this.searchQuestions(filters)  // Apply filters if provided
-      : this.getQuestions()           // Get all questions if no filters
-    
-    // Convert questions to formatted JSON string
-    return JSON.stringify(questions, null, 2)
-  }
-
-  // ===================================================================
-  // Validation Methods
-  // ===================================================================
-  
-  // Validate question data structure and content
-  // Throws QuizDataError if validation fails
-  private validateQuestion(question: any): void {
-    // Validate question text length
-    if (!question.question || question.question.length < VALIDATION_RULES.QUESTION_MIN_LENGTH) {
-      throw new QuizDataError(
-        `Question must be at least ${VALIDATION_RULES.QUESTION_MIN_LENGTH} characters long`,
-        'INVALID_QUESTION'
-      )
-    }
-    
-    // Validate question text maximum length
-    if (question.question.length > VALIDATION_RULES.QUESTION_MAX_LENGTH) {
-      throw new QuizDataError(
-        `Question must be no more than ${VALIDATION_RULES.QUESTION_MAX_LENGTH} characters long`,
-        'INVALID_QUESTION'
-      )
-    }
-    
-    // Validate options array structure and count
-    if (!Array.isArray(question.options) || 
-        question.options.length < VALIDATION_RULES.MIN_OPTIONS ||
-        question.options.length > VALIDATION_RULES.MAX_OPTIONS) {
-      throw new QuizDataError(
-        `Question must have exactly ${VALIDATION_RULES.MIN_OPTIONS} options`,
-        'INVALID_OPTIONS'
-      )
-    }
-    
-    // Validate each option
-    question.options.forEach((option: string, index: number) => {
-      // Validate option minimum length
-      if (!option || option.length < VALIDATION_RULES.OPTION_MIN_LENGTH) {
-        throw new QuizDataError(
-          `Option ${index + 1} must be at least ${VALIDATION_RULES.OPTION_MIN_LENGTH} characters long`,
-          'INVALID_OPTION'
-        )
-      }
-      
-      // Validate option maximum length
-      if (option.length > VALIDATION_RULES.OPTION_MAX_LENGTH) {
-        throw new QuizDataError(
-          `Option ${index + 1} must be no more than ${VALIDATION_RULES.OPTION_MAX_LENGTH} characters long`,
-          'INVALID_OPTION'
-        )
-      }
-    })
-    
-    // Validate correct answer index
-    if (typeof question.correct_answer !== 'number' || 
-        question.correct_answer < 0 || 
-        question.correct_answer >= question.options.length) {
-      throw new QuizDataError(
-        `Correct answer index must be between 0 and ${question.options.length - 1}`,
-        'INVALID_CORRECT_ANSWER'
-      )
-    }
-    
-    // Validate difficulty level
-    if (!question.difficulty || !['beginner', 'intermediate', 'advanced'].includes(question.difficulty)) {
-      throw new QuizDataError(
-        'Question must have a valid difficulty level (beginner, intermediate, or advanced)',
-        'INVALID_DIFFICULTY'
-      )
-    }
-    
-    // Validate category exists
-    if (!question.category) {
-      throw new QuizDataError(
-        'Question must have a category',
-        'INVALID_CATEGORY'
-      )
-    }
-    
-    // Validate subcategory exists
-    if (!question.subcategory) {
-      throw new QuizDataError(
-        'Question must have a subcategory',
-        'INVALID_SUBCATEGORY'
-      )
-    }
-  }
-
-  // ===================================================================
-  // Helper Methods
-  // ===================================================================
-  
-  // Save questions array to localStorage
-  private saveQuestions(questions: QuizQuestion[]): void {
-    this.safeSetItem(QUIZ_STORAGE_KEYS.QUESTIONS, JSON.stringify(questions))
-  }
-
-  // Generate unique ID for new questions/drafts
-  private generateId(): string {
-    // Combine timestamp and random string for uniqueness
-    return Date.now().toString(36) + Math.random().toString(36).substr(2)
-  }
-
-  // Initialize with sample data if no data exists
-  // Creates and returns sample questions for initial user experience
+  // Initialize with sample data for development/testing
   private initializeWithSampleData(): QuizQuestion[] {
-    // Define sample questions for initial user experience
+    console.log('🔄 Initializing with sample quiz data...')
+    
     const sampleQuestions: QuizQuestion[] = [
       {
         id: 'sample-1',
-        question: 'Which social media platform is known for short-form videos?',
-        options: ['Instagram', 'TikTok', 'Twitter', 'Snapchat'],
+        question: 'Which social media platform was originally called Musical.ly?',
+        options: ['Instagram', 'TikTok', 'Snapchat', 'Twitter'],
         correct_answer: 1,          // TikTok is correct
         difficulty: 'beginner',
         fun_fact: 'TikTok was originally called Musical.ly!',
@@ -1063,33 +503,30 @@ class QuizDataManager {
         name: 'Movies',
         description: 'Test your knowledge of movies and cinema',
         icon: '🎬',
-        color: 'bg-blue-500',
-        questionCount: 0,
-        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
-        createdAt: now,
-        updatedAt: now
+        color: 'from-blue-500 to-purple-600',
+        subcategories: ['Action', 'Comedy', 'Drama'],
+        entry_fee: 100,
+        prize_pool: 250
       },
       {
         id: 'social-media',
         name: 'Social Media',
         description: 'How well do you know social media platforms?',
         icon: '📱',
-        color: 'bg-purple-500',
-        questionCount: 0,
-        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
-        createdAt: now,
-        updatedAt: now
+        color: 'from-purple-500 to-pink-600',
+        subcategories: ['Platforms', 'Trends', 'Influencers'],
+        entry_fee: 100,
+        prize_pool: 250
       },
       {
         id: 'influencers',
         name: 'Influencers',
         description: 'Test your knowledge of popular influencers',
         icon: '🌟',
-        color: 'bg-pink-500',
-        questionCount: 0,
-        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
-        createdAt: now,
-        updatedAt: now
+        color: 'from-pink-500 to-red-600',
+        subcategories: ['Fashion', 'Tech', 'Lifestyle'],
+        entry_fee: 100,
+        prize_pool: 250
       }
     ]
     
@@ -1207,55 +644,353 @@ class QuizDataManager {
       version: '1.0'
     }
     
-    const backupString = JSON.stringify(backupData)
-    this.safeSetItem(QUIZ_STORAGE_KEYS.BACKUP, backupString)
-    return backupString
+    return JSON.stringify(backupData, null, 2)
   }
 
   // Restore from backup
   restoreFromBackup(backupData: string): void {
     try {
-      const parsedData = JSON.parse(backupData)
+      const parsed = JSON.parse(backupData)
       
-      if (parsedData.questions) {
-        this.saveQuestions(parsedData.questions)
+      if (parsed.questions) {
+        this.saveQuestions(parsed.questions)
       }
       
-      if (parsedData.categories) {
-        this.saveCategories(parsedData.categories)
+      if (parsed.categories) {
+        this.saveCategories(parsed.categories)
       }
       
-      if (parsedData.settings) {
-        this.saveSettings(parsedData.settings)
+      if (parsed.settings) {
+        this.saveSettings(parsed.settings)
       }
       
-      if (parsedData.drafts) {
-        this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(parsedData.drafts))
+      if (parsed.drafts) {
+        this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(parsed.drafts))
       }
       
-      console.log('✅ Successfully restored from backup')
+      console.log('✅ Quiz data restored from backup')
+    } catch (error) {
+      throw new QuizDataError('Failed to restore from backup', 'BACKUP_RESTORE_FAILED', { error })
+    }
+  }
+
+  // Generate unique ID
+  private generateId(): string {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2)
+  }
+
+  // Save questions
+  saveQuestions(questions: QuizQuestion[]): void {
+    this.safeSetItem(QUIZ_STORAGE_KEYS.QUESTIONS, JSON.stringify(questions))
+  }
+
+  // Add question
+  addQuestion(question: Omit<QuizQuestion, 'id' | 'createdAt' | 'updatedAt'>): QuizQuestion {
+    const questions = this.getQuestions()
+    const now = Date.now()
+    const newQuestion: QuizQuestion = {
+      ...question,
+      id: this.generateId(),
+      createdAt: now,
+      updatedAt: now
+    }
+    
+    questions.push(newQuestion)
+    this.saveQuestions(questions)
+    return newQuestion
+  }
+
+  // Update question
+  updateQuestion(id: string, updates: Partial<Omit<QuizQuestion, 'id' | 'createdAt'>>): QuizQuestion {
+    const questions = this.getQuestions()
+    const index = questions.findIndex(q => q.id === id)
+    
+    if (index === -1) {
+      throw new QuizDataError(`Question with id ${id} not found`, 'NOT_FOUND')
+    }
+    
+    const updatedQuestion = {
+      ...questions[index],
+      ...updates,
+      updatedAt: Date.now()
+    }
+    
+    questions[index] = updatedQuestion
+    this.saveQuestions(questions)
+    return updatedQuestion
+  }
+
+  // Delete question
+  deleteQuestion(id: string): boolean {
+    const questions = this.getQuestions()
+    const filteredQuestions = questions.filter(q => q.id !== id)
+    
+    if (filteredQuestions.length === questions.length) {
+      throw new QuizDataError(`Question with id ${id} not found`, 'NOT_FOUND')
+    }
+    
+    this.saveQuestions(filteredQuestions)
+    return true
+  }
+
+  // Search questions
+  searchQuestions(filters: SearchFilters): QuizQuestion[] {
+    const questions = this.getQuestions()
+    
+    return questions.filter(question => {
+      // Category filter
+      if (filters.category && question.category !== filters.category) {
+        return false
+      }
+      
+      // Difficulty filter
+      if (filters.difficulty && question.difficulty !== filters.difficulty) {
+        return false
+      }
+      
+      // Search term filter
+      if (filters.query) {
+        const searchTerm = filters.query.toLowerCase()
+        const matchesQuestion = question.question.toLowerCase().includes(searchTerm)
+        const matchesOptions = question.options.some(option => 
+          option.toLowerCase().includes(searchTerm)
+        )
+        const matchesSubcategory = question.subcategory.toLowerCase().includes(searchTerm)
+        
+        if (!matchesQuestion && !matchesOptions && !matchesSubcategory) {
+          return false
+        }
+      }
+      
+      return true
+    })
+  }
+
+  // Bulk operations
+  async performBulkOperation(
+    operation: 'add' | 'update' | 'delete',
+    data: any[]
+  ): Promise<BulkOperationResult> {
+    const result: BulkOperationResult = {
+      success: true,
+      processedCount: 0,
+      errorCount: 0,
+      errors: []
+    }
+    
+    // Limit bulk operations to prevent performance issues
+    if (data.length > VALIDATION_RULES.MAX_BULK_OPERATIONS) {
+      throw new QuizDataError(
+        `Bulk operation limit exceeded. Maximum ${VALIDATION_RULES.MAX_BULK_OPERATIONS} operations allowed.`,
+        'BULK_LIMIT_EXCEEDED'
+      )
+    }
+    
+    switch (operation) {
+      case 'add':
+        for (const item of data) {
+          try {
+            this.addQuestion(item)
+            result.processedCount++
+          } catch (error) {
+            result.errorCount++
+            result.errors.push(
+              error instanceof Error ? error.message : 'Unknown error'
+            )
+          }
+        }
+        break
+        
+      case 'update':
+        for (const item of data) {
+          try {
+            if (!item.id) {
+              throw new QuizDataError('Item ID is required for update operation', 'MISSING_ID')
+            }
+            this.updateQuestion(item.id, item)
+            result.processedCount++
+          } catch (error) {
+            result.errorCount++
+            result.errors.push(
+              error instanceof Error ? error.message : 'Unknown error'
+            )
+          }
+        }
+        break
+        
+      case 'delete':
+        for (const item of data) {
+          try {
+            const id = typeof item === 'string' ? item : item.id
+            if (!id) {
+              throw new QuizDataError('Item ID is required for delete operation', 'MISSING_ID')
+            }
+            this.deleteQuestion(id)
+            result.processedCount++
+          } catch (error) {
+            result.errorCount++
+            result.errors.push(
+              error instanceof Error ? error.message : 'Unknown error'
+            )
+          }
+        }
+        break
+        
+      default:
+        throw new QuizDataError(`Unsupported bulk operation: ${operation}`, 'UNSUPPORTED_OPERATION')
+    }
+    
+    // Update success status
+    result.success = result.errorCount === 0
+    
+    return result
+  }
+
+  // Import questions from file
+  async importQuestionsFromFile(file: File): Promise<BulkOperationResult> {
+    // Check file size
+    if (file.size > VALIDATION_RULES.MAX_FILE_SIZE) {
+      throw new QuizDataError(
+        `File size exceeds limit of ${VALIDATION_RULES.MAX_FILE_SIZE} bytes`,
+        'FILE_SIZE_EXCEEDED'
+      )
+    }
+    
+    // Check file type
+    const validTypes = ['application/json', 'text/csv']
+    if (!validTypes.includes(file.type)) {
+      throw new QuizDataError(
+        'Invalid file type. Only JSON and CSV files are supported',
+        'INVALID_FILE_TYPE'
+      )
+    }
+    
+    try {
+      const content = await file.text()
+      let questions: any[] = []
+      
+      if (file.type === 'application/json') {
+        questions = JSON.parse(content)
+      } else {
+        // Parse CSV (simplified implementation)
+        const lines = content.split('\n').filter(line => line.trim())
+        if (lines.length < 2) {
+          throw new QuizDataError('CSV file must contain at least header and one data row', 'INVALID_CSV')
+        }
+        
+        const headers = lines[0].split(',').map(h => h.trim())
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(',').map(v => v.trim())
+          const question: any = {}
+          
+          headers.forEach((header, index) => {
+            if (index < values.length) {
+              question[header] = values[index]
+            }
+          })
+          
+          questions.push(question)
+        }
+      }
+      
+      // Validate and transform imported questions
+      const validatedQuestions = questions.map(q => {
+        // Ensure required fields
+        return {
+          ...q,
+          id: q.id || this.generateId(),
+          question: q.question || '',
+          options: Array.isArray(q.options) ? q.options : [],
+          correct_answer: typeof q.correct_answer === 'number' ? q.correct_answer : -1,
+          difficulty: q.difficulty || 'beginner',
+          fun_fact: q.fun_fact || '',
+          category: q.category || 'general',
+          subcategory: q.subcategory || 'general',
+          section: q.section || 'general',
+          createdAt: q.createdAt || Date.now(),
+          updatedAt: Date.now()
+        }
+      })
+      
+      // Perform bulk add operation
+      return this.performBulkOperation('add', validatedQuestions)
     } catch (error) {
       throw new QuizDataError(
-        `Failed to restore from backup: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        'RESTORE_FAILED'
+        `Failed to import questions: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'IMPORT_FAILED',
+        { fileName: file.name, fileType: file.type }
       )
     }
   }
 
-  // Get backup
-  getBackup(): string | null {
-    return this.safeGetItem(QUIZ_STORAGE_KEYS.BACKUP)
+  // Export questions to file
+  exportQuestionsToFile(format: 'json' | 'csv' = 'json'): string {
+    const questions = this.getQuestions()
+    
+    if (format === 'json') {
+      return JSON.stringify(questions, null, 2)
+    } else {
+      // Convert to CSV
+      if (questions.length === 0) {
+        return 'id,question,options,correct_answer,difficulty,fun_fact,category,subcategory,section,createdAt,updatedAt\n'
+      }
+      
+      const headers = Object.keys(questions[0]).join(',')
+      const rows = questions.map(q => {
+        return Object.values(q).map(v => {
+          if (Array.isArray(v)) {
+            return `"${v.join('|')}"`
+          }
+          return `"${String(v).replace(/"/g, '""')}"`
+        }).join(',')
+      })
+      
+      return `${headers}\n${rows.join('\n')}`
+    }
+  }
+
+  // Get statistics
+  getStatistics(): {
+    totalQuestions: number
+    totalCategories: number
+    questionsByCategory: Record<string, number>
+    questionsByDifficulty: Record<string, number>
+  } {
+    const questions = this.getQuestions()
+    const categories = this.getCategories()
+    
+    const questionsByCategory: Record<string, number> = {}
+    const questionsByDifficulty: Record<string, number> = {}
+    
+    questions.forEach(q => {
+      questionsByCategory[q.category] = (questionsByCategory[q.category] || 0) + 1
+      questionsByDifficulty[q.difficulty] = (questionsByDifficulty[q.difficulty] || 0) + 1
+    })
+    
+    return {
+      totalQuestions: questions.length,
+      totalCategories: categories.length,
+      questionsByCategory,
+      questionsByDifficulty
+    }
   }
 
   // Clear all data
   clearAllData(): void {
-    Object.values(QUIZ_STORAGE_KEYS).forEach(key => {
-      try {
+    try {
+      Object.values(QUIZ_STORAGE_KEYS).forEach(key => {
         localStorage.removeItem(key)
-      } catch (error) {
-        console.error(`Error clearing data for key ${key}:`, error)
-      }
-    })
+      })
+      
+      // Clear caches
+      this.questionCache.clear()
+      this.staticDatabaseCache = null
+      this.categoryCache.clear()
+      
+      console.log('✅ All quiz data cleared')
+    } catch (error) {
+      throw new QuizDataError('Failed to clear data', 'CLEAR_FAILED', { error })
+    }
   }
 }
 
