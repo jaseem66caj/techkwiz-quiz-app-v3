@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 interface Category {
   id: string
@@ -21,17 +22,31 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category, onSelect, userCoins }: CategoryCardProps) {
   const canAfford = userCoins >= category.entry_fee
+  const [reduceMotion, setReduceMotion] = useState(false)
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+      setReduceMotion(mediaQuery.matches)
+      
+      const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches)
+      mediaQuery.addEventListener('change', handler)
+      
+      return () => mediaQuery.removeEventListener('change', handler)
+    }
+  }, [])
   
   return (
     <motion.div
-      whileHover={{ scale: 1.02, y: -5 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={!reduceMotion ? { scale: 1.02, y: -5 } : {}}
+      whileTap={!reduceMotion ? { scale: 0.98 } : {}}
       className="glass-effect p-6 rounded-2xl cursor-pointer group transition-all duration-300 hover:shadow-2xl"
       onClick={() => canAfford && onSelect(category.id)}
     >
       {/* Category Icon and Header */}
       <div className="text-center mb-6">
-        <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">
+        <div className={`text-5xl mb-3 transition-transform duration-300 ${!reduceMotion ? 'group-hover:scale-110' : ''}`}>
           {category.icon}
         </div>
         <h3 className="text-xl font-bold text-white mb-2">

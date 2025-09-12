@@ -12,6 +12,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analyze": "ANALYZE=true next build",
+    "analyze:script": "node scripts/analyze-bundle.js",
     "test:visual": "playwright test",
     "test:visual:ui": "playwright test --ui",
     "test:e2e:stable": "playwright test --timeout=90000 --retries=2 --workers=1",
