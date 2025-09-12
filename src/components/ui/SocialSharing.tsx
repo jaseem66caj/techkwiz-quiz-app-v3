@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface SocialShareProps {
+interface SocialSharingProps {
   url?: string
   title?: string
   description?: string
@@ -11,13 +11,13 @@ interface SocialShareProps {
   className?: string
 }
 
-export function SocialShare({
+export function SocialSharing({
   url = typeof window !== 'undefined' ? window.location.href : '',
   title = 'Check out TechKwiz - Test Your Tech Knowledge!',
   description = 'Take amazing tech quizzes and test your programming, AI, and web development skills.',
   hashtags = ['TechKwiz', 'Programming', 'Quiz', 'TechSkills'],
   className = ''
-}: SocialShareProps) {
+}: SocialSharingProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
 
   const socialPlatforms = [
@@ -112,7 +112,7 @@ export function QuizResultShare({
   return (
     <div className={`bg-gradient-to-r from-purple-600 to-blue-600 p-4 rounded-lg ${className}`}>
       <h3 className="text-white font-bold text-center mb-3">🚀 Share Your Results!</h3>
-      <SocialShare
+      <SocialSharing
         title={shareTitle}
         hashtags={['TechKwiz', category.replace(/\s+/g, ''), 'QuizChallenge']}
       />
@@ -130,7 +130,7 @@ export function CategoryShare({
   const shareTitle = `🚀 Join me in taking the ${categoryName} quiz on TechKwiz!`
   
   return (
-    <SocialShare
+    <SocialSharing
       title={shareTitle}
       hashtags={['TechKwiz', categoryName.replace(/\s+/g, ''), 'Learning']}
       className={className}
@@ -142,7 +142,7 @@ export function FloatingSocialShare({ className }: { className?: string }) {
   return (
     <div className={`fixed right-4 top-1/2 transform -translate-y-1/2 z-50 ${className}`}>
       <div className="bg-white rounded-full p-2 shadow-lg">
-        <SocialShare />
+        <SocialSharing />
       </div>
     </div>
   )

@@ -3,19 +3,19 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
-interface EnhancedRewardAnimationProps {
+interface RewardCelebrationAnimationProps {
   isVisible: boolean
   rewardType: 'coins' | 'bonus' | 'streak' | 'perfect' | 'level_up'
   amount?: number
   onAnimationComplete?: () => void
 }
 
-export function EnhancedRewardAnimation({
+export function RewardCelebrationAnimation({
   isVisible,
   rewardType,
   amount = 50,
   onAnimationComplete
-}: EnhancedRewardAnimationProps) {
+}: RewardCelebrationAnimationProps) {
   const [showParticles, setShowParticles] = useState(false)
   const [animationPhase, setAnimationPhase] = useState<'entrance' | 'celebration' | 'exit'>('entrance')
 

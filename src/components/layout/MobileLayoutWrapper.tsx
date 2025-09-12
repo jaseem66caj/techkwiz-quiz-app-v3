@@ -3,7 +3,7 @@
 import { useApp } from '@/app/providers'
 import { AchievementNotification } from '../../components/user'
 
-export function LayoutWrapper({ children }: { children: React.ReactNode }) {
+export function MobileLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { state, dispatch } = useApp();
 
   const handleCloseNotification = () => {

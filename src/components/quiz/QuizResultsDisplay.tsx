@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { QuizResultShare } from '../../components/ui'
 import { QuizResultBannerAd, ResponsiveAd } from '../../components/ads'
 
-interface QuizResultProps {
+interface QuizResultsDisplayProps {
   score: number
   totalQuestions: number
   category: string
@@ -18,7 +18,7 @@ interface QuizResultProps {
   timerSlot?: React.ReactNode
 }
 
-export function QuizResult({
+export function QuizResultsDisplay({
   score,
   totalQuestions,
   category,
@@ -28,7 +28,7 @@ export function QuizResult({
   onPlayAgain,
   onBackToCategories,
   timerSlot
-}: QuizResultProps) {
+}: QuizResultsDisplayProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const percentage = Math.round((score / totalQuestions) * 100)
 

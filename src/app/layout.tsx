@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import { Providers } from './providers'
 import { GoogleAnalytics } from '@/components/analytics'
-import { LayoutWrapper } from '@/components/layout'
+import { MobileLayoutWrapper } from '@/components/layout'
 import { ErrorBoundary } from '@/components/layout'
 import { GlobalErrorInitializer } from '@/components/layout'
 import './globals.css'
@@ -25,7 +25,7 @@ export default function RootLayout({
         <GlobalErrorInitializer />
         <ErrorBoundary>
           <Providers>
-            <LayoutWrapper>{children}</LayoutWrapper>
+            <MobileLayoutWrapper>{children}</MobileLayoutWrapper>
           </Providers>
         </ErrorBoundary>
       </body>

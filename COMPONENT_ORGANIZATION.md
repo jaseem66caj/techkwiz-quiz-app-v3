@@ -43,17 +43,17 @@ export * from './GoogleAnalytics'
 Components that provide the overall structure and error handling:
 - ErrorBoundary.tsx - General error boundary component
 - QuizErrorBoundary.tsx - Quiz-specific error boundary
-- LayoutWrapper.tsx - Layout wrapper component
+- MobileLayoutWrapper.tsx - Layout wrapper component
 - GlobalErrorInitializer.tsx - Global error initializer
-- ClientHomePage.tsx - Client-side home page component
+- HomePageClient.tsx - Client-side home page component
 
 **Index exports:**
 ```typescript
 export { default as ErrorBoundary } from './ErrorBoundary'
 export * from './QuizErrorBoundary'
-export * from './LayoutWrapper'
+export * from './MobileLayoutWrapper'
 export * from './GlobalErrorInitializer'
-export * from './ClientHomePage'
+export * from './HomePageClient'
 ```
 
 Note: ErrorBoundary is exported as a default export, so it requires a named import alias in the index file.
@@ -91,25 +91,25 @@ export * from './UnifiedNavigation'
 ### Quiz (`src/components/quiz/`)
 Components specific to the quiz functionality:
 - UnifiedQuizInterface.tsx - Main quiz interface component
-- QuizResult.tsx - Quiz result display component
+- QuizResultsDisplay.tsx - Quiz result display component
 - CountdownTimer.tsx - Quiz timer component
 
 **Index exports:**
 ```typescript
 export * from './UnifiedQuizInterface'
-export * from './QuizResult'
+export * from './QuizResultsDisplay'
 export * from './CountdownTimer'
 ```
 
 ### Rewards (`src/components/rewards/`)
 Components related to rewards, coins, and monetization:
 - UnifiedRewardPopup.tsx - Unified reward popup component
-- EnhancedRewardAnimation.tsx - Enhanced reward animations
+- RewardCelebrationAnimation.tsx - Enhanced reward animations
 
 **Index exports:**
 ```typescript
 export * from './UnifiedRewardPopup'
-export * from './EnhancedRewardAnimation'
+export * from './RewardCelebrationAnimation'
 ```
 
 ### UI (`src/components/ui/`)
@@ -117,7 +117,7 @@ General UI components used across the application:
 - CategoryCard.tsx - Category display card
 - EnhancedCoinDisplay.tsx - Enhanced coin display component
 - StreakMultiplierDisplay.tsx - Streak multiplier display
-- SocialShare.tsx - Social sharing components
+- SocialSharing.tsx - Social sharing components
 - NewsSection.tsx - News section component
 - FortuneCookie.tsx - Fortune cookie component
 - SocialProofBanner.tsx - Social proof banner
@@ -129,7 +129,7 @@ General UI components used across the application:
 export * from './CategoryCard'
 export * from './EnhancedCoinDisplay'
 export * from './StreakMultiplierDisplay'
-export * from './SocialShare'
+export * from './SocialSharing'
 export * from './NewsSection'
 export * from './FortuneCookie'
 export * from './SocialProofBanner'
@@ -163,7 +163,7 @@ import { UnifiedNavigation } from '@/components/navigation'
 import { ErrorBoundary } from '@/components/layout'
 
 // Import multiple components from the same category
-import { CategoryCard, NewsSection, SocialShare } from '@/components/ui'
+import { CategoryCard, NewsSection, SocialSharing } from '@/components/ui'
 ```
 
 ### Using Relative Imports
@@ -174,7 +174,7 @@ import { TimeUpModal } from '../components/modals'
 import { UnifiedNavigation } from '../components/navigation'
 
 // Import multiple components from the same category
-import { CategoryCard, NewsSection, SocialShare } from '../components/ui'
+import { CategoryCard, NewsSection, SocialSharing } from '../components/ui'
 ```
 
 ### Special Import Considerations

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { UnifiedQuizInterface, QuizResult, CountdownTimer } from '../../../components/quiz'
+import { UnifiedQuizInterface, QuizResultsDisplay, CountdownTimer } from '../../../components/quiz'
 import { TimeUpModal } from '../../../components/modals'
 import { UnifiedRewardPopup } from '../../../components/rewards'
 import { quizDataManager } from '../../../utils/quizDataManager'
@@ -470,57 +470,24 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         </div>
 
         {showResult ? (
-          <QuizResult
+          <QuizResultsDisplay
             score={score}
             totalQuestions={questions.length}
             category={categoryId}
-            coinsEarned={calculateQuizReward(score, questions.length).totalCoins}
+            coinsEarned={score * 25}
             maxStreak={maxStreak}
             onPlayAgain={() => {
-              try { router.push('/start') } catch (e) {
-                import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
-                if (typeof window !== 'undefined') window.location.href = '/start'
-              }
+              // Reset quiz state
+              setCurrent(0)
+              setSelected(null)
+              setScore(0)
+              setShowResult(false)
+              setCurrentStreak(0)
+              setMaxStreak(0)
+              setShowReward(false)
+              setIsCorrect(false)
             }}
-            onBackToCategories={() => {
-              try { router.push('/start') } catch (e) {
-                import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
-                if (typeof window !== 'undefined') window.location.href = '/start'
-              }
-            }}
-            timerSlot={
-              <>
-                {/* Accessible timer live region (updates every 10s) */}
-                <div aria-live="polite" role="timer" className="sr-only">{srAnnouncement}</div>
-
-                {/* Standardized completion timer (90s) */}
-                <div className="glass-effect p-4 rounded-xl mb-6">
-                  <p className="text-blue-200 text-base font-medium mb-3 text-center">
-                    Redirecting to categories in {resultCountdown} seconds...
-                  </p>
-                  <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-linear rounded-full"
-                      style={{ width: `${Math.min(100, Math.round(((90 - resultCountdown) / 90) * 100))}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-center mt-4">
-                    <button
-                      aria-label="Next Quiz"
-                      onClick={() => {
-                        try { router.push('/start') } catch (e) {
-                          import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
-                          if (typeof window !== 'undefined') window.location.href = '/start'
-                        }
-                      }}
-                      className="button-secondary py-3 px-6 rounded-xl"
-                    >
-                      Next Quiz
-                    </button>
-                  </div>
-                </div>
-              </>
-            }
+            onBackToCategories={() => router.push('/start')}
           />
         ) : (
           <>
