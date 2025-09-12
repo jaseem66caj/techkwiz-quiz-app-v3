@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PopupInterstitialAd } from '../../components/ads'
 
@@ -118,6 +118,18 @@ export function FortuneCookie({ className }: { className?: string }) {
   const [currentFortune, setCurrentFortune] = useState<FortuneMessage | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [clickCount, setClickCount] = useState(0)
+  const [reduceMotion, setReduceMotion] = useState(false)
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduceMotion(mediaQuery.matches)
+    
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
 
   const getRandomFortune = (): FortuneMessage => {
     const randomIndex = Math.floor(Math.random() * fortuneMessages.length)
@@ -172,13 +184,13 @@ export function FortuneCookie({ className }: { className?: string }) {
           className={`relative group transition-all duration-300 ${
             isAnimating ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-105'
           }`}
-          whileHover={{ scale: isAnimating ? 1 : 1.05 }}
-          whileTap={{ scale: isAnimating ? 1 : 0.95 }}
-          animate={{
+          whileHover={!reduceMotion ? { scale: isAnimating ? 1 : 1.05 } : {}}
+          whileTap={!reduceMotion ? { scale: isAnimating ? 1 : 0.95 } : {}}
+          animate={!reduceMotion ? {
             y: [0, -4, 0],
             rotate: isAnimating ? [0, 360] : [0, -1, 1, 0]
-          }}
-          transition={{
+          } : {}}
+          transition={!reduceMotion ? {
             y: {
               duration: 2,
               repeat: Infinity,
@@ -193,7 +205,7 @@ export function FortuneCookie({ className }: { className?: string }) {
               repeat: Infinity,
               ease: "easeInOut"
             }
-          }}
+          } : {}}
         >
           {/* Compact Fortune Cookie Design */}
           <div className="relative w-12 h-12">
@@ -271,7 +283,7 @@ export function FortuneCookie({ className }: { className?: string }) {
               <div className="text-center">
                 <motion.div
                   className="inline-block w-8 h-8 border-4 border-white border-t-transparent rounded-full"
-                  animate={{ rotate: 360 }}
+                  animate={!reduceMotion ? { rotate: 360 } : {}}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 />
                 <p className="text-white mt-2 text-sm">Preparing your fortune...</p>
@@ -314,7 +326,7 @@ export function FortuneCookie({ className }: { className?: string }) {
               <div className="absolute inset-0 opacity-10 rounded-3xl overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-200 to-orange-200 animate-pulse"></div>
                 {/* Reduced from 8 to 4 animated elements for better performance */}
-                {[...Array(4)].map((_, i) => (
+                {!reduceMotion && [...Array(4)].map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute w-8 h-8 bg-yellow-300 rounded-full opacity-20"
@@ -444,7 +456,7 @@ export function FortuneCookie({ className }: { className?: string }) {
               </motion.div>
 
               {/* Floating Decorative Elements - Reduced for performance */}
-              {[
+              {!reduceMotion && [
                 { emoji: '✨', position: 'top-6 left-6', delay: 0 },
                 { emoji: '🌟', position: 'top-8 right-8', delay: 0.5 }
               ].map((item, index) => (

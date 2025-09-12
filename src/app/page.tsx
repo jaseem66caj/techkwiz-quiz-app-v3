@@ -12,16 +12,21 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { UnifiedQuizInterface } from '../components/quiz'
 import { ExitConfirmationModal } from '../components/modals'
 import { useExitPrevention } from '../hooks/useExitPrevention'
 import { quizDataManager } from '../utils/quizDataManager'
 import { realTimeSyncService } from '../utils/realTimeSync'
-import { CreateProfile } from '../components/user';
 import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator';
 import { saveUser } from '../utils/auth';
 import { getUnlockedAchievements } from '../utils/achievements';
 import { getAvatarEmojiById } from '../utils/avatar';
+import dynamic from 'next/dynamic';
+import { CreateProfile } from '../components/user/CreateProfile';
+
+const UnifiedQuizInterface = dynamic(() => import('../components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
+});
 
 // Main Home Page component that serves as the primary user interface
 export default function HomePage() {

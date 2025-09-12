@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '../../utils/wordpress'
 
 interface NewsSectionProps {
@@ -133,9 +134,11 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
                   {article.featuredImage ? (
-                    <img 
+                    <Image 
                       src={article.featuredImage} 
                       alt={article.title}
+                      width={80}
+                      height={80}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none'

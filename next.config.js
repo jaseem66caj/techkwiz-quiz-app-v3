@@ -7,7 +7,7 @@ const nextConfig = {
 
   // Optimize images
   images: {
-    domains: [],
+    domains: ['techkwiz.com'],
     formats: ['image/webp', 'image/avif'],
   },
 

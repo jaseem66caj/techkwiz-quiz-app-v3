@@ -3,9 +3,28 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { UnifiedQuizInterface, QuizResultsDisplay, CountdownTimer } from '../../../components/quiz'
 import { TimeUpModal } from '../../../components/modals'
-import { UnifiedRewardPopup } from '../../../components/rewards'
+import dynamic from 'next/dynamic'
+
+const UnifiedQuizInterface = dynamic(() => import('../../../components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
+})
+
+const QuizResultsDisplay = dynamic(() => import('../../../components/quiz/QuizResultsDisplay').then(mod => mod.QuizResultsDisplay), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-gray-800/50 rounded-xl animate-pulse" />
+})
+
+const CountdownTimer = dynamic(() => import('../../../components/quiz/CountdownTimer').then(mod => mod.CountdownTimer), {
+  ssr: false,
+  loading: () => <div className="h-8 bg-gray-800/50 rounded-xl animate-pulse" />
+})
+
+const UnifiedRewardPopup = dynamic(() => import('../../../components/rewards/UnifiedRewardPopup').then(mod => mod.UnifiedRewardPopup), {
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-800/50 rounded-xl animate-pulse" />
+})
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 import { getAvatarEmojiById } from '../../../utils/avatar';

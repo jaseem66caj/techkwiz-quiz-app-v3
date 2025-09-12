@@ -6,8 +6,17 @@ import { motion } from 'framer-motion'
 import { useApp } from '../providers'
 import { UnifiedNavigation } from '../../components/navigation'
 import { CategoryPageTopAd, CategoryPageBottomAd, HeaderBannerAd, SidebarRightAd } from '../../components/ads'
-import { NewsSection } from '../../components/ui'
-import { FortuneCookie } from '../../components/ui'
+import dynamic from 'next/dynamic'
+
+const NewsSection = dynamic(() => import('../../components/ui/NewsSection').then(mod => mod.NewsSection), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-gray-800/50 rounded-xl animate-pulse" />
+})
+
+const FortuneCookie = dynamic(() => import('../../components/ui/FortuneCookie').then(mod => mod.FortuneCookie), {
+  ssr: false,
+  loading: () => <div className="h-32 bg-gray-800/50 rounded-xl animate-pulse" />
+})
 import { seoConfig } from '../../utils/seo'
 import * as Sentry from '@sentry/nextjs'
 
