@@ -503,30 +503,33 @@ class QuizDataManager {
         name: 'Movies',
         description: 'Test your knowledge of movies and cinema',
         icon: '🎬',
-        color: 'from-blue-500 to-purple-600',
-        subcategories: ['Action', 'Comedy', 'Drama'],
-        entry_fee: 100,
-        prize_pool: 250
+        color: 'bg-blue-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
       },
       {
         id: 'social-media',
         name: 'Social Media',
         description: 'How well do you know social media platforms?',
         icon: '📱',
-        color: 'from-purple-500 to-pink-600',
-        subcategories: ['Platforms', 'Trends', 'Influencers'],
-        entry_fee: 100,
-        prize_pool: 250
+        color: 'bg-purple-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
       },
       {
         id: 'influencers',
         name: 'Influencers',
         description: 'Test your knowledge of popular influencers',
         icon: '🌟',
-        color: 'from-pink-500 to-red-600',
-        subcategories: ['Fashion', 'Tech', 'Lifestyle'],
-        entry_fee: 100,
-        prize_pool: 250
+        color: 'bg-pink-500',
+        questionCount: 0,
+        difficultyLevels: ['beginner', 'intermediate', 'advanced'],
+        createdAt: now,
+        updatedAt: now
       }
     ]
     
