@@ -110,6 +110,8 @@ test-results/
 playwright-report/
 test-results/.playwright-artifacts-*/
 test-results/*-retry*/
+playwright-report-local/
+test-results-local/
 
 # Performance results
 performance-results/
