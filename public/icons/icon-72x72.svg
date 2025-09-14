@@ -1,0 +1,30 @@
+<svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="36" cy="36" r="32.4" fill="url(#bgGradient)"/>
+  
+  <!-- Brain shape -->
+  <g transform="translate(23.4, 21.6)">
+    <path d="M12.6 0 
+             C17.639999999999997 0, 25.2 5.760000000000001, 25.2 11.520000000000001
+             C25.2 17.28, 17.639999999999997 23.040000000000003, 12.6 28.8
+             C7.56 23.040000000000003, 0 17.28, 0 11.520000000000001
+             C0 5.760000000000001, 7.56 0, 12.6 0
+             Z" fill="white" opacity="0.9"/>
+    
+    <!-- Brain details -->
+    <ellipse cx="7.56" cy="8.64" rx="2.52" ry="4.32" fill="#3b82f6"/>
+    <ellipse cx="17.639999999999997" cy="8.64" rx="2.52" ry="4.32" fill="#3b82f6"/>
+    <ellipse cx="12.6" cy="17.28" rx="3.78" ry="2.8800000000000003" fill="#3b82f6"/>
+  </g>
+  
+  <!-- Quiz mark (question mark) -->
+  <text x="36" y="41.4" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" font-weight="bold">?</text>
+</svg>

@@ -21,7 +21,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Navigate to homepage
-    await page.goto('http://localhost:3002/');
+    await page.goto('/');
 
     // Wait for quiz interface to load
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
@@ -35,7 +35,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     await firstOption.click();
 
     // Verify immediate visual feedback (answer should be selected)
-    await expect(firstOption).toHaveClass(/selected|correct|incorrect/);
+    await expect(firstOption).toHaveClass(/bg-green-500|bg-red-500/);
 
     // Wait for automatic progression (should happen after 650ms total: 400ms feedback + 250ms pause)
     // Check if we've moved to the next question automatically
@@ -71,7 +71,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Navigate to category quiz
-    await page.goto('http://localhost:3002/quiz/programming');
+    await page.goto('/quiz/programming');
 
     // Wait for quiz interface to load
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
@@ -85,7 +85,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     await firstOption.click();
 
     // Verify immediate visual feedback (answer should be selected)
-    await expect(firstOption).toHaveClass(/selected|correct|incorrect/);
+    await expect(firstOption).toHaveClass(/bg-green-500|bg-red-500/);
 
     // Wait for RewardPopup to appear after 400ms
     await expect(page.locator('text=Claim')).toBeVisible({ timeout: 1000 });
@@ -126,7 +126,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Test homepage quiz timing
-    await page.goto('http://localhost:3002/');
+    await page.goto('/');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
 
     const startTime = Date.now();
@@ -137,7 +137,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     const homepageTime = Date.now() - startTime;
 
     // Navigate to category quiz
-    await page.goto('http://localhost:3002/quiz/programming');
+    await page.goto('/quiz/programming');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
 
     const categoryStartTime = Date.now();
@@ -186,13 +186,13 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Test homepage quiz coin calculation
-    await page.goto('http://localhost:3002/');
+    await page.goto('/');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
     await page.locator('[data-testid="answer-option"]').first().click();
     await page.waitForTimeout(800); // Wait for enhanced timing (650ms + buffer)
 
     // Test category quiz coin calculation
-    await page.goto('http://localhost:3002/quiz/programming');
+    await page.goto('/quiz/programming');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
     await page.locator('[data-testid="answer-option"]').first().click();
     await expect(page.locator('text=Claim')).toBeVisible({ timeout: 1000 });
@@ -234,7 +234,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
 
     // Navigate to category quiz and measure time to insufficient coins message
     const startTime = Date.now();
-    await page.goto('http://localhost:3002/quiz/programming');
+    await page.goto('/quiz/programming');
 
     // Wait for insufficient coins message to appear
     await expect(page.locator('text=Insufficient coins')).toBeVisible({ timeout: 5000 });
@@ -269,7 +269,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Navigate to start page
-    await page.goto('http://localhost:3002/start');
+    await page.goto('/start');
     await page.waitForSelector('button:has-text("PLAY")', { timeout: 10000 });
 
     // Measure time from button click to visual feedback
@@ -305,7 +305,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     });
 
     // Test category quiz complete flow
-    await page.goto('http://localhost:3002/quiz/programming');
+    await page.goto('/quiz/programming');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
 
     // Answer first question and verify RewardPopup flow
@@ -317,7 +317,7 @@ test.describe('Quiz Timing and Progression Flows', () => {
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 5000 });
     
     // Test homepage quiz complete flow
-    await page.goto('http://localhost:3002/');
+    await page.goto('/');
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
 
     // Answer first question and verify automatic progression

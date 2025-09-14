@@ -47,7 +47,7 @@ Sentry.init({
   initialScope: {
     tags: {
       component: 'client',
-      app: 'techkwiz-v8'
+      app: 'techkwiz-quiz-app-v3'
     },
   },
 });

@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-const PRODUCTION_URL = 'https://play.techkwiz.com';
+const BASE_URL = 'http://localhost:3002';
 
 test.describe('Navigation Fix Verification', () => {
   let page: Page;
@@ -25,7 +25,7 @@ test.describe('Navigation Fix Verification', () => {
     console.log('🔍 Testing navigation fix after deployment...');
     
     // Load homepage
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     console.log('✅ Homepage loaded');
@@ -129,7 +129,7 @@ test.describe('Navigation Fix Verification', () => {
   test('Verify Both Navigation Options Available', async () => {
     console.log('🔍 Testing both navigation options after quiz completion...');
     
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Complete quiz (simplified - just click first available button)
@@ -163,7 +163,7 @@ test.describe('Navigation Fix Verification', () => {
   test('Test Navigation Button Functionality', async () => {
     console.log('🔍 Testing navigation button functionality...');
     
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Simulate quiz completion by clicking any available button

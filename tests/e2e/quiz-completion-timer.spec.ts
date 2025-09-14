@@ -57,7 +57,7 @@ async function answerFirstOption(page: any) {
 
 test('Homepage Results: shows 90-second countdown and Create Profile Now button', async ({ page }) => {
   await seedUser(page, 200)
-  await page.goto('http://localhost:3002/')
+  await page.goto('/')
 
   // Answer 5 questions quickly; homepage auto-progresses
   for (let i = 0; i < 5; i++) {
@@ -82,7 +82,7 @@ test('Homepage Results: shows 90-second countdown and Create Profile Now button'
 
 test('Category Results: shows 90-second countdown and Next Quiz button', async ({ page }) => {
   await seedUser(page, 500)
-  await page.goto('http://localhost:3002/quiz/programming')
+  await page.goto('/quiz/programming')
 
   // Iterate through a few questions; handle RewardPopup manually
   for (let i = 0; i < 6; i++) {

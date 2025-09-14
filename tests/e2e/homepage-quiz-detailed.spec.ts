@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-const PRODUCTION_URL = 'https://play.techkwiz.com';
+const BASE_URL = 'http://localhost:3002';
 
 test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
   let page: Page;
@@ -26,7 +26,7 @@ test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
     console.log('🔍 Starting detailed homepage quiz analysis...');
     
     // Step 1: Load homepage and analyze structure
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     console.log('📊 Analyzing page structure...');
@@ -119,7 +119,7 @@ test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
     
     // Test direct navigation to /start
     console.log('🎯 Testing direct navigation to /start...');
-    await page.goto(`${PRODUCTION_URL}/start`);
+    await page.goto(`${BASE_URL}/start`);
     await page.waitForLoadState('networkidle');
     
     const startPageUrl = page.url();
@@ -173,7 +173,7 @@ test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
     });
     
     // Go back to homepage and take screenshot
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     await page.screenshot({ 
       path: 'test-results-production/homepage-structure.png', 
@@ -186,7 +186,7 @@ test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
   test('Quiz Interaction Simulation', async () => {
     console.log('🎮 Testing quiz interaction simulation...');
     
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Try to find and interact with any quiz elements
@@ -211,7 +211,7 @@ test.describe('Homepage Quiz Flow - Detailed Analysis', () => {
           const newUrl = page.url();
           console.log(`🔗 After click, URL: ${newUrl}`);
           
-          if (newUrl !== PRODUCTION_URL) {
+          if (newUrl !== BASE_URL) {
             console.log('✅ Navigation occurred after click');
             break;
           }

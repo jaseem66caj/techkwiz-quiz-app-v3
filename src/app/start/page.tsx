@@ -352,13 +352,8 @@ export default function StartPage() {
                     </div>
                   </div>
 
-                  {/* Right Section - Live Badge and PLAY Button */}
+                  {/* Right Section - PLAY Button only (removed Live Badge) */}
                   <div className="flex-shrink-0 flex flex-col items-end space-y-2">
-                    {/* Live Badge */}
-                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                      Live
-                    </span>
-                    
                     {/* PLAY Button with loading state */}
                     <button
                       className={`px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-lg ${

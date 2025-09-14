@@ -1,5 +1,5 @@
 /**
- * Global Error Handler for TechKwiz v8
+ * Global Error Handler for techkwiz-quiz-app-v3
  * 
  * This module sets up global error handling for unhandled promise rejections,
  * uncaught exceptions, and other critical errors that might not be caught

@@ -1,4 +1,4 @@
-# 🎯 TechKwiz v8 - Interactive Tech Quiz Application
+# 🎯 techkwiz-quiz-app-v3 - Interactive Tech Quiz Application
 
 A modern, responsive quiz application built with Next.js 15, React 19, and TypeScript. Features real-time coin rewards, achievements, and an engaging user experience.
 
@@ -25,8 +25,8 @@ A modern, responsive quiz application built with Next.js 15, React 19, and TypeS
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/jaseem66caj/techkwiz-quiz-app-v2.git
-   cd techkwiz-v8
+   git clone https://github.com/jaseem66caj/techkwiz-quiz-app-v3.git
+   cd techkwiz-quiz-app-v3
    ```
 
 2. **Install dependencies**
@@ -121,7 +121,7 @@ Key environment variables (see `.env.example` for full list):
 
 ### ✅ Live on Vercel (Production Ready)
 
-**🎉 TechKwiz v8 is now LIVE!**
+**🎉 techkwiz-quiz-app-v3 is now LIVE!**
 
 - **Status**: ✅ **DEPLOYED AND RUNNING**
 - **Hosting**: Vercel with automatic deployments

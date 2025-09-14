@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-const PRODUCTION_URL = 'https://play.techkwiz.com';
+const BASE_URL = 'http://localhost:3002';
 
 test.describe('Quiz Completion Flow - Critical Navigation Issue', () => {
   let page: Page;
@@ -25,7 +25,7 @@ test.describe('Quiz Completion Flow - Critical Navigation Issue', () => {
     console.log('🎯 Testing complete homepage quiz flow...');
     
     // Step 1: Load homepage
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     console.log('✅ Homepage loaded');
@@ -134,7 +134,7 @@ test.describe('Quiz Completion Flow - Critical Navigation Issue', () => {
               console.log(`📂 Categories visible: ${categoryElements}`);
               
               break;
-            } else if (newUrl !== PRODUCTION_URL) {
+            } else if (newUrl !== BASE_URL) {
               console.log(`🔄 Navigated to different page: ${newUrl}`);
             } else {
               console.log('❌ No navigation occurred');
@@ -171,7 +171,7 @@ test.describe('Quiz Completion Flow - Critical Navigation Issue', () => {
     
     // Step 8: Test direct navigation to /start as fallback
     console.log('🔄 Testing direct navigation to /start as fallback...');
-    await page.goto(`${PRODUCTION_URL}/start`);
+    await page.goto(`${BASE_URL}/start`);
     await page.waitForLoadState('networkidle');
     
     const startPageUrl = page.url();
@@ -204,11 +204,11 @@ test.describe('Quiz Completion Flow - Critical Navigation Issue', () => {
     console.log('🧪 Testing navigation without completing quiz...');
     
     // Load homepage but don't complete quiz
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Try to navigate directly to /start
-    await page.goto(`${PRODUCTION_URL}/start`);
+    await page.goto(`${BASE_URL}/start`);
     await page.waitForLoadState('networkidle');
     
     const url = page.url();

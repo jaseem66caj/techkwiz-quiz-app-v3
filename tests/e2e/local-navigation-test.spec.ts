@@ -1,10 +1,10 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 
-// Local development URL - using port 3003 as shown in the server output
-const LOCAL_URL = 'http://localhost:3003';
+// Local development URL - using port 3000 as shown in the server output
+const LOCAL_URL = 'http://localhost:3002';
 
 // Test configuration for local development
-test.describe('TechKwiz v8 Local Navigation Tests', () => {
+test.describe('techkwiz-quiz-app-v3 Local Navigation Tests', () => {
   let context: BrowserContext;
   let page: Page;
 

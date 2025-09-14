@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/playwright.config.ts",
-    "rootDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/tests/e2e",
+    "configFile": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/playwright.config.ts",
+    "rootDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e",
     "forbidOnly": false,
     "fullyParallel": false,
     "globalSetup": null,
@@ -35,7 +35,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/test-results",
+        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results",
         "repeatEach": 1,
         "retries": 2,
         "metadata": {
@@ -43,7 +43,7 @@
         },
         "id": "mobile",
         "name": "mobile",
-        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/tests/e2e",
+        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -51,7 +51,7 @@
         "timeout": 90000
       },
       {
-        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/test-results",
+        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results",
         "repeatEach": 1,
         "retries": 2,
         "metadata": {
@@ -59,7 +59,7 @@
         },
         "id": "tablet",
         "name": "tablet",
-        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/tests/e2e",
+        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -67,7 +67,7 @@
         "timeout": 90000
       },
       {
-        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/test-results",
+        "outputDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results",
         "repeatEach": 1,
         "retries": 2,
         "metadata": {
@@ -75,7 +75,7 @@
         },
         "id": "desktop",
         "name": "desktop",
-        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v2/tests/e2e",
+        "testDir": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -90,27 +90,27 @@
     "workers": 1,
     "webServer": {
       "command": "npm run dev",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3002",
       "reuseExistingServer": true,
       "timeout": 120000
     }
   },
   "suites": [
     {
-      "title": "homepage-quiz-detailed.spec.ts",
-      "file": "homepage-quiz-detailed.spec.ts",
+      "title": "visual-design-documentation.spec.ts",
+      "file": "visual-design-documentation.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Homepage Quiz Flow - Detailed Analysis",
-          "file": "homepage-quiz-detailed.spec.ts",
-          "line": 5,
+          "title": "TechKwiz Visual Design Documentation",
+          "file": "visual-design-documentation.spec.ts",
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "Detailed Homepage Quiz Analysis",
+              "title": "Homepage - Main Landing Page",
               "ok": true,
               "tags": [],
               "tests": [
@@ -125,169 +125,19 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 10297,
+                      "duration": 3188,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "🔍 Starting detailed homepage quiz analysis...\n"
+                          "text": "📸 Capturing Homepage\n"
                         },
                         {
-                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔄 Initializing with sample quiz data...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
-                        },
-                        {
-                          "text": "📊 Analyzing page structure...\n"
-                        },
-                        {
-                          "text": "🔘 Interactive elements: 4 buttons, 0 links, 0 inputs\n"
-                        },
-                        {
-                          "text": "📝 Content analysis: Quiz content: true, Start content: true\n"
-                        },
-                        {
-                          "text": "✅ Found 1 elements matching: [data-testid*=\"quiz\"]\n"
-                        },
-                        {
-                          "text": "   📄 Element 1 text: \"Question 1 of 520% CompleteJust getting started! 🚀Level Up! 🚀Answer questions and win coins!Which ...\"\n"
-                        },
-                        {
-                          "text": "💾 LocalStorage analysis:\n"
-                        },
-                        {
-                          "text": "   🔑 admin_reward_config: object \n"
-                        },
-                        {
-                          "text": "   🔑 admin_quiz_questions: object (3 items)\n"
-                        },
-                        {
-                          "text": "   🔑 techkwiz_user: object \n"
-                        },
-                        {
-                          "text": "👤 User state: Guest, Coins: 0, Level: 1\n"
-                        },
-                        {
-                          "text": "🎯 Testing direct navigation to /start...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 beforeunload event triggered, isActive: true\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🚨 beforeunload: Preventing exit and calling onExitAttempt\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: UnifiedNavigation component: hideHeaderElements = false mode = full\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔄 Loading quiz categories...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: UnifiedNavigation component: hideHeaderElements = false mode = full\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Loaded categories from local database: 8\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: UnifiedNavigation component: hideHeaderElements = false mode = full\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: UnifiedNavigation component: hideHeaderElements = false mode = full\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Successfully fetched from WordPress REST API\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: Attempting to fetch from WordPress REST API...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Successfully fetched from WordPress REST API\n"
-                        },
-                        {
-                          "text": "🔗 /start page URL: https://play.techkwiz.com/start\n"
-                        },
-                        {
-                          "text": "✅ Successfully reached /start page\n"
-                        },
-                        {
-                          "text": "📊 /start page analysis: Categories: true, Loading: false, Error: true\n"
-                        },
-                        {
-                          "text": "📄 /start page has 8239 characters of content\n"
-                        },
-                        {
-                          "text": "📄 First 200 characters: \"🥠✨🔮Lucky Fortune!Tap for wisdomTechKwiz🪙0Hi, Guest!LogoutChoose CategorySelect a category to start your quiz journey8 categories • 50+ questions • Multiple levelsAll(8)Programming(2)AI & ML(1)Web(1...\"\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
-                        },
-                        {
-                          "text": "📸 Screenshots saved for detailed analysis\n"
+                          "text": "✅ Homepage screenshot saved\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-12T10:48:27.825Z",
+                      "startTime": "2025-09-14T13:34:23.280Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -295,14 +145,14 @@
                   "status": "expected"
                 }
               ],
-              "id": "ba4ad3983b5074480ba9-09186028906c87b455f4",
-              "file": "homepage-quiz-detailed.spec.ts",
-              "line": 25,
+              "id": "66dd0916253d02153a15-32793f54880c40e32de3",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 9,
               "column": 7
             },
             {
-              "title": "Quiz Interaction Simulation",
-              "ok": true,
+              "title": "Start Page - Category Selection",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -315,59 +165,565 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2395,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 15665,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 36
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 36
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16\u001b[22m"
+                        }
+                      ],
                       "stdout": [
                         {
-                          "text": "🎮 Testing quiz interaction simulation...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 📊 Google Analytics: Disabled or no tracking ID configured\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🛡️ Initializing global error handlers...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: ✅ Global error handlers initialized successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Effect running, isActive: true\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Adding event listeners...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔧 useExitPrevention: Event listeners added successfully\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🔄 Initializing with sample quiz data...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 🚀 Initializing auth with session-based coins...\n"
-                        },
-                        {
-                          "text": "🖥️ Console [log]: 👤 Found user: Guest with 0 session coins\n"
-                        },
-                        {
-                          "text": "🔘 Found 4 interactive elements\n"
-                        },
-                        {
-                          "text": "🔘 Element 1: BUTTON - \"AInstagram\" \n"
-                        },
-                        {
-                          "text": "🔘 Element 2: BUTTON - \"BTikTok\" \n"
-                        },
-                        {
-                          "text": "🔘 Element 3: BUTTON - \"CTwitter\" \n"
-                        },
-                        {
-                          "text": "🔘 Element 4: BUTTON - \"DSnapchat\" \n"
+                          "text": "📸 Capturing Start Page\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-12T10:48:38.362Z",
+                      "startTime": "2025-09-14T13:34:27.085Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-4d1ca-t-Page---Category-Selection-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-4d1ca-t-Page---Category-Selection-desktop/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15984,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 36
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 36
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16\u001b[22m"
+                        },
+                        {
+                          "message": "Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open '/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/.playwright-artifacts-1/traces/66dd0916253d02153a15-882ef8200c22791ccdff-retry1.network'"
+                        },
+                        {
+                          "message": "Error: ENOENT: no such file or directory, open '/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/.playwright-artifacts-1/83d5086a3ad35c1f875c01b8c1e480d3.zip'"
+                        },
+                        {
+                          "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Start Page\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-14T13:34:43.121Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-4d1ca-t-Page---Category-Selection-desktop-retry1/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 18404,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 36
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 36
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 34 |\u001b[39m     \n \u001b[90m 35 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \n \u001b[90m 38 |\u001b[39m     \u001b[90m// Take full page screenshot\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:36:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Start Page\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-14T13:36:29.902Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-4d1ca-t-Page---Category-Selection-desktop-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-4d1ca-t-Page---Category-Selection-desktop-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-882ef8200c22791ccdff",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Quiz Interface - Question Display",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16020,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 55
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 55
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:36:49.513Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 55
+                      }
+                    },
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16437,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 55
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 55
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-14T13:37:06.154Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 55
+                      }
+                    },
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16405,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 55
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 55
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 53 |\u001b[39m     \n \u001b[90m 54 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 57 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 58 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:55:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-14T13:37:23.376Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-c6ab5-nterface---Question-Display-desktop-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 55
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-e8cd8988dbd5672e9f7c",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Quiz Results Page",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16243,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 79
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 79
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Results\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:37:40.453Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 79
+                      }
+                    },
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15903,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 79
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 79
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Results\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-14T13:37:57.365Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 79
+                      }
+                    },
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15998,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 79
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 79
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 77 |\u001b[39m     \n \u001b[90m 78 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:79:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Quiz Results\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-14T13:38:14.065Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-1f4aa-mentation-Quiz-Results-Page-desktop-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 79
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-4788f17ebf2e4c706cb8",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "Profile Page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5165,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Profile Page\n"
+                        },
+                        {
+                          "text": "✅ Profile page screenshot saved\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:38:30.819Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -375,9 +731,414 @@
                   "status": "expected"
                 }
               ],
-              "id": "ba4ad3983b5074480ba9-ea91646b2a4c9142adbb",
-              "file": "homepage-quiz-detailed.spec.ts",
-              "line": 186,
+              "id": "66dd0916253d02153a15-5dbaee15001bd299cc97",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 108,
+              "column": 7
+            },
+            {
+              "title": "Mobile View - Homepage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1811,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Mobile View - Homepage\n"
+                        },
+                        {
+                          "text": "✅ Mobile homepage screenshot saved\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:38:36.260Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-b9cade87f0b4f7ea30ea",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "Mobile View - Category Selection",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15674,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 160
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 160
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Mobile View - Category Selection\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:38:38.076Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 160
+                      }
+                    },
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15778,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 160
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 160
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Mobile View - Category Selection\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-14T13:38:54.096Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 160
+                      }
+                    },
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15356,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 160
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 160
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 158 |\u001b[39m     \n \u001b[90m 159 |\u001b[39m     \u001b[90m// Wait for categories to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 160 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 161 |\u001b[39m     \n \u001b[90m 162 |\u001b[39m     \u001b[90m// Take screenshot\u001b[39m\n \u001b[90m 163 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:160:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Mobile View - Category Selection\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-14T13:39:10.668Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-537a3-e-View---Category-Selection-desktop-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 160
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-ccf308894737051e275b",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 149,
+              "column": 7
+            },
+            {
+              "title": "Tablet View - Quiz Interface",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop",
+                  "projectName": "desktop",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15818,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 182
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 182
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Tablet View - Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-14T13:39:26.563Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 182
+                      }
+                    },
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16022,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 182
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 182
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Tablet View - Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-09-14T13:39:42.930Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 182
+                      }
+                    },
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15802,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16",
+                        "location": {
+                          "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                          "column": 16,
+                          "line": 182
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                            "column": 16,
+                            "line": 182
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"category-card\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 180 |\u001b[39m     \n \u001b[90m 181 |\u001b[39m     \u001b[90m// Wait for categories and click the first one\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mconst\u001b[39m firstCategory \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"category-card\"]'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m firstCategory\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[0m\n\u001b[2m    at /Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts:182:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "📸 Capturing Tablet View - Quiz Interface\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 2,
+                      "startTime": "2025-09-14T13:39:59.584Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop-retry2/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/test-results/visual-design-documentatio-9590d-ablet-View---Quiz-Interface-desktop-retry2/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jaseem/Documents/GitHub/techkwiz-quiz-app-v3/tests/e2e/visual-design-documentation.spec.ts",
+                        "column": 16,
+                        "line": 182
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "66dd0916253d02153a15-1e4e4dd0a23204599fa7",
+              "file": "visual-design-documentation.spec.ts",
+              "line": 171,
               "column": 7
             }
           ]
@@ -387,11 +1148,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-12T10:48:27.507Z",
-    "duration": 13285.113,
-    "expected": 2,
+    "startTime": "2025-09-14T13:34:22.999Z",
+    "duration": 352709.06100000005,
+    "expected": 3,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 5,
     "flaky": 0
   }
 }

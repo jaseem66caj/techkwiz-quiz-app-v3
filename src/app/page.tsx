@@ -60,7 +60,7 @@ export default function HomePage() {
       setResultCountdown(prev => {
         const next = Math.max(prev - 1, 0);
         // Update ARIA live region every 10 seconds to avoid spam
-        if (next % 10 === 0) setSrAnnouncement(`Redirecting to categories in ${next} seconds`);
+        if (next % 10 === 0) setSrAnnouncement(`Redirecting to profile creation in ${next} seconds`);
         return next;
       });
     }, 1000);
@@ -68,10 +68,14 @@ export default function HomePage() {
     const timeout = setTimeout(() => {
       try {
         setIsNavigating(true);
-        router.push('/start'); // preserve history
+        // Changed from router.push('/start') to setShowCreateProfile(true) as requested
+        setShowResult(false);
+        setShowCreateProfile(true);
       } catch (e) {
         import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any));
-        if (typeof window !== 'undefined') window.location.href = '/start';
+        // Fallback to profile creation
+        setShowResult(false);
+        setShowCreateProfile(true);
       }
     }, 90000);
 
@@ -228,7 +232,7 @@ export default function HomePage() {
     setSelectedAnswer(answerIndex);
 
     // Apply immediate visual feedback styling (consistent with category quizzes)
-    // Enhanced timing: 400ms visual feedback + 250ms natural pause before progression
+    // Enhanced timing: 400ms visual feedback + 600ms natural pause before progression
     setTimeout(() => {
       const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
       const rewardResult = isCorrect ? calculateCorrectAnswerReward() : { coins: 0 };
@@ -293,7 +297,7 @@ export default function HomePage() {
 
         dispatch({ type: 'END_QUIZ', payload: { correctAnswers: finalScore, totalQuestions: quickStartQuiz.length } });
       }
-    }, 650); // Enhanced timing: 400ms visual feedback + 250ms natural pause = 650ms total
+    }, 1000); // Enhanced timing: 400ms visual feedback + 600ms natural pause = 1000ms total
   };
 
   // ===================================================================
@@ -419,19 +423,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Standardized completion timer (90s) */}
-              <div className="glass-effect p-4 rounded-xl mb-4">
-                <p className="text-blue-200 text-base font-medium mb-3 text-center">
-                  Redirecting to categories in {resultCountdown} seconds...
-                </p>
-                <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-linear rounded-full"
-                    style={{ width: `${Math.min(100, Math.round(((90 - resultCountdown) / 90) * 100))}%` }}
-                  />
-                </div>
-              </div>
-
+              {/* Standardized completion timer (90s) - runs in background */}
               <div className="flex justify-center">
                 <button
                   onClick={() => {

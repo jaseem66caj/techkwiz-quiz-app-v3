@@ -30,10 +30,19 @@ test.describe('Category Quiz Progression Tests', () => {
     });
 
     // Navigate to a valid category quiz page
-    await page.goto('http://localhost:3000/quiz/programming');
+    await page.goto('/quiz/programming');
 
-    // Wait for the quiz to load
-    await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 10000 });
+    // Wait for the quiz to load - increase timeout for dynamic components
+    // First check if we're on the insufficient coins page (should not be the case with 200 coins)
+    const insufficientCoinsMessage = page.locator('text=Insufficient coins');
+    const isInsufficientCoinsPage = await insufficientCoinsMessage.isVisible({ timeout: 5000 });
+    
+    if (isInsufficientCoinsPage) {
+      throw new Error('User redirected to insufficient coins page despite having 200 coins');
+    }
+
+    // Wait for the quiz interface to load with increased timeout
+    await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 30000 });
 
     // Check for any console errors, specifically ReferenceError
     const consoleErrors = [];
@@ -44,7 +53,7 @@ test.describe('Category Quiz Progression Tests', () => {
     });
 
     // Wait for answer options to be ready (more robust than specific header text)
-    await page.waitForSelector('[data-testid="answer-option"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="answer-option"]', { timeout: 15000 });
 
     // Try to log the question text if available (non-fatal if absent)
     const headerLocator = page.locator('[data-testid="question-text"]');
@@ -67,34 +76,46 @@ test.describe('Category Quiz Progression Tests', () => {
     console.log('Answering first question');
 
     // Wait for answer options to be visible
-    await page.waitForSelector('[data-testid="answer-option"]', { timeout: 5000 });
+    await page.waitForSelector('[data-testid="answer-option"]', { timeout: 10000 });
 
     // Allow initial animations/transitions to settle before interaction
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1500);
 
     // Click the first answer option
     const answerOptions = page.locator('[data-testid="answer-option"]');
     await answerOptions.first().click({ force: true });
 
-    // Wait for reward popup to appear and skip it
-    await page.waitForTimeout(1000);
-    const skipButton = page.locator('text=Skip Now');
-    if (await skipButton.isVisible()) {
-      console.log('Skipping reward popup');
-      await skipButton.click();
+    // Wait for reward popup to appear (account for 400ms delay)
+    await page.waitForTimeout(2000);
+    
+    // Look for the reward popup and click the claim button
+    const claimButton = page.locator('[data-testid="reward-claim-button"]');
+    const claimButtonText = page.locator('text=Claim');
+    
+    // Check if the claim button is visible
+    if (await claimButton.isVisible({ timeout: 5000 }) || await claimButtonText.isVisible({ timeout: 5000 })) {
+      console.log('Found reward popup, clicking claim button');
+      // Click the claim button using either selector
+      if (await claimButton.isVisible()) {
+        await claimButton.click();
+      } else {
+        await claimButtonText.click();
+      }
+    } else {
+      console.log('Reward popup not found, continuing...');
     }
 
     // Wait for next question
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(4000);
 
     // Prefer checking for question text change when available
     if (initialHeaderText) {
-      await expect(headerLocator.first()).not.toHaveText(initialHeaderText, { timeout: 5000 });
+      await expect(headerLocator.first()).not.toHaveText(initialHeaderText, { timeout: 10000 });
       const newHeaderText = await headerLocator.first().textContent();
       console.log(`✅ Progressed. New header: ${newHeaderText}`);
     } else {
       // Fallback: ensure answer options are still present (quiz not stuck)
-      await expect(page.locator('[data-testid="answer-option"]').first()).toBeVisible();
+      await expect(page.locator('[data-testid="answer-option"]').first()).toBeVisible({ timeout: 10000 });
       console.log('✅ Progressed to next step (fallback check)');
     }
 

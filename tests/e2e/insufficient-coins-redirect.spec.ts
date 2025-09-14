@@ -27,7 +27,7 @@ test.describe('Insufficient Coins - Auto Redirect to Homepage Quiz', () => {
       // Seed user with 0 coins before navigation
       await page.addInitScript(seedUserWithCoins, 0);
 
-      await page.goto(`http://localhost:3000/quiz/${category}`);
+      await page.goto(`http://localhost:3002/quiz/${category}`);
 
       // Expect the insufficient coins message & countdown UI
       await expect(page.locator('text=Insufficient coins')).toBeVisible({ timeout: 8000 });
@@ -44,7 +44,7 @@ test.describe('Insufficient Coins - Auto Redirect to Homepage Quiz', () => {
       }
 
       // Verify we land on the homepage quiz
-      await page.waitForURL('http://localhost:3000/**', { timeout: 10000 });
+      await page.waitForURL('http://localhost:3002/**', { timeout: 10000 });
       // Check a unique homepage heading to confirm navigation
       await expect(page.locator('h1:has-text("Welcome to TechKwiz!")')).toBeVisible({ timeout: 10000 });
     });

@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { TimeUpModal } from '../../../components/modals'
+import { UnifiedRewardPopup } from '../../../components/rewards/UnifiedRewardPopup'
 import dynamic from 'next/dynamic'
 
 const UnifiedQuizInterface = dynamic(() => import('../../../components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
@@ -21,10 +22,6 @@ const CountdownTimer = dynamic(() => import('../../../components/quiz/CountdownT
   loading: () => <div className="h-8 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
-const UnifiedRewardPopup = dynamic(() => import('../../../components/rewards/UnifiedRewardPopup').then(mod => mod.UnifiedRewardPopup), {
-  ssr: false,
-  loading: () => <div className="h-96 bg-gray-800/50 rounded-xl animate-pulse" />
-})
 import { quizDataManager } from '../../../utils/quizDataManager'
 import { useApp } from '../../providers'
 import { getAvatarEmojiById } from '../../../utils/avatar';
@@ -67,8 +64,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const [adSlotCode, setAdSlotCode] = useState<string>('')
   // Results & streak tracking
   const [showResult, setShowResult] = useState(false)
-  const [currentStreak, setCurrentStreak] = useState(0)
-  const [maxStreak, setMaxStreak] = useState(0)
 
   // Standardized 90s completion redirect (Category Results)
   const [resultCountdown, setResultCountdown] = useState(90)
@@ -130,14 +125,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   useEffect(() => {
     if (!showResult) return;
 
-    const interval = setInterval(() => {
-      setResultCountdown(prev => {
-        const next = Math.max(prev - 1, 0)
-        if (next % 10 === 0) setSrAnnouncement(`Redirecting to categories in ${next} seconds`)
-        return next
-      })
-    }, 1000)
-
     const timeout = setTimeout(() => {
       try {
         router.push('/start')
@@ -148,7 +135,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     }, 90000)
 
     return () => {
-      clearInterval(interval)
       clearTimeout(timeout)
     }
   }, [showResult, router])
@@ -301,8 +287,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     setShowTimeUp(true)
     // Mark as incorrect
     setIsCorrect(false)
-    // Reset streak on timeout
-    setCurrentStreak(0)
     // Set selected to indicate time expired
     setSelected(-1)
     // Trigger reward popup after delay
@@ -315,28 +299,29 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     if (selected !== null) return;
 
     try {
+      console.log('handleAnswer called with answerIndex:', answerIndex);
       // Apply immediate visual feedback styling (consistent with homepage quiz)
       setSelected(answerIndex);
+      console.log('setSelected called with answerIndex:', answerIndex);
 
       // Check if answer is correct (use refs to avoid stale closures)
       const correct = questionsRef.current[currentRef.current]?.correct_answer === answerIndex;
       setIsCorrect(!!correct);
+      console.log('setIsCorrect called with:', !!correct);
 
       // Update score, streak, and award coins for correct answers
       if (correct) {
-        setScore(s => s + 1);
-        setCurrentStreak(cs => {
-          const next = cs + 1
-          setMaxStreak(ms => Math.max(ms, next))
-          return next
-        })
+        setScore(s => {
+          const next = s + 1;
+          console.log('Setting score to:', next);
+          return next;
+        });
 
         // Award coins immediately for correct answers
         const rewardResult = calculateCorrectAnswerReward();
         dispatch({ type: 'UPDATE_COINS', payload: rewardResult.coins });
         console.log(`✅ Correct answer! Earned ${rewardResult.coins} coins`);
       } else {
-        setCurrentStreak(0)
         console.log(`❌ Wrong answer, no coins earned`);
       }
 
@@ -344,6 +329,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       // Quiz progression PAUSES until user manually interacts with popup
       const timeout = setTimeout(() => {
         if (isMountedRef.current) {
+          console.log('Setting showReward to true');
           setShowReward(true); // Display RewardPopup requiring user interaction
         }
       }, 400); // Consistent 400ms timing with homepage quiz
@@ -369,20 +355,29 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // Advance to next question or complete quiz
   const advance = useCallback(() => {
     try {
+      console.log('advance function called', { current, questionsLength: questions.length });
       // Hide reward popup and time up modal
       setShowReward(false);
       setShowTimeUp(false);
+      console.log('setShowReward and setShowTimeUp called');
 
       // Check if there are more questions
       if (current < questions.length - 1) {
+        console.log('Advancing to next question');
         // Advance to next question
-        setCurrent(c => c + 1);
+        setCurrent(c => {
+          const next = c + 1;
+          console.log('Setting current to', next);
+          return next;
+        });
         setSelected(null);
+        console.log('setSelected called with null');
       } else {
         // Quiz completed - dispatch end quiz action, show results, then navigate
         const totalQuestions = questions.length
         dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions } });
         setShowResult(true)
+        console.log('Quiz completed, showing results');
 
         // Standardized behavior: results remain visible; 90s timer handles redirect to categories
         // (See effect: 90s auto-redirect when showResult is true)
@@ -397,7 +392,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         })
       })
     }
-  }, [current, questions.length, score, dispatch, router, categoryId]);
+  }, [current, questions.length, score, dispatch, categoryId]);
 
   // ===================================================================
   // Loading and Error States
@@ -493,16 +488,13 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
             score={score}
             totalQuestions={questions.length}
             category={categoryId}
-            coinsEarned={score * 25}
-            maxStreak={maxStreak}
+            coinsEarned={score * 50}
             onPlayAgain={() => {
               // Reset quiz state
               setCurrent(0)
               setSelected(null)
               setScore(0)
               setShowResult(false)
-              setCurrentStreak(0)
-              setMaxStreak(0)
               setShowReward(false)
               setIsCorrect(false)
             }}

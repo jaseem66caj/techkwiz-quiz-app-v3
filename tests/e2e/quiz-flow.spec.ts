@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('TechKwiz Quiz Flow E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Start the development server if not already running
-    await page.goto('http://localhost:3000');
+    await page.goto('/');
   });
 
   test('Homepage loads and displays quiz interface', async ({ page }) => {
@@ -180,7 +180,7 @@ test.describe('TechKwiz Quiz Flow E2E Tests', () => {
 
   test('Error handling and loading states', async ({ page }) => {
     // Test loading state
-    await page.goto('http://localhost:3000');
+    await page.goto('/');
     
     // Check for loading indicator
     const loadingIndicator = page.locator('text=Loading TechKwiz');

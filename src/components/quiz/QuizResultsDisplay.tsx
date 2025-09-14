@@ -11,7 +11,6 @@ interface QuizResultsDisplayProps {
   category: string
   difficulty?: string
   coinsEarned?: number
-  maxStreak?: number
   onPlayAgain: () => void
   onBackToCategories: () => void
   // Optional slot to render custom content below results but above action buttons (e.g., standardized timer)
@@ -24,30 +23,12 @@ export function QuizResultsDisplay({
   category,
   difficulty = 'beginner',
   coinsEarned = 0,
-  maxStreak = 0,
   onPlayAgain,
   onBackToCategories,
   timerSlot
 }: QuizResultsDisplayProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const percentage = Math.round((score / totalQuestions) * 100)
-
-  useEffect(() => {
-    setShowConfetti(true)
-    const timer = setTimeout(() => setShowConfetti(false), 3000)
-    return () => clearTimeout(timer)
-  }, [])
-
-  const getPerformanceMessage = () => {
-    if (percentage >= 90) return { message: "Perfect! 🌟", color: "text-yellow-400" }
-    if (percentage >= 80) return { message: "Excellent! 🏆", color: "text-green-400" }
-    if (percentage >= 70) return { message: "Great job! 👍", color: "text-blue-400" }
-    if (percentage >= 60) return { message: "Good work! 📈", color: "text-purple-400" }
-    if (percentage >= 40) return { message: "Not bad! 💪", color: "text-orange-400" }
-    return { message: "Keep practicing! 📚", color: "text-red-400" }
-  }
-
-  const performance = getPerformanceMessage()
 
   const getDifficultyBadge = () => {
     switch (difficulty) {
@@ -66,35 +47,6 @@ export function QuizResultsDisplay({
       transition={{ duration: 0.6 }}
       className="glass-effect p-8 rounded-2xl text-center max-w-lg mx-auto relative overflow-hidden"
     >
-      {/* Confetti Effect */}
-      {showConfetti && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(25)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-2xl"
-              initial={{ 
-                y: -50, 
-                x: Math.random() * 500 - 250,
-                opacity: 1 
-              }}
-              animate={{ 
-                y: 500,
-                x: Math.random() * 500 - 250,
-                opacity: 0,
-                rotate: 360
-              }}
-              transition={{ 
-                duration: 3,
-                delay: Math.random() * 2
-              }}
-            >
-              {['🎉', '🎊', '⭐', '🏆', '🎈', '🌟', '💫', '✨'][Math.floor(Math.random() * 8)]}
-            </motion.div>
-          ))}
-        </div>
-      )}
-
       {/* Result Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -120,7 +72,7 @@ export function QuizResultsDisplay({
         </div>
       </motion.div>
 
-      {/* Score Display */}
+      {/* Score Display - Simplified to remove streak information */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -155,62 +107,29 @@ export function QuizResultsDisplay({
           </div>
         </div>
 
-        <div className="glass-effect p-4 rounded-xl">
-          <div className="text-3xl font-bold text-purple-400 mb-2">
-            {maxStreak}
-          </div>
-          <div className="text-blue-200 text-sm">
-            Best Streak
-          </div>
-        </div>
+        {/* Removed Best Streak display */}
       </motion.div>
 
-      {/* Performance Message */}
+      {/* Action Buttons - Changed "Play Again" to "Try Other Quizzes" */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className={`text-lg font-semibold ${performance.color} mb-6`}
+        className="flex flex-col sm:flex-row gap-3 mt-8"
       >
-        {performance.message}
-      </motion.div>
-
-      {/* Achievements */}
-      {(percentage >= 80 || maxStreak >= 5 || coinsEarned >= 1000) && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="glass-effect p-4 rounded-xl mb-6"
+        <button
+          onClick={onBackToCategories}
+          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
         >
-          <h3 className="text-white font-semibold mb-3 flex items-center justify-center">
-            <span className="mr-2">🏅</span>
-            Achievements Unlocked!
-          </h3>
-          <div className="flex flex-wrap justify-center gap-2">
-            {percentage >= 80 && (
-              <span className="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs">
-                🌟 High Score
-              </span>
-            )}
-            {maxStreak >= 5 && (
-              <span className="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-xs">
-                🔥 Streak Master
-              </span>
-            )}
-            {coinsEarned >= 1000 && (
-              <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs">
-                💰 Big Earner
-              </span>
-            )}
-            {percentage === 100 && (
-              <span className="bg-gold-500/20 text-yellow-300 px-3 py-1 rounded-full text-xs">
-                🏆 Perfect Score
-              </span>
-            )}
-          </div>
-        </motion.div>
-      )}
+          Back to Categories
+        </button>
+        <button
+          onClick={onBackToCategories} // Changed to go back to categories instead of playing again
+          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+        >
+          Try Other Quizzes
+        </button>
+      </motion.div>
 
       {/* Advertisement Banner */}
       <motion.div

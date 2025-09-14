@@ -1,10 +1,10 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 
 // Production URL for testing
-const PRODUCTION_URL = 'https://play.techkwiz.com';
+const BASE_URL = 'http://localhost:3002';
 
 // Test configuration for production
-test.describe('TechKwiz v8 Production Navigation Tests', () => {
+test.describe('techkwiz-quiz-app-v3 Production Navigation Tests', () => {
   let context: BrowserContext;
   let page: Page;
 
@@ -44,7 +44,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     
     // Step 1: Load homepage
     console.log('📍 Step 1: Loading homepage...');
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Verify homepage loads correctly
@@ -72,7 +72,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     console.log('📍 Step 4: Attempting navigation to /start...');
     
     try {
-      await page.goto(`${PRODUCTION_URL}/start`);
+      await page.goto(`${BASE_URL}/start`);
       await page.waitForLoadState('networkidle');
       
       // Check if /start page loads successfully
@@ -114,7 +114,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     console.log('🧪 Testing: Authentication State');
     
     // Load homepage and check authentication state
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Check localStorage for user data
@@ -153,7 +153,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
       console.log(`📍 Testing route: ${route}`);
       
       try {
-        await page.goto(`${PRODUCTION_URL}${route}`);
+        await page.goto(`${BASE_URL}${route}`);
         await page.waitForLoadState('networkidle');
         
         // Check for error boundary activation
@@ -198,7 +198,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     
     // Measure page load time
     const startTime = Date.now();
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     const loadTime = Date.now() - startTime;
     
@@ -228,7 +228,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto(PRODUCTION_URL);
+    await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     
     // Check for mobile-specific elements
@@ -237,7 +237,7 @@ test.describe('TechKwiz v8 Production Navigation Tests', () => {
     
     // Test navigation on mobile
     try {
-      await page.goto(`${PRODUCTION_URL}/start`);
+      await page.goto(`${BASE_URL}/start`);
       await page.waitForLoadState('networkidle');
       console.log('✅ Mobile navigation to /start successful');
     } catch (error) {

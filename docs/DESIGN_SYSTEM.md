@@ -1,212 +1,127 @@
 # TechKwiz Design System
-**Version 2.0** | **Last Updated:** December 9, 2024 | **Maintained by:** Design System Team
+
+**Version 1.0** | **Last Updated:** September 14, 2025 | **Maintained by:** TechKwiz Development Team
 
 ## 🎯 Overview
 
-This document serves as the **single source of truth** for all design decisions in the TechKwiz Quiz App. It is a comprehensive, authoritative visual design specification that must be consulted and potentially updated for every UI-related change.
-
-**⚠️ MANDATORY CONSULTATION REQUIREMENT:** All UI-related changes, feature additions, and visual modifications MUST reference this design system and follow the documented approval process before implementation.
+This document defines the complete design system for the TechKwiz Quiz App. It serves as the single source of truth for all visual design elements, including color palette, typography, spacing, components, and interaction patterns. This system ensures consistency across all UI elements and provides guidelines for creating new components that align with the established visual language.
 
 ## 🎨 Color Palette
 
-### Primary Colors (Synchronized with `tailwind.config.js`)
-- **Primary Blue 500**: `#3B82F6` - Main brand color, primary actions, links *(Tailwind: `primary-500`)*
-- **Primary Blue 600**: `#2563EB` - Primary button backgrounds, active states *(Tailwind: `primary-600`)*
-- **Primary Blue 700**: `#1D4ED8` - Pressed states, dark mode primary *(Tailwind: `primary-700`)*
-- **Primary Blue 800**: `#1E40AF` - High contrast elements *(Tailwind: `primary-800`)*
-- **Primary Blue 900**: `#1E3A8A` - Maximum contrast, headings *(Tailwind: `primary-900`)*
+### Primary Colors
+The primary color palette is based on blue gradients that convey trust, technology, and professionalism.
 
-### Secondary Colors (Synchronized with `tailwind.config.js`)
-- **Secondary Orange 500**: `#F59E0B` - Secondary actions, highlights *(Tailwind: `secondary-500`)*
-- **Secondary Orange 600**: `#D97706` - Secondary button hover states *(Tailwind: `secondary-600`)*
+| Color Name | Hex Value | Usage |
+|------------|-----------|-------|
+| Primary Blue 500 | `#3B82F6` | Main brand color, primary actions, links |
+| Primary Blue 600 | `#2563EB` | Primary button backgrounds, active states |
+| Primary Blue 700 | `#1D4ED8` | Pressed states, dark mode primary |
+| Primary Blue 800 | `#1E40AF` | High contrast elements |
+| Primary Blue 900 | `#1E3A8A` | Maximum contrast, headings |
 
-### Background Gradient (Actual Implementation)
-- **Body Background**: `linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)` - Main app background
-- **Glass Effect Background**: `rgba(30, 60, 114, 0.8)` - Card and component backgrounds
+### Secondary Colors
+Secondary colors provide accent and highlight functionality.
 
-### Quiz-Specific Colors (From Actual Implementation)
-- **Quiz Option Background**: `rgba(42, 82, 152, 0.8)` - Default quiz option state
-- **Selected Option**: `rgba(255, 193, 7, 0.8)` with border `#ffc107` - User selection
-- **Correct Answer**: `rgba(40, 167, 69, 0.8)` with border `#28a745` - Correct feedback
-- **Incorrect Answer**: `rgba(220, 53, 69, 0.8)` with border `#dc3545` - Incorrect feedback
+| Color Name | Hex Value | Usage |
+|------------|-----------|-------|
+| Secondary Orange 500 | `#F59E0B` | Secondary actions, highlights |
+| Secondary Orange 600 | `#D97706` | Secondary button hover states |
 
-### Semantic Colors (Implementation-Verified)
-- **Success Green**: `#28A745` - Correct answers, positive actions
-- **Warning Yellow**: `#FFC107` - Selected states, caution
-- **Error Red**: `#DC3545` - Incorrect answers, error states
-- **Info Blue**: `#3B82F6` - Informational messages, neutral actions
+### Background Gradient
+The app uses a gradient background that creates depth and visual interest.
 
-## 📝 Typography (Synchronized with Implementation)
+| Element | Value | Usage |
+|---------|-------|-------|
+| Body Background | `linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)` | Main app background |
+| Glass Effect Background | `rgba(30, 60, 114, 0.8)` | Card and component backgrounds |
 
-### Font Family (Verified in `globals.css` and `tailwind.config.js`)
-- **Primary Font**: `Inter` with fallbacks `system-ui, sans-serif`
-- **Font Loading**: Google Fonts CDN via `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap')`
-- **Tailwind Class**: `font-sans`
+### Quiz-Specific Colors
+These colors provide visual feedback during quiz interactions.
 
-### Font Sizes (Tailwind CSS Standard Scale)
-- **Heading 1**: `2.25rem` (36px) - `text-4xl` - Main page titles
-- **Heading 2**: `1.875rem` (30px) - `text-3xl` - Section headings
-- **Heading 3**: `1.5rem` (24px) - `text-2xl` - Subsection headings
-- **Heading 4**: `1.25rem` (20px) - `text-xl` - Card titles
-- **Body Large**: `1.125rem` (18px) - `text-lg` - Lead paragraphs
-- **Body Regular**: `1rem` (16px) - `text-base` - Standard text
-- **Body Small**: `0.875rem` (14px) - `text-sm` - Secondary text
-- **Caption**: `0.75rem` (12px) - `text-xs` - Metadata and fine print
+| State | Background | Border | Usage |
+|-------|------------|--------|-------|
+| Quiz Option Default | `rgba(42, 82, 152, 0.8)` | Transparent | Default quiz option state |
+| Selected Option | `rgba(255, 193, 7, 0.8)` | `#ffc107` | User selection |
+| Correct Answer | `rgba(40, 167, 69, 0.8)` | `#28a745` | Correct feedback |
+| Incorrect Answer | `rgba(220, 53, 69, 0.8)` | `#dc3545` | Incorrect feedback |
 
-### Font Weights (Available in Inter Font)
-- **Light**: `300` - `font-light` - Subtle text
-- **Regular**: `400` - `font-normal` - Standard text
-- **Medium**: `500` - `font-medium` - Emphasized text
-- **Semi-Bold**: `600` - `font-semibold` - Subheadings, buttons
-- **Bold**: `700` - `font-bold` - Headings
-- **Extra-Bold**: `800` - `font-extrabold` - Page titles, hero text
+### Semantic Colors
+Semantic colors convey meaning and status.
 
-### Line Heights (Tailwind CSS Classes)
-- **Tight**: `1.25` - `leading-tight` - Headings
-- **Normal**: `1.5` - `leading-normal` - Body text
-- **Relaxed**: `1.75` - `leading-relaxed` - Paragraphs
+| Color Name | Hex Value | Usage |
+|------------|-----------|-------|
+| Success Green | `#28A745` | Correct answers, positive actions |
+| Warning Yellow | `#FFC107` | Selected states, caution |
+| Error Red | `#DC3545` | Incorrect answers, error states |
+| Info Blue | `#3B82F6` | Informational messages, neutral actions |
 
-## 📏 Spacing System (4px Grid - Tailwind CSS)
+## 📝 Typography
 
-### Scale (Synchronized with Tailwind CSS)
-- **0**: `0` - `p-0`, `m-0` - No spacing
-- **1**: `0.25rem` (4px) - `p-1`, `m-1` - Minimal spacing
-- **2**: `0.5rem` (8px) - `p-2`, `m-2` - Micro spacing
-- **3**: `0.75rem` (12px) - `p-3`, `m-3` - Small elements
-- **4**: `1rem` (16px) - `p-4`, `m-4` - Standard spacing
-- **6**: `1.5rem` (24px) - `p-6`, `m-6` - Section spacing
-- **8**: `2rem` (32px) - `p-8`, `m-8` - Major sections
-- **12**: `3rem` (48px) - `p-12`, `m-12` - Page-level spacing
+### Font Family
+The design system uses a single font family with appropriate fallbacks for maximum compatibility.
 
-### Component-Specific Spacing (From Implementation)
-- **Quiz Options**: `padding: 12px` - Mobile optimized
-- **Cards**: `padding: 1.5rem` (24px) - Standard card padding
-- **Navigation**: `padding: 0.75rem 1rem` (12px 16px) - Nav bar padding
-- **Buttons**: `padding: 0.75rem 1.5rem` (12px 24px) - Button padding
+| Property | Value |
+|----------|-------|
+| Primary Font | `Inter` |
+| Fallback Fonts | `system-ui, sans-serif` |
+| Font Loading | Google Fonts CDN via `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap')` |
 
-### Responsive Spacing Strategy
-- **Mobile (xs-sm)**: Base spacing values, optimized for touch
-- **Tablet (md-lg)**: 1.25x base values for better visual hierarchy
-- **Desktop (xl-2xl)**: 1.5x base values for spacious layouts
+### Font Sizes
+Typography follows a consistent scale that ensures readability across all devices.
 
----
+| Size Name | Value (rem) | Value (px) | Usage |
+|-----------|-------------|------------|-------|
+| Heading 1 | 2.25 | 36 | Main page titles |
+| Heading 2 | 1.875 | 30 | Section headings |
+| Heading 3 | 1.5 | 24 | Subsection headings |
+| Heading 4 | 1.25 | 20 | Card titles |
+| Body Large | 1.125 | 18 | Lead paragraphs |
+| Body Regular | 1 | 16 | Standard text |
+| Body Small | 0.875 | 14 | Secondary text |
+| Caption | 0.75 | 12 | Metadata and fine print |
 
-## 🔒 Design Change Control Framework
+### Font Weights
+Font weights provide visual hierarchy and emphasis.
 
-### Mandatory Approval Workflow
+| Weight Name | Value | Usage |
+|-------------|-------|-------|
+| Light | 300 | Subtle text |
+| Regular | 400 | Standard text |
+| Medium | 500 | Emphasized text |
+| Semi-Bold | 600 | Subheadings, buttons |
+| Bold | 700 | Headings |
+| Extra-Bold | 800 | Page titles, hero text |
 
-**⚠️ CRITICAL:** All visual changes must follow this approval process before implementation.
+## 📏 Spacing System
 
-#### 1. Pre-Change Requirements
-- [ ] Consult this design system documentation
-- [ ] Identify affected components and pages
-- [ ] Assess visual impact and breaking changes
-- [ ] Prepare rollback plan
+The spacing system is based on a 4px grid to ensure consistent alignment and rhythm.
 
-#### 2. Change Request Template
-```markdown
-## Design Change Request
+### Scale
+| Scale | Value (rem) | Value (px) | Usage |
+|-------|-------------|------------|-------|
+| 0 | 0 | 0 | No spacing |
+| 1 | 0.25 | 4 | Minimal spacing |
+| 2 | 0.5 | 8 | Micro spacing |
+| 3 | 0.75 | 12 | Small elements |
+| 4 | 1 | 16 | Standard spacing |
+| 6 | 1.5 | 24 | Section spacing |
+| 8 | 2 | 32 | Major sections |
+| 12 | 3 | 48 | Page-level spacing |
 
-**Date:** [YYYY-MM-DD]
-**Requestor:** [Name/Team]
-**Priority:** [Low/Medium/High/Critical]
+### Component-Specific Spacing
+| Component | Padding/Margin | Notes |
+|-----------|----------------|-------|
+| Quiz Options | 12px | Mobile optimized |
+| Cards | 1.5rem (24px) | Standard card padding |
+| Navigation | 0.75rem 1rem (12px 16px) | Nav bar padding |
+| Buttons | 0.75rem 1.5rem (12px 24px) | Button padding |
 
-### Change Description
-- **What:** Brief description of the change
-- **Why:** Business justification or user need
-- **Where:** Affected components/pages
-
-### Impact Assessment
-- **Visual Impact:** [Minimal/Moderate/Significant]
-- **Affected Components:** [List all components]
-- **Breaking Changes:** [Yes/No - describe if yes]
-- **Responsive Impact:** [Mobile/Tablet/Desktop affected]
-
-### Implementation Plan
-- **Estimated Effort:** [Hours/Days]
-- **Dependencies:** [Other changes required]
-- **Testing Plan:** [Visual regression tests to update]
-- **Rollback Plan:** [How to revert if needed]
-
-### Approval Checklist
-- [ ] Design System Owner approval
-- [ ] Technical Lead approval
-- [ ] Visual regression tests updated
-- [ ] Documentation updated
-```
-
-#### 3. Roles and Responsibilities
-
-**Design System Owner** (Maintains documentation)
-- Reviews all design change requests
-- Updates design system documentation
-- Ensures consistency across changes
-- Final approval authority for design decisions
-
-**Design Reviewers** (Approve changes)
-- Technical Lead: Reviews implementation feasibility
-- Product Owner: Reviews business alignment
-- UX Lead: Reviews user experience impact
-
-**Implementation Team** (Executes changes)
-- Frontend Developers: Implement approved changes
-- QA Engineers: Execute visual regression tests
-- DevOps: Deploy and monitor changes
-
-#### 4. Approval Matrix
-| Change Type | Design Owner | Tech Lead | Product Owner | Auto-Deploy |
-|-------------|--------------|-----------|---------------|-------------|
-| Color tweaks | ✅ | ❌ | ❌ | ❌ |
-| New components | ✅ | ✅ | ✅ | ❌ |
-| Layout changes | ✅ | ✅ | ❌ | ❌ |
-| Emergency fixes | ✅ | ✅ | ❌ | ✅ |
-
-### Visual Regression Testing Requirements
-
-**Mandatory Process:** ALL design changes must include visual regression test updates.
-
-#### 1. Before Implementation
-```bash
-# Generate current baselines
-npm run test:visual -- --update-snapshots
-```
-
-#### 2. After Implementation
-```bash
-# Run visual regression tests
-npm run test:visual
-
-# If tests fail, review differences and either:
-# - Fix implementation to match design system, OR
-# - Update baselines if change is intentional
-npm run test:visual -- --update-snapshots
-```
-
-#### 3. Required Test Coverage
-- **Homepage**: All viewports (mobile, tablet, desktop)
-- **Start Page**: All viewports
-- **Quiz Interface**: Mobile and desktop
-- **Profile Page**: Mobile and desktop
-- **Affected Components**: All viewports
-
-#### 4. Change Documentation Requirements
-Every approved change MUST simultaneously update:
-1. **This design system document** - Updated specifications
-2. **Component code** - Implementation changes
-3. **Visual test baselines** - New reference images
-4. **Change log** - Record of what changed and why
-
-**⚠️ NO EXCEPTIONS:** Changes without complete documentation updates will be rejected.
-
----
-
-## 🧩 Components (Implementation-Ready Specifications)
+## 🧩 Components
 
 ### Buttons
 
-#### Primary Button (Actual Implementation)
-**CSS Class:** `.button-primary`
-**File Reference:** `src/app/globals.css` lines 102-116
+#### Primary Button
+Primary buttons are used for the most important actions.
 
 ```css
 .button-primary {
@@ -226,16 +141,8 @@ Every approved change MUST simultaneously update:
 }
 ```
 
-**Usage Example:**
-```jsx
-<button className="button-primary py-3 px-6">
-  Play Again
-</button>
-```
-
-#### Secondary Button (Actual Implementation)
-**CSS Class:** `.button-secondary`
-**File Reference:** `src/app/globals.css` lines 118-134
+#### Secondary Button
+Secondary buttons are used for less prominent actions.
 
 ```css
 .button-secondary {
@@ -257,18 +164,8 @@ Every approved change MUST simultaneously update:
 }
 ```
 
-**Usage Example:**
-```jsx
-<button className="button-secondary py-3 px-6">
-  Back to Categories
-</button>
-```
-
-### Cards (Glass Effect Implementation)
-
-#### Standard Glass Card
-**CSS Class:** `.glass-effect`
-**File Reference:** `src/app/globals.css` lines 94-100
+### Cards (Glass Effect)
+Cards use a glass effect to create depth while maintaining readability.
 
 ```css
 .glass-effect {
@@ -280,32 +177,8 @@ Every approved change MUST simultaneously update:
 }
 ```
 
-**Usage Example:**
-```jsx
-<div className="glass-effect p-6 rounded-2xl">
-  <h3 className="text-xl font-bold text-white mb-4">Card Title</h3>
-  <p className="text-blue-200">Card content goes here</p>
-</div>
-```
-
-#### Category Card (Actual Implementation)
-**File Reference:** `src/components/CategoryCard.tsx` lines 26-30
-
-```jsx
-<motion.div
-  whileHover={{ scale: 1.02, y: -5 }}
-  whileTap={{ scale: 0.98 }}
-  className="glass-effect p-6 rounded-2xl cursor-pointer group transition-all duration-300 hover:shadow-2xl"
->
-  {/* Card content */}
-</motion.div>
-```
-
-### Quiz Options (Actual Implementation)
-
-#### Default Quiz Option
-**CSS Class:** `.quiz-option`
-**File Reference:** `src/app/globals.css` lines 136-154
+### Quiz Options
+Quiz options are designed for touch interaction and clear feedback.
 
 ```css
 .quiz-option {
@@ -327,41 +200,8 @@ Every approved change MUST simultaneously update:
   line-height: 1.4;
   width: 100%;
 }
-```
 
-#### Quiz Option States (Implementation-Verified)
-
-**Selected State** (`.quiz-option.selected`):
-```css
-.quiz-option.selected {
-  background: rgba(255, 193, 7, 0.8);
-  border-color: #ffc107;
-  transform: scale(1.05);
-}
-```
-
-**Correct State** (`.quiz-option.correct`):
-```css
-.quiz-option.correct {
-  background: rgba(40, 167, 69, 0.8);
-  border-color: #28a745;
-  animation: correctAnswer 0.6s ease;
-}
-```
-
-**Incorrect State** (`.quiz-option.incorrect`):
-```css
-.quiz-option.incorrect {
-  background: rgba(220, 53, 69, 0.8);
-  border-color: #dc3545;
-  animation: shake 0.5s ease;
-}
-```
-
-#### Mobile Responsive Quiz Options
-**File Reference:** `src/app/globals.css` lines 157-174
-
-```css
+/* Mobile-specific improvements */
 @media (max-width: 640px) {
   .quiz-option {
     padding: 12px 8px;
@@ -373,463 +213,64 @@ Every approved change MUST simultaneously update:
 }
 ```
 
-### Navigation (Actual Implementation)
-
-#### Main Navigation Bar
-**File Reference:** `src/components/Navigation.tsx` line 67
-
-```jsx
-<nav className="bg-gray-800/90 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-  <div className="px-4 py-3">
-    <div className="flex items-center justify-between">
-      {/* Navigation content */}
-    </div>
-  </div>
-</nav>
-```
-
-**Specifications:**
-- **Background**: `rgba(31, 41, 55, 0.9)` - `bg-gray-800/90`
-- **Backdrop Filter**: `blur(4px)` - `backdrop-blur-sm`
-- **Border**: `1px solid rgba(255, 255, 255, 0.1)` - `border-white/10`
-- **Height**: Auto (content-based)
-- **Padding**: `0.75rem 1rem` (12px 16px) - `px-4 py-3`
-- **Position**: `sticky top-0` with `z-index: 50`
-
-### Progress Bar (Implementation Examples)
-
-#### Quiz Progress Bar
-**File Reference:** `src/components/EnhancedQuizInterface.tsx` lines 278-281
-
-```jsx
-<div className="w-full bg-gray-700 rounded-full h-2">
-  <div
-    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
-    style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
-  />
-</div>
-```
-
-#### Timer Progress Bar
-**File Reference:** `src/components/CountdownTimer.tsx` lines 140-146
-
-```jsx
-<div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-  <motion.div
-    className="h-full bg-gradient-to-r from-green-400 to-blue-500 transition-all duration-1000 ease-linear"
-    style={{ width: `${progressPercentage}%` }}
-  />
-</div>
-```
-
----
-
-## ✅ Design Compliance Checklist
-
-### Before Implementation
-- [ ] **Color Verification**: All colors match documented hex values
-- [ ] **Typography Check**: Font sizes, weights, and families are correct
-- [ ] **Spacing Audit**: Padding and margins follow 4px grid system
-- [ ] **Component Consistency**: Using existing component patterns
-- [ ] **Responsive Design**: Mobile-first approach implemented
-- [ ] **Animation Standards**: Framer Motion patterns followed
-- [ ] **Glass Effects**: Proper backdrop-filter and transparency values
-
-### Component-Specific Checklists
-
-#### Button Checklist
-- [ ] Uses `.button-primary` or `.button-secondary` classes
-- [ ] Proper hover states with `translateY(-2px)`
-- [ ] Correct border-radius: `12px`
-- [ ] Font weight: `600` (semi-bold)
-- [ ] Transition: `all 0.3s ease`
-
-#### Card Checklist
-- [ ] Uses `.glass-effect` class for background
-- [ ] Border-radius: `16px` minimum
-- [ ] Padding: `1.5rem` (24px) standard
-- [ ] Proper backdrop-filter blur
-- [ ] White border with 10% opacity
-
-#### Quiz Option Checklist
-- [ ] Uses `.quiz-option` base class
-- [ ] Mobile responsive padding adjustments
-- [ ] Proper state classes (`.selected`, `.correct`, `.incorrect`)
-- [ ] Animation keyframes for feedback
-- [ ] Minimum touch target: 48px on mobile
-
-### Common Design Violations
-
-#### ❌ INCORRECT Implementation Examples
-
-**Wrong Button Styling:**
-```jsx
-// DON'T: Custom inline styles
-<button style={{
-  background: 'blue',
-  padding: '10px',
-  borderRadius: '5px'
-}}>
-  Click Me
-</button>
-```
-
-**Wrong Color Usage:**
-```jsx
-// DON'T: Hardcoded colors not in design system
-<div className="bg-red-500 text-green-400">
-  Error message
-</div>
-```
-
-**Wrong Spacing:**
-```jsx
-// DON'T: Non-standard spacing values
-<div className="p-5 m-7">
-  Content
-</div>
-```
-
-#### ✅ CORRECT Implementation Examples
-
-**Correct Button Styling:**
-```jsx
-// DO: Use design system classes
-<button className="button-primary py-3 px-6">
-  Click Me
-</button>
-```
-
-**Correct Color Usage:**
-```jsx
-// DO: Use semantic color classes
-<div className="bg-red-500 text-white">
-  Error message
-</div>
-```
-
-**Correct Spacing:**
-```jsx
-// DO: Use 4px grid system
-<div className="p-6 m-4">
-  Content
-</div>
-```
-
----
-
-## 📋 Version Control and Maintenance Protocol
-
-### Design System Changelog
-
-#### Version 2.0 - December 9, 2024
-**Major Update: Comprehensive Design System Overhaul**
-
-**Added:**
-- Mandatory design change control framework
-- Implementation-ready code examples with file references
-- Design compliance checklist and common violations guide
-- Visual regression testing integration
-- Cross-references to technical infrastructure
-
-**Updated:**
-- Color palette synchronized with `tailwind.config.js`
-- Typography specifications with Tailwind CSS classes
-- Component specifications with actual implementation details
-- Spacing system aligned with 4px grid
-
-**Technical Changes:**
-- All color values verified against actual implementation
-- Component examples extracted from live codebase
-- Animation specifications updated with Framer Motion patterns
-
-#### Version 1.0 - Previous
-**Initial Release**
-- Basic color palette and typography
-- Component specifications
-- Animation guidelines
-- Responsive breakpoints
-
-### Cross-References to Related Documentation
-
-**Required Reading for Design Changes:**
-- [`docs/DESIGN_PRESERVATION_STRATEGY.md`](./DESIGN_PRESERVATION_STRATEGY.md) - Visual testing strategy
-- [`docs/VISUAL_TESTING_STATUS_FINAL.md`](./VISUAL_TESTING_STATUS_FINAL.md) - Current testing status
-- [`docs/VISUAL_TESTING_IMPLEMENTATION_COMPLETE.md`](./VISUAL_TESTING_IMPLEMENTATION_COMPLETE.md) - Implementation details
-
-**Technical Infrastructure:**
-- [`tailwind.config.js`](../tailwind.config.js) - Color and spacing definitions
-- [`src/app/globals.css`](../src/app/globals.css) - Component CSS classes
-- [`playwright.config.ts`](../playwright.config.ts) - Visual testing configuration
-- [`.percy.yaml`](../.percy.yaml) - Percy visual testing setup
-
-### Mandatory Update Process
-
-**The Triple Update Rule:** Every design change MUST update three things simultaneously:
-
-1. **Design System Documentation** (this file)
-   - Update specifications
-   - Add/modify code examples
-   - Update changelog
-
-2. **Component Implementation**
-   - Update component code
-   - Modify CSS classes
-   - Test responsive behavior
-
-3. **Visual Test Baselines**
-   - Run visual regression tests
-   - Update baseline images
-   - Commit new references
-
-**Command Sequence:**
-```bash
-# 1. Make design changes
-# 2. Update this documentation
-# 3. Update component code
-# 4. Update visual baselines
-npm run test:visual -- --update-snapshots
-# 5. Commit all changes together
-git add .
-git commit -m "feat: update design system - [brief description]"
-```
-
-### Quarterly Design System Audit Schedule
-
-**Q1 Audit (March)** - Color and Typography Review
-- [ ] Verify all colors match implementation
-- [ ] Check font loading and fallbacks
-- [ ] Review typography scale usage
-- [ ] Update color palette if needed
-
-**Q2 Audit (June)** - Component and Spacing Review
-- [ ] Audit component implementations
-- [ ] Verify spacing system adherence
-- [ ] Check responsive behavior
-- [ ] Update component specifications
-
-**Q3 Audit (September)** - Animation and Interaction Review
-- [ ] Review Framer Motion implementations
-- [ ] Check animation performance
-- [ ] Verify interaction patterns
-- [ ] Update animation specifications
-
-**Q4 Audit (December)** - Comprehensive System Review
-- [ ] Full design system audit
-- [ ] Documentation completeness check
-- [ ] Visual regression test coverage
-- [ ] Plan next year improvements
-
-### Emergency vs. Planned Update Process
-
-#### Emergency Design Fixes (Production Issues)
-**Approval Required:** Design System Owner + Technical Lead
-**Timeline:** Immediate (within 2 hours)
-**Process:**
-1. Implement minimal fix
-2. Deploy to production
-3. Create follow-up task for proper documentation
-4. Update design system within 24 hours
-
-#### Planned Design Updates (Feature Development)
-**Approval Required:** Full approval matrix
-**Timeline:** Standard development cycle
-**Process:**
-1. Submit design change request
-2. Get all required approvals
-3. Implement with full documentation
-4. Update visual regression tests
-5. Deploy with monitoring
-
-### Version Numbering System
-
-**Major Version (X.0):** Breaking changes, complete redesigns
-**Minor Version (X.Y):** New components, significant updates
-**Patch Version (X.Y.Z):** Bug fixes, minor adjustments
-
-**Current Version:** 2.0
-**Next Planned:** 2.1 (Q1 2025) - Enhanced mobile components
-
----
-
-## 🔧 Integration with Current Technical Infrastructure
-
-### Tech Stack Compatibility (Verified)
-
-**Current Stack:**
-- **Next.js**: 15.5.2 - React framework
-- **React**: 19.1.0 - UI library
-- **Tailwind CSS**: 3.4.0 - Utility-first CSS framework
-- **Framer Motion**: 12.23.9 - Animation library
-- **TypeScript**: 5.8.3 - Type safety
-- **Playwright**: 1.55.0 - Visual testing
-
-**Design System Integration Points:**
-- All color values compatible with Tailwind CSS color system
-- Typography scale aligns with Tailwind's default scale
-- Spacing system uses Tailwind's 4px-based rem units
-- Animations leverage Framer Motion's motion components
-- Components are TypeScript-ready with proper interfaces
-
-### Visual Testing Infrastructure
-
-#### Playwright Configuration
-**File:** [`playwright.config.ts`](../playwright.config.ts)
-
-```typescript
-export default defineConfig({
-  testDir: './tests/e2e',
-  snapshotDir: './tests/e2e/baselines',
-  projects: [
-    {
-      name: 'mobile',
-      use: {
-        ...devices['iPhone 12'],
-        viewport: { width: 375, height: 667 }
-      },
-    },
-    {
-      name: 'tablet',
-      use: {
-        ...devices['iPad Mini'],
-        viewport: { width: 768, height: 1024 }
-      },
-    },
-    {
-      name: 'desktop',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1280, height: 800 }
-      },
-    },
-  ],
-});
-```
-
-#### Visual Testing Commands
-```bash
-# Run all visual tests
-npm run test:visual
-
-# Run with UI mode for debugging
-npm run test:visual:ui
-
-# Update baselines after approved changes
-npm run test:visual -- --update-snapshots
-
-# Run stable E2E tests
-npm run test:e2e:stable
-```
-
-#### Percy Configuration
-**File:** [`.percy.yaml`](../.percy.yaml)
-
-```yaml
-version: 2
-snapshot:
-  widths: [375, 768, 1280]
-  min-height: 1024
-discovery:
-  allowed-hostnames:
-    - localhost
-```
-
-### Mobile-First Responsive Design (Implementation-Verified)
-
-#### Breakpoints (Synchronized with `tailwind.config.js`)
-```javascript
-screens: {
-  'xs': '375px',   // Mobile phones
-  'sm': '640px',   // Large phones
-  'md': '768px',   // Tablets
-  'lg': '1024px',  // Small laptops
-  'xl': '1280px',  // Desktops
-  '2xl': '1536px', // Large screens
-}
-```
-
-#### Mobile-First Implementation Strategy
-**Base Styles (Mobile):**
-- Default styles target mobile devices
-- Touch-friendly interactive elements (min 44px)
-- Single-column layouts
-- Optimized font sizes and spacing
-
-**Progressive Enhancement:**
-```css
-/* Mobile first (default) */
-.quiz-option {
-  padding: 12px 8px;
-  font-size: 14px;
-  min-height: 48px;
-}
-
-/* Tablet and up */
-@media (min-width: 768px) {
-  .quiz-option {
-    padding: 12px 12px;
-    font-size: 15px;
-    min-height: 52px;
-  }
-}
-```
-
-#### Touch Target Guidelines
-- **Minimum Size**: 44px × 44px (iOS/Android standard)
-- **Recommended Size**: 48px × 48px for better usability
-- **Spacing**: 8px minimum between touch targets
-- **Implementation**: All buttons and interactive elements meet these requirements
-
-### Sentry Error Monitoring Integration
-
-**Error Tracking for Design Issues:**
-- Visual rendering errors automatically reported
-- Component crash tracking for design system violations
-- Performance monitoring for animation-heavy components
-- User interaction tracking for UX improvements
-
-**Configuration:** [`@sentry/nextjs`](../package.json) version 8.46.0
-
-### Animation System (Framer Motion 12.23.9)
-
-#### Standard Animation Patterns (Implementation-Verified)
-
-**Page Transitions:**
-```jsx
-<motion.div
-  initial={{ opacity: 0, scale: 0.95 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5 }}
->
-  {/* Page content */}
-</motion.div>
-```
-
-**Button Interactions:**
-```jsx
-<motion.button
-  whileHover={{ scale: 1.02 }}
-  whileTap={{ scale: 0.98 }}
-  className="button-primary"
->
-  Click Me
-</motion.button>
-```
-
-**Card Hover Effects:**
-```jsx
-<motion.div
-  whileHover={{ scale: 1.02, y: -5 }}
-  className="glass-effect"
->
-  {/* Card content */}
-</motion.div>
-```
-
-#### CSS Keyframe Animations (Fallback Support)
-**File Reference:** `src/app/globals.css`
+### Quiz Option States
+Different states provide clear feedback to users.
 
 ```css
+.quiz-option.selected {
+  background: rgba(255, 193, 7, 0.8);
+  border-color: #ffc107;
+  transform: scale(1.05);
+}
+
+.quiz-option.correct {
+  background: rgba(40, 167, 69, 0.8);
+  border-color: #28a745;
+  animation: correctAnswer 0.6s ease;
+}
+
+.quiz-option.incorrect {
+  background: rgba(220, 53, 69, 0.8);
+  border-color: #dc3545;
+  animation: shake 0.5s ease;
+}
+```
+
+## 📱 Responsive Design
+
+### Breakpoints
+The design system uses a mobile-first approach with the following breakpoints:
+
+| Breakpoint | Value | Usage |
+|------------|-------|-------|
+| Mobile (xs) | 375px | Small mobile devices |
+| Small (sm) | 640px | Large mobile devices |
+| Medium (md) | 768px | Tablets |
+| Large (lg) | 1024px | Small desktops |
+| Extra Large (xl) | 1280px | Standard desktops |
+| 2x Extra Large (2xl) | 1536px | Large desktops |
+
+### Mobile-First Approach
+All designs should start with mobile styling and progressively enhance for larger screens. This ensures optimal performance and user experience on all devices.
+
+### Responsive Design Guidelines
+For detailed responsive design implementation guidelines, see [Responsive Design Guidelines](./website-standards/RESPONSIVE_DESIGN_GUIDELINES.md).
+
+## 🎭 Animations
+
+### Framer Motion Patterns
+The app uses Framer Motion for smooth, performant animations.
+
+| Pattern | Usage |
+|---------|-------|
+| Page Transitions | `initial={{ opacity: 0, scale: 0.95 }}` to `animate={{ opacity: 1, scale: 1 }}` |
+| Button Interactions | `whileHover={{ scale: 1.02 }}` and `whileTap={{ scale: 0.98 }}` |
+| Card Hover Effects | `whileHover={{ scale: 1.02, y: -5 }}` |
+
+### CSS Keyframe Animations
+Custom animations provide feedback and enhance the user experience.
+
+```
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -843,190 +284,84 @@ screens: {
   80% { transform: scale3d(.97, .97, .97); }
   100% { opacity: 1; transform: scale3d(1, 1, 1); }
 }
+
+@keyframes correctAnswer {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
 ```
 
-**Tailwind Animation Classes:**
-- `animate-fade-in` - Fade in with slide up
-- `animate-slide-up` - Slide up animation
-- `animate-bounce-in` - Bounce entrance animation
+## 🧭 Navigation
 
----
+### Unified Navigation Component
+The navigation component has three modes:
+1. **Full Mode** (default): Complete navigation with all features
+2. **Simple Mode**: Logo and basic navigation links
+3. **Minimal Mode**: Logo only
 
-## 🚨 Enforcement and Compliance Mechanisms
+### Navigation Items
+| Item | Path | Icon |
+|------|------|------|
+| Home | `/` | 🏠 |
+| Categories | `/start` | 📚 |
+| Leaderboard | `/leaderboard` | 🏆 |
+| Profile | `/profile` | 👤 |
 
-### Mandatory Design System Consultation
+## 🔄 User Flow Patterns
 
-**REQUIREMENT:** All UI-related changes MUST include design system consultation in PR reviews.
+### Homepage Flow
+The homepage provides a quick quiz experience to engage new users.
 
-#### PR Review Checklist Template
-```markdown
-## Design System Compliance Review
+```
+graph TD
+    A[User visits homepage] --> B[Quick 5-question quiz]
+    B --> C[Answer questions]
+    C --> D[View results]
+    D --> E[Redirect to profile creation after 90 seconds]
+```
 
-### Pre-Merge Requirements
-- [ ] **Design System Consulted**: Referenced this document for all UI changes
-- [ ] **Color Compliance**: All colors match documented specifications
-- [ ] **Component Standards**: Used existing component patterns and classes
+### Category Selection Flow
+Users select categories to participate in full quizzes.
+
+```
+graph TD
+    A[User visits /start] --> B[View category cards]
+    B --> C[Select category]
+    C --> D{Sufficient coins?}
+    D --> |Yes| E[Navigate to quiz]
+    D --> |No| F[Redirect to insufficient coins page]
+```
+
+## ✅ Design System Compliance Checklist
+
+### Before Implementation
+- [ ] **Color Verification**: All colors match documented hex values
+- [ ] **Typography Check**: Font sizes, weights, and families are correct
+- [ ] **Spacing Audit**: Padding and margins follow 4px grid system
+- [ ] **Component Consistency**: Using existing component patterns
 - [ ] **Responsive Design**: Mobile-first approach implemented
-- [ ] **Visual Tests Updated**: Baseline images updated if needed
-- [ ] **Documentation Updated**: Design system updated if new patterns added
+- [ ] **Animation Standards**: Framer Motion patterns followed
+- [ ] **Glass Effects**: Proper backdrop-filter and transparency values
 
-### Reviewer Verification
-- [ ] **Technical Review**: Implementation matches design system specifications
-- [ ] **Visual Review**: Changes maintain design consistency
-- [ ] **Test Coverage**: Visual regression tests pass or are appropriately updated
+### After Implementation
+- [ ] **Visual Regression Tests**: All tests pass or baselines updated
+- [ ] **Accessibility Check**: WCAG compliance verified
+- [ ] **Performance Audit**: No significant performance degradation
+- [ ] **Cross-Browser Testing**: Works on all supported browsers
+- [ ] **Mobile Testing**: Proper display on all device sizes
 
-**Reviewer:** [Name]
-**Date:** [YYYY-MM-DD]
-```
+## 📚 References
 
-### Acceptance Criteria for UI Changes
-
-#### Level 1: Minor Changes (Color tweaks, spacing adjustments)
-**Required Approvals:** 1 (Design System Owner)
-**Acceptance Criteria:**
-- [ ] Changes documented in design system
-- [ ] Visual regression tests pass
-- [ ] No breaking changes to existing components
-
-#### Level 2: Component Updates (New variants, behavior changes)
-**Required Approvals:** 2 (Design System Owner + Technical Lead)
-**Acceptance Criteria:**
-- [ ] Component specifications updated
-- [ ] Code examples provided
-- [ ] Backward compatibility maintained
-- [ ] Visual tests cover all variants
-
-#### Level 3: System Changes (New components, major redesigns)
-**Required Approvals:** 3 (Design System Owner + Technical Lead + Product Owner)
-**Acceptance Criteria:**
-- [ ] Full design system documentation update
-- [ ] Implementation guide with examples
-- [ ] Migration guide for existing usage
-- [ ] Comprehensive visual test coverage
-
-### Automated Enforcement Through Visual Regression Tests
-
-#### Continuous Integration Integration
-```yaml
-# .github/workflows/visual-tests.yml
-name: Visual Regression Tests
-on: [pull_request]
-jobs:
-  visual-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm install
-      - name: Run visual tests
-        run: npm run test:visual
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: visual-test-results
-          path: test-results/
-```
-
-#### Automated Checks
-- **Pre-commit hooks**: Lint CSS for design system compliance
-- **CI/CD pipeline**: Visual regression tests on every PR
-- **Deployment gates**: Visual tests must pass before production deployment
-- **Monitoring**: Sentry alerts for design-related runtime errors
-
-### Escalation Process for Design System Violations
-
-#### Level 1: Minor Violations (Caught in review)
-**Process:**
-1. Reviewer identifies violation in PR
-2. Developer fixes issue before merge
-3. No escalation needed
-
-#### Level 2: Moderate Violations (Deployed to staging)
-**Process:**
-1. QA or reviewer identifies violation in staging
-2. Create high-priority bug ticket
-3. Fix within 1 business day
-4. Update visual regression tests
-
-#### Level 3: Major Violations (Deployed to production)
-**Process:**
-1. Immediate notification to Design System Owner
-2. Emergency fix process initiated
-3. Post-mortem meeting scheduled
-4. Process improvements implemented
-
-#### Level 4: Systematic Violations (Pattern of non-compliance)
-**Process:**
-1. Design System Owner escalates to Technical Lead
-2. Team training session scheduled
-3. Additional review requirements implemented
-4. Design system documentation improvements
-
-### Design System Violation Tracking
-
-**Violation Categories:**
-- **Color Misuse**: Using non-standard colors
-- **Component Deviation**: Not using design system components
-- **Spacing Violations**: Non-standard padding/margins
-- **Typography Errors**: Wrong fonts, sizes, or weights
-- **Animation Inconsistencies**: Non-standard transitions or effects
-
-**Tracking Metrics:**
-- Number of violations per sprint
-- Time to resolution for violations
-- Repeat violations by team/developer
-- Design system consultation rate in PRs
-
-### Success Metrics
-
-**Design Consistency Metrics:**
-- Visual regression test pass rate: >95%
-- Design system consultation rate: 100% of UI PRs
-- Component reuse rate: >80% of UI elements
-- Design violation resolution time: <24 hours
-
-**Developer Experience Metrics:**
-- Time to implement new UI components
-- Design system documentation usage
-- Developer satisfaction with design system
-- Onboarding time for new team members
-
----
-
-## 📚 Additional Resources
-
-### Quick Reference Links
-- **Component Examples**: [`src/components/`](../src/components/) - Live component implementations
-- **CSS Classes**: [`src/app/globals.css`](../src/app/globals.css) - Design system CSS
-- **Visual Tests**: [`tests/e2e/`](../tests/e2e/) - Visual regression test suite
-- **Configuration**: [`tailwind.config.js`](../tailwind.config.js) - Tailwind customizations
-
-### Design System Tools
-- **Figma**: [Design System Library] (if applicable)
-- **Storybook**: [Component Documentation] (if implemented)
-- **Percy**: Visual testing dashboard
-- **Playwright**: Test execution and reporting
-
-### Support and Contact
-- **Design System Owner**: [Contact Information]
-- **Technical Lead**: [Contact Information]
-- **Design Team**: [Contact Information]
-- **Documentation Issues**: Create GitHub issue with `design-system` label
-
----
-
-## 🎯 Conclusion
-
-This design system serves as the **single source of truth** for all visual design decisions in the TechKwiz Quiz App. By following the documented specifications, approval processes, and compliance mechanisms, we ensure:
-
-✅ **Consistent User Experience** across all features and platforms
-✅ **Efficient Development** with reusable components and clear guidelines
-✅ **Quality Assurance** through automated visual regression testing
-✅ **Maintainable Codebase** with documented patterns and standards
-✅ **Scalable Design Process** that grows with the application
-
-**Remember:** Every UI change is an opportunity to strengthen our design system. When in doubt, consult this documentation and engage with the design system team.
-
-**Last Updated:** December 9, 2024 | **Version:** 2.0 | **Next Review:** March 2025
-
+- **Website Design Standards**: [docs/website-standards/WEBSITE_DESIGN_STANDARDS.md](./website-standards/WEBSITE_DESIGN_STANDARDS.md)
+- **Responsive Design Guidelines**: [docs/website-standards/RESPONSIVE_DESIGN_GUIDELINES.md](./website-standards/RESPONSIVE_DESIGN_GUIDELINES.md)
+- **Component Organization**: [docs/architecture/COMPONENT_ORGANIZATION.md](./architecture/COMPONENT_ORGANIZATION.md)
+- **UI Component Standards**: [docs/components/UI_COMPONENT_STANDARDS.md](./components/UI_COMPONENT_STANDARDS.md)
+- **Project README**: [README.md](../README.md)
+- **Global Styles**: [src/app/globals.css](../src/app/globals.css)
