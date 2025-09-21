@@ -21,6 +21,8 @@ export default defineConfig({
     trace: 'on-first-retry',
     video: 'retain-on-failure',
   },
+  // Set environment variables for testing
+  globalSetup: require.resolve('./tests/e2e/global-setup.ts'),
   projects: [
     {
       name: 'mobile',

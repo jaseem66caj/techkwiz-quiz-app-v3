@@ -72,6 +72,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const [insufficientCoins, setInsufficientCoins] = useState(false)
   const [redirectCountdown, setRedirectCountdown] = useState(5)
   const [earningPotential, setEarningPotential] = useState<number>(0)
+  const [quizSessionCoins, setQuizSessionCoins] = useState<number>(0)
 
   // Timer state management
   const [timerEnabled, setTimerEnabled] = useState(true)
@@ -320,6 +321,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         // Award coins immediately for correct answers
         const rewardResult = calculateCorrectAnswerReward();
         dispatch({ type: 'UPDATE_COINS', payload: rewardResult.coins });
+        setQuizSessionCoins(prev => prev + rewardResult.coins);
         console.log(`✅ Correct answer! Earned ${rewardResult.coins} coins`);
       } else {
         console.log(`❌ Wrong answer, no coins earned`);
@@ -466,10 +468,19 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
                 <span className="text-2xl mr-2">{getAvatarEmojiById(state.user.avatar)}</span>
                 <span className="text-white font-medium">{state.user.name}</span>
               </div>
-              <div className="flex items-center bg-orange-500/20 rounded-full px-4 py-2 border border-orange-400/30">
-                <span className="text-2xl mr-2">🪙</span>
-                <span className="text-orange-300 font-medium">Coins: </span>
-                <span className="text-white font-bold ml-1">{state.user.coins}</span>
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center bg-orange-500/20 rounded-full px-3 py-1 border border-orange-400/30">
+                  <span className="text-lg mr-1">🪙</span>
+                  <span className="text-orange-300 text-sm">Wallet: </span>
+                  <span className="text-white font-bold text-sm">{state.user.coins}</span>
+                </div>
+                {quizSessionCoins > 0 && (
+                  <div className="flex items-center bg-green-500/20 rounded-full px-3 py-1 border border-green-400/30">
+                    <span className="text-lg mr-1">✨</span>
+                    <span className="text-green-300 text-sm">Earned: </span>
+                    <span className="text-white font-bold text-sm">+{quizSessionCoins}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}

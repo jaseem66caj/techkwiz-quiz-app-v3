@@ -75,6 +75,13 @@ export function useExitPrevention({
 
   useEffect(() => {
     console.log('🔧 useExitPrevention: Effect running, isActive:', isActive)
+
+    // Check if exit prevention is disabled (for testing environments)
+    if (process.env.NEXT_PUBLIC_DISABLE_EXIT_GUARD === 'true') {
+      console.log('🔧 useExitPrevention: Exit prevention disabled by environment variable')
+      return
+    }
+
     if (!isActive) return
 
     console.log('🔧 useExitPrevention: Adding event listeners...')

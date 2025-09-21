@@ -308,6 +308,7 @@ export default function StartPage() {
             {filteredCategories.map((category, index) => (
               <motion.div
                 key={category.id}
+                data-testid="category-card"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}

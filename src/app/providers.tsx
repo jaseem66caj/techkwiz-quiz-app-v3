@@ -17,7 +17,7 @@ import {
 } from '../utils/auth'
 import { getUnlockedAchievements } from '../utils/achievements';
 import { Achievement } from '../types/reward';
-import { calculateQuizReward } from '../utils/rewardCalculator';
+import { calculateQuizReward, getRewardConfig } from '../utils/rewardCalculator';
 
 // Types
 // AppState represents the complete application state
@@ -144,7 +144,8 @@ function appReducer(state: AppState, action: any) {
       }
 
       // Log quiz completion (coins already awarded individually per correct answer)
-      const expectedCoins = quizResult.correctAnswers * 50; // For logging purposes only
+      const { coinValues } = getRewardConfig();
+const expectedCoins = quizResult.correctAnswers * coinValues.correct; // For logging only
       console.log(`🎉 Quiz completed! ${quizResult.correctAnswers} correct answers (${expectedCoins} coins already awarded). Current balance: ${state.user.coins}`)
       
       // Calculate and update user level (1 level per 5 quizzes)

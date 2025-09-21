@@ -39,6 +39,7 @@ export function CategoryCard({ category, onSelect, userCoins }: CategoryCardProp
   
   return (
     <motion.div
+      data-testid="category-card"
       whileHover={!reduceMotion ? { scale: 1.02, y: -5 } : {}}
       whileTap={!reduceMotion ? { scale: 0.98 } : {}}
       className="glass-effect p-6 rounded-2xl cursor-pointer group transition-all duration-300 hover:shadow-2xl"

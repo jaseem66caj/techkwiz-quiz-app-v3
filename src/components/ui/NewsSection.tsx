@@ -19,7 +19,16 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
     const loadArticles = async () => {
       setLoading(true)
       setError(null)
-      
+
+      // Check if news fetching is disabled (for testing environments)
+      if (process.env.NEXT_PUBLIC_DISABLE_NEWS === 'true') {
+        console.log('📰 News fetching disabled by environment variable, using mock data')
+        setArticles(mockWordPressPosts)
+        setDataSource('mock')
+        setLoading(false)
+        return
+      }
+
       try {
         // First, try to fetch from WordPress REST API
         console.log('Attempting to fetch from WordPress REST API...')
@@ -27,20 +36,20 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
         setArticles(wpPosts)
         setDataSource('live')
         console.log('✅ Successfully fetched from WordPress REST API')
-        
+
       } catch (restApiError) {
         console.log('WordPress REST API failed, trying RSS feed...')
-        
+
         try {
           // Fallback to RSS feed
           const rssPosts = await fetchWordPressRSS('https://techkwiz.com/feed/')
           setArticles(rssPosts)
           setDataSource('live')
           console.log('✅ Successfully fetched from RSS feed')
-          
+
         } catch (rssError) {
           console.log('RSS feed also failed, using mock data...')
-          
+
           // Final fallback to mock data
           setArticles(mockWordPressPosts)
           setDataSource('mock')

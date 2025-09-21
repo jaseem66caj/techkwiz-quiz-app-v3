@@ -52,5 +52,5 @@ Sentry.init({
   },
 });
 
-// Export required hooks for Next.js integration (if available)
-// Note: captureRouterTransitionStart may not be available in all Sentry versions
+// Export required hooks for Next.js integration (Sentry v10+)
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

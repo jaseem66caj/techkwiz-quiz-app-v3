@@ -79,7 +79,7 @@ src/
 
 1. **Start Quiz** - Choose a category from the start page
 2. **Answer Questions** - Select your answer from multiple choices
-3. **Earn Coins** - Get 25 coins for each correct answer
+3. **Earn Coins** - Get 50 coins for each correct answer
 4. **Unlock Achievements** - Complete challenges to earn special rewards
 5. **Track Progress** - View your stats and coin balance
 
