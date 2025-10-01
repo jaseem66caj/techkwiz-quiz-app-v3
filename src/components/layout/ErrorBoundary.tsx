@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             })
           }
         }
-      } catch (userError) {
+      } catch {
         // Ignore user context errors
       }
 

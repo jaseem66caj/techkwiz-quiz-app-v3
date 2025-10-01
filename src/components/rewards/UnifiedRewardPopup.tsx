@@ -7,28 +7,24 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useApp } from '../../app/providers'
-import { getAvatarEmojiById } from '../../utils/avatar'
+import { useApp } from '@/app/providers'
+import { getAvatarEmojiById } from '@/utils/avatar'
 
 // Main UnifiedRewardPopup component
 export function UnifiedRewardPopup({ 
   isOpen, 
   onClose, 
   isCorrect, 
-  coinsEarned,
-  onAdCompleted
+  coinsEarned
 }: { 
   isOpen: boolean
   onClose: () => void
   isCorrect: boolean
   coinsEarned: number
-  onAdCompleted?: (coins: number) => void
 }) {
   const { state } = useApp()
-  const [showingAd, setShowingAd] = useState(false)
-  const [adCompleted, setAdCompleted] = useState(false)
 
   // Handle escape key press to close popup
   useEffect(() => {
@@ -46,26 +42,6 @@ export function UnifiedRewardPopup({
       document.removeEventListener('keydown', handleEscape)
     }
   }, [isOpen, onClose])
-
-  // Handle ad completion
-  const handleAdCompleted = () => {
-    setAdCompleted(true)
-    setShowingAd(false)
-    if (onAdCompleted) {
-      onAdCompleted(100) // Reward 100 coins for watching ad
-    }
-  }
-
-  // Show ad after 2 seconds if user got question wrong
-  useEffect(() => {
-    if (isOpen && !isCorrect && !showingAd && !adCompleted) {
-      const timer = setTimeout(() => {
-        setShowingAd(true)
-      }, 2000)
-
-      return () => clearTimeout(timer)
-    }
-  }, [isOpen, isCorrect, showingAd, adCompleted])
 
   if (!isOpen) return null
 

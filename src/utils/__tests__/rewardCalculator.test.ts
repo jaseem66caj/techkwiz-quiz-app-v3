@@ -1,3 +1,4 @@
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import {
   getRewardConfig,
   calculateCorrectAnswerReward,
@@ -240,7 +241,7 @@ describe('rewardCalculator', () => {
     });
 
     it('should warn when correct answer reward differs from default', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
       const { rewardDataManager } = require('../rewardDataManager');
       rewardDataManager.getRewardConfig.mockReturnValue({

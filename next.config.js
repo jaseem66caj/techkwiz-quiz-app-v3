@@ -5,10 +5,19 @@ const nextConfig = {
 
   // SWC minification is enabled by default in Next.js 13+
 
-  // Optimize images
+  // Optimize images (updated for Next.js 15)
   images: {
-    domains: ['techkwiz.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'techkwiz.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // Environment variables validation
@@ -18,11 +27,9 @@ const nextConfig = {
 
   // Experimental features (app directory is stable in Next.js 13+)
 
-  // Webpack configuration
+  // Webpack configuration for build optimization
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Add custom webpack configurations if needed
-    
-    // Optimize bundle size
+    // Optimize bundle size for production
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
@@ -32,7 +39,25 @@ const nextConfig = {
             name: 'vendors',
             chunks: 'all',
           },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            enforce: true,
+          },
         },
+      }
+
+      // Enable tree shaking
+      config.optimization.usedExports = true
+      config.optimization.sideEffects = false
+    }
+
+    // Improve build performance
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
       }
     }
 

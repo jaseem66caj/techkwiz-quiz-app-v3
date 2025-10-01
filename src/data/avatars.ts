@@ -5,7 +5,7 @@
 // for the TechKwiz application. It provides a rich selection of avatars
 // organized by categories to enhance user personalization.
 
-import { Avatar, AvatarCategoryInfo } from '../types/avatar';
+import { Avatar, AvatarCategoryInfo } from '@/types/avatar';
 
 /**
  * Avatar categories with metadata

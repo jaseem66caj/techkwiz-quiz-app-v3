@@ -52,8 +52,7 @@ class TwoFactorAuthService {
   // Generate QR code data URL
   private generateQRCode(secret: string, accountName: string = 'TechKwiz Admin'): string {
     const issuer = 'TechKwiz'
-    const otpAuthUrl = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(accountName)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`
-    
+
     // In a real implementation, you would use a QR code library
     // For now, we'll return a placeholder data URL
     const canvas = document.createElement('canvas')
@@ -70,6 +69,7 @@ class TwoFactorAuthService {
     ctx.fillText('QR Code', 100, 90)
     ctx.fillText('Scan with', 100, 110)
     ctx.fillText('Authenticator App', 100, 130)
+    ctx.fillText(`${issuer} • ${accountName}`, 100, 150)
     
     return canvas.toDataURL()
   }
@@ -279,7 +279,7 @@ class TwoFactorAuthService {
   }
 
   // Disable 2FA
-  async disable2FA(password: string): Promise<TwoFactorVerification> {
+  async disable2FA(_password: string): Promise<TwoFactorVerification> {
     try {
       // In a real implementation, verify the password
       // For now, we'll just disable it

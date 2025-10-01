@@ -28,5 +28,5 @@ if (SENTRY_DSN) {
     replaysOnErrorSampleRate: 1.0,
   });
 } else {
-  console.log('Sentry DSN not provided, error monitoring disabled on client');
+  console.info('Sentry DSN not provided, error monitoring disabled on client');
 }

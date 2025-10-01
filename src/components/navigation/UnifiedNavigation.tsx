@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useApp } from '../../app/providers'
-import { EnhancedCoinDisplay } from '../../components/ui'
-import { StreakMultiplierDisplay } from '../../components/ui'
-import { useRevenueOptimization } from '../../hooks/useRevenueOptimization'
-import { logout } from '../../utils/auth'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { useApp } from '@/app/providers'
+import { StreakMultiplierDisplay } from '@/components/ui'
+import { useRevenueOptimization } from '@/hooks/useRevenueOptimization'
+import { logout } from '@/utils/auth'
 
 interface UnifiedNavigationProps {
   hideHeaderElements?: boolean;
@@ -21,19 +20,16 @@ export function UnifiedNavigation({
 }: UnifiedNavigationProps) {
   const { state, dispatch } = useApp()
   const router = useRouter()
-  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   // Revenue optimization hooks
   const {
     revenueMetrics,
-    activeMultipliers,
-    getCurrentMultiplier,
-    processReferral
+    getCurrentMultiplier
   } = useRevenueOptimization()
 
   // Debug logging
-  console.log('UnifiedNavigation component: hideHeaderElements =', hideHeaderElements, 'mode =', mode)
+  console.info('UnifiedNavigation component: hideHeaderElements =', hideHeaderElements, 'mode =', mode)
 
   const navigationItems = [
     { name: 'Home', href: '/', icon: '🏠' },

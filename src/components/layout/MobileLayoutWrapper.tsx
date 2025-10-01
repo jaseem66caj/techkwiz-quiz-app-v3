@@ -1,7 +1,7 @@
 'use client'
 
+import { AchievementNotification } from '@/components/user'
 import { useApp } from '@/app/providers'
-import { AchievementNotification } from '../../components/user'
 
 export function MobileLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { state, dispatch } = useApp();

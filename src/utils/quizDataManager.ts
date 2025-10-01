@@ -12,14 +12,10 @@ import {
   BulkOperationResult,
   QuestionDraft,
   QuizManagementSettings,
-  QUIZ_STORAGE_KEYS,
-  DEFAULT_CATEGORIES
+  QUIZ_STORAGE_KEYS
 } from '@/types/quiz'
 import {
-  autoMigrateQuestion,
-  batchMigrateLegacyQuestions,
-  validateQuizQuestion,
-  DataMigrationError
+  autoMigrateQuestion
 } from './quizDataMigration'
 
 // Data validation rules to ensure data integrity
@@ -37,9 +33,14 @@ export const VALIDATION_RULES = {
 
 // Custom error class for quiz data operations
 export class QuizDataError extends Error {
-  constructor(message: string, public code: string, public context?: any) {
+  code: string
+  context?: unknown
+
+  constructor(message: string, code: string, context?: unknown) {
     super(message)
     this.name = 'QuizDataError'
+    this.code = code
+    this.context = context
     this.logError()
   }
 
@@ -52,12 +53,12 @@ export class QuizDataError extends Error {
       timestamp: new Date().toISOString()
     }
 
-    console.group('🚨 QuizDataError')
-    console.error('Code:', this.code)
-    console.error('Message:', this.message)
-    if (this.context) console.error('Context:', this.context)
-    console.error('Stack:', this.stack)
-    console.groupEnd()
+    console.error('🚨 QuizDataError', {
+      code: this.code,
+      message: this.message,
+      context: this.context,
+      stack: this.stack
+    })
 
     // Store error for debugging
     try {
@@ -197,17 +198,17 @@ class QuizDataManager {
       // Check cache first
       const cachedQuestions = this.getCachedQuestions(cacheKey)
       if (cachedQuestions && cachedQuestions.length >= count) {
-        console.log(`⚡ Cache hit for ${categoryId}: returning ${cachedQuestions.length} cached questions`)
+        console.info(`⚡ Cache hit for ${categoryId}: returning ${cachedQuestions.length} cached questions`)
         return cachedQuestions.slice(0, count)
       }
 
-      console.log(`🔄 Loading ${count} questions for category: ${categoryId}${section ? ` (section: ${section})` : ''}`)
+      console.info(`🔄 Loading ${count} questions for category: ${categoryId}${section ? ` (section: ${section})` : ''}`)
 
       // Step 1: Try to get admin-created questions
       let adminQuestions: QuizQuestion[] = []
       try {
         adminQuestions = this.getQuestionsByCategoryAndSection(categoryId, section)
-        console.log(`📊 Found ${adminQuestions.length} admin questions for category: ${categoryId}`)
+        console.info(`📊 Found ${adminQuestions.length} admin questions for category: ${categoryId}`)
       } catch (adminError) {
         console.warn('Failed to load admin questions:', adminError)
         // Continue to fallback - don't throw here
@@ -215,7 +216,7 @@ class QuizDataManager {
 
       if (adminQuestions.length >= Math.min(count, 3)) {
         const selectedQuestions = adminQuestions.slice(0, count)
-        console.log(`✅ Using ${selectedQuestions.length} admin questions for category: ${categoryId}`)
+        console.info(`✅ Using ${selectedQuestions.length} admin questions for category: ${categoryId}`)
 
         // Cache the results
         this.setCachedQuestions(cacheKey, selectedQuestions)
@@ -225,21 +226,21 @@ class QuizDataManager {
       }
 
       // Step 2: Fallback to static database (with caching)
-      console.log(`⚠️ Insufficient admin questions (${adminQuestions.length}), falling back to static database`)
+      console.info(`⚠️ Insufficient admin questions (${adminQuestions.length}), falling back to static database`)
 
       try {
         // Use cached static database if available
         if (!this.staticDatabaseCache) {
-          console.log('📦 Importing static quiz database...');
+          console.info('📦 Importing static quiz database...');
           const { QUIZ_DATABASE } = await import('../data/quizDatabase')
           this.staticDatabaseCache = QUIZ_DATABASE as Record<string, QuizQuestion[]>
-          console.log('📦 Static database cached for future use')
+          console.info('📦 Static database cached for future use')
         }
 
         const staticQuestions = this.staticDatabaseCache[categoryId] || []
 
         if (staticQuestions.length > 0) {
-          console.log(`📊 Found ${staticQuestions.length} static questions for category: ${categoryId}`)
+          console.info(`📊 Found ${staticQuestions.length} static questions for category: ${categoryId}`)
 
           // Validate and migrate static questions if needed (with caching)
           const migrationCacheKey = `migration-${categoryId}`
@@ -271,7 +272,7 @@ class QuizDataManager {
 
           if (validatedQuestions.length > 0) {
             const selectedQuestions = validatedQuestions.slice(0, count)
-            console.log(`✅ Using ${selectedQuestions.length} static questions for category: ${categoryId}`)
+            console.info(`✅ Using ${selectedQuestions.length} static questions for category: ${categoryId}`)
 
             // Cache the final results
             this.setCachedQuestions(cacheKey, selectedQuestions)
@@ -286,7 +287,7 @@ class QuizDataManager {
       }
 
       // Step 3: Final fallback to sample data
-      console.log(`⚠️ No questions found for category: ${categoryId}, using sample data`)
+      console.info(`⚠️ No questions found for category: ${categoryId}, using sample data`)
       const sampleQuestions = this.initializeWithSampleData()
       const selectedQuestions = sampleQuestions.slice(0, count)
 
@@ -307,7 +308,7 @@ class QuizDataManager {
       try {
         const sampleQuestions = this.initializeWithSampleData()
         const emergencyQuestions = sampleQuestions.slice(0, count)
-        console.log(`🆘 Emergency fallback: returning ${emergencyQuestions.length} sample questions`)
+        console.info(`🆘 Emergency fallback: returning ${emergencyQuestions.length} sample questions`)
         return emergencyQuestions
       } catch (emergencyError) {
         // If even sample data fails, return empty array
@@ -412,7 +413,7 @@ class QuizDataManager {
     count: number,
     loadTime: number
   ): void {
-    console.log(`✅ Loaded ${count} questions from ${source} for category ${categoryId} in ${loadTime}ms`)
+    console.info(`✅ Loaded ${count} questions from ${source} for category ${categoryId} in ${loadTime}ms`)
   }
 
   // Log question loading error
@@ -430,7 +431,7 @@ class QuizDataManager {
 
   // Initialize with sample data for development/testing
   private initializeWithSampleData(): QuizQuestion[] {
-    console.log('🔄 Initializing with sample quiz data...')
+    console.info('🔄 Initializing with sample quiz data...')
     
     const sampleQuestions: QuizQuestion[] = [
       {
@@ -671,7 +672,7 @@ class QuizDataManager {
         this.safeSetItem(QUIZ_STORAGE_KEYS.DRAFTS, JSON.stringify(parsed.drafts))
       }
       
-      console.log('✅ Quiz data restored from backup')
+      console.info('✅ Quiz data restored from backup')
     } catch (error) {
       throw new QuizDataError('Failed to restore from backup', 'BACKUP_RESTORE_FAILED', { error })
     }
@@ -990,7 +991,7 @@ class QuizDataManager {
       this.staticDatabaseCache = null
       this.categoryCache.clear()
       
-      console.log('✅ All quiz data cleared')
+      console.info('✅ All quiz data cleared')
     } catch (error) {
       throw new QuizDataError('Failed to clear data', 'CLEAR_FAILED', { error })
     }

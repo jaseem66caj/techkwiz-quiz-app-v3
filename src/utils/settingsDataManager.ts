@@ -234,7 +234,7 @@ class SettingsDataManager {
         this.saveIntegrationSettings(backup.integrations)
       }
 
-      console.log('✅ Settings restored from backup')
+      console.info('✅ Settings restored from backup')
       return true
     } catch (error) {
       console.error('Error restoring settings from backup:', error)

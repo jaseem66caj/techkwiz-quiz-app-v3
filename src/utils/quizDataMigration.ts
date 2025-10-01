@@ -26,9 +26,14 @@ interface LegacyQuizQuestion {
 
 // Data validation error class
 export class DataMigrationError extends Error {
-  constructor(message: string, public code: string, public data?: any) {
+  code: string
+  data?: unknown
+
+  constructor(message: string, code: string, data?: unknown) {
     super(message)
     this.name = 'DataMigrationError'
+    this.code = code
+    this.data = data
   }
 }
 

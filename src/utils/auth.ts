@@ -5,7 +5,6 @@
 // and data persistence using browser localStorage. It handles user creation,
 // login/logout, and data storage for the client-side only application.
 
-import { getAvatarEmojiById, getDefaultAvatar } from './avatar';
 
 // User interface defining the structure of user data
 export interface User {
@@ -130,7 +129,7 @@ export const getAllUsers = (): User[] => {
 
 // Login function (for compatibility with authentication systems)
 // In a real app, this would authenticate with a server
-export const login = async (email: string, password: string): Promise<User> => {
+export const login = async (_email: string, _password: string): Promise<User> => {
   // For now, just return the current user or create a new one
   const user = getCurrentUser();
   return user;
@@ -138,7 +137,7 @@ export const login = async (email: string, password: string): Promise<User> => {
 
 // Signup function (for compatibility with authentication systems)
 // In a real app, this would create a new user on the server
-export const signup = async (name: string, email: string, password: string): Promise<User> => {
+export const signup = async (name: string, _email: string, _password: string): Promise<User> => {
   // Create a new user with provided name
   const newUser: User = {
     id: `user_${Date.now()}`,           // Unique ID based on timestamp

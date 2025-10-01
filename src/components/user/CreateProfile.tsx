@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AvatarSelector } from './AvatarSelector';
-import { getAvatarEmojiById } from '../../utils/avatar';
+import { getAvatarEmojiById } from '@/utils/avatar';
 
 interface CreateProfileProps {
-  onProfileCreated: (username: string, avatar: string) => void;
+  onProfileCreated: (_username: string, _avatar: string) => void;
 }
 
 export function CreateProfile({ onProfileCreated }: CreateProfileProps) {

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 interface Props {
   children: ReactNode
   fallback?: ReactNode
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  onError?: (_error: Error, _errorInfo: React.ErrorInfo) => void
 }
 
 interface State {
@@ -58,12 +58,12 @@ export class QuizErrorBoundary extends Component<Props, State> {
     }
 
     // Log to console with structured data
-    console.group('🚨 Quiz Error Boundary')
-    console.error('Error:', error.message)
-    console.error('Stack:', error.stack)
-    console.error('Component Stack:', errorInfo.componentStack)
-    console.error('Full Error Data:', errorData)
-    console.groupEnd()
+    console.error('🚨 Quiz Error Boundary', {
+      message: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack,
+      metadata: errorData
+    })
 
     // Store error in localStorage for debugging
     try {
@@ -128,6 +128,14 @@ export class QuizErrorBoundary extends Component<Props, State> {
                       <strong>Stack:</strong>
                       <pre className="whitespace-pre-wrap mt-1">
                         {this.state.error.stack}
+                      </pre>
+                    </div>
+                  )}
+                  {this.state.errorInfo?.componentStack && (
+                    <div className="mt-2">
+                      <strong>Component Stack:</strong>
+                      <pre className="whitespace-pre-wrap mt-1">
+                        {this.state.errorInfo.componentStack}
                       </pre>
                     </div>
                   )}
@@ -196,7 +204,7 @@ export function useErrorHandler() {
   const clearErrors = () => {
     try {
       localStorage.removeItem('quiz_errors')
-      console.log('Quiz errors cleared from localStorage')
+      console.info('Quiz errors cleared from localStorage')
     } catch (error) {
       console.warn('Failed to clear errors:', error)
     }

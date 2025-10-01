@@ -16,7 +16,7 @@ interface Category {
 
 interface CategoryCardProps {
   category: Category
-  onSelect: (categoryId: string) => void
+  onSelect: (_categoryId: string) => void
   userCoins: number
 }
 

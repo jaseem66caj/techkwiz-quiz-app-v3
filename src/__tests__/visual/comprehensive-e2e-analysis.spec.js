@@ -12,7 +12,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
   // Phase 1: Basic Connectivity and Core Functionality
   test.describe('Phase 1: Basic Connectivity and Core Functionality', () => {
     
-    test('Server Health Check - All Viewports', async ({ page, browserName }) => {
+    test('Server Health Check - All Viewports', async ({ page, browserName: _browserName }) => {
       const viewports = [
         { name: 'Mobile', width: 375, height: 667 },
         { name: 'Tablet', width: 768, height: 1024 },
@@ -55,7 +55,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
         );
         expect(hydrationErrors).toHaveLength(0);
         
-        console.log(`✅ ${viewport.name} (${viewport.width}x${viewport.height}): Loaded in ${loadTime}ms`);
+        console.info(`✅ ${viewport.name} (${viewport.width}x${viewport.height}): Loaded in ${loadTime}ms`);
       }
     });
 
@@ -95,7 +95,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
           expect(isDisabled).toBeNull();
         }
         
-        console.log(`✅ ${viewport.name}: Navigation validated`);
+        console.info(`✅ ${viewport.name}: Navigation validated`);
       }
     });
   });
@@ -150,9 +150,9 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
           }
         }
         
-        console.log('✅ Homepage quiz interface tested successfully');
+        console.info('✅ Homepage quiz interface tested successfully');
       } else {
-        console.log('ℹ️ No quiz interface found on homepage - may be on different route');
+        console.info('ℹ️ No quiz interface found on homepage - may be on different route');
       }
     });
   });
@@ -206,7 +206,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
             }
           }
           
-          console.log(`✅ ${route.name}: Loaded in ${loadTime}ms`);
+          console.info(`✅ ${route.name}: Loaded in ${loadTime}ms`);
           
         } catch (error) {
           console.error(`❌ ${route.name} failed:`, error.message);
@@ -239,7 +239,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
             await expect(quizContent.first()).toBeVisible();
           }
           
-          console.log(`✅ Quiz route /${category}: Loaded successfully`);
+          console.info(`✅ Quiz route /${category}: Loaded successfully`);
           
         } catch (error) {
           console.error(`❌ Quiz route /${category} failed:`, error.message);
@@ -253,18 +253,16 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
   test.describe('Phase 4: Complete User Journey Integration', () => {
     
     test('End-to-End User Flow - Critical Path', async ({ page }) => {
-      console.log('🚀 Starting complete user journey test...');
+      console.info('🚀 Starting complete user journey test...');
       
       // Step 1: Start at homepage
       await page.goto('/', { waitUntil: 'networkidle' });
       await page.waitForTimeout(2000);
       
-      let initialCoins = 0;
-      
       // Try to find and complete homepage quiz if available
       const homeQuiz = page.locator('.quiz-interface, [data-testid="quiz-interface"]');
       if (await homeQuiz.count() > 0) {
-        console.log('📝 Found homepage quiz, attempting to complete...');
+        console.info('📝 Found homepage quiz, attempting to complete...');
         
         const answers = page.locator('button[class*="answer"], .answer-option');
         if (await answers.count() > 0) {
@@ -284,21 +282,21 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
       }
       
       // Step 2: Navigate to category selection
-      console.log('📚 Navigating to category selection...');
+      console.info('📚 Navigating to category selection...');
       await page.goto('/start', { waitUntil: 'networkidle' });
       await page.waitForTimeout(2000);
       
       // Step 3: Choose a category (if available)
       const categoryButtons = page.locator('button[class*="category"], .category-button, a[href*="/quiz/"]');
       if (await categoryButtons.count() > 0) {
-        console.log('🎯 Found categories, selecting first available...');
+        console.info('🎯 Found categories, selecting first available...');
         await categoryButtons.first().click();
         await page.waitForTimeout(3000);
         
         // We should now be on a quiz page
         const currentUrl = page.url();
         if (currentUrl.includes('/quiz/')) {
-          console.log('✅ Successfully navigated to quiz page:', currentUrl);
+          console.info('✅ Successfully navigated to quiz page:', currentUrl);
           
           // Test quiz functionality
           const quizAnswers = page.locator('button[class*="answer"], .answer-option');
@@ -320,7 +318,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
       }
       
       // Step 4: Navigate to profile
-      console.log('👤 Checking profile page...');
+      console.info('👤 Checking profile page...');
       await page.goto('/profile', { waitUntil: 'networkidle' });
       await page.waitForTimeout(2000);
       
@@ -329,7 +327,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
       expect(await profileError.count()).toBe(0);
       
       // Step 5: Check leaderboard
-      console.log('🏆 Checking leaderboard page...');
+      console.info('🏆 Checking leaderboard page...');
       await page.goto('/leaderboard', { waitUntil: 'networkidle' });
       await page.waitForTimeout(2000);
       
@@ -338,11 +336,11 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
       expect(await leaderboardError.count()).toBe(0);
       
       // Step 6: Return to homepage and verify state
-      console.log('🏠 Returning to homepage to verify state persistence...');
+      console.info('🏠 Returning to homepage to verify state persistence...');
       await page.goto('/', { waitUntil: 'networkidle' });
       await page.waitForTimeout(2000);
       
-      console.log('✅ Complete user journey test completed successfully');
+      console.info('✅ Complete user journey test completed successfully');
     });
   });
 
@@ -372,7 +370,7 @@ test.describe('Comprehensive E2E Analysis - Techkwiz-v8', () => {
           
         } catch (error) {
           // Network errors are acceptable for malformed URLs
-          console.log(`Expected error for malformed URL ${url}:`, error.message);
+          console.info(`Expected error for malformed URL ${url}:`, error.message);
         }
       }
     });

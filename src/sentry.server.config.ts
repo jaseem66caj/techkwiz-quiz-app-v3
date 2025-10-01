@@ -8,9 +8,9 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     debug: process.env.NODE_ENV === 'development',
     environment: process.env.NODE_ENV,
     release: process.env.NEXT_PUBLIC_APP_VERSION || '8.0.0',
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Sentry Server Event:', event);
+        console.info('Sentry Server Event:', event);
       }
       return event;
     },

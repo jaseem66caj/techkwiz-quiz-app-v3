@@ -1,9 +1,9 @@
 // @ts-check
-const { chromium } = require('playwright');
 const fs = require('fs').promises;
+const { chromium } = require('playwright');
 
 async function generateBaselines() {
-  console.log('🔍 Generating baseline images for TechKwiz...');
+  console.info('🔍 Generating baseline images for TechKwiz...');
   
   const browser = await chromium.launch();
   const page = await browser.newPage();
@@ -28,26 +28,26 @@ async function generateBaselines() {
   await fs.mkdir('./baselines', { recursive: true });
   
   for (const viewport of viewports) {
-    console.log(`📱 Generating baselines for ${viewport.name}...`);
+    console.info(`📱 Generating baselines for ${viewport.name}...`);
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     
     for (const pageDef of pages) {
       try {
-        console.log(`  📄 Capturing ${pageDef.name}...`);
+        console.info(`  📄 Capturing ${pageDef.name}...`);
         await page.goto(`http://localhost:3000${pageDef.path}`, { waitUntil: 'networkidle' });
         await page.waitForTimeout(2000); // Wait for animations
         
         const filename = `./baselines/${pageDef.name}-${viewport.name}.png`;
         await page.screenshot({ path: filename, fullPage: true });
-        console.log(`    ✅ Saved ${filename}`);
+        console.info(`    ✅ Saved ${filename}`);
       } catch (error) {
-        console.log(`    ❌ Failed to capture ${pageDef.name}: ${error.message}`);
+        console.info(`    ❌ Failed to capture ${pageDef.name}: ${error.message}`);
       }
     }
   }
   
   await browser.close();
-  console.log('✅ Baseline generation complete!');
+  console.info('✅ Baseline generation complete!');
 }
 
 // Run if this file is executed directly

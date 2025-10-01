@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AVATAR_CATEGORIES } from '../../data/avatars';
-import { getAllAvatars, getAvatarsByCategoryGrouped, searchAvatars } from '../../utils/avatar';
-import { Avatar as AvatarType } from '../../types/avatar';
+import { motion } from 'framer-motion';
+import { AVATAR_CATEGORIES } from '@/data/avatars';
+import { getAllAvatars, getAvatarsByCategoryGrouped, searchAvatars } from '@/utils/avatar';
+import { Avatar as AvatarType } from '@/types/avatar';
 
 interface AvatarSelectorProps {
   selectedAvatar: string;
-  onAvatarSelect: (avatarId: string) => void;
+  onAvatarSelect: (_avatarId: string) => void;
   onClose: () => void;
 }
 

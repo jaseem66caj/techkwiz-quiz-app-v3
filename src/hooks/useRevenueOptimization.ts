@@ -25,7 +25,7 @@ interface CoinMultiplier {
 
 
 export function useRevenueOptimization() {
-  const { state, dispatch } = useApp()
+  const { dispatch } = useApp()
   const [revenueMetrics, setRevenueMetrics] = useState<RevenueMetrics>({
     totalCoinsEarned: 0,
     totalCoinsSpent: 0,
@@ -153,7 +153,7 @@ export function useRevenueOptimization() {
   }, [activeMultipliers])
 
   // Award coins with enhanced system
-  const awardCoins = useCallback((baseAmount: number, source: 'quiz' | 'daily' | 'referral' | 'ad' | 'bonus') => {
+  const awardCoins = useCallback((baseAmount: number, _source: 'quiz' | 'daily' | 'referral' | 'ad' | 'bonus') => {
     const enhancedAmount = calculateCoinsWithMultipliers(baseAmount)
     
     // Update user coins
@@ -233,7 +233,7 @@ export function useRevenueOptimization() {
 
 
   // Handle referral
-  const processReferral = useCallback((referralCode: string) => {
+  const processReferral = useCallback((_referralCode: string) => {
     // Award referral bonus
     awardCoins(100, 'referral')
     

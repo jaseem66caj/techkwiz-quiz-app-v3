@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PopupInterstitialAd } from '../../components/ads'
 
 interface FortuneMessage {
   id: number
@@ -114,7 +113,6 @@ const fortuneMessages: FortuneMessage[] = [
 ]
 
 export function FortuneCookie({ className }: { className?: string }) {
-  const [isShowingAd, setIsShowingAd] = useState(false)
   const [currentFortune, setCurrentFortune] = useState<FortuneMessage | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [clickCount, setClickCount] = useState(0)
@@ -142,21 +140,14 @@ export function FortuneCookie({ className }: { className?: string }) {
     setClickCount(prev => prev + 1)
     setIsAnimating(true)
     
-    // Show interstitial ad first
-    setIsShowingAd(true)
-    
-    // After ad duration, show fortune
+    const newFortune = getRandomFortune()
+    setCurrentFortune(newFortune)
+
+    // Auto-hide fortune after 6 seconds
     setTimeout(() => {
-      setIsShowingAd(false)
-      const newFortune = getRandomFortune()
-      setCurrentFortune(newFortune)
-      
-      // Auto-hide fortune after 6 seconds
-      setTimeout(() => {
-        setCurrentFortune(null)
-        setIsAnimating(false)
-      }, 6000)
-    }, 3000) // Show ad for 3 seconds
+      setCurrentFortune(null)
+      setIsAnimating(false)
+    }, 6000)
   }
 
   const closeFortune = () => {
@@ -261,37 +252,6 @@ export function FortuneCookie({ className }: { className?: string }) {
           </div>
         </motion.button>
       </motion.div>
-
-      {/* Interstitial Ad Modal */}
-      <AnimatePresence>
-        {isShowingAd && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-90 z-[100] flex items-center justify-center"
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="relative"
-            >
-              <PopupInterstitialAd className="mb-4" />
-              
-              {/* Loading indicator */}
-              <div className="text-center">
-                <motion.div
-                  className="inline-block w-8 h-8 border-4 border-white border-t-transparent rounded-full"
-                  animate={!reduceMotion ? { rotate: 360 } : {}}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                />
-                <p className="text-white mt-2 text-sm">Preparing your fortune...</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Fortune Message Modal */}
       <AnimatePresence>

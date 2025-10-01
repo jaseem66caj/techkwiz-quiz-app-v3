@@ -9,15 +9,30 @@
  * @param key - The key to retrieve from localStorage
  * @returns The stored value or null if not found or error occurs
  */
+const resolveStorage = (): Storage | null => {
+  if (typeof globalThis !== 'undefined') {
+    const storage = (globalThis as { localStorage?: Storage }).localStorage;
+    if (storage) {
+      return storage;
+    }
+  }
+
+  if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+    return window.localStorage;
+  }
+
+  return null;
+};
+
 export function safeGetItem(key: string): string | null {
-  // Return null if not on client side (server-side rendering)
-  if (typeof window === 'undefined') {
+  const storage = resolveStorage();
+  if (!storage) {
     return null;
   }
 
   try {
     // Attempt to retrieve item from localStorage
-    return localStorage.getItem(key);
+    return storage.getItem(key);
   } catch (error) {
     // Log error and return null if operation fails
     console.error(`Error reading from localStorage key ${key}:`, error);
@@ -32,14 +47,14 @@ export function safeGetItem(key: string): string | null {
  * @returns Boolean indicating success or failure
  */
 export function safeSetItem(key: string, value: string): boolean {
-  // Return false if not on client side (server-side rendering)
-  if (typeof window === 'undefined') {
+  const storage = resolveStorage();
+  if (!storage) {
     return false;
   }
 
   try {
     // Attempt to save item to localStorage
-    localStorage.setItem(key, value);
+    storage.setItem(key, value);
     return true;
   } catch (error) {
     // Log error and handle storage quota exceeded error
@@ -58,14 +73,14 @@ export function safeSetItem(key: string, value: string): boolean {
  * @returns Boolean indicating success or failure
  */
 export function safeRemoveItem(key: string): boolean {
-  // Return false if not on client side (server-side rendering)
-  if (typeof window === 'undefined') {
+  const storage = resolveStorage();
+  if (!storage) {
     return false;
   }
 
   try {
     // Attempt to remove item from localStorage
-    localStorage.removeItem(key);
+    storage.removeItem(key);
     return true;
   } catch (error) {
     // Log error and return false if operation fails

@@ -5,7 +5,7 @@
 // for the TechKwiz application. It provides a rich selection of themes
 // to enhance user personalization.
 
-import { ProfileTheme } from '../types/theme';
+import { ProfileTheme } from '@/types/theme';
 
 /**
  * Complete collection of themes

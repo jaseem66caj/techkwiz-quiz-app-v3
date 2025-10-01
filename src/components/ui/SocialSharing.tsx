@@ -1,26 +1,31 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 interface SocialSharingProps {
   url?: string
   title?: string
-  description?: string
   hashtags?: string[]
   className?: string
+}
+
+type SocialPlatform = {
+  name: string
+  icon: string
+  color: string
+  getUrl: () => string
 }
 
 export function SocialSharing({
   url = typeof window !== 'undefined' ? window.location.href : '',
   title = 'Check out TechKwiz - Test Your Tech Knowledge!',
-  description = 'Take amazing tech quizzes and test your programming, AI, and web development skills.',
   hashtags = ['TechKwiz', 'Programming', 'Quiz', 'TechSkills'],
   className = ''
 }: SocialSharingProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
 
-  const socialPlatforms = [
+  const socialPlatforms: SocialPlatform[] = [
     {
       name: 'Twitter',
       icon: '🐦',
@@ -47,7 +52,7 @@ export function SocialSharing({
     }
   ]
 
-  const handleSocialShare = (platform: any) => {
+  const handleSocialShare = (platform: SocialPlatform) => {
     const shareUrl = platform.getUrl()
     window.open(shareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes')
   }

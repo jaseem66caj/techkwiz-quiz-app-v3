@@ -26,7 +26,7 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
       const configuredTrackingId = settings.analytics?.googleAnalyticsId
 
       if (!configuredTrackingId) {
-        console.log('📊 Google Analytics: Disabled or no tracking ID configured')
+        console.info('📊 Google Analytics: Disabled or no tracking ID configured')
         return
       }
 
@@ -51,7 +51,7 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
           send_page_view: true
         })
 
-        console.log('📊 Google Analytics initialized:', finalTrackingId)
+        console.info('📊 Google Analytics initialized:', finalTrackingId)
       }
 
       // Custom code execution disabled for simplified version
@@ -109,7 +109,7 @@ export function useGoogleAnalytics() {
         page_location: url
       })
 
-      console.log('📊 GA Page view tracked:', url)
+      console.info('📊 GA Page view tracked:', url)
     } catch (error) {
       console.error('📊 GA Page view tracking error:', error)
     }
@@ -126,7 +126,7 @@ export function useGoogleAnalytics() {
 
       window.gtag('event', eventName, parameters)
 
-      console.log('📊 GA Event tracked:', eventName, parameters)
+      console.info('📊 GA Event tracked:', eventName, parameters)
     } catch (error) {
       console.error('📊 GA Event tracking error:', error)
     }
@@ -140,8 +140,9 @@ export function useGoogleAnalytics() {
 
 // Extend Window interface for TypeScript
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     dataLayer: any[]
-    gtag: (...args: any[]) => void
+    gtag: (..._args: any[]) => void
   }
 }

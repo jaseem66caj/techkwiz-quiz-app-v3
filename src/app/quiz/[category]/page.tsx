@@ -1,34 +1,31 @@
 'use client'
 
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { TimeUpModal } from '../../../components/modals'
-import { UnifiedRewardPopup } from '../../../components/rewards/UnifiedRewardPopup'
-import dynamic from 'next/dynamic'
+import { useApp } from '../../providers'
+import { QuizQuestion } from '@/types/quiz'
+import { TimeUpModal } from '@/components/modals'
+import { UnifiedRewardPopup } from '@/components/rewards'
+import { getAvatarEmojiById } from '@/utils/avatar'
+import { calculateCorrectAnswerReward } from '@/utils/rewardCalculator'
+import { useCategoryQuizLoader } from '@/hooks/useCategoryQuizLoader'
 
-const UnifiedQuizInterface = dynamic(() => import('../../../components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
+const UnifiedQuizInterface = dynamic(() => import('@/components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
   ssr: false,
   loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
-const QuizResultsDisplay = dynamic(() => import('../../../components/quiz/QuizResultsDisplay').then(mod => mod.QuizResultsDisplay), {
+const QuizResultsDisplay = dynamic(() => import('@/components/quiz/QuizResultsDisplay').then(mod => mod.QuizResultsDisplay), {
   ssr: false,
   loading: () => <div className="h-48 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
-const CountdownTimer = dynamic(() => import('../../../components/quiz/CountdownTimer').then(mod => mod.CountdownTimer), {
+const CountdownTimer = dynamic(() => import('@/components/quiz/CountdownTimer').then(mod => mod.CountdownTimer), {
   ssr: false,
   loading: () => <div className="h-8 bg-gray-800/50 rounded-xl animate-pulse" />
 })
-
-import { quizDataManager } from '../../../utils/quizDataManager'
-import { useApp } from '../../providers'
-import { getAvatarEmojiById } from '../../../utils/avatar';
-
-// Import unified QuizQuestion interface
-import { QuizQuestion } from '@/types/quiz'
-import { calculateCorrectAnswerReward, calculateQuizReward } from '../../../utils/rewardCalculator'
 
 // Main Quiz Page component for a specific category
 export default function QuizPage({ params }: { params: Promise<{ category: string }> }) {
@@ -50,34 +47,30 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const questionsRef = useRef<QuizQuestion[]>([])
   const currentRef = useRef(0)
 
-  // Loading and error state management
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
   // Quiz state management
-  const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [showReward, setShowReward] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
-  const [adSlotCode, setAdSlotCode] = useState<string>('')
   // Results & streak tracking
   const [showResult, setShowResult] = useState(false)
 
-  // Standardized 90s completion redirect (Category Results)
-  const [resultCountdown, setResultCountdown] = useState(90)
-  const [srAnnouncement, setSrAnnouncement] = useState('')
-
-  const [insufficientCoins, setInsufficientCoins] = useState(false)
   const [redirectCountdown, setRedirectCountdown] = useState(5)
-  const [earningPotential, setEarningPotential] = useState<number>(0)
   const [quizSessionCoins, setQuizSessionCoins] = useState<number>(0)
 
   // Timer state management
   const [timerEnabled, setTimerEnabled] = useState(true)
   const [timerSeconds, setTimerSeconds] = useState(30)
   const [showTimeUp, setShowTimeUp] = useState(false)
+
+  const {
+    questions,
+    loading,
+    error,
+    insufficientCoins,
+    earningPotential,
+  } = useCategoryQuizLoader(categoryId, { user: state.user, currentQuiz: state.currentQuiz }, dispatch)
 
   // Cleanup function for timeouts
   const clearAllTimeouts = useCallback(() => {
@@ -116,6 +109,11 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   useEffect(() => {
     // Keep refs in sync with latest state
     questionsRef.current = questions
+
+    if (questions.length > 0) {
+      setTimerEnabled(true)
+      setTimerSeconds(30)
+    }
   }, [questions])
 
   useEffect(() => {
@@ -129,8 +127,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     const timeout = setTimeout(() => {
       try {
         router.push('/start')
-      } catch (e) {
-        import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any))
+      } catch (error) {
+        import('@sentry/nextjs').then(Sentry => Sentry.captureException(error as any))
         if (typeof window !== 'undefined') window.location.href = '/start'
       }
     }, 90000)
@@ -139,91 +137,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       clearTimeout(timeout)
     }
   }, [showResult, router])
-
-  useEffect(() => {
-    // Guard clause - exit if no category ID or user state not loaded yet
-    if (!categoryId || !state.user) {
-      return;
-    }
-
-    // Guard clause - prevent re-initialization if quiz is already started or questions are loaded
-    if (state.currentQuiz || questions.length > 0) {
-      return;
-    }
-
-    // PERFORMANCE OPTIMIZATION: Immediate coin validation before expensive operations
-    // Problem: Users with insufficient coins experienced 2-5 second delays before seeing redirection message
-    // Solution: Check coins immediately using standard entry fee (100 coins) before async operations
-    // Result: Insufficient coins detection reduced from 2-5 seconds to <300ms
-    const STANDARD_ENTRY_FEE = 100;
-
-    // Log coin validation for debugging (can be removed in production)
-    console.log(`💰 Fast Coin Check: User has ${state.user?.coins} coins, standard entry fee is ${STANDARD_ENTRY_FEE}`);
-
-    // FAST PATH: If user has insufficient coins, show message immediately (no async operations needed)
-    if (state.user && state.user.coins < STANDARD_ENTRY_FEE) {
-      // Compute earning potential for homepage quiz (assume 5 questions)
-      try {
-        const potential = calculateQuizReward(5, 5).totalCoins
-        setEarningPotential(potential)
-      } catch (e) {
-        setEarningPotential(0)
-      }
-      setInsufficientCoins(true)
-      setLoading(false)
-      return
-    }
-
-    // SLOW PATH: Only for users with sufficient coins - load category data and questions
-    const init = async () => {
-      try {
-        // Load category information (only needed for users with sufficient coins)
-        const { QUIZ_CATEGORIES } = await import('../../../data/quizDatabase');
-        const categoryInfo = (QUIZ_CATEGORIES as any)[categoryId];
-        const entryFee = categoryInfo ? categoryInfo.entry_fee : STANDARD_ENTRY_FEE;
-
-        // Double-check coin validation with actual category data (should match standard fee)
-        if (state.user && state.user.coins < entryFee) {
-          console.warn(`⚠️ Coin validation mismatch: standard fee ${STANDARD_ENTRY_FEE} vs actual fee ${entryFee}`);
-          try {
-            const potential = calculateQuizReward(5, 5).totalCoins
-            setEarningPotential(potential)
-          } catch (e) {
-            setEarningPotential(0)
-          }
-          setInsufficientCoins(true)
-          setLoading(false)
-          return
-        }
-
-        // Dispatch action to start quiz and deduct entry fee
-        dispatch({ type: 'START_QUIZ', payload: { quiz: { category: categoryId }, entryFee } });
-
-        // Enable timer with default configuration
-        setTimerEnabled(true)
-        setTimerSeconds(30)
-
-        try {
-          // Use unified question manager with intelligent fallback
-          const unifiedQuestions = await quizDataManager.getUnifiedQuestions(categoryId, 5, 'category')
-          setQuestions(unifiedQuestions)
-        } catch (error) {
-          // Handle errors in loading questions
-          console.error('Error loading questions:', error)
-          // Emergency fallback - this should rarely happen due to built-in fallbacks
-          setQuestions([])
-        }
-
-        // Set loading state to false when initialization is complete
-        setLoading(false)
-      } catch (err: any) {
-        // Handle initialization errors
-        setError(err?.message || 'Failed to load quiz')
-        setLoading(false)
-      }
-    }
-    init()
-  }, [categoryId, dispatch, state.user])
 
   // Handle automatic redirection when insufficient coins
   useEffect(() => {
@@ -264,18 +177,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   }, [insufficientCoins, router, categoryId])
 
   // ===================================================================
-  // Ad Slot Loading Effect
-  // ===================================================================
-  // Effect to load ad configuration (currently using default)
-
-  // Fetch popup interstitial ad code - using default ad code
-  useEffect(() => {
-    // Removed backend API call for ad slots
-    // Using default ad code or empty string
-    setAdSlotCode('')
-  }, [])
-
-  // ===================================================================
   // Quiz Event Handlers
   // ===================================================================
   // Functions to handle various quiz events and user interactions
@@ -300,21 +201,21 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     if (selected !== null) return;
 
     try {
-      console.log('handleAnswer called with answerIndex:', answerIndex);
+      console.info('handleAnswer called with answerIndex:', answerIndex);
       // Apply immediate visual feedback styling (consistent with homepage quiz)
       setSelected(answerIndex);
-      console.log('setSelected called with answerIndex:', answerIndex);
+      console.info('setSelected called with answerIndex:', answerIndex);
 
       // Check if answer is correct (use refs to avoid stale closures)
       const correct = questionsRef.current[currentRef.current]?.correct_answer === answerIndex;
       setIsCorrect(!!correct);
-      console.log('setIsCorrect called with:', !!correct);
+      console.info('setIsCorrect called with:', !!correct);
 
       // Update score, streak, and award coins for correct answers
       if (correct) {
         setScore(s => {
           const next = s + 1;
-          console.log('Setting score to:', next);
+          console.info('Setting score to:', next);
           return next;
         });
 
@@ -322,16 +223,16 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         const rewardResult = calculateCorrectAnswerReward();
         dispatch({ type: 'UPDATE_COINS', payload: rewardResult.coins });
         setQuizSessionCoins(prev => prev + rewardResult.coins);
-        console.log(`✅ Correct answer! Earned ${rewardResult.coins} coins`);
+        console.info(`✅ Correct answer! Earned ${rewardResult.coins} coins`);
       } else {
-        console.log(`❌ Wrong answer, no coins earned`);
+        console.info(`❌ Wrong answer, no coins earned`);
       }
 
       // Wait exactly 400ms for visual feedback display, then show RewardPopup
       // Quiz progression PAUSES until user manually interacts with popup
       const timeout = setTimeout(() => {
         if (isMountedRef.current) {
-          console.log('Setting showReward to true');
+          console.info('Setting showReward to true');
           setShowReward(true); // Display RewardPopup requiring user interaction
         }
       }, 400); // Consistent 400ms timing with homepage quiz
@@ -348,38 +249,32 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     }
   }, [selected, questions, current, dispatch, categoryId]);
 
-  // Handle ad completion and reward distribution
-  const handleAdCompleted = (coinsFromAd: number) => {
-    // Dispatch action to update user coins
-    dispatch({ type: 'UPDATE_COINS', payload: coinsFromAd });
-  };
-
   // Advance to next question or complete quiz
   const advance = useCallback(() => {
     try {
-      console.log('advance function called', { current, questionsLength: questions.length });
+      console.info('advance function called', { current, questionsLength: questions.length });
       // Hide reward popup and time up modal
       setShowReward(false);
       setShowTimeUp(false);
-      console.log('setShowReward and setShowTimeUp called');
+      console.info('setShowReward and setShowTimeUp called');
 
       // Check if there are more questions
       if (current < questions.length - 1) {
-        console.log('Advancing to next question');
+        console.info('Advancing to next question');
         // Advance to next question
         setCurrent(c => {
           const next = c + 1;
-          console.log('Setting current to', next);
+          console.info('Setting current to', next);
           return next;
         });
         setSelected(null);
-        console.log('setSelected called with null');
+        console.info('setSelected called with null');
       } else {
         // Quiz completed - dispatch end quiz action, show results, then navigate
         const totalQuestions = questions.length
         dispatch({ type: 'END_QUIZ', payload: { correctAnswers: score, totalQuestions } });
         setShowResult(true)
-        console.log('Quiz completed, showing results');
+        console.info('Quiz completed, showing results');
 
         // Standardized behavior: results remain visible; 90s timer handles redirect to categories
         // (See effect: 90s auto-redirect when showResult is true)
@@ -425,8 +320,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
           <div className="text-slate-400 mb-6">Redirecting to homepage quiz in {redirectCountdown}...</div>
           <button
             onClick={() => {
-              try { router.push('/') } catch (e) {
-                import('@sentry/nextjs').then(Sentry => Sentry.captureException(e))
+              try { router.push('/') } catch (error) {
+                import('@sentry/nextjs').then(Sentry => Sentry.captureException(error))
                 if (typeof window !== 'undefined') window.location.href = '/'
               }
             }}
@@ -484,7 +379,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
               </div>
             </div>
           )}
-          
+
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-orange-100">Question {current + 1} of {questions.length}</h1>
             <div className="text-orange-300 font-bold">Score: {score}</div>
@@ -538,10 +433,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
           onClose={advance}
           isCorrect={isCorrect}
           coinsEarned={isCorrect ? calculateCorrectAnswerReward().coins : 0}
-          onAdCompleted={(coinsFromAd) => {
-            handleAdCompleted(coinsFromAd);
-            advance();
-          }}
         />
       )}
 

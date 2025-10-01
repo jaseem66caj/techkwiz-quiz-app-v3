@@ -1,17 +1,15 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { useApp } from '../../app/providers'
-import { UnifiedQuizInterface } from '../../components/quiz'
-import { UnifiedNavigation } from '../../components/navigation'
-import { calculateCorrectAnswerReward, calculateQuizReward } from '../../utils/rewardCalculator'
+import { useApp } from '@/app/providers'
+import { UnifiedQuizInterface } from '@/components/quiz'
+import { UnifiedNavigation } from '@/components/navigation'
+import { calculateCorrectAnswerReward, calculateQuizReward } from '@/utils/rewardCalculator'
 
 
 export default function ClientHomePage() {
-  const { state, dispatch } = useApp()
-  const router = useRouter()
+  const { state, dispatch, ensureUser } = useApp()
 
   // Local component state
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -41,33 +39,10 @@ export default function ClientHomePage() {
 
   // Auto-create guest user if not authenticated
   useEffect(() => {
-    if (!state.isAuthenticated) {
-      try {
-        const guestUser = {
-          id: `guest_${Date.now()}`,
-          name: 'Guest User',
-          email: `guest_${Date.now()}@techkwiz.com`,
-          coins: 0,
-          level: 1,
-          totalQuizzes: 0,
-          correctAnswers: 0,
-          joinDate: new Date().toISOString(),
-          quizHistory: [],
-          achievements: []
-        }
-
-        dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser })
-      } catch (error) {
-        console.error('Error creating guest user:', error)
-        // Import Sentry dynamically to avoid SSR issues
-        import('@sentry/nextjs').then(Sentry => {
-          Sentry.captureException(error, {
-            tags: { component: 'ClientHomePage', action: 'createGuestUser' }
-          })
-        })
-      }
+    if (!state.loading) {
+      ensureUser()
     }
-  }, [state.isAuthenticated, dispatch])
+  }, [state.loading, ensureUser])
 
   // Youth-focused quick start quiz data
   const quickStartQuiz = [
@@ -146,14 +121,14 @@ export default function ClientHomePage() {
         if (finalIsCorrect) {
           setScore(prevScore => {
             const newScore = prevScore + 1
-            console.log(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins (Score: ${newScore})`)
+            console.info(`✅ ${isPersonalityQuestion ? 'Great choice' : 'Correct answer'}! Earned ${coinsEarned} coins (Score: ${newScore})`)
             return newScore
           })
 
           // Award coins for correct answers on homepage quiz
           dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
         } else {
-          console.log(`❌ Wrong answer, no coins earned`)
+          console.info(`❌ Wrong answer, no coins earned`)
         }
 
         // Proceed to next question after delay
@@ -185,14 +160,6 @@ export default function ClientHomePage() {
 
     timeoutRefs.current.push(timeout1)
   }, [selectedAnswer, currentQuestion, dispatch])
-
-
-
-  const handleAdWatched = (coinsEarned: number) => {
-    console.log(`📺 Ad watched! Earned ${coinsEarned} coins`)
-    dispatch({ type: 'UPDATE_COINS', payload: coinsEarned })
-  }
-
 
 
   // Show loading state

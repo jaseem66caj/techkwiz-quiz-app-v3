@@ -5,8 +5,8 @@
 // TechKwiz application. These functions provide helper methods for
 // theme selection, validation, and management.
 
-import { ProfileTheme } from '../types/theme';
-import { THEMES, getThemeById as _getThemeById, getDefaultTheme } from '../data/themes';
+import { ProfileTheme } from '@/types/theme';
+import { THEMES, getThemeById as _getThemeById } from '@/data/themes';
 
 /**
  * Get all available themes

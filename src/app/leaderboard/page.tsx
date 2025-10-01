@@ -3,40 +3,24 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { UnifiedNavigation } from '../../components/navigation'
-import { AdBanner } from '../../components/ads'
-
-import { seoConfig } from '../../utils/seo'
-import { getAllUsers, User } from '../../utils/auth'
+import { UnifiedNavigation } from '@/components/navigation'
+import { AdBanner } from '@/components/ads'
+import { getAllUsers, User } from '@/utils/auth'
 
 export default function LeaderboardPage() {
-  const { state, dispatch } = useApp()
+  const { state, ensureUser } = useApp()
   const [activeTab, setActiveTab] = useState('all-time')
   const [leaderboardData, setLeaderboardData] = useState<User[]>([])
 
   useEffect(() => {
-    // Only create guest user if auth initialization is complete and no user exists
-    if (!state.loading && !state.user) {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        name: 'Guest',
-        email: 'guest@techkwiz.com',
-        coins: 0,
-        level: 1,
-        totalQuizzes: 0,
-        correctAnswers: 0,
-        joinDate: new Date().toISOString(),
-        quizHistory: [],
-        streak: 0
-      };
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser });
-    }
+    if (state.loading) return
 
-    // Load leaderboard data regardless of user state
+    ensureUser()
+
     const users = getAllUsers()
     const sortedUsers = users.sort((a, b) => b.coins - a.coins)
     setLeaderboardData(sortedUsers)
-  }, [state.loading, state.user, dispatch])
+  }, [state.loading, state.user, ensureUser])
 
   // Show loading state while auth is initializing
   if (state.loading) {

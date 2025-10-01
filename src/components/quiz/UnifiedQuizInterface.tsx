@@ -10,11 +10,9 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-
-// Import unified QuizQuestion interface
-import { QuizQuestion } from '@/types/quiz'
+import type { QuizQuestion } from '@/types/quiz'
 
 // Interface defining the structure of quiz question data
 interface UnifiedQuizInterfaceProps {
@@ -23,7 +21,7 @@ interface UnifiedQuizInterfaceProps {
   // Index of the currently selected answer (-1 if none selected)
   selectedAnswer: number | null
   // Callback function triggered when user selects an answer
-  onAnswerSelect: (answerIndex: number) => void
+  onAnswerSelect: (_answerIndex: number) => void
   // Flag indicating if the current question has been answered
   questionAnswered: boolean
   // Current question number in the quiz sequence
@@ -189,7 +187,7 @@ export function UnifiedQuizInterface({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              console.log('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
+              console.info('🔧 QuizInterface: Button clicked, calling onAnswerSelect with index:', index)
               onAnswerSelect(index)
             }}
             disabled={selectedAnswer !== null}

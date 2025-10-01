@@ -24,10 +24,10 @@ export function useExitPrevention({
 
   // Browser beforeunload event handler
   const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
-    console.log('🔧 beforeunload event triggered, isActive:', preventionActiveRef.current)
+    console.info('🔧 beforeunload event triggered, isActive:', preventionActiveRef.current)
     if (!preventionActiveRef.current) return
 
-    console.log('🚨 beforeunload: Preventing exit and calling onExitAttempt')
+    console.info('🚨 beforeunload: Preventing exit and calling onExitAttempt')
     
     // Modern browsers ignore the custom message and show their own
     event.preventDefault()
@@ -40,11 +40,11 @@ export function useExitPrevention({
   }, [customMessage])
 
   // Back button / navigation handler
-  const handlePopState = useCallback((event: PopStateEvent) => {
-    console.log('🔧 popstate event triggered, isActive:', preventionActiveRef.current)
+  const handlePopState = useCallback((_event: PopStateEvent) => {
+    console.info('🔧 popstate event triggered, isActive:', preventionActiveRef.current)
     if (!preventionActiveRef.current) return
 
-    console.log('🚨 popstate: Preventing navigation and calling onExitAttempt')
+    console.info('🚨 popstate: Preventing navigation and calling onExitAttempt')
     
     // Prevent navigation
     window.history.pushState(null, '', window.location.pathname)
@@ -67,24 +67,24 @@ export function useExitPrevention({
     )
 
     if (isExitShortcut) {
-      console.log('🚨 keyboard shortcut detected:', event.key, 'calling onExitAttempt')
+      console.info('🚨 keyboard shortcut detected:', event.key, 'calling onExitAttempt')
       event.preventDefault()
       onExitAttemptRef.current()
     }
   }, [])
 
   useEffect(() => {
-    console.log('🔧 useExitPrevention: Effect running, isActive:', isActive)
+    console.info('🔧 useExitPrevention: Effect running, isActive:', isActive)
 
     // Check if exit prevention is disabled (for testing environments)
     if (process.env.NEXT_PUBLIC_DISABLE_EXIT_GUARD === 'true') {
-      console.log('🔧 useExitPrevention: Exit prevention disabled by environment variable')
+      console.info('🔧 useExitPrevention: Exit prevention disabled by environment variable')
       return
     }
 
     if (!isActive) return
 
-    console.log('🔧 useExitPrevention: Adding event listeners...')
+    console.info('🔧 useExitPrevention: Adding event listeners...')
     
     // Add event listeners
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -94,10 +94,10 @@ export function useExitPrevention({
     // Push initial state to enable back button detection
     window.history.pushState(null, '', window.location.pathname)
     
-    console.log('🔧 useExitPrevention: Event listeners added successfully')
+    console.info('🔧 useExitPrevention: Event listeners added successfully')
 
     return () => {
-      console.log('🔧 useExitPrevention: Cleaning up event listeners...')
+      console.info('🔧 useExitPrevention: Cleaning up event listeners...')
       // Cleanup event listeners
       window.removeEventListener('beforeunload', handleBeforeUnload)
       window.removeEventListener('popstate', handlePopState)

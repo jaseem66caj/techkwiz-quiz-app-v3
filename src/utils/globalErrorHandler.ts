@@ -21,7 +21,7 @@ export function initializeGlobalErrorHandlers() {
     return
   }
 
-  console.log('🛡️ Initializing global error handlers...')
+  console.info('🛡️ Initializing global error handlers...')
 
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
@@ -132,8 +132,31 @@ export function initializeGlobalErrorHandlers() {
       
       return response
     } catch (error) {
+      const normalizedMessage = error instanceof Error && typeof error.message === 'string'
+        ? error.message.toLowerCase()
+        : ''
+      const errorCode = (error as { code?: string } | undefined)?.code
+      const isAbortOrTimeout = error instanceof Error && (
+        error.name === 'AbortError' ||
+        error.name === 'TimeoutError' ||
+        error.name === 'WordPressTimeoutError' ||
+        normalizedMessage.includes('aborted') ||
+        normalizedMessage.includes('timed out') ||
+        errorCode === 'WORDPRESS_TIMEOUT'
+      )
+
+      if (isAbortOrTimeout) {
+        console.info('🌐 Fetch aborted or timed out:', {
+          url: args[0],
+          name: (error as Error).name,
+          message: (error as Error).message,
+          code: errorCode
+        })
+        throw error
+      }
+
       console.error('🌐 Network Request Failed:', error)
-      
+
       // Report network failures to Sentry
       Sentry.captureException(error, {
         tags: {
@@ -197,7 +220,7 @@ export function initializeGlobalErrorHandlers() {
 
   // Mark handlers as initialized
   handlersInitialized = true
-  console.log('✅ Global error handlers initialized successfully')
+  console.info('✅ Global error handlers initialized successfully')
 }
 
 /**
@@ -236,7 +259,7 @@ export function reportError(error: Error, context: {
  * Report a message to Sentry
  */
 export function reportMessage(message: string, level: 'info' | 'warning' | 'error' = 'info', context: Record<string, any> = {}) {
-  console.log(`📊 Reporting message [${level}]:`, message)
+  console.info(`📊 Reporting message [${level}]:`, message)
   
   Sentry.captureMessage(message, {
     level,

@@ -157,7 +157,7 @@ class IntegrationService {
   async connectSocialMedia(platform: 'facebook' | 'twitter' | 'instagram', credentials: any): Promise<{ success: boolean; message: string }> {
     try {
       // In a real implementation, this would handle OAuth flows
-      const response = await this.makeApiRequest('/social/connect', {
+      await this.makeApiRequest('/social/connect', {
         method: 'POST',
         body: JSON.stringify({
           platform,
@@ -232,7 +232,7 @@ class IntegrationService {
   // Notification Methods
   async sendNotification(type: 'email' | 'sms' | 'push', recipient: string, message: string, subject?: string): Promise<{ success: boolean; message: string }> {
     try {
-      const response = await this.makeApiRequest('/notifications/send', {
+      await this.makeApiRequest('/notifications/send', {
         method: 'POST',
         body: JSON.stringify({
           type,

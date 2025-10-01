@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 const categories = ['technology', 'science', 'mathematics'];
 
-async function waitForRewardPopup(page) {
+async function waitForRewardPopup(page: Page) {
   // Check for any of the expected popup buttons within ~1500ms to account for the 400ms delay
   const selectors = [
     'text=Skip Now',

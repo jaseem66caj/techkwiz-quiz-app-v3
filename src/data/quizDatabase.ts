@@ -8,7 +8,7 @@
 // - Category definitions with metadata
 // - Utility functions for retrieving quiz content
 
-import { calculateCategoryMaxCoins } from '../utils/rewardCalculator'
+import { calculateCategoryMaxCoins } from '@/utils/rewardCalculator'
 
 // Interface defining the structure of a quiz question
 export interface QuizQuestion {

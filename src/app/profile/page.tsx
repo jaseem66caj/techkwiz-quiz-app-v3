@@ -4,39 +4,24 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from '../providers'
-import { UnifiedNavigation } from '../../components/navigation'
-import { AdBanner } from '../../components/ads'
-import { AvatarSelector } from '../../components/user/AvatarSelector'
-import { getAvatarEmojiById } from '../../utils/avatar'
-
-import { seoConfig } from '../../utils/seo'
-import { getAllAchievements, getUnlockedAchievements } from '../../utils/achievements'
-import { saveUser } from '../../utils/auth'
+import { UnifiedNavigation } from '@/components/navigation'
+import { AdBanner } from '@/components/ads'
+import { AvatarSelector } from '@/components/user/AvatarSelector'
+import { getAvatarEmojiById } from '@/utils/avatar'
+import { getAllAchievements, getUnlockedAchievements } from '@/utils/achievements'
+import { saveUser } from '@/utils/auth'
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { state, dispatch } = useApp()
+  const { state, dispatch, ensureUser } = useApp()
   const [activeTab, setActiveTab] = useState('stats')
   const [showAvatarSelector, setShowAvatarSelector] = useState(false)
 
   useEffect(() => {
-    // Only create guest user if auth initialization is complete and no user exists
-    if (!state.loading && !state.user) {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        name: 'Guest',
-        avatar: 'robot',
-        coins: 0,
-        level: 1,
-        totalQuizzes: 0,
-        correctAnswers: 0,
-        joinDate: new Date().toISOString(),
-        quizHistory: [],
-        streak: 0
-      };
-      dispatch({ type: 'LOGIN_SUCCESS', payload: guestUser });
+    if (!state.loading) {
+      ensureUser()
     }
-  }, [state.loading, state.user, dispatch])
+  }, [state.loading, ensureUser])
 
   // Show loading state while auth is initializing
   if (state.loading) {

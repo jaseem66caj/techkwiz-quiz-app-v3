@@ -4,8 +4,8 @@
  */
 
 interface ServiceWorkerRegistrationOptions {
-  onSuccess?: (registration: ServiceWorkerRegistration) => void;
-  onUpdate?: (registration: ServiceWorkerRegistration) => void;
+  onSuccess?: (_registration: ServiceWorkerRegistration) => void;
+  onUpdate?: (_registration: ServiceWorkerRegistration) => void;
 }
 
 export function registerServiceWorker(config?: ServiceWorkerRegistrationOptions): void {
@@ -16,7 +16,7 @@ export function registerServiceWorker(config?: ServiceWorkerRegistrationOptions)
       navigator.serviceWorker
         .register(swUrl)
         .then(registration => {
-          console.log('Service Worker registered with scope:', registration.scope);
+          console.info('Service Worker registered with scope:', registration.scope);
 
           registration.onupdatefound = () => {
             const installingWorker = registration.installing;
@@ -29,7 +29,7 @@ export function registerServiceWorker(config?: ServiceWorkerRegistrationOptions)
                   // At this point, the updated precached content has been fetched,
                   // but the previous service worker will still serve the older content
                   // until all client tabs are closed.
-                  console.log(
+                  console.info(
                     'New content is available and will be used when all tabs for this page are closed.'
                   );
 
@@ -40,7 +40,7 @@ export function registerServiceWorker(config?: ServiceWorkerRegistrationOptions)
                 } else {
                   // At this point, everything has been precached.
                   // It's the perfect time to display a "Content is cached for offline use." message.
-                  console.log('Content is cached for offline use.');
+                  console.info('Content is cached for offline use.');
 
                   // Execute callback
                   if (config && config.onSuccess) {

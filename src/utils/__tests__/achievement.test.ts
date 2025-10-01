@@ -1,3 +1,4 @@
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import {
   calculateAchievementProgress,
   getAchievementsWithProgress,
@@ -5,6 +6,7 @@ import {
   isRareAchievement,
   generateAchievementShareText,
 } from '../achievement';
+import * as achievementsModule from '../achievements';
 import { User } from '../auth';
 import { Achievement } from '../../types/reward';
 
@@ -95,15 +97,12 @@ const mockAchievements: Achievement[] = [
 ];
 
 // Mock the getAllAchievements and getUnlockedAchievements functions
-jest.mock('../achievements', () => {
-  const originalModule = jest.requireActual('../achievements');
+jest.mock('../achievements', () => ({
+  getAllAchievements: jest.fn(),
+  getUnlockedAchievements: jest.fn(),
+}));
 
-  return {
-    ...originalModule,
-    getAllAchievements: jest.fn(),
-    getUnlockedAchievements: jest.fn(),
-  };
-});
+const mockedAchievementsModule = jest.mocked(achievementsModule);
 
 describe('achievement', () => {
   beforeEach(() => {
@@ -111,9 +110,8 @@ describe('achievement', () => {
     jest.clearAllMocks();
 
     // Setup default mock implementations
-    const { getAllAchievements, getUnlockedAchievements } = require('../achievements');
-    getAllAchievements.mockReturnValue(mockAchievements);
-    getUnlockedAchievements.mockReturnValue([mockAchievements[0]]);
+    mockedAchievementsModule.getAllAchievements.mockReturnValue(mockAchievements);
+    mockedAchievementsModule.getUnlockedAchievements.mockReturnValue([mockAchievements[0]]);
   });
 
   describe('calculateAchievementProgress', () => {

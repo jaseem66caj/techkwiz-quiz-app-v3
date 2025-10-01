@@ -1,9 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
-import { QuizResultShare } from '../../components/ui'
-import { QuizResultBannerAd, ResponsiveAd } from '../../components/ads'
+import { QuizResultShare } from '@/components/ui'
 
 interface QuizResultsDisplayProps {
   score: number
@@ -11,7 +9,7 @@ interface QuizResultsDisplayProps {
   category: string
   difficulty?: string
   coinsEarned?: number
-  onPlayAgain: () => void
+  onPlayAgain?: () => void
   onBackToCategories: () => void
   // Optional slot to render custom content below results but above action buttons (e.g., standardized timer)
   timerSlot?: React.ReactNode
@@ -27,7 +25,6 @@ export function QuizResultsDisplay({
   onBackToCategories,
   timerSlot
 }: QuizResultsDisplayProps) {
-  const [showConfetti, setShowConfetti] = useState(false)
   const percentage = Math.round((score / totalQuestions) * 100)
 
   const getDifficultyBadge = () => {
@@ -124,21 +121,11 @@ export function QuizResultsDisplay({
           Back to Categories
         </button>
         <button
-          onClick={onBackToCategories} // Changed to go back to categories instead of playing again
+          onClick={onPlayAgain ?? onBackToCategories}
           className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
         >
           Try Other Quizzes
         </button>
-      </motion.div>
-
-      {/* Advertisement Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="my-6"
-      >
-        <QuizResultBannerAd className="mb-4" />
       </motion.div>
 
       {/* Social Sharing */}
@@ -159,15 +146,6 @@ export function QuizResultsDisplay({
       {/* Standardized Timer Slot (optional) */}
       {timerSlot}
 
-      {/* Bottom Ad */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.9 }}
-        className="mt-6 pt-4 border-t border-white/10"
-      >
-        <ResponsiveAd adSlot="quiz-result-bottom" className="mb-4" />
-      </motion.div>
     </motion.div>
   )
 }

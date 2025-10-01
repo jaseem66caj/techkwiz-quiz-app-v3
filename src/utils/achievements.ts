@@ -6,8 +6,8 @@
 // quiz performance, coin earnings, and other activities. The system tracks
 // user progress and determines which achievements have been unlocked.
 
-import { User } from './auth';
-import { Achievement } from '../types/reward';
+import { Achievement } from '@/types/reward';
+import { User } from '@/utils/auth';
 
 // ===================================================================
 // Predefined Achievement Templates

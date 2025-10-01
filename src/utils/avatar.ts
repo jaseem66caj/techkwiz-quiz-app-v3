@@ -5,8 +5,8 @@
 // TechKwiz application. These functions provide helper methods for
 // avatar selection, validation, and management.
 
-import { Avatar } from '../types/avatar';
-import { AVATARS, getAvatarsByCategory, searchAvatars } from '../data/avatars';
+import { Avatar } from '@/types/avatar';
+import { AVATARS } from '@/data/avatars';
 
 /**
  * Get all available avatars
@@ -82,4 +82,4 @@ export const getAvatarsByCategoryGrouped = (): Record<string, Avatar[]> => {
 };
 
 // Export searchAvatars function from the data file
-export { searchAvatars } from '../data/avatars';
+export { searchAvatars } from '@/data/avatars';

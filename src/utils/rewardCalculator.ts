@@ -1,5 +1,5 @@
-import { DEFAULT_REWARD_CONFIG } from '../types/reward'
 import { rewardDataManager } from './rewardDataManager'
+import { DEFAULT_REWARD_CONFIG } from '@/types/reward'
 
 /**
  * Centralized reward calculation utility
@@ -189,7 +189,7 @@ export function validateRewardConsistency() {
   const config = getRewardConfig()
   
   // Log current configuration for debugging
-  console.log('🎯 Current Reward Configuration:', {
+  console.info('🎯 Current Reward Configuration:', {
     correct: config.coinValues.correct,
     incorrect: config.coinValues.incorrect,
     bonus: config.coinValues.bonus,

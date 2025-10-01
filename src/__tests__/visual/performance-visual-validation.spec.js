@@ -78,10 +78,10 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
             }
           }
           
-          console.log(`📊 ${route.name} - ${viewport.name}:`);
-          console.log(`   Load Time: ${loadTime}ms`);
-          console.log(`   FCP: ${performanceMetrics.firstContentfulPaint}ms`);
-          console.log(`   DOM Content Loaded: ${performanceMetrics.domContentLoaded}ms`);
+          console.info(`📊 ${route.name} - ${viewport.name}:`);
+          console.info(`   Load Time: ${loadTime}ms`);
+          console.info(`   FCP: ${performanceMetrics.firstContentfulPaint}ms`);
+          console.info(`   DOM Content Loaded: ${performanceMetrics.domContentLoaded}ms`);
         });
       }
     }
@@ -114,10 +114,10 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
       const jsRequests = requests.filter(req => req.resourceType === 'script');
       const cssRequests = requests.filter(req => req.resourceType === 'stylesheet');
       
-      console.log(`📦 Resource Analysis:`);
-      console.log(`   JavaScript files: ${jsRequests.length}`);
-      console.log(`   CSS files: ${cssRequests.length}`);
-      console.log(`   Total requests: ${requests.length}`);
+      console.info(`📦 Resource Analysis:`);
+      console.info(`   JavaScript files: ${jsRequests.length}`);
+      console.info(`   CSS files: ${cssRequests.length}`);
+      console.info(`   Total requests: ${requests.length}`);
       
       // Verify no failed requests
       const failedResponses = responses.filter(res => res.status >= 400);
@@ -170,7 +170,7 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
             threshold: 0.2
           });
           
-          console.log(`📸 Screenshot captured: ${route.name}-${viewport.name}`);
+          console.info(`📸 Screenshot captured: ${route.name}-${viewport.name}`);
         });
       }
     }
@@ -212,7 +212,7 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
           expect(fontSizeNum).toBeGreaterThan(12); // Minimum readable font size
         }
         
-        console.log(`✅ Responsive check passed: ${breakpoint.name} (${breakpoint.width}x${breakpoint.height})`);
+        console.info(`✅ Responsive check passed: ${breakpoint.name} (${breakpoint.width}x${breakpoint.height})`);
       }
     });
 
@@ -224,7 +224,7 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
       const animatedCount = await animatedElements.count();
       
       if (animatedCount > 0) {
-        console.log(`🎬 Found ${animatedCount} animated elements`);
+        console.info(`🎬 Found ${animatedCount} animated elements`);
         
         // Verify animations don't cause layout shifts
         const initialLayout = await page.evaluate(() => {
@@ -288,10 +288,10 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
       
       // Check for gradient backgrounds
       const gradientElements = await page.locator('[class*="gradient"], [style*="gradient"]').count();
-      console.log(`🎨 Found ${gradientElements} elements with gradients`);
+      console.info(`🎨 Found ${gradientElements} elements with gradients`);
       
       // Verify Tailwind CSS classes are applied
-      const tailwindClasses = await page.evaluate(() => {
+      const tailwindCount = await page.evaluate(() => {
         const elements = document.querySelectorAll('*');
         let tailwindCount = 0;
         
@@ -308,7 +308,7 @@ test.describe('Performance and Visual Validation - Techkwiz-v8', () => {
       });
       
       expect(tailwindCount).toBeGreaterThan(0);
-      console.log(`🎯 Found ${tailwindCount} elements with Tailwind classes`);
+      console.info(`🎯 Found ${tailwindCount} elements with Tailwind classes`);
     });
   });
 });

@@ -1,21 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ProfileTheme } from '../../types/theme'
+import { motion } from 'framer-motion'
 import { getAllThemes } from '../../utils/theme'
 import { useApp } from '../../app/providers'
 import { saveUser } from '../../utils/auth'
 
 interface ThemeSelectorProps {
   selectedTheme: string
-  onThemeSelect: (themeId: string) => void
+  onThemeSelect: (_themeId: string) => void
   onClose: () => void
 }
 
 export function ThemeSelector({ selectedTheme, onThemeSelect, onClose }: ThemeSelectorProps) {
   const { state, dispatch } = useApp()
-  const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
   const themes = getAllThemes()
 
   const handleThemeSelect = (themeId: string) => {
@@ -57,15 +54,12 @@ export function ThemeSelector({ selectedTheme, onThemeSelect, onClose }: ThemeSe
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {themes.map((theme) => {
               const isSelected = selectedTheme === theme.id
-              const isHovered = hoveredTheme === theme.id
-              
+
               return (
                 <motion.div
                   key={theme.id}
                   whileHover={{ y: -5 }}
                   whileTap={{ scale: 0.95 }}
-                  onMouseEnter={() => setHoveredTheme(theme.id)}
-                  onMouseLeave={() => setHoveredTheme(null)}
                   onClick={() => handleThemeSelect(theme.id)}
                   className={`
                     rounded-xl p-4 cursor-pointer transition-all duration-300

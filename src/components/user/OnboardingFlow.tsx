@@ -15,7 +15,7 @@ interface OnboardingQuestion {
 }
 
 interface OnboardingFlowProps {
-  onComplete: (coinsEarned: number) => void
+  onComplete: (_coinsEarned: number) => void
   onSkip: () => void
 }
 
@@ -49,11 +49,11 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
           }))
 
           setOnboardingQuestions(convertedQuestions)
-          console.log('✅ Using admin onboarding questions')
+          console.info('✅ Using admin onboarding questions')
         } else {
           // Use fallback questions
           setOnboardingQuestions(getFallbackOnboardingQuestions())
-          console.log('⚠️ Using fallback onboarding questions')
+          console.info('⚠️ Using fallback onboarding questions')
         }
       } catch (error) {
         console.error('Error loading onboarding questions:', error)

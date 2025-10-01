@@ -215,7 +215,7 @@ export class MockFrontendDataGenerator {
     if (this.isGenerating) return
     
     this.isGenerating = true
-    console.log('🎭 Generating mock frontend data...')
+    console.info('🎭 Generating mock frontend data...')
     
     try {
       // Generate and store all mock data
@@ -232,7 +232,7 @@ export class MockFrontendDataGenerator {
       // Add timestamp
       localStorage.setItem('mock_data_generated', Date.now().toString())
       
-      console.log('🎭 Mock frontend data generated successfully!')
+      console.info('🎭 Mock frontend data generated successfully!')
       
       // Trigger storage event to notify sync service
       window.dispatchEvent(new StorageEvent('storage', {
@@ -272,7 +272,7 @@ export class MockFrontendDataGenerator {
       })
       localStorage.setItem('page_views', JSON.stringify(pageViews))
       
-      console.log('🎭 Mock data updated with new activity')
+      console.info('🎭 Mock data updated with new activity')
       
       // Trigger storage event
       window.dispatchEvent(new StorageEvent('storage', {
@@ -305,7 +305,7 @@ export class MockFrontendDataGenerator {
       localStorage.removeItem(key)
     })
     
-    console.log('🎭 Mock data cleared')
+    console.info('🎭 Mock data cleared')
   }
 }
 

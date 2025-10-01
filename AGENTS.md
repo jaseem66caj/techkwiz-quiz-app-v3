@@ -1,49 +1,16 @@
-# Agent Guidelines for TechKwiz-v8
+# Repository Guidelines
 
-## Build & Test Commands
-- **Build**: `npm run build`
-- **Lint**: `npm run lint`
-- **Visual Tests**: `npm run test:visual`
-- **E2E Tests**: `npm run test:e2e:stable`
-- **Single Test**: `npx playwright test tests/e2e/specific-test.spec.ts --timeout=90000`
+## Project Structure & Module Organization
+Keep feature work in `src`, grouped by concern: routing and layouts in `src/app`, shared UI in `src/components`, stateful logic in `src/hooks`, reusable helpers in `src/utils`, and domain models in `src/types`. Static quiz assets and icons live in `public`. Test suites reside in `src/__tests__` for unit coverage and `tests/e2e` for Playwright journeys; visual baselines are under `tests/e2e/baselines`.
 
-## Code Style Guidelines
+## Build, Test, and Development Commands
+Use `npm run dev` for the Next.js dev server on port 3002. Run `npm run build` before release to ensure the production bundle compiles. `npm run lint` executes `next lint` with the shared ESLint rules. Visual regression checks rely on `npm run test:visual`, while `npm run test:e2e:stable` runs the serialized Playwright suite with retries. For focused debugging, target a spec with `npx playwright test tests/e2e/specific-test.spec.ts --timeout=90000`. Bundle analysis is available via `npm run analyze` when diagnosing size regressions.
 
-### TypeScript & Imports
-- Use absolute imports with `@/` alias (e.g., `import { QuizQuestion } from '@/types/quiz'`)
-- Strict mode disabled (`"strict": false`)
-- Target ES2017 with modern module resolution
+## Coding Style & Naming Conventions
+This codebase uses TypeScript with ES2017 targets and the `@/` alias for absolute imports. Follow PascalCase for React components and types, camelCase for functions and variables, PascalCase filenames for components, and camelCase for utilities. Maintain two-space indentation, keep Tailwind classes sorted by layout→spacing→color, and document public APIs with JSDoc (include parameter notes and return types). Custom errors should extend `Error`, expose a `code`, and log contextual metadata.
 
-### Naming Conventions
-- **Components**: PascalCase (e.g., `QuizInterface`, `CategoryCard`)
-- **Functions/Variables**: camelCase (e.g., `onAnswerSelect`, `questionAnswered`)
-- **Types/Interfaces**: PascalCase (e.g., `QuizQuestion`, `QuizInterfaceProps`)
-- **Files**: PascalCase for components, camelCase for utilities
+## Testing Guidelines
+Unit tests run with Jest; execute `npx jest --coverage` to keep the `coverage` report up to date. Snapshot and golden-image baselines live in `tests/e2e/baselines`; update them only after intentional UI changes. Name new Playwright specs with the feature and viewport target (e.g., `leaderboard-desktop.spec.ts`) and capture any unstable flows with retries disabled locally. Record test evidence in PRs when fixing flaky behaviour.
 
-### Documentation & Comments
-- Use extensive JSDoc comments for all interfaces and public functions
-- Include parameter descriptions and return types
-- Add file-level headers explaining component/utility purpose
-
-### Error Handling
-- Use custom error classes extending Error (e.g., `QuizDataError`)
-- Include error codes and context for debugging
-- Implement proper error logging in custom error classes
-
-### File Structure
-- `src/app/` - Next.js app router pages
-- `src/components/` - React components
-- `src/utils/` - Utility functions and data managers
-- `src/types/` - TypeScript type definitions
-- `src/hooks/` - Custom React hooks
-- `tests/e2e/` - Playwright end-to-end tests
-
-### ESLint Configuration
-- Extends `next/core-web-vitals`
-- Disabled rules: `react/no-unescaped-entities`, `react-hooks/exhaustive-deps`, `@next/next/no-html-link-for-pages`, `@next/next/no-img-element`
-
-### Testing
-- Playwright for E2E and visual testing
-- Test directory: `tests/e2e/`
-- Snapshots stored in `tests/e2e/baselines/`
-- Supports mobile, tablet, and desktop viewports
+## Commit & Pull Request Guidelines
+Craft concise, descriptive commit messages—recent history favors imperative subjects and optional emoji prefixes (e.g., `🚀 Streamline quiz loader`). Reference related issues where applicable. Pull requests should outline the change intent, list manual and automated checks (`npm run lint`, applicable Playwright commands), and include screenshots or videos for UI-facing work. Keep PRs scoped, link follow-up tasks, and ensure environment variables or migration steps are documented before requesting review.

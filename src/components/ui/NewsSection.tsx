@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '../../utils/wordpress'
+import { useEffect, useState } from 'react'
+import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '@/utils/wordpress'
 
 interface NewsSectionProps {
   className?: string
@@ -20,9 +20,12 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
       setLoading(true)
       setError(null)
 
-      // Check if news fetching is disabled (for testing environments)
-      if (process.env.NEXT_PUBLIC_DISABLE_NEWS === 'true') {
-        console.log('📰 News fetching disabled by environment variable, using mock data')
+      // Enhanced environment variable checking for test environments
+      const isNewsDisabled = process.env.NEXT_PUBLIC_DISABLE_NEWS === 'true' ||
+                            typeof window !== 'undefined' && window.localStorage?.getItem('NEXT_PUBLIC_DISABLE_NEWS') === 'true'
+
+      if (isNewsDisabled) {
+        console.info('📰 News fetching disabled by environment variable, using mock data')
         setArticles(mockWordPressPosts)
         setDataSource('mock')
         setLoading(false)
@@ -30,30 +33,82 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
       }
 
       try {
-        // First, try to fetch from WordPress REST API
-        console.log('Attempting to fetch from WordPress REST API...')
+        // First, try to fetch from WordPress REST API with fast CORS detection
+        console.info('Attempting to fetch from WordPress REST API...')
         const wpPosts = await fetchWordPressPosts('https://techkwiz.com', 6)
         setArticles(wpPosts)
         setDataSource('live')
-        console.log('✅ Successfully fetched from WordPress REST API')
+        console.info('✅ Successfully fetched from WordPress REST API')
 
       } catch (restApiError) {
-        console.log('WordPress REST API failed, trying RSS feed...')
+        // Check error type for appropriate handling
+        const isCorsError = restApiError instanceof Error &&
+          (restApiError.message.includes('CORS') ||
+           restApiError.message.includes('Access-Control') ||
+           restApiError.message.includes('User-Agent'))
 
-        try {
-          // Fallback to RSS feed
-          const rssPosts = await fetchWordPressRSS('https://techkwiz.com/feed/')
-          setArticles(rssPosts)
-          setDataSource('live')
-          console.log('✅ Successfully fetched from RSS feed')
+        const isTimeoutError = restApiError instanceof Error &&
+          (restApiError.name === 'AbortError' || restApiError.message.includes('aborted'))
 
-        } catch (rssError) {
-          console.log('RSS feed also failed, using mock data...')
-
-          // Final fallback to mock data
+        if (isCorsError) {
+          console.info('🚫 CORS error detected, skipping to mock data for faster fallback')
           setArticles(mockWordPressPosts)
           setDataSource('mock')
-          setError('Live news feed temporarily unavailable')
+          setError('Live news feed temporarily unavailable (CORS)')
+        } else if (isTimeoutError) {
+          console.info('⏱️ WordPress API timeout, trying RSS feed...')
+
+          try {
+            // Fallback to RSS feed for timeout errors
+            const rssPosts = await fetchWordPressRSS('https://techkwiz.com/feed/')
+            setArticles(rssPosts)
+            setDataSource('live')
+            console.info('✅ Successfully fetched from RSS feed')
+
+          } catch (rssError) {
+            const isRssTimeout = rssError instanceof Error &&
+              (rssError.name === 'AbortError' || rssError.message.includes('aborted'))
+
+            if (isRssTimeout) {
+              console.info('⏱️ RSS API also timed out, using mock data...')
+            } else {
+              console.info('RSS feed also failed, using mock data...')
+            }
+
+            // Final fallback to mock data
+            setArticles(mockWordPressPosts)
+            setDataSource('mock')
+            setError('Live news feed temporarily unavailable')
+          }
+        } else {
+          // Check if this is a development environment to reduce console noise
+          const isDevelopment = process.env.NODE_ENV === 'development'
+
+          if (isDevelopment) {
+            console.info('🌐 WordPress REST API unavailable (development), trying RSS fallback')
+          } else {
+            console.info('WordPress REST API failed, trying RSS feed...')
+          }
+
+          try {
+            // Fallback to RSS feed for other errors
+            const rssPosts = await fetchWordPressRSS('https://techkwiz.com/feed/')
+            setArticles(rssPosts)
+            setDataSource('live')
+            console.info('✅ Successfully fetched from RSS feed')
+
+          } catch {
+            if (isDevelopment) {
+              console.info('🌐 RSS feed also unavailable (development), using mock data')
+            } else {
+              console.info('RSS feed also failed, using mock data...')
+            }
+
+            // Final fallback to mock data
+            setArticles(mockWordPressPosts)
+            setDataSource('mock')
+            setError('Live news feed temporarily unavailable')
+          }
         }
       } finally {
         setLoading(false)
@@ -61,7 +116,7 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
     }
 
     loadArticles()
-    
+
     // Set up auto-refresh every 10 minutes for live data
     const refreshInterval = setInterval(() => {
       if (dataSource === 'live') {
@@ -143,8 +198,8 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
                   {article.featuredImage ? (
-                    <Image 
-                      src={article.featuredImage} 
+                    <Image
+                      src={article.featuredImage}
                       alt={article.title}
                       width={80}
                       height={80}
@@ -173,11 +228,11 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
                     {formatDate(article.publishDate)}
                   </span>
                 </div>
-                
+
                 <h3 className="text-white font-semibold text-sm sm:text-base line-clamp-2 mb-1 sm:mb-2">
                   {article.title}
                 </h3>
-                
+
                 <p className="text-gray-300 text-xs sm:text-sm line-clamp-2 leading-relaxed">
                   {article.excerpt}
                 </p>

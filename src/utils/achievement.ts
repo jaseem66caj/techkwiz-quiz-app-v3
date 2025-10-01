@@ -5,9 +5,9 @@
 // in the TechKwiz application. These functions provide helper methods for
 // achievement progress tracking, calculation, and management.
 
-import { User } from './auth';
-import { Achievement } from '../types/reward';
-import { getAllAchievements, getUnlockedAchievements } from './achievements';
+import { Achievement } from '@/types/reward';
+import { User } from '@/utils/auth';
+import { getAllAchievements, getUnlockedAchievements } from '@/utils/achievements';
 
 /**
  * Calculate achievement progress percentage

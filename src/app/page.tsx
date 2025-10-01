@@ -8,22 +8,20 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useApp } from './providers'
-import { ExitConfirmationModal } from '../components/modals'
-import { useExitPrevention } from '../hooks/useExitPrevention'
-import { quizDataManager } from '../utils/quizDataManager'
-import { realTimeSyncService } from '../utils/realTimeSync'
-import { calculateCorrectAnswerReward, calculateQuizReward } from '../utils/rewardCalculator';
-import { saveUser } from '../utils/auth';
-import { getUnlockedAchievements } from '../utils/achievements';
-import { getAvatarEmojiById } from '../utils/avatar';
-import dynamic from 'next/dynamic';
-import { CreateProfile } from '../components/user/CreateProfile';
+import { ExitConfirmationModal } from '@/components/modals'
+import { CreateProfile } from '@/components/user/CreateProfile'
+import { useExitPrevention } from '@/hooks/useExitPrevention'
+import { saveUser } from '@/utils/auth'
+import { calculateQuizReward } from '@/utils/rewardCalculator'
+import { useHomepageQuizQuestions } from '@/hooks/useHomepageQuizQuestions'
+import { useHomepageQuizProgression } from '@/hooks/useHomepageQuizProgression'
 
-const UnifiedQuizInterface = dynamic(() => import('../components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
+const UnifiedQuizInterface = dynamic(() => import('@/components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
   ssr: false,
   loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
 });
@@ -37,18 +35,22 @@ export default function HomePage() {
   
   // State management for UI components and quiz flow
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [score, setScore] = useState(0)
-  const [showResult, setShowResult] = useState(false)
-  const [quizCompleted, setQuizCompleted] = useState(false)
-  const [quizQuestions, setQuizQuestions] = useState<any[]>([])
-  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true)
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   // 90-second redirect to categories (standardized)
-  const [resultCountdown, setResultCountdown] = useState(90);
+  const [, setResultCountdown] = useState(90)
   const [srAnnouncement, setSrAnnouncement] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
+
+  const { quickStartQuiz, isLoading: isLoadingQuestions } = useHomepageQuizQuestions()
+  const {
+    currentQuestion,
+    selectedAnswer,
+    score,
+    showResult,
+    quizCompleted,
+    setShowResult,
+    handleAnswerSelect,
+  } = useHomepageQuizProgression(quickStartQuiz)
 
   // ===================================================================
   // Auto-redirect Timer Effect (Homepage Results)
@@ -91,7 +93,7 @@ export default function HomePage() {
   // Hook to prevent accidental exit during quiz
 
   // Setup exit prevention to warn users about losing progress
-  const { disablePrevention } = useExitPrevention({
+  useExitPrevention({
     isActive: !quizCompleted && !showResult,
     onExitAttempt: () => {
       setShowExitConfirmation(true)
@@ -99,208 +101,6 @@ export default function HomePage() {
     customMessage: "Are you sure you want to leave? Your progress will be lost!"
   })
 
-  // ===================================================================
-  // Quiz Question Loading Effect
-  // ===================================================================
-  // Effect to load quiz questions on component mount
-
-  // Effect to load quiz questions when component mounts
-  useEffect(() => {
-    // Guard clause for server-side rendering
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    try {
-      setIsLoadingQuestions(true)
-      // Try to get game sync data from localStorage
-      const gameSyncData = localStorage.getItem('game_quiz_data')
-      let questions = []
-
-      // Load questions from localStorage or fallback to data manager
-      if (gameSyncData) {
-        questions = JSON.parse(gameSyncData)
-      } else {
-        try {
-          questions = quizDataManager.getQuestions() || []
-        } catch (error) {
-          console.error('Error loading admin questions:', error)
-          questions = []
-        }
-      }
-
-      // Filter questions for homepage display
-      const homepageQuestions = questions.filter(q => q.section === 'homepage')
-      const beginnerQuestions = questions.filter(q => q.difficulty === 'beginner')
-      let questionsToUse = homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
-
-      // Set quiz questions or fallback to default questions
-      if (questionsToUse.length >= 5) {
-        const convertedQuestions = questionsToUse.slice(0, 5).map(q => ({
-          id: q.id,
-          question: q.question,
-          options: q.options,
-          correct_answer: q.correct_answer ?? 0,
-          difficulty: q.difficulty,
-          fun_fact: q.fun_fact || "Thanks for playing!",
-          category: q.category,
-          subcategory: q.subcategory || q.category
-        }))
-        setQuizQuestions(convertedQuestions)
-      } else {
-        setQuizQuestions(getFallbackQuestions())
-      }
-    } catch (error) {
-      console.error('❌ Error loading quiz questions:', error)
-      setQuizQuestions(getFallbackQuestions())
-    } finally {
-      setIsLoadingQuestions(false)
-    }
-  }, [])
-
-  // ===================================================================
-  // Fallback Questions
-  // ===================================================================
-  // Default questions to use when no other questions are available
-
-  // Provide fallback questions when no questions are available
-  const getFallbackQuestions = () => [
-    {
-      id: 'fallback-1',
-      question: "Which social media platform is known for short-form videos?",
-      options: ["Instagram", "TikTok", "Twitter", "Snapchat"],
-      correct_answer: 1,
-      difficulty: 'beginner',
-      fun_fact: "TikTok was originally called Musical.ly!",
-      category: "social-media",
-      subcategory: "social-media"
-    },
-    {
-      id: 'fallback-2',
-      question: "What does 'AI' stand for?",
-      options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Algorithmic Integration"],
-      correct_answer: 0,
-      difficulty: 'beginner',
-      fun_fact: "The term 'Artificial Intelligence' was first coined in 1956!",
-      category: "technology",
-      subcategory: "technology"
-    },
-    {
-      id: 'fallback-3',
-      question: "Which company created the iPhone?",
-      options: ["Google", "Samsung", "Apple", "Microsoft"],
-      correct_answer: 2,
-      difficulty: 'beginner',
-      fun_fact: "The first iPhone was released in 2007!",
-      category: "technology",
-      subcategory: "technology"
-    },
-    {
-      id: 'fallback-4',
-      question: "What does 'URL' stand for?",
-      options: ["Universal Resource Locator", "Uniform Resource Locator", "Unified Resource Locator", "Unique Resource Locator"],
-      correct_answer: 1,
-      difficulty: 'beginner',
-      fun_fact: "The first website was created in 1991 by Tim Berners-Lee!",
-      category: "technology",
-      subcategory: "technology"
-    },
-    {
-      id: 'fallback-5',
-      question: "Which of these is NOT a programming language?",
-      options: ["Python", "Java", "Cobra", "Snake"],
-      correct_answer: 3,
-      difficulty: 'beginner',
-      fun_fact: "Python was named after the comedy group Monty Python!",
-      category: "technology",
-      subcategory: "technology"
-    }
-  ];
-
-  // Quick start quiz with available questions or fallback
-  const quickStartQuiz = quizQuestions.length > 0 ? quizQuestions : getFallbackQuestions();
-
-  // ===================================================================
-  // Quiz Answer Handling
-  // ===================================================================
-  // Functions to handle user interactions during the quiz
-
-  // Handle user selecting an answer (Homepage Quiz - Automatic Progression Flow)
-  const handleAnswerSelect = (answerIndex: number) => {
-    // Prevent multiple selections
-    if (selectedAnswer !== null) return;
-    setSelectedAnswer(answerIndex);
-
-    // Apply immediate visual feedback styling (consistent with category quizzes)
-    // Enhanced timing: 400ms visual feedback + 600ms natural pause before progression
-    setTimeout(() => {
-      const isCorrect = answerIndex === quickStartQuiz[currentQuestion].correct_answer;
-      const rewardResult = isCorrect ? calculateCorrectAnswerReward() : { coins: 0 };
-      const coinsEarned = rewardResult.coins;
-
-      // Update score and coins for correct answers
-      if (isCorrect) {
-        setScore(score + 1);
-        // Award coins for correct answers on homepage quiz
-        dispatch({ type: 'UPDATE_COINS', payload: coinsEarned });
-        console.log(`✅ Correct answer! Earned ${coinsEarned} coins`);
-      } else {
-        console.log(`❌ Wrong answer, no coins earned`);
-      }
-
-      // Automatic progression after visual feedback + brief pause (no RewardPopup for homepage quiz)
-      // Brief pause makes progression feel more natural while maintaining automatic flow
-      if (currentQuestion < quickStartQuiz.length - 1) {
-        // Move to next question automatically after natural pause
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedAnswer(null);
-      } else {
-        // Complete the quiz automatically after natural pause
-        setQuizCompleted(true);
-        setShowResult(true);
-
-        // Calculate final stats for achievements and user updates
-        const finalScore = score + (isCorrect ? 1 : 0);
-        const quizRewardResult = calculateQuizReward(finalScore, quickStartQuiz.length);
-        const totalCoinsEarned = quizRewardResult.totalCoins;
-
-        // Create updated user with null safety
-        const currentUser = state.user || {
-          id: `guest_${Date.now()}`,
-          name: 'Guest',
-          avatar: 'robot',
-          coins: 0,
-          level: 1,
-          totalQuizzes: 0,
-          correctAnswers: 0,
-          joinDate: new Date().toISOString(),
-          quizHistory: [],
-          streak: 0
-        };
-
-        const updatedUser = {
-          ...currentUser,
-          totalQuizzes: currentUser.totalQuizzes + 1,
-          correctAnswers: currentUser.correctAnswers + finalScore,
-          streak: isCorrect ? currentUser.streak + 1 : 0,
-          coins: currentUser.coins + totalCoinsEarned
-        };
-
-        const unlockedAchievements = getUnlockedAchievements(currentUser);
-        const newlyUnlocked = getUnlockedAchievements(updatedUser).filter(
-          unlocked => !unlockedAchievements.some(a => a.id === unlocked.id)
-        );
-
-        if (newlyUnlocked.length > 0) {
-          dispatch({ type: 'NEW_ACHIEVEMENT', payload: newlyUnlocked[0] });
-        }
-
-        dispatch({ type: 'END_QUIZ', payload: { correctAnswers: finalScore, totalQuestions: quickStartQuiz.length } });
-      }
-    }, 1000); // Enhanced timing: 400ms visual feedback + 600ms natural pause = 1000ms total
-  };
-
-  // ===================================================================
   // Profile Creation Handling
   // ===================================================================
   // Functions to handle user profile creation after quiz completion

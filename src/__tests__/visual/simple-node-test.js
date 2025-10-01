@@ -52,7 +52,7 @@ const createSimpleHTML = (title, content) => `
 `;
 
 function runSimpleVisualTest() {
-  console.log('Starting simple visual test...');
+  console.info('Starting simple visual test...');
   
   // Create baselines directory if it doesn't exist
   const baselinesDir = './src/__tests__/visual/baselines';
@@ -83,11 +83,11 @@ function runSimpleVisualTest() {
     const htmlContent = createSimpleHTML(page.title, page.content);
     const filePath = path.join(baselinesDir, `${page.name}-baseline.html`);
     fs.writeFileSync(filePath, htmlContent);
-    console.log(`✅ Created baseline for ${page.name}`);
+    console.info(`✅ Created baseline for ${page.name}`);
   });
   
-  console.log('🎉 Simple visual test completed successfully!');
-  console.log('Baseline HTML files created in src/__tests__/visual/baselines/');
+  console.info('🎉 Simple visual test completed successfully!');
+  console.info('Baseline HTML files created in src/__tests__/visual/baselines/');
 }
 
 runSimpleVisualTest();

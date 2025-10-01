@@ -7,9 +7,7 @@
 
 import { 
   RewardConfig, 
-  Achievement, 
-  PopupSettings, 
-  AdSenseConfig,
+  Achievement,
   RewardPreviewData,
   REWARD_STORAGE_KEYS,
   DEFAULT_REWARD_CONFIG,
@@ -36,9 +34,12 @@ export const REWARD_VALIDATION_RULES = {
 
 // Custom error class for reward data operations
 export class RewardDataError extends Error {
-  constructor(message: string, public code: string) {
+  code: string
+
+  constructor(message: string, code: string) {
     super(message)
     this.name = 'RewardDataError'
+    this.code = code
   }
 }
 
@@ -475,7 +476,7 @@ class RewardDataManager {
         this.safeSetItem(REWARD_STORAGE_KEYS.CONFIG, JSON.stringify(parsedData.config))
       }
       
-      console.log('✅ Successfully restored reward data from backup')
+      console.info('✅ Successfully restored reward data from backup')
     } catch (error) {
       throw new RewardDataError(
         `Failed to restore from backup: ${error instanceof Error ? error.message : 'Unknown error'}`,

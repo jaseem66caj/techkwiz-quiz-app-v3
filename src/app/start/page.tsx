@@ -1,24 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import * as Sentry from '@sentry/nextjs'
 import { motion } from 'framer-motion'
-import { useApp } from '../providers'
-import { UnifiedNavigation } from '../../components/navigation'
-import { CategoryPageTopAd, CategoryPageBottomAd, HeaderBannerAd, SidebarRightAd } from '../../components/ads'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useApp } from '../providers'
+import { UnifiedNavigation } from '@/components/navigation'
+import { seoConfig } from '@/utils/seo'
 
-const NewsSection = dynamic(() => import('../../components/ui/NewsSection').then(mod => mod.NewsSection), {
+const NewsSection = dynamic(() => import('@/components/ui/NewsSection').then(mod => mod.NewsSection), {
   ssr: false,
   loading: () => <div className="h-48 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
-const FortuneCookie = dynamic(() => import('../../components/ui/FortuneCookie').then(mod => mod.FortuneCookie), {
+const FortuneCookie = dynamic(() => import('@/components/ui/FortuneCookie').then(mod => mod.FortuneCookie), {
   ssr: false,
   loading: () => <div className="h-32 bg-gray-800/50 rounded-xl animate-pulse" />
 })
-import { seoConfig } from '../../utils/seo'
-import * as Sentry from '@sentry/nextjs'
 
 interface QuizCategory {
   id: string;
@@ -33,12 +32,18 @@ interface QuizCategory {
 
 export default function StartPage() {
   const router = useRouter()
-  const { state, dispatch } = useApp()
+  const { state } = useApp()
   const [selectedCategory, setSelectedCategory] = useState('ALL')
 
   const [categories, setCategories] = useState<QuizCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [insufficientCoinsCategory, setInsufficientCoinsCategory] = useState<{
+    id: string;
+    name: string;
+    entryFee: number;
+    userCoins: number;
+  } | null>(null)
   const [navigating, setNavigating] = useState<string | null>(null) // Track which category is being navigated to
 
   const fetchCategories = async () => {
@@ -46,8 +51,8 @@ export default function StartPage() {
       setLoading(true);
       setError('');
 
-      console.log('🔄 Loading quiz categories...');
-      const { QUIZ_CATEGORIES } = await import('../../data/quizDatabase');
+      console.info('🔄 Loading quiz categories...');
+      const { QUIZ_CATEGORIES } = await import('@/data/quizDatabase');
 
       if (!QUIZ_CATEGORIES || typeof QUIZ_CATEGORIES !== 'object') {
         throw new Error('Invalid quiz categories data structure');
@@ -60,7 +65,7 @@ export default function StartPage() {
       }
 
       setCategories(categoriesArray);
-      console.log('✅ Loaded categories from local database:', categoriesArray.length);
+      console.info('✅ Loaded categories from local database:', categoriesArray.length);
     } catch (error) {
       console.error('❌ Error loading local categories:', error);
 
@@ -80,7 +85,7 @@ export default function StartPage() {
       setError(`Failed to load quiz categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
 
       // Provide fallback categories if main data fails
-      const { calculateCategoryMaxCoins } = await import('../../utils/rewardCalculator');
+      const { calculateCategoryMaxCoins } = await import('@/utils/rewardCalculator');
       setCategories([
         {
           id: 'programming',
@@ -100,16 +105,16 @@ export default function StartPage() {
 
   useEffect(() => {
     fetchCategories();
-    
+
     // Set page title and meta description for SEO
     document.title = seoConfig.categories.title
-    
+
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
       metaDescription.setAttribute('content', seoConfig.categories.description)
     }
-    
+
     // Add keywords meta tag
     let metaKeywords = document.querySelector('meta[name="keywords"]')
     if (!metaKeywords) {
@@ -153,7 +158,7 @@ export default function StartPage() {
       // Check if user is authenticated and has completed profile
       if (!state.isAuthenticated || !state.user) {
         // Store intended destination and redirect to homepage for authentication
-        console.log('User not authenticated, redirecting to homepage for login')
+        console.info('User not authenticated, redirecting to homepage for login')
         localStorage.setItem('intended_destination', `/quiz/${categoryId}`)
 
         Sentry.addBreadcrumb({
@@ -169,14 +174,40 @@ export default function StartPage() {
       // For now, we'll assume the profile is completed since we can't import the function
       // In a real implementation, we would check this properly
 
-      // Always navigate to the category page - let it handle coin validation and redirection
-      // This ensures consistent behavior with the new insufficient coins redirection flow
-      console.log(`🚀 Navigating to category: ${categoryId} (user has ${state.user?.coins || 0} coins, entry fee: ${category.entry_fee})`)
+      // Enhanced access control: Check coins before navigation for better UX
+      const userCoins = state.user?.coins || 0;
+      const entryFee = category.entry_fee;
+
+      console.info(`🚀 Category access check: ${categoryId} (user has ${userCoins} coins, entry fee: ${entryFee})`)
+
+      // If user has insufficient coins, show immediate feedback instead of navigating
+      if (userCoins < entryFee) {
+        console.info(`🚫 Insufficient coins for category access: ${userCoins} < ${entryFee}`)
+
+        // Set insufficient coins state to show modal
+        setInsufficientCoinsCategory({
+          id: categoryId,
+          name: category.name,
+          entryFee: entryFee,
+          userCoins: userCoins
+        });
+
+        Sentry.addBreadcrumb({
+          message: 'User blocked from quiz category due to insufficient coins',
+          category: 'access_control',
+          data: { categoryId, userCoins, entryFee, deficit: entryFee - userCoins }
+        });
+
+        return; // Don't navigate, show modal instead
+      }
+
+      // User has sufficient coins - proceed with navigation
+      console.info(`✅ Sufficient coins for category access: ${userCoins} >= ${entryFee}`)
 
       Sentry.addBreadcrumb({
         message: 'User navigating to quiz category',
         category: 'navigation',
-        data: { categoryId, userCoins: state.user?.coins || 0, entryFee: category.entry_fee }
+        data: { categoryId, userCoins, entryFee }
       });
 
       router.push(`/quiz/${categoryId}`)
@@ -192,8 +223,8 @@ export default function StartPage() {
 
 
 
-  const filteredCategories = selectedCategory === 'ALL' 
-    ? categories 
+  const filteredCategories = selectedCategory === 'ALL'
+    ? categories
     : categories.filter(cat => {
         switch (selectedCategory) {
           case 'PROGRAMMING':
@@ -257,10 +288,10 @@ export default function StartPage() {
     <>
       {/* Fortune Cookie Feature */}
       <FortuneCookie />
-      
+
       <div className="min-h-screen bg-transparent">
         <UnifiedNavigation />
-        
+
         <main className="px-4 py-4">
           {/* Mobile-web Header */}
           <motion.div
@@ -322,26 +353,26 @@ export default function StartPage() {
                     <div className="text-3xl flex-shrink-0">
                       {category.icon}
                     </div>
-                    
+
                     {/* Category Details */}
                     <div className="flex-1 min-w-0">
                       {/* Category Name */}
                       <h3 className="text-white font-bold text-base leading-tight mb-1">
                         {category.name}
                       </h3>
-                      
+
                       {/* Prize and Entry Fee */}
                       <div className="flex items-center space-x-3 text-sm">
                         <div className="text-yellow-400 font-semibold flex items-center">
                           <span className="mr-1">🏆</span>
                           <span>{category.prize_pool}</span>
                         </div>
-                        
+
                         <div className="text-blue-300">
                           Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
                         </div>
                       </div>
-                      
+
                       {/* Winner Timer */}
                       <div className="text-gray-400 text-xs mt-1">
                         Winner: {(() => {
@@ -395,6 +426,48 @@ export default function StartPage() {
         </main>
       </div>
 
+      {/* Insufficient Coins Modal */}
+      {insufficientCoinsCategory && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-slate-800/90 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 max-w-md w-full text-center"
+          >
+            <div className="text-5xl mb-4">🪙</div>
+            <h2 className="text-2xl font-bold text-orange-200 mb-2">Insufficient Coins</h2>
+            <p className="text-slate-300 mb-4">
+              You need <span className="text-orange-300 font-bold">{insufficientCoinsCategory.entryFee}</span> coins
+              to play <span className="text-white font-medium">{insufficientCoinsCategory.name}</span>.
+            </p>
+            <p className="text-slate-300 mb-4">
+              You currently have <span className="text-orange-300 font-bold">{insufficientCoinsCategory.userCoins}</span> coins.
+            </p>
+            <p className="text-slate-400 text-sm mb-6">
+              Earn coins for free by playing the homepage quiz!
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => {
+                  setInsufficientCoinsCategory(null);
+                  router.push('/');
+                }}
+                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200"
+              >
+                Earn Coins Free
+              </button>
+              <button
+                onClick={() => setInsufficientCoinsCategory(null)}
+                className="flex-1 bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-medium hover:bg-slate-600 transition-all duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
     </>
   )

@@ -1,81 +1,102 @@
+import {
+  describe,
+  it,
+  expect,
+  jest,
+  beforeAll,
+  afterAll,
+  beforeEach,
+  afterEach,
+} from '@jest/globals';
 import { registerServiceWorker, unregisterServiceWorker } from '../serviceWorkerRegistration';
 
+const mockServiceWorker = {
+  register: jest.fn(() => Promise.resolve({ scope: '/sw' } as ServiceWorkerRegistration)),
+  ready: Promise.resolve({
+    unregister: jest.fn(),
+  } as ServiceWorkerRegistration),
+};
+
+let originalNavigatorDescriptor: PropertyDescriptor | undefined;
+
+beforeAll(() => {
+  originalNavigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+});
+
+afterAll(() => {
+  if (originalNavigatorDescriptor) {
+    Object.defineProperty(globalThis, 'navigator', originalNavigatorDescriptor);
+  }
+});
+
 describe('serviceWorkerRegistration', () => {
-  const mockServiceWorker = {
-    register: jest.fn(() => Promise.resolve({})),
-    ready: Promise.resolve({
-      unregister: jest.fn(),
-    }),
-  };
-
-  const mockNavigator = {
-    serviceWorker: mockServiceWorker,
-  } as unknown as Navigator;
-
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    if (originalNavigatorDescriptor) {
+      Object.defineProperty(globalThis, 'navigator', originalNavigatorDescriptor);
+    }
   });
 
   describe('registerServiceWorker', () => {
     it('should not throw an error when called', () => {
-      // Mock window and navigator
-      Object.defineProperty(global, 'window', {
-        value: {
-          addEventListener: jest.fn(),
-          navigator: mockNavigator,
-        },
-        writable: true,
+      Object.defineProperty(globalThis, 'navigator', {
+        value: { serviceWorker: mockServiceWorker } as Navigator,
+        configurable: true,
       });
 
-      expect(() => {
-        registerServiceWorker();
-      }).not.toThrow();
+      const addEventListenerSpy = jest
+        .spyOn(window, 'addEventListener')
+        .mockImplementation((_event, handler: EventListenerOrEventListenerObject) => {
+          if (typeof handler === 'function') {
+            handler(new Event('load'));
+          }
+        });
+
+      expect(() => registerServiceWorker()).not.toThrow();
+
+      addEventListenerSpy.mockRestore();
     });
 
     it('should not throw an error when service worker is not supported', () => {
-      // Mock window without service worker support
-      Object.defineProperty(global, 'window', {
-        value: {
-          addEventListener: jest.fn(),
-          navigator: {},
-        },
-        writable: true,
+      Object.defineProperty(globalThis, 'navigator', {
+        value: {} as Navigator,
+        configurable: true,
       });
 
-      expect(() => {
-        registerServiceWorker();
-      }).not.toThrow();
+      const addEventListenerSpy = jest
+        .spyOn(window, 'addEventListener')
+        .mockImplementation((_event, handler: EventListenerOrEventListenerObject) => {
+          if (typeof handler === 'function') {
+            handler(new Event('load'));
+          }
+        });
+
+      expect(() => registerServiceWorker()).not.toThrow();
+
+      addEventListenerSpy.mockRestore();
     });
   });
 
   describe('unregisterServiceWorker', () => {
     it('should not throw when service worker is supported', () => {
-      // Mock window and navigator
-      Object.defineProperty(global, 'window', {
-        value: {
-          navigator: mockNavigator,
-        },
-        writable: true,
+      Object.defineProperty(globalThis, 'navigator', {
+        value: { serviceWorker: mockServiceWorker } as Navigator,
+        configurable: true,
       });
 
-      expect(() => {
-        unregisterServiceWorker();
-      }).not.toThrow();
+      expect(() => unregisterServiceWorker()).not.toThrow();
     });
 
     it('should not throw when service worker is not supported', () => {
-      // Mock window without service worker support
-      Object.defineProperty(global, 'window', {
-        value: {
-          navigator: {},
-        },
-        writable: true,
+      Object.defineProperty(globalThis, 'navigator', {
+        value: {} as Navigator,
+        configurable: true,
       });
 
-      expect(() => {
-        unregisterServiceWorker();
-      }).not.toThrow();
+      expect(() => unregisterServiceWorker()).not.toThrow();
     });
   });
 });

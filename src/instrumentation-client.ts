@@ -29,10 +29,10 @@ Sentry.init({
   ],
 
   // Performance monitoring
-  beforeSend(event, hint) {
+    beforeSend(event, _hint) {
     // Filter out development errors if needed
     if (process.env.NODE_ENV === 'development') {
-      console.log('Sentry Event:', event);
+      console.info('Sentry Event:', event);
     }
     return event;
   },

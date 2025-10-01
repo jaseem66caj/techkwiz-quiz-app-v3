@@ -1,5 +1,4 @@
 // Real-time data synchronization between admin dashboard and quiz game
-import { QuizQuestion } from '@/types/quiz'
 import { quizDataManager } from './quizDataManager'
 import { rewardDataManager } from './rewardDataManager'
 import { analyticsDataManager } from './analyticsDataManager'
@@ -13,7 +12,7 @@ interface SyncEvent {
 
 class RealTimeSyncService {
   private static instance: RealTimeSyncService
-  private eventListeners: Map<string, ((event: SyncEvent) => void)[]> = new Map()
+  private eventListeners: Map<string, ((_event: SyncEvent) => void)[]> = new Map()
   private syncQueue: SyncEvent[] = []
   private isProcessing = false
   private lastSyncTime = 0
@@ -88,7 +87,7 @@ class RealTimeSyncService {
   }
 
   // Add event listener
-  addEventListener(eventType: SyncEvent['type'], callback: (event: SyncEvent) => void): void {
+  addEventListener(eventType: SyncEvent['type'], callback: (_event: SyncEvent) => void): void {
     if (!this.eventListeners.has(eventType)) {
       this.eventListeners.set(eventType, [])
     }
@@ -96,7 +95,7 @@ class RealTimeSyncService {
   }
 
   // Remove event listener
-  removeEventListener(eventType: SyncEvent['type'], callback: (event: SyncEvent) => void): void {
+  removeEventListener(eventType: SyncEvent['type'], callback: (_event: SyncEvent) => void): void {
     const listeners = this.eventListeners.get(eventType)
     if (listeners) {
       const index = listeners.indexOf(callback)

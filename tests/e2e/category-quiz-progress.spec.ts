@@ -45,7 +45,7 @@ test.describe('Category Quiz Progression Tests', () => {
     await page.waitForSelector('[data-testid="quiz-interface"]', { timeout: 30000 });
 
     // Check for any console errors, specifically ReferenceError
-    const consoleErrors = [];
+    const consoleErrors: string[] = [];
     page.on('console', msg => {
       if (msg.type() === 'error') {
         consoleErrors.push(msg.text());
