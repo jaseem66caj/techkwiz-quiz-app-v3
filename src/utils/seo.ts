@@ -28,11 +28,20 @@ export function buildPageMetadata({ title, description, path, noIndex }: PageMet
       url,
       siteName: SITE_NAME,
       type: 'website',
+      images: [
+        {
+          url: '/icon-512.png',
+          width: 512,
+          height: 512,
+          alt: SITE_NAME,
+        },
+      ],
     },
     twitter: {
       card: 'summary',
       title,
       description,
+      images: ['/icon-512.png'],
     },
   }
 }
