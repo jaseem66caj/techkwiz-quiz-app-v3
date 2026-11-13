@@ -10,7 +10,6 @@ interface CountdownTimerProps {
   showWarning?: boolean
   warningThreshold?: number
   questionNumber: number
-  autoAdvance?: boolean
 }
 
 export function CountdownTimer({
@@ -19,86 +18,32 @@ export function CountdownTimer({
   onTimeUp,
   showWarning = true,
   warningThreshold = 10,
-  questionNumber,
-  autoAdvance = true
+  questionNumber
 }: CountdownTimerProps) {
-  const [timeLeft, setTimeLeft] = useState(totalSeconds)
-  const [isWarning, setIsWarning] = useState(false)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [clock, setClock] = useState({ questionNumber, totalSeconds, remaining: totalSeconds })
+  // A new question must never inherit the previous question's zero during effects.
+  const timeLeft = clock.questionNumber === questionNumber && clock.totalSeconds === totalSeconds
+    ? clock.remaining : totalSeconds
   const hasCalledTimeUp = useRef(false)
+  const isWarning = showWarning && timeLeft <= warningThreshold && timeLeft > 0
 
-  // Reset timer when question changes or when totalSeconds changes
   useEffect(() => {
-    setTimeLeft(totalSeconds)
-    setIsWarning(false)
+    setClock({ questionNumber, totalSeconds, remaining: totalSeconds })
     hasCalledTimeUp.current = false
   }, [totalSeconds, questionNumber])
 
-  // Timer countdown logic
   useEffect(() => {
-    try {
-      if (isActive && timeLeft > 0) {
-        intervalRef.current = setInterval(() => {
-          setTimeLeft(prev => {
-            const newTime = prev - 1
+    if (!isActive) return
+    const interval = setInterval(() => setClock(prev => ({ ...prev, remaining: Math.max(0, prev.remaining - 1) })), 1000)
+    return () => clearInterval(interval)
+  }, [isActive, questionNumber])
 
-            // Show warning when time is running low
-            if (showWarning && newTime <= warningThreshold && newTime > 0) {
-              setIsWarning(true)
-            }
-
-            // Time's up
-            if (newTime <= 0 && !hasCalledTimeUp.current) {
-              hasCalledTimeUp.current = true
-              if (autoAdvance) {
-                try {
-                  timeoutRef.current = setTimeout(() => {
-                    if (onTimeUp) {
-                      onTimeUp()
-                    }
-                  }, 100) // Small delay to ensure state updates
-                } catch (error) {
-                  console.error('Error calling onTimeUp:', error)
-                  import('@sentry/nextjs').then(Sentry => {
-                    Sentry.captureException(error, {
-                      tags: { component: 'CountdownTimer', action: 'onTimeUp' }
-                    })
-                  })
-                }
-              }
-              return 0
-            }
-
-            return newTime
-          })
-        }, 1000)
-      } else {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current)
-          intervalRef.current = null
-        }
-      }
-    } catch (error) {
-      console.error('Error in CountdownTimer useEffect:', error)
-      import('@sentry/nextjs').then(Sentry => {
-        Sentry.captureException(error, {
-          tags: { component: 'CountdownTimer', action: 'timerEffect' }
-        })
-      })
+  useEffect(() => {
+    if (isActive && timeLeft === 0 && !hasCalledTimeUp.current) {
+      hasCalledTimeUp.current = true
+      onTimeUp()
     }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-        intervalRef.current = null
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-      }
-    }
-  }, [isActive, timeLeft, showWarning, warningThreshold, autoAdvance, onTimeUp])
+  }, [isActive, timeLeft, onTimeUp])
 
   // Calculate progress percentage
   const progressPercentage = ((totalSeconds - timeLeft) / totalSeconds) * 100
@@ -124,9 +69,6 @@ export function CountdownTimer({
     return 'from-green-500 to-green-600'
   }
 
-  // Don't render if not active
-  if (!isActive) return null
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -134,7 +76,7 @@ export function CountdownTimer({
       className="mb-6"
     >
       <div className="max-w-2xl mx-auto">
-        <div className={`${getTimerColor()} backdrop-blur-md rounded-xl p-4 border transition-all duration-300`}>
+        <div className={`${getTimerColor()} min-h-[160px] backdrop-blur-md rounded-xl p-4 border transition-all duration-300`}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
               <motion.div
@@ -150,7 +92,7 @@ export function CountdownTimer({
               <div className={`text-2xl font-bold ${timeLeft <= 5 ? 'animate-pulse' : ''}`}>
                 {formatTime(timeLeft)}
               </div>
-              {timeLeft <= 5 && (
+              <div className="min-h-4">{timeLeft <= 5 && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -158,7 +100,7 @@ export function CountdownTimer({
                 >
                   Hurry up! ⚡
                 </motion.div>
-              )}
+              )}</div>
             </div>
           </div>
           
@@ -172,44 +114,9 @@ export function CountdownTimer({
             />
           </div>
           
-          {/* Warning message */}
-          {isWarning && timeLeft > 5 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mt-2"
-            >
-              <span className="text-xs text-orange-300">
-                ⚠️ Time running out! Answer quickly to earn coins!
-              </span>
-            </motion.div>
-          )}
-          
-          {/* Final countdown message */}
-          {timeLeft <= 5 && timeLeft > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mt-2"
-            >
-              <span className="text-xs text-red-300 font-medium">
-                🚨 Final countdown! {timeLeft} second{timeLeft !== 1 ? 's' : ''} left!
-              </span>
-            </motion.div>
-          )}
-          
-          {/* Time's up message */}
-          {timeLeft <= 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center mt-2"
-            >
-              <span className="text-sm text-red-300 font-bold">
-                ⏰ Time's up! Moving to next question...
-              </span>
-            </motion.div>
-          )}
+          <div className="min-h-10 mt-2 text-center text-xs" aria-live="polite">
+            {timeLeft === 0 ? "Time’s up!" : timeLeft <= 5 ? `Final countdown! ${timeLeft} seconds left!` : isWarning ? 'Time running out! Answer quickly.' : !isActive ? 'Timer paused' : ''}
+          </div>
         </div>
       </div>
     </motion.div>

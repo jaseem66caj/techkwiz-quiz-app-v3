@@ -248,10 +248,7 @@ function extractFeaturedImage(post: any): string {
     }
   }
 
-  // Generate a placeholder based on the post title
-  const title = post.title?.rendered || 'Article'
-  const encodedTitle = encodeURIComponent(title.substring(0, 20))
-  return `https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=${encodedTitle}`
+  return '/images/news-fallback.svg'
 }
 
 function extractCategory(post: any): string {
@@ -285,7 +282,7 @@ function extractImageFromContent(content: string): string {
   }
 
   // Return a placeholder if no image found
-  return 'https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Article'
+  return '/images/news-fallback.svg'
 }
 
 // Mock data for development and fallback
@@ -296,7 +293,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'Explore the remarkable journey of JavaScript and the latest features that are shaping modern web development in 2025...',
     link: 'https://techkwiz.com/javascript-evolution-es2025',
     publishDate: '2025-01-20T08:30:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/F7DF1E/000000?text=JavaScript',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Web Development',
     author: 'Alex Chen'
   },
@@ -306,7 +303,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'A comprehensive guide to architecting and deploying microservices using modern containerization techniques...',
     link: 'https://techkwiz.com/microservices-nodejs-docker',
     publishDate: '2025-01-18T12:15:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/339933/FFFFFF?text=Node.js',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Backend Development',
     author: 'Sarah Johnson'
   },
@@ -316,7 +313,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'Discover how to implement powerful machine learning models directly in web browsers using TensorFlow.js...',
     link: 'https://techkwiz.com/tensorflowjs-ml-browser',
     publishDate: '2025-01-16T15:45:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/FF6F00/FFFFFF?text=TensorFlow',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Machine Learning',
     author: 'Dr. Michael Rodriguez'
   },
@@ -326,7 +323,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'Learn how PWAs are revolutionizing mobile app development with native-like experiences using web technologies...',
     link: 'https://techkwiz.com/progressive-web-apps-future',
     publishDate: '2025-01-14T10:20:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/5F2D91/FFFFFF?text=PWA',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Mobile Development',
     author: 'Emily Zhang'
   },
@@ -336,7 +333,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'An introduction to quantum programming concepts and how they will impact software development in the coming decade...',
     link: 'https://techkwiz.com/quantum-computing-programming',
     publishDate: '2025-01-12T14:10:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/8E44AD/FFFFFF?text=Quantum',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Emerging Technologies',
     author: 'Prof. David Kim'
   },
@@ -346,7 +343,7 @@ export const mockWordPressPosts: WordPressPost[] = [
     excerpt: 'Master the art of serverless computing and learn how to build scalable applications without managing infrastructure...',
     link: 'https://techkwiz.com/serverless-architecture-guide',
     publishDate: '2025-01-10T09:30:00Z',
-    featuredImage: 'https://via.placeholder.com/300x200/FF9900/000000?text=Serverless',
+    featuredImage: '/images/news-fallback.svg',
     category: 'Cloud Computing',
     author: 'Maria Lopez'
   }

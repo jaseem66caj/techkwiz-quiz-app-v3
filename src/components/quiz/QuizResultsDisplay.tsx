@@ -124,7 +124,7 @@ export function QuizResultsDisplay({
           onClick={onPlayAgain ?? onBackToCategories}
           className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
         >
-          Try Other Quizzes
+          Play Again
         </button>
       </motion.div>
 
