@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Dispatch } from 'react'
 import type { QuizQuestion } from '@/types/quiz'
 import { QUIZ_DATABASE, QUIZ_CATEGORIES } from '@/data/quizDatabase'
@@ -13,6 +13,8 @@ interface CategoryQuizLoaderResult {
   error: string
   insufficientCoins: boolean
   earningPotential: number
+  canPlay: boolean
+  markInteractionStarted: () => void
 }
 
 type CategoryState = {
@@ -64,16 +66,31 @@ export function useCategoryQuizLoader(
   // dispatch, independent of `questions.length` (which is non-zero from the
   // first render now that static questions are preloaded).
   const initializedCategoryRef = useRef<string | null>(null)
+  const interactionFrozenRef = useRef(false)
+  const lastCategoryIdRef = useRef<string | null>(null)
+  const [canPlay, setCanPlay] = useState(false)
+
+  const markInteractionStarted = useCallback(() => {
+    interactionFrozenRef.current = true
+  }, [])
 
   useEffect(() => {
     if (!categoryId) {
       return
     }
 
+    // Each category gets its own entry-fee gate; an interaction lock from a
+    // previously played category must not carry over and freeze this one.
+    if (lastCategoryIdRef.current !== categoryId) {
+      lastCategoryIdRef.current = categoryId
+      interactionFrozenRef.current = false
+    }
+
     // User hydrates asynchronously (see Providers) — keep showing the static
     // questions already rendered until it's available, then run the real
     // entry-fee check once per category.
     if (!state.user) {
+      setCanPlay(false)
       return
     }
 
@@ -83,6 +100,7 @@ export function useCategoryQuizLoader(
 
     if (state.currentQuiz?.category === categoryId) {
       initializedCategoryRef.current = categoryId
+      setCanPlay(true)
       return
     }
 
@@ -95,6 +113,7 @@ export function useCategoryQuizLoader(
       }
 
       setInsufficientCoins(true)
+      setCanPlay(false)
       initializedCategoryRef.current = categoryId
       return
     }
@@ -111,6 +130,7 @@ export function useCategoryQuizLoader(
         const user = state.user
         if (!user) {
           setInsufficientCoins(true)
+          setCanPlay(false)
           return
         }
 
@@ -123,6 +143,7 @@ export function useCategoryQuizLoader(
           }
 
           setInsufficientCoins(true)
+          setCanPlay(false)
           return
         }
 
@@ -131,11 +152,15 @@ export function useCategoryQuizLoader(
         const unifiedQuestions = await quizDataManager.getUnifiedQuestions(categoryId, 5, 'category')
         // Same 5-question shape as the static preload, so this swap does not
         // shift layout — only upgrade if we actually got something back.
-        if (unifiedQuestions.length > 0) {
+        if (unifiedQuestions.length > 0 && !interactionFrozenRef.current) {
           setQuestions(unifiedQuestions)
+        }
+        if (!interactionFrozenRef.current) {
+          setCanPlay(true)
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load quiz')
+        setCanPlay(false)
       } finally {
         initializedCategoryRef.current = categoryId
       }
@@ -149,5 +174,7 @@ export function useCategoryQuizLoader(
     error,
     insufficientCoins,
     earningPotential,
+    canPlay,
+    markInteractionStarted,
   }
 }

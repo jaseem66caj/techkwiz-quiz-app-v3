@@ -70,6 +70,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     error,
     insufficientCoins,
     earningPotential,
+    canPlay,
+    markInteractionStarted,
   } = useCategoryQuizLoader(categoryId, { user: state.user, currentQuiz: state.currentQuiz }, dispatch)
 
   // Cleanup function for timeouts
@@ -183,8 +185,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
   // Handle timer expiration
   const handleTimeUp = () => {
-    // Guard clause - exit if answer already selected
-    if (selected !== null) return
+    // Guard clause - exit if answer already selected or entry is not allowed
+    if (!canPlay || insufficientCoins || selected !== null) return
     // Show time up modal
     setShowTimeUp(true)
     // Mark as incorrect
@@ -197,8 +199,9 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
   // Handle user answer selection (Category Quiz - Manual Progression Flow)
   const handleAnswer = useCallback((answerIndex: number) => {
-    // Guard clause - exit if answer already selected
-    if (selected !== null) return;
+    // Guard clause - exit if entry is unpaid or an answer is already selected
+    if (!canPlay || insufficientCoins || selected !== null) return;
+    markInteractionStarted()
 
     try {
       console.info('handleAnswer called with answerIndex:', answerIndex);
@@ -247,10 +250,11 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         })
       })
     }
-  }, [selected, questions, current, dispatch, categoryId]);
+  }, [selected, questions, current, dispatch, categoryId, canPlay, insufficientCoins, markInteractionStarted]);
 
   // Advance to next question or complete quiz
   const advance = useCallback(() => {
+    if (!canPlay || insufficientCoins) return
     try {
       console.info('advance function called', { current, questionsLength: questions.length });
       // Hide reward popup and time up modal
@@ -289,7 +293,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         })
       })
     }
-  }, [current, questions.length, score, dispatch, categoryId]);
+  }, [current, questions.length, score, dispatch, categoryId, canPlay, insufficientCoins]);
 
   // ===================================================================
   // Loading and Error States
@@ -315,7 +319,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-      <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl" aria-hidden={insufficientCoins}>
+      <div className={`container mx-auto px-4 pt-10 pb-8 max-w-2xl${(!canPlay || insufficientCoins) ? ' pointer-events-none' : ''}`} aria-hidden={!canPlay || insufficientCoins || undefined} inert={!canPlay || insufficientCoins || undefined}>
         {/* Header with user information and coin balance */}
         <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 mb-6">
           {/* User info display for authenticated users */}
@@ -371,7 +375,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         ) : (
           <>
             {timerEnabled && (
-              <CountdownTimer totalSeconds={timerSeconds} isActive={selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
+              <CountdownTimer totalSeconds={timerSeconds} isActive={canPlay && !insufficientCoins && selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
             )}
 
             <UnifiedQuizInterface
