@@ -28,9 +28,6 @@ export function UnifiedNavigation({
     getCurrentMultiplier
   } = useRevenueOptimization()
 
-  // Debug logging
-  console.info('UnifiedNavigation component: hideHeaderElements =', hideHeaderElements, 'mode =', mode)
-
   const navigationItems = [
     { name: 'Home', href: '/', icon: '🏠' },
     { name: 'Categories', href: '/start', icon: '📚' },

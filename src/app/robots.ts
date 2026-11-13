@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/config/site'
+
 // Required for static export
 export const dynamic = 'force-static'
 
@@ -10,22 +12,21 @@ export default function robots() {
         disallow: [
           '/private/',
           '/admin/',
-          '/jaseem/', // Admin panel route
           '/*?*', // Disallow URLs with query parameters to avoid duplicate content
         ],
       },
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/private/', '/admin/', '/jaseem/'],
+        disallow: ['/private/', '/admin/'],
       },
       {
         userAgent: 'Bingbot',
         allow: '/',
-        disallow: ['/private/', '/admin/', '/jaseem/'],
+        disallow: ['/private/', '/admin/'],
       }
     ],
-    sitemap: 'https://techkwiz.com/sitemap.xml',
-    host: 'https://techkwiz.com'
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL
   }
 }

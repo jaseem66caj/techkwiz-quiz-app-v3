@@ -51,17 +51,11 @@ This guide provides step-by-step instructions for configuring production environ
 
 ### 4. Admin Authentication Setup
 
-**Variable:** `NEXT_PUBLIC_ADMIN_PASSWORD_HASH`
-**Format:** `TechKwiz2024!Admin` (case-sensitive)
+**Important:** A `NEXT_PUBLIC_` prefix is bundled into the client and must
+never be used for secrets. Admin auth should use a server-side-only
+variable (no `NEXT_PUBLIC_` prefix), e.g. `ADMIN_PASSWORD_HASH`.
 
-**Admin Panel Configuration:**
-
-1. **Default Password**: `TechKwiz2024!Admin`
-2. **Admin URL**: `https://yourdomain.com/jaseem`
-3. **Security**: Change password for production use
-4. **Access**: Requires HTTPS in production
-
-**Example:** `NEXT_PUBLIC_ADMIN_PASSWORD_HASH=TechKwiz2024!Admin`
+**Example:** `ADMIN_PASSWORD_HASH=replace-with-a-server-side-secret`
 
 ### 5. Production Domain Setup
 
@@ -85,7 +79,7 @@ This guide provides step-by-step instructions for configuring production environ
 2. Replace the placeholder values with your actual IDs:
    ```bash
    # Admin Configuration
-   NEXT_PUBLIC_ADMIN_PASSWORD_HASH=TechKwiz2024!Admin
+   NEXT_PUBLIC_ADMIN_PASSWORD_HASH=replace-with-a-server-side-secret
 
    # Application URLs
    NEXT_PUBLIC_APP_URL=https://your-actual-domain.com
@@ -106,7 +100,7 @@ This guide provides step-by-step instructions for configuring production environ
 3. Click **New repository secret** for each of the following:
 
 **Required Secrets:**
-- `ADMIN_PASSWORD` → Admin panel password (`TechKwiz2024!Admin`)
+- `ADMIN_PASSWORD` → Admin panel password (`replace-with-a-server-side-secret`)
 - `ANALYTICS_ID` → Your GA4 Measurement ID
 - `GTM_ID` → Your GTM Container ID
 - `ADSENSE_PUBLISHER_ID` → Your AdSense Publisher ID
@@ -145,7 +139,7 @@ After deployment, verify these items work correctly:
 ### Core Application
 - [ ] Main quiz loads at `https://your-domain.com`
 - [ ] Admin panel accessible at `https://your-domain.com/jaseem`
-- [ ] Admin authentication works with password `TechKwiz2024!Admin`
+- [ ] Admin authentication works with password `replace-with-a-server-side-secret`
 - [ ] All admin sections (Dashboard, Quiz Management, etc.) load correctly
 - [ ] Sidebar collapse/expand functionality works on desktop
 - [ ] Mobile admin drawer navigation works properly
@@ -193,7 +187,7 @@ After deployment, verify these items work correctly:
 
 **Admin panel not accessible:**
 - Verify admin URL format: `https://your-domain.com/jaseem`
-- Check admin password: `TechKwiz2024!Admin` (case-sensitive)
+- Check admin password: `replace-with-a-server-side-secret` (case-sensitive)
 - Ensure `NEXT_PUBLIC_ADMIN_PASSWORD_HASH` is set correctly
 - Try clearing browser cache and cookies
 

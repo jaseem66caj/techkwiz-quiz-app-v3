@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Script from 'next/script'
 import { settingsDataManager } from '@/utils/settingsDataManager'
+import { GA_MEASUREMENT_ID } from '@/config/site'
 
 interface GoogleAnalyticsProps {
   trackingId?: string
@@ -25,34 +26,16 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
       const settings = settingsDataManager.getSystemSettings()
       const configuredTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!configuredTrackingId) {
-        console.info('📊 Google Analytics: Disabled or no tracking ID configured')
+      // Official Play GA4 is loaded by PlayGa4 in the root layout. This helper
+      // stays in place for an optional extra ID from the in-app settings store.
+      const extraId = trackingId || configuredTrackingId
+      // Official Play GA4 is already loaded by PlayGa4. Do not inject it again,
+      // even if someone passes that same ID as a prop.
+      if (!extraId || extraId === GA_MEASUREMENT_ID) {
         return
       }
 
-      setGaTrackingId(configuredTrackingId)
-
-      const finalTrackingId = trackingId || configuredTrackingId
-
-      // Initialize Google Analytics
-      if (typeof window.gtag === 'undefined') {
-        // Create gtag function
-        window.dataLayer = window.dataLayer || []
-        window.gtag = function gtag() {
-          window.dataLayer.push(arguments)
-        }
-
-        // Configure GA
-        window.gtag('js', new Date())
-        window.gtag('config', finalTrackingId, {
-          page_title: document.title,
-          page_location: window.location.href,
-          anonymize_ip: true,
-          send_page_view: true
-        })
-
-        console.info('📊 Google Analytics initialized:', finalTrackingId)
-      }
+      setGaTrackingId(extraId)
 
       // Custom code execution disabled for simplified version
 
@@ -61,12 +44,11 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
     }
   }, [trackingId])
 
-  // Don't render anything on server side or if no tracking ID
-  if (!isClient || (!gaTrackingId && !trackingId)) {
+  const finalTrackingId = gaTrackingId
+  // Don't render on the server, with no extra ID, or if the extra ID is the official Play stream.
+  if (!isClient || !finalTrackingId || finalTrackingId === GA_MEASUREMENT_ID) {
     return null
   }
-
-  const finalTrackingId = trackingId || gaTrackingId
 
   return (
     <>

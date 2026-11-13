@@ -27,7 +27,7 @@
 
 ### Password Management
 - **Environment Variable**: `NEXT_PUBLIC_ADMIN_PASSWORD_HASH`
-- **Default Development Password**: `TechKwiz2024!Admin`
+- **Default Development Password**: `replace-with-a-server-side-secret`
 - **Hashing**: Simple hash function for password verification
 - **Storage**: Session data stored in localStorage with timeout
 

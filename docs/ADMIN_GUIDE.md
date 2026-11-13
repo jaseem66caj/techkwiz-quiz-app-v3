@@ -7,12 +7,12 @@ Complete guide for managing the TechKwiz quiz application through the admin dash
 ### Authentication
 
 **Admin URL**: `http://localhost:3001/jaseem` (Development) | `https://your-domain.com/jaseem` (Production)  
-**Admin Password**: `TechKwiz2024!Admin`
+**Admin Password**: `replace-with-a-server-side-secret`
 
 ### Login Process
 
 1. Navigate to the admin URL
-2. Enter the admin password: `TechKwiz2024!Admin`
+2. Enter the admin password: `replace-with-a-server-side-secret`
 3. Click "Access Admin Panel"
 4. You'll be redirected to the admin dashboard
 
@@ -209,7 +209,7 @@ Complete guide for managing the TechKwiz quiz application through the admin dash
 #### Authentication Issues
 **Problem**: Correct password rejected  
 **Solution**:
-1. Verify password: `TechKwiz2024!Admin` (case-sensitive)
+1. Verify password: `replace-with-a-server-side-secret` (case-sensitive)
 2. Clear browser cookies
 3. Try incognito/private mode
 4. Check environment variables
@@ -240,4 +240,4 @@ For additional support:
 
 ---
 
-**🚀 Ready to manage your quiz?** Access the admin panel at the URL above with password `TechKwiz2024!Admin`
+**🚀 Ready to manage your quiz?** Access the admin panel at the URL above with password `replace-with-a-server-side-secret`

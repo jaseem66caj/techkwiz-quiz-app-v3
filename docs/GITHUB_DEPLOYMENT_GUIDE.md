@@ -73,7 +73,7 @@ GitHub Secrets store sensitive information like FTP credentials securely.
 | `FTP_PASSWORD` | Your FTP password | `your-ftp-password` |
 | `APP_URL` | Your website URL | `https://your-domain.com` |
 | `APP_DOMAIN` | Your domain name | `your-domain.com` |
-| `ADMIN_PASSWORD` | Admin panel password | `TechKwiz2024!Admin` |
+| `ADMIN_PASSWORD` | Admin panel password | `replace-with-a-server-side-secret` |
 | `ANALYTICS_ID` | Google Analytics ID | `G-XXXXXXXXXX` |
 | `GTM_ID` | Google Tag Manager ID | `GTM-XXXXXXX` |
 | `ADSENSE_PUBLISHER_ID` | AdSense Publisher ID | `ca-pub-1234567890123456` |
@@ -157,7 +157,7 @@ From now on, every time you:
 ### 7.3 Admin Panel Testing
 ```
 ✅ Admin panel accessible at https://your-domain.com/jaseem
-✅ Admin authentication works with password: TechKwiz2024!Admin
+✅ Admin authentication works with password: replace-with-a-server-side-secret
 ✅ Dashboard section loads with statistics
 ✅ Quiz Management section displays questions table
 ✅ Reward Configuration section shows settings
@@ -215,7 +215,7 @@ From now on, every time you:
 ### Issue 4: Admin Panel Not Accessible
 **Solution:**
 - Verify admin URL format: `https://your-domain.com/jaseem`
-- Check admin password: `TechKwiz2024!Admin` (case-sensitive)
+- Check admin password: `replace-with-a-server-side-secret` (case-sensitive)
 - Ensure `ADMIN_PASSWORD` secret is set correctly
 - Clear browser cache and cookies
 - Try incognito/private browsing mode
