@@ -4,6 +4,8 @@
  */
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { appReducer } from '../app/providers'
+import { QUIZ_CATEGORIES } from '../data/quizDatabase'
 import { calculateCorrectAnswerReward, getRewardConfig } from '../utils/rewardCalculator'
 
 // Mock localStorage
@@ -99,125 +101,23 @@ describe('Coin Balance Persistence', () => {
       expect(walletCoins + sessionCoins).toBe(150)
     })
 
-    it('should validate entry fee standard amount', () => {
-      const STANDARD_ENTRY_FEE = 100
-      expect(STANDARD_ENTRY_FEE).toBe(100)
+    it('keeps every public category free', () => {
+      expect(Object.values(QUIZ_CATEGORIES).every(category => category.entry_fee === 0)).toBe(true)
     })
   })
 
-  describe('Entry Fee Deduction Logic', () => {
-    // Mock reducer function for testing START_QUIZ action
-    const mockStartQuizReducer = (state: any, action: any) => {
-      if (action.type !== 'START_QUIZ') return state;
-
-      // Guard clause: only proceed if user exists
-      if (!state.user) {
-        return state;
+  describe('Free round initialization', () => {
+    it.each([0, 50, 500])('does not charge a player with %i coins, even for legacy fee payloads', coins => {
+      const state = {
+        user: { id: 'guest-test', name: 'Guest', avatar: 'robot', coins, level: 1,
+          totalQuizzes: 0, correctAnswers: 0, joinDate: '', quizHistory: [], streak: 0 },
+        currentQuiz: null, isAuthenticated: true, quizHistory: [], loading: false, notification: null,
       }
-
-      const { quiz, entryFee } = action.payload;
-
-      // Guard clause: prevent duplicate quiz starts for the same category
-      if (state.currentQuiz?.category === quiz.category) {
-        return state;
-      }
-
-      // Check if user has enough coins to enter the quiz
-      if (state.user.coins < entryFee) {
-        return state;
-      }
-
-      // Deduct entry fee from user's coins
-      const userAfterFee = { ...state.user, coins: state.user.coins - entryFee };
-
-      return {
-        ...state,
-        user: userAfterFee,
-        currentQuiz: quiz,
-      };
-    }
-
-    it('should deduct entry fee exactly once', () => {
-      const initialState = {
-        user: { id: 'test-user', coins: 500 },
-        currentQuiz: null
-      };
-
-      const action = {
-        type: 'START_QUIZ',
-        payload: {
-          quiz: { category: 'programming' },
-          entryFee: 100
-        }
-      };
-
-      const newState = mockStartQuizReducer(initialState, action);
-
-      expect(newState.user?.coins).toBe(400); // 500 - 100 = 400
-      expect(newState.currentQuiz?.category).toBe('programming');
-    });
-
-    it('should prevent duplicate deductions for same category', () => {
-      const initialState = {
-        user: { id: 'test-user', coins: 400 },
-        currentQuiz: { category: 'programming' }
-      };
-
-      const action = {
-        type: 'START_QUIZ',
-        payload: {
-          quiz: { category: 'programming' },
-          entryFee: 100
-        }
-      };
-
-      const newState = mockStartQuizReducer(initialState, action);
-
-      // Should not deduct again - coins should remain 400
-      expect(newState.user?.coins).toBe(400);
-      expect(newState.currentQuiz?.category).toBe('programming');
-    });
-
-    it('should reject quiz start with insufficient coins', () => {
-      const initialState = {
-        user: { id: 'test-user', coins: 50 },
-        currentQuiz: null
-      };
-
-      const action = {
-        type: 'START_QUIZ',
-        payload: {
-          quiz: { category: 'programming' },
-          entryFee: 100
-        }
-      };
-
-      const newState = mockStartQuizReducer(initialState, action);
-
-      // Should not deduct coins or start quiz
-      expect(newState.user?.coins).toBe(50);
-      expect(newState.currentQuiz).toBeNull();
-    });
-
-    it('should handle missing user gracefully', () => {
-      const initialState = {
-        user: null,
-        currentQuiz: null
-      };
-
-      const action = {
-        type: 'START_QUIZ',
-        payload: {
-          quiz: { category: 'programming' },
-          entryFee: 100
-        }
-      };
-
-      const newState = mockStartQuizReducer(initialState, action);
-
-      // Should return unchanged state
-      expect(newState.user).toBeNull();
-      expect(newState.currentQuiz).toBeNull();
-    });
+      const action = { type: 'START_QUIZ', payload: { quiz: { category: 'programming' }, entryFee: 100 } }
+      const started = appReducer(state, action)
+      const replayed = appReducer(started, action)
+      expect(replayed.user?.coins).toBe(coins)
+      expect(replayed.currentQuiz.category).toBe('programming')
+    })
   })
 })

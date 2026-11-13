@@ -38,12 +38,6 @@ export default function StartPage() {
   const [totalQuestions, setTotalQuestions] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [insufficientCoinsCategory, setInsufficientCoinsCategory] = useState<{
-    id: string;
-    name: string;
-    entryFee: number;
-    userCoins: number;
-  } | null>(null)
   const [navigating, setNavigating] = useState<string | null>(null) // Track which category is being navigated to
 
   const fetchCategories = async () => {
@@ -96,7 +90,7 @@ export default function StartPage() {
           color: 'from-blue-500 to-purple-600',
           description: 'Test your programming knowledge',
           subcategories: ['JavaScript', 'Python', 'Web Development'],
-          entry_fee: 25,
+          entry_fee: 0,
           prize_pool: calculateCategoryMaxCoins('programming') // Automatically calculates based on QUIZ_DATABASE['programming'].length × 50 coins
         }
       ]);
@@ -111,14 +105,7 @@ export default function StartPage() {
 
   const categoryTabs = [
     { id: 'ALL', name: 'All', count: categories.length },
-    { id: 'PROGRAMMING', name: 'Programming', count: 2 },
-    { id: 'AI', name: 'AI & ML', count: 1 },
-    { id: 'WEB', name: 'Web', count: 1 },
-    { id: 'MOBILE', name: 'Mobile', count: 1 },
-    { id: 'DATA', name: 'Data', count: 1 },
-    { id: 'SECURITY', name: 'Security', count: 1 },
-    { id: 'CLOUD', name: 'Cloud', count: 1 },
-    { id: 'BLOCKCHAIN', name: 'Blockchain', count: 1 },
+    ...categories.map(category => ({ id: category.id, name: category.name, count: 1 })),
   ]
 
   const handleCategorySelect = (categoryId: string) => {
@@ -139,61 +126,6 @@ export default function StartPage() {
         return
       }
 
-      // Check if user is authenticated and has completed profile
-      if (!state.isAuthenticated || !state.user) {
-        // Store intended destination and redirect to homepage for authentication
-        console.info('User not authenticated, redirecting to homepage for login')
-        localStorage.setItem('intended_destination', `/quiz/${categoryId}`)
-
-        Sentry.addBreadcrumb({
-          message: 'User redirected to homepage for authentication',
-          category: 'navigation',
-          data: { categoryId, intended_destination: `/quiz/${categoryId}` }
-        });
-
-        router.push('/')
-        return
-      }
-
-      // For now, we'll assume the profile is completed since we can't import the function
-      // In a real implementation, we would check this properly
-
-      // Enhanced access control: Check coins before navigation for better UX
-      const userCoins = state.user?.coins || 0;
-      const entryFee = category.entry_fee;
-
-      console.info(`🚀 Category access check: ${categoryId} (user has ${userCoins} coins, entry fee: ${entryFee})`)
-
-      // If user has insufficient coins, show immediate feedback instead of navigating
-      if (userCoins < entryFee) {
-        console.info(`🚫 Insufficient coins for category access: ${userCoins} < ${entryFee}`)
-
-        // Set insufficient coins state to show modal
-        setInsufficientCoinsCategory({
-          id: categoryId,
-          name: category.name,
-          entryFee: entryFee,
-          userCoins: userCoins
-        });
-
-        Sentry.addBreadcrumb({
-          message: 'User blocked from quiz category due to insufficient coins',
-          category: 'access_control',
-          data: { categoryId, userCoins, entryFee, deficit: entryFee - userCoins }
-        });
-
-        return; // Don't navigate, show modal instead
-      }
-
-      // User has sufficient coins - proceed with navigation
-      console.info(`✅ Sufficient coins for category access: ${userCoins} >= ${entryFee}`)
-
-      Sentry.addBreadcrumb({
-        message: 'User navigating to quiz category',
-        category: 'navigation',
-        data: { categoryId, userCoins, entryFee }
-      });
-
       router.push(`/quiz/${categoryId}`)
     } catch (error) {
       console.error('Error in handleCategorySelect:', error);
@@ -209,28 +141,7 @@ export default function StartPage() {
 
   const filteredCategories = selectedCategory === 'ALL'
     ? categories
-    : categories.filter(cat => {
-        switch (selectedCategory) {
-          case 'PROGRAMMING':
-            return ['programming', 'web-dev'].includes(cat.id)
-          case 'AI':
-            return cat.id === 'ai'
-          case 'WEB':
-            return cat.id === 'web-dev'
-          case 'MOBILE':
-            return cat.id === 'mobile-dev'
-          case 'DATA':
-            return cat.id === 'data-science'
-          case 'SECURITY':
-            return cat.id === 'cybersecurity'
-          case 'CLOUD':
-            return cat.id === 'cloud'
-          case 'BLOCKCHAIN':
-            return cat.id === 'blockchain'
-          default:
-            return true
-        }
-      })
+    : categories.filter(cat => cat.id === selectedCategory)
 
   // Show loading state for categories or auth initialization
   if (loading || state.loading) {
@@ -288,7 +199,7 @@ export default function StartPage() {
               Choose Category
             </h1>
             <p className="text-blue-200 text-sm mb-1">
-              Select a category to start your quiz journey
+              Play any category for free. No profile or coins required.
             </p>
             <p className="text-blue-300 text-xs">
               {categories.length} categories • {totalQuestions} questions • Multiple levels
@@ -328,7 +239,6 @@ export default function StartPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 hover:bg-gray-700/50 transition-all duration-300 cursor-pointer border border-white/10"
-                onClick={() => handleCategorySelect(category.id)}
               >
                 <div className="flex items-center justify-between">
                   {/* Left Section - Icon and Info */}
@@ -353,7 +263,7 @@ export default function StartPage() {
                         </div>
 
                         <div className="text-blue-300">
-                          Entry: <span className="text-orange-400 font-semibold">🪙{category.entry_fee}</span>
+                          <span className="text-green-300 font-semibold">Free entry</span>
                         </div>
                       </div>
 
@@ -410,48 +320,6 @@ export default function StartPage() {
         </main>
       </div>
 
-      {/* Insufficient Coins Modal */}
-      {insufficientCoinsCategory && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-slate-800/90 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 max-w-md w-full text-center"
-          >
-            <div className="text-5xl mb-4">🪙</div>
-            <h2 className="text-2xl font-bold text-orange-200 mb-2">Insufficient Coins</h2>
-            <p className="text-slate-300 mb-4">
-              You need <span className="text-orange-300 font-bold">{insufficientCoinsCategory.entryFee}</span> coins
-              to play <span className="text-white font-medium">{insufficientCoinsCategory.name}</span>.
-            </p>
-            <p className="text-slate-300 mb-4">
-              You currently have <span className="text-orange-300 font-bold">{insufficientCoinsCategory.userCoins}</span> coins.
-            </p>
-            <p className="text-slate-400 text-sm mb-6">
-              Earn coins for free by playing the homepage quiz!
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => {
-                  setInsufficientCoinsCategory(null);
-                  router.push('/');
-                }}
-                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200"
-              >
-                Earn Coins Free
-              </button>
-              <button
-                onClick={() => setInsufficientCoinsCategory(null)}
-                className="flex-1 bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-medium hover:bg-slate-600 transition-all duration-200"
-              >
-                Cancel
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
 
     </>
   )

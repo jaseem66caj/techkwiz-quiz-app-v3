@@ -70,7 +70,7 @@ function createGuestUser(): User {
 
 // Reducer function to handle state updates based on actions
 // This function processes all state changes in a predictable way
-function appReducer(state: AppState, action: any) {
+export function appReducer(state: AppState, action: any) {
   switch (action.type) {
     // Set loading state (used during app initialization)
     case 'SET_LOADING':
@@ -120,45 +120,9 @@ function appReducer(state: AppState, action: any) {
         user: updatedUser,
       }
 
-    // Start a quiz and deduct entry fee from user's coins
+    // Public quizzes are free. Ignore legacy fee payloads from stale callers.
     case 'START_QUIZ':
-      // Guard clause: only proceed if user exists
-      if (!state.user) {
-        console.warn('💰 START_QUIZ: No user found, cannot deduct entry fee');
-        return state;
-      }
-
-      const { quiz, entryFee } = action.payload;
-
-      // Guard clause: prevent duplicate quiz starts for the same category
-      if (state.currentQuiz?.category === quiz.category) {
-        console.warn(`💰 START_QUIZ: Quiz already started for category ${quiz.category}, preventing duplicate deduction`);
-        return state;
-      }
-
-      // Check if user has enough coins to enter the quiz
-      if (state.user.coins < entryFee) {
-        console.warn(`💰 START_QUIZ: Insufficient coins (${state.user.coins} < ${entryFee})`);
-        return state;
-      }
-
-      // Log the deduction for debugging
-      console.info(`💰 START_QUIZ: Deducting ${entryFee} coins from ${state.user.coins} (user: ${state.user.id})`);
-
-      // Deduct entry fee from user's coins
-      const userAfterFee = { ...state.user, coins: state.user.coins - entryFee };
-
-      // Persist changes to localStorage
-      saveUser(userAfterFee);
-      updateUserCoins(userAfterFee.coins);
-
-      console.info(`💰 START_QUIZ: Deduction complete, new balance: ${userAfterFee.coins}`);
-
-      return {
-        ...state,
-        user: userAfterFee,
-        currentQuiz: quiz,
-      };
+      return { ...state, currentQuiz: action.payload.quiz };
 
     // Handle quiz completion and update user stats
     case 'END_QUIZ':
