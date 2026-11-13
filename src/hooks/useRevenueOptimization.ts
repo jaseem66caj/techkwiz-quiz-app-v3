@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useApp } from '../app/providers'
+import { DEFAULT_REWARD_CONFIG } from '@/types/reward'
 
 interface RevenueMetrics {
   totalCoinsEarned: number
@@ -183,22 +184,34 @@ export function useRevenueOptimization() {
     return newMultiplier
   }, [])
 
-  // Track ad view and reward
-  const trackAdView = useCallback((rewardCoins: number = 100) => {
-    const enhancedReward = awardCoins(rewardCoins, 'ad')
-    
-    setRevenueMetrics(prev => ({
-      ...prev,
-      adViews: prev.adViews + 1
-    }))
+  /**
+   * Credit in-game coins only after a completed H5 rewarded ad
+   * (`adBreak({ type: 'reward' })` / adViewed). Never credit clicks,
+   * impressions, or dismissed ads. Ads are currently off; do not call this
+   * from a click-to-earn hook.
+   */
+  const trackAdView = useCallback((
+    status: 'viewed' | 'dismissed' | 'error' | 'unavailable',
+    rewardCoins: number = 100
+  ) => {
+    if (!DEFAULT_REWARD_CONFIG.adSettings.enabled || status !== 'viewed') {
+      return 0
+    }
 
-    // Add ad view multiplier for next quiz (if user watches multiple ads)
-    if (revenueMetrics.adViews > 0 && revenueMetrics.adViews % 3 === 0) {
-      addMultiplier('streak', 1.5, 30) // 1.5x multiplier for 30 minutes after every 3 ads
+    const enhancedReward = awardCoins(rewardCoins, 'ad')
+
+    let nextAdViews = 0
+    setRevenueMetrics(prev => {
+      nextAdViews = prev.adViews + 1
+      return { ...prev, adViews: nextAdViews }
+    })
+
+    if (nextAdViews > 0 && nextAdViews % 3 === 0) {
+      addMultiplier('streak', 1.5, 30)
     }
 
     return enhancedReward
-  }, [awardCoins, revenueMetrics.adViews, addMultiplier])
+  }, [awardCoins, addMultiplier])
 
   // Check and show daily bonus
   const checkDailyBonus = useCallback(() => {
@@ -271,14 +284,9 @@ export function useRevenueOptimization() {
   const getRevenueRecommendations = useCallback(() => {
     const recommendations = []
     
-    if (revenueMetrics.adViews < 5) {
-      recommendations.push({
-        type: 'ad_engagement',
-        message: 'Watch ads to earn bonus coins and unlock multipliers!',
-        priority: 'high'
-      })
-    }
-    
+    // Do not recommend watching or clicking ads. Ads are off. A later rewarded
+    // opt-in must use RewardedAdOptIn (adBreak type 'reward'), never this list.
+
     if (revenueMetrics.dailyStreak < 3) {
       recommendations.push({
         type: 'daily_engagement',
