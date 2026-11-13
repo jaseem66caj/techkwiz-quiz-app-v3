@@ -30,7 +30,7 @@ describe('quizDataManager unified questions', () => {
     const questions = await quizDataManager.getUnifiedQuestions('homepage', 5, 'homepage')
 
     expect(questions.length).toBeGreaterThanOrEqual(3)
-    expect(questions[0].id).toBe('admin-0')
+    expect(questions.map(question => question.id).sort()).toEqual(adminQuestions.map(question => question.id).sort())
   })
 
   it('falls back to sample questions when admin data is missing', async () => {

@@ -171,7 +171,7 @@ export function UnifiedQuizInterface({
   const renderThisOrThatQuestion = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4 leading-tight" data-testid="question-text">
+        <h3 className="text-lg font-semibold text-white mb-4 leading-tight" style={{ minHeight: '6rem' }} data-testid="question-text">
           {question.question}
         </h3>
         {question.emoji_clue && (
@@ -211,7 +211,7 @@ export function UnifiedQuizInterface({
         <div className="text-6xl mb-6" data-testid="emoji-clue">
           {question.emoji_clue}
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
+        <h3 className="text-xl font-semibold text-white mb-2" style={{ minHeight: '6rem' }} data-testid="question-text">
           {question.question}
         </h3>
         <p className="text-blue-200 text-sm">Crack the emoji code!</p>
@@ -243,7 +243,7 @@ export function UnifiedQuizInterface({
   const renderPersonalityQuestion = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
+        <h3 className="text-xl font-semibold text-white mb-2" style={{ minHeight: '6rem' }} data-testid="question-text">
           {question.question}
         </h3>
         <p className="text-blue-200 text-sm">Choose what resonates with you!</p>
@@ -276,7 +276,7 @@ export function UnifiedQuizInterface({
     <div className="space-y-6">
       <div className="text-center mb-6">
         <div className="text-4xl mb-4">🔮</div>
-        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
+        <h3 className="text-xl font-semibold text-white mb-2" style={{ minHeight: '6rem' }} data-testid="question-text">
           {question.question}
         </h3>
         <p className="text-blue-200 text-sm">Predict the future!</p>
@@ -308,7 +308,7 @@ export function UnifiedQuizInterface({
   const renderMultipleChoiceQuestion = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold text-white mb-2" data-testid="question-text">
+        <h3 className="text-xl font-semibold text-white mb-2" style={{ minHeight: '6rem' }} data-testid="question-text">
           {question.question}
         </h3>
       </div>
@@ -345,7 +345,7 @@ export function UnifiedQuizInterface({
       </div>
       
       {/* Fun fact display for answered questions */}
-      {questionAnswered && question.fun_fact && (
+      <div className="min-h-48">{questionAnswered && question.fun_fact && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -359,7 +359,7 @@ export function UnifiedQuizInterface({
             </div>
           </div>
         </motion.div>
-      )}
+      )}</div>
     </div>
   )
 
@@ -384,7 +384,7 @@ export function UnifiedQuizInterface({
   // ===================================================================
   // Renders the complete quiz interface with question content and progress indicators
   return (
-    <div className="relative">
+    <div className="quiz-question relative">
       {/* Encouragement message overlay (only in enhanced mode) - Simplified animation */}
       {showEncouragementMessage && (
         <motion.div

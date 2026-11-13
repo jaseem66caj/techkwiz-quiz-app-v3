@@ -25,7 +25,7 @@ const QuizResultsDisplay = dynamic(() => import('@/components/quiz/QuizResultsDi
 // with label/time row + progress bar) so its ssr:false swap doesn't shift layout.
 const CountdownTimer = dynamic(() => import('@/components/quiz/CountdownTimer').then(mod => mod.CountdownTimer), {
   ssr: false,
-  loading: () => <div className="h-28 mb-6 bg-slate-800/50 rounded-xl animate-pulse" />
+  loading: () => <div className="h-40 mb-6 bg-slate-800/50 rounded-xl animate-pulse" />
 })
 
 // Main Quiz Page component for a specific category
@@ -34,12 +34,12 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // React.use() must not be wrapped in try/catch to avoid Suspense violations
   const resolvedParams = React.use(params)
 
-  // Access global application state and dispatch function
+  return <CategoryRound key={resolvedParams.category} categoryId={resolvedParams.category} />
+}
+
+function CategoryRound({ categoryId }: { categoryId: string }) {
   const { state, dispatch } = useApp()
-  // Next.js router for navigation
   const router = useRouter()
-  // State for the current category ID
-  const [categoryId, setCategoryId] = useState<string>(resolvedParams.category || '')
 
   // Refs for cleanup and mounted state
   const timeoutRefs = useRef<NodeJS.Timeout[]>([])
@@ -57,7 +57,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // Results & streak tracking
   const [showResult, setShowResult] = useState(false)
 
-  const [redirectCountdown, setRedirectCountdown] = useState(5)
   const [quizSessionCoins, setQuizSessionCoins] = useState<number>(0)
 
   // Timer state management
@@ -68,8 +67,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   const {
     questions,
     error,
-    insufficientCoins,
-    earningPotential,
     canPlay,
     markInteractionStarted,
   } = useCategoryQuizLoader(categoryId, { user: state.user, currentQuiz: state.currentQuiz }, dispatch)
@@ -90,17 +87,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
       clearAllTimeouts()
     }
   }, [clearAllTimeouts])
-
-  // ===================================================================
-  // Parameter Resolution
-  // ===================================================================
-  // Category ID is now resolved at component initialization via React.use()
-  // This useEffect is kept for any additional parameter validation if needed
-  useEffect(() => {
-    if (resolvedParams.category && categoryId !== resolvedParams.category) {
-      setCategoryId(resolvedParams.category)
-    }
-  }, [resolvedParams, categoryId])
 
   // ===================================================================
   // Quiz Initialization Effect
@@ -140,44 +126,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
     }
   }, [showResult, router])
 
-  // Handle automatic redirection when insufficient coins
-  useEffect(() => {
-    if (!insufficientCoins) return
-
-    // Set countdown from 5 to 0
-    setRedirectCountdown(5)
-
-    const interval = setInterval(() => {
-      setRedirectCountdown(prev => Math.max(0, prev - 1))
-    }, 1000)
-    const timer = setTimeout(() => {
-      if (!isMountedRef.current) return
-      try {
-        router.push('/')
-      } catch (error) {
-        console.error('Error during insufficient coins redirect:', error)
-        import('@sentry/nextjs').then(Sentry => {
-          Sentry.captureException(error, {
-            tags: { component: 'CategoryQuiz', action: 'insufficientCoinsRedirect' },
-            extra: { categoryId }
-          })
-        })
-        if (typeof window !== 'undefined') {
-          window.location.href = '/'
-        }
-      }
-    }, 5000)
-
-    // Track timers for cleanup
-    timeoutRefs.current.push(interval as unknown as NodeJS.Timeout)
-    timeoutRefs.current.push(timer)
-
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timer)
-    }
-  }, [insufficientCoins, router, categoryId])
-
   // ===================================================================
   // Quiz Event Handlers
   // ===================================================================
@@ -186,21 +134,21 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // Handle timer expiration
   const handleTimeUp = () => {
     // Guard clause - exit if answer already selected or entry is not allowed
-    if (!canPlay || insufficientCoins || selected !== null) return
+    if (!canPlay || selected !== null) return
+    markInteractionStarted()
     // Show time up modal
     setShowTimeUp(true)
     // Mark as incorrect
     setIsCorrect(false)
     // Set selected to indicate time expired
     setSelected(-1)
-    // Trigger reward popup after delay
-    setTimeout(() => setShowReward(true), 400)
+
   }
 
   // Handle user answer selection (Category Quiz - Manual Progression Flow)
   const handleAnswer = useCallback((answerIndex: number) => {
-    // Guard clause - exit if entry is unpaid or an answer is already selected
-    if (!canPlay || insufficientCoins || selected !== null) return;
+    // Guard clause - exit if round is still loading or an answer is already selected
+    if (!canPlay || selected !== null) return;
     markInteractionStarted()
 
     try {
@@ -250,11 +198,11 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         })
       })
     }
-  }, [selected, questions, current, dispatch, categoryId, canPlay, insufficientCoins, markInteractionStarted]);
+  }, [selected, questions, current, dispatch, categoryId, canPlay, markInteractionStarted]);
 
   // Advance to next question or complete quiz
   const advance = useCallback(() => {
-    if (!canPlay || insufficientCoins) return
+    if (!canPlay) return
     try {
       console.info('advance function called', { current, questionsLength: questions.length });
       // Hide reward popup and time up modal
@@ -293,7 +241,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         })
       })
     }
-  }, [current, questions.length, score, dispatch, categoryId, canPlay, insufficientCoins]);
+  }, [current, questions.length, score, dispatch, categoryId, canPlay]);
 
   // ===================================================================
   // Loading and Error States
@@ -318,36 +266,32 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // Render the complete quiz interface with all components
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-      <div className={`container mx-auto px-4 pt-10 pb-8 max-w-2xl${(!canPlay || insufficientCoins) ? ' pointer-events-none' : ''}`} aria-hidden={!canPlay || insufficientCoins || undefined} inert={!canPlay || insufficientCoins || undefined}>
+    <div className="quiz-stage relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      <div className={`container mx-auto px-4 pt-10 pb-8 max-w-2xl${(!canPlay) ? ' pointer-events-none' : ''}`} aria-hidden={!canPlay || undefined} inert={!canPlay || undefined}>
         {/* Header with user information and coin balance */}
         <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 mb-6">
-          {/* User info display for authenticated users */}
-          {state.user && state.user.name !== 'Guest' && (
-            <div className="flex items-center justify-between mb-4">
+          {/* Reserve the wallet row before stored user hydration. */}
+            <div className="flex flex-wrap gap-3 items-center justify-between mb-4 min-h-12">
               <div className="flex items-center bg-gray-800/50 rounded-full px-4 py-2 border border-gray-700">
-                <span className="text-2xl mr-2">{getAvatarEmojiById(state.user.avatar)}</span>
-                <span className="text-white font-medium">{state.user.name}</span>
+                <span className="text-2xl mr-2">{getAvatarEmojiById(state.user?.avatar || 'robot')}</span>
+                <span className="text-white font-medium">{state.user?.name || 'Guest'}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="flex items-center bg-orange-500/20 rounded-full px-3 py-1 border border-orange-400/30">
                   <span className="text-lg mr-1">🪙</span>
                   <span className="text-orange-300 text-sm">Wallet: </span>
-                  <span className="text-white font-bold text-sm">{state.user.coins}</span>
+                  <span className="text-white font-bold text-sm">{state.user?.coins || 0}</span>
                 </div>
-                {quizSessionCoins > 0 && (
                   <div className="flex items-center bg-green-500/20 rounded-full px-3 py-1 border border-green-400/30">
                     <span className="text-lg mr-1">✨</span>
                     <span className="text-green-300 text-sm">Earned: </span>
                     <span className="text-white font-bold text-sm">+{quizSessionCoins}</span>
                   </div>
-                )}
               </div>
             </div>
-          )}
 
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-orange-100">Question {current + 1} of {questions.length}</h1>
+            <h2 className="text-2xl font-bold text-orange-100">{showResult ? "Round complete" : `Question ${current + 1} of ${questions.length}`}</h2>
             <div className="text-orange-300 font-bold">Score: {score}</div>
           </div>
           <div className="w-full bg-slate-700 rounded-full h-3 mt-4">
@@ -360,9 +304,10 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
             score={score}
             totalQuestions={questions.length}
             category={categoryId}
-            coinsEarned={score * 50}
+            coinsEarned={quizSessionCoins}
             onPlayAgain={() => {
               // Reset quiz state
+              setQuizSessionCoins(0)
               setCurrent(0)
               setSelected(null)
               setScore(0)
@@ -375,7 +320,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         ) : (
           <>
             {timerEnabled && (
-              <CountdownTimer totalSeconds={timerSeconds} isActive={canPlay && !insufficientCoins && selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} autoAdvance={false} />
+              <CountdownTimer totalSeconds={timerSeconds} isActive={canPlay && selected === null && !showReward && !showTimeUp} onTimeUp={handleTimeUp} showWarning={true} warningThreshold={10} questionNumber={current} />
             )}
 
             <UnifiedQuizInterface
@@ -406,36 +351,7 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
         <TimeUpModal isOpen={showTimeUp} question={questions[current]} onClose={advance} autoCloseDelay={2000} />
       )}
 
-      {insufficientCoins && (
-        <div
-          className="absolute inset-0 z-20 flex items-start justify-center px-4 pt-10"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="insufficient-coins-title"
-        >
-          <div className="absolute inset-0 bg-indigo-950/80" />
-          <div className="relative container mx-auto max-w-2xl">
-            <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-8 border border-slate-700/50 text-center">
-              <div className="text-5xl mb-4">🪙</div>
-              <h2 id="insufficient-coins-title" className="text-2xl font-bold text-orange-200 mb-2">Insufficient coins</h2>
-              <p className="text-slate-300 mb-2">Taking you to the homepage quiz where you can earn coins for free!</p>
-              <p className="text-orange-300 font-medium mb-4">Earn up to <span className="text-white font-bold">{earningPotential}</span> coins in the homepage quiz.</p>
-              <div className="text-slate-400 mb-6">Redirecting to homepage quiz in {redirectCountdown}...</div>
-              <button
-                onClick={() => {
-                  try { router.push('/') } catch (error) {
-                    import('@sentry/nextjs').then(Sentry => Sentry.captureException(error))
-                    if (typeof window !== 'undefined') window.location.href = '/'
-                  }
-                }}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg"
-              >
-                Go to Homepage Quiz Now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }

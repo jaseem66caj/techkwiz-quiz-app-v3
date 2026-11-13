@@ -260,3 +260,25 @@ a {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* Keep every actionable control usable on touch screens, including text links. */
+button, a, [role="button"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+a {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Delayed question feedback and result chunks must not move following content.
+   These are minimums: long text remains fully visible and can grow naturally. */
+.quiz-stage {
+  min-height: 1200px;
+}
+.quiz-question {
+  min-height: 720px;
+}
+@media (min-width: 640px) {
+  .quiz-stage { min-height: 1100px; }
+  .quiz-question { min-height: 660px; }
+}

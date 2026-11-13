@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { getNewsImage } from '@/utils/newsImage'
 import { fetchWordPressPosts, fetchWordPressRSS, mockWordPressPosts, WordPressPost } from '@/utils/wordpress'
 
 interface NewsSectionProps {
@@ -142,7 +143,7 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
 
   if (loading) {
     return (
-      <div className={`glass-effect p-4 sm:p-6 rounded-xl ${className}`}>
+      <div className={`glass-effect min-h-[1050px] sm:min-h-[900px] p-4 sm:p-6 rounded-xl ${className}`}>
         <div className="flex items-center space-x-2 mb-4">
           <span className="text-2xl">📰</span>
           <h2 className="text-white font-bold text-lg sm:text-xl">Latest Tech News</h2>
@@ -157,7 +158,7 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
   }
 
   return (
-    <div className={`glass-effect p-4 sm:p-6 rounded-xl ${className}`}>
+    <div className={`glass-effect min-h-[1050px] sm:min-h-[900px] p-4 sm:p-6 rounded-xl ${className}`}>
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center space-x-2">
           <span className="text-2xl">📰</span>
@@ -199,14 +200,14 @@ export function NewsSection({ className = '' }: NewsSectionProps) {
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
                   {article.featuredImage ? (
                     <Image
-                      src={article.featuredImage}
+                      src={getNewsImage(article.featuredImage)}
                       alt={article.title}
                       width={80}
                       height={80}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                        e.currentTarget.removeAttribute('srcset')
+                        e.currentTarget.src = '/images/news-fallback.svg'
                       }}
                     />
                   ) : (

@@ -63,7 +63,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-pink-500 to-purple-600',
     description: 'Discover your vibe through rapid-fire choices',
     subcategories: ['Aesthetic', 'Lifestyle', 'Values', 'Preferences'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'pop-culture-flash': {
@@ -73,7 +73,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-red-500 to-pink-600',
     description: 'Decode trends and viral moments',
     subcategories: ['TikTok', 'Music', 'Celebrities', 'Memes'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'micro-trivia': {
@@ -83,7 +83,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-blue-500 to-cyan-600',
     description: 'Lightning-fast knowledge battles',
     subcategories: ['Random Facts', 'Quick Fire', 'Brain Teasers', 'Speed Round'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'social-identity': {
@@ -93,7 +93,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-purple-500 to-indigo-600',
     description: 'Find your digital persona match',
     subcategories: ['Influencer Type', 'Content Style', 'Social Vibe', 'Online Persona'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'trend-vibes': {
@@ -103,7 +103,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-orange-500 to-yellow-600',
     description: 'Stay plugged into what\'s viral',
     subcategories: ['TikTok Slang', 'Viral Trends', 'Local Culture', 'Gen Z Language'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'future-you': {
@@ -113,7 +113,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-green-500 to-teal-600',
     description: 'Predict your path and tech trends',
     subcategories: ['Career Paths', 'Tech Future', 'Life Predictions', 'AI vs Human'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'programming': {
@@ -123,7 +123,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-blue-500 to-purple-600',
     description: 'Test your coding knowledge',
     subcategories: ['JavaScript', 'Python', 'HTML', 'Algorithms'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
   'ai': {
@@ -133,7 +133,7 @@ export const QUIZ_CATEGORIES: Record<string, QuizCategory> = {
     color: 'from-purple-500 to-pink-600',
     description: 'Explore AI and machine learning',
     subcategories: ['Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision'],
-    entry_fee: 100,
+    entry_fee: 0,
     get prize_pool() { return calculateCategoryMaxCoins(this.id) }, // Automatically calculates max coins for one round
   },
 }

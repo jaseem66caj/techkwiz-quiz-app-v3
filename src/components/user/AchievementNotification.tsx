@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Achievement } from '../../types/reward'
 
@@ -9,7 +11,19 @@ interface AchievementNotificationProps {
 }
 
 export function AchievementNotification({ achievement, onClose }: AchievementNotificationProps) {
-  return (
+  const [mounted, setMounted] = useState(false)
+
+  // Portal to document.body: an ancestor layout wrapper uses backdrop-filter,
+  // which makes it the containing block for position:fixed descendants,
+  // pinning this notification near the bottom of the full page instead of
+  // the viewport (colliding with the footer).
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  return createPortal(
     <AnimatePresence>
       {achievement && (
         <motion.div
@@ -28,6 +42,7 @@ export function AchievementNotification({ achievement, onClose }: AchievementNot
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }

@@ -66,7 +66,7 @@ export default function HomePage() {
       setResultCountdown(prev => {
         const next = Math.max(prev - 1, 0);
         // Update ARIA live region every 10 seconds to avoid spam
-        if (next % 10 === 0) setSrAnnouncement(`Redirecting to profile creation in ${next} seconds`);
+        if (next % 10 === 0) setSrAnnouncement(`Returning to categories in ${next} seconds`);
         return next;
       });
     }, 1000);
@@ -74,14 +74,10 @@ export default function HomePage() {
     const timeout = setTimeout(() => {
       try {
         setIsNavigating(true);
-        // Changed from router.push('/start') to setShowCreateProfile(true) as requested
-        setShowResult(false);
-        setShowCreateProfile(true);
+        router.push('/start');
       } catch (e) {
         import('@sentry/nextjs').then(Sentry => Sentry.captureException(e as any));
-        // Fallback to profile creation
-        setShowResult(false);
-        setShowCreateProfile(true);
+        window.location.href = '/start';
       }
     }, 90000);
 
@@ -161,7 +157,7 @@ export default function HomePage() {
   // Show loading screen during navigation to prevent quiz interface flash
   if (isNavigating) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      <div className="quiz-stage min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <main className="flex-1 flex items-center justify-center">
           <div className="glass-effect p-8 rounded-2xl text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400 mx-auto mb-4"></div>
@@ -175,8 +171,8 @@ export default function HomePage() {
   // Show quiz result screen after quiz completion
   if (showResult && quizCompleted) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <main className="flex-1 flex items-center justify-center p-4">
+      <div className="quiz-stage min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <main className="flex-1 flex items-start justify-center p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -203,7 +199,7 @@ export default function HomePage() {
 
             <div className="mt-6">
               <p className="text-blue-200 mb-4">
-                You've earned {calculateQuizReward(score, quickStartQuiz.length).totalCoins} coins! This is the only way to get free coins in TechKwiz.
+                You've earned {calculateQuizReward(score, quickStartQuiz.length).totalCoins} coins! Keep playing any category for free.
               </p>
               
               <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30 mb-6">
@@ -214,7 +210,8 @@ export default function HomePage() {
               </div>
 
               {/* Standardized completion timer (90s) - runs in background */}
-              <div className="flex justify-center">
+              <div className="flex flex-col gap-3">
+                <button onClick={() => router.push('/start')} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl">Play More Free Quizzes</button>
                 <button
                   onClick={() => {
                     setShowResult(false);
@@ -222,7 +219,7 @@ export default function HomePage() {
                   }}
                   className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-colors"
                 >
-                  Create Profile Now
+                  Create Profile (Optional)
                 </button>
               </div>
             </div>
@@ -235,12 +232,12 @@ export default function HomePage() {
   // Show quiz interface for active quiz
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <main className="flex-1 p-4 flex flex-col items-center justify-center">
+      <div className="quiz-stage min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <main className="flex-1 p-4 flex flex-col items-center justify-start">
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h2 className="text-3xl font-bold text-white mb-2">
               🎉 Welcome to <span className="text-orange-400">TechKwiz!</span>
-            </h1>
+            </h2>
             <p className="text-blue-200 text-base mb-2">
               Test your knowledge with this quick quiz!
             </p>
