@@ -22,7 +22,6 @@ import { useHomepageQuizQuestions } from '@/hooks/useHomepageQuizQuestions'
 import { useHomepageQuizProgression } from '@/hooks/useHomepageQuizProgression'
 
 const UnifiedQuizInterface = dynamic(() => import('@/components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
-  ssr: false,
   loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
 });
 
@@ -41,7 +40,7 @@ export default function HomePage() {
   const [srAnnouncement, setSrAnnouncement] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
 
-  const { quickStartQuiz, isLoading: isLoadingQuestions } = useHomepageQuizQuestions()
+  const { quickStartQuiz, markAnswered } = useHomepageQuizQuestions()
   const {
     currentQuestion,
     selectedAnswer,
@@ -51,6 +50,11 @@ export default function HomePage() {
     setShowResult,
     handleAnswerSelect,
   } = useHomepageQuizProgression(quickStartQuiz)
+
+  const handleQuizAnswerSelect = (answerIndex: number) => {
+    markAnswered()
+    handleAnswerSelect(answerIndex)
+  }
 
   // ===================================================================
   // Auto-redirect Timer Effect (Homepage Results)
@@ -149,20 +153,6 @@ export default function HomePage() {
   // ===================================================================
   // Conditional rendering based on component state
 
-  // Show loading screen while questions are loading
-  if (isLoadingQuestions) {
-    return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <main className="flex-1 flex items-center justify-center">
-          <div className="glass-effect p-8 rounded-2xl text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white">Loading TechKwiz...</p>
-          </div>
-        </main>
-      </div>
-    )
-  }
-  
   // Show profile creation screen after quiz completion
   if (showCreateProfile) {
     return <CreateProfile onProfileCreated={handleProfileCreated} />;
@@ -247,11 +237,7 @@ export default function HomePage() {
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <main className="flex-1 p-4 flex flex-col items-center justify-center">
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-6"
-          >
+          <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-white mb-2">
               🎉 Welcome to <span className="text-orange-400">TechKwiz!</span>
             </h1>
@@ -261,13 +247,13 @@ export default function HomePage() {
             <p className="text-green-300 text-sm font-medium">
               👆 Click an answer below to start earning coins!
             </p>
-          </motion.div>
+          </div>
 
           <div className="w-full max-w-md">
             <UnifiedQuizInterface
               question={quickStartQuiz[currentQuestion]}
               selectedAnswer={selectedAnswer}
-              onAnswerSelect={handleAnswerSelect}
+              onAnswerSelect={handleQuizAnswerSelect}
               questionAnswered={selectedAnswer !== null}
               questionNumber={currentQuestion + 1}
               totalQuestions={quickStartQuiz.length}

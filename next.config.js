@@ -28,30 +28,10 @@ const nextConfig = {
   // Experimental features (app directory is stable in Next.js 13+)
 
   // Webpack configuration for build optimization
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Optimize bundle size for production
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            enforce: true,
-          },
-        },
-      }
-
-      // Enable tree shaking
-      config.optimization.usedExports = true
-      config.optimization.sideEffects = false
-    }
+  webpack: (config, { dev }) => {
+    // Let Next.js 15's default splitChunks heuristics run in production —
+    // forcing every node_modules package into one "vendors" cache group
+    // (previously here) defeats per-route async chunking.
 
     // Improve build performance
     if (dev) {
@@ -139,41 +119,39 @@ const nextConfig = {
   },
 }
 
-const { withSentryConfig } = require("@sentry/nextjs");
-module.exports = withSentryConfig(
-  nextConfig,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
+const { withSentryConfig } = require("@sentry/nextjs/config");
+// Sentry 10 single-options form (the old two-object signature is deprecated).
+// See node_modules/@sentry/nextjs/build/types-ts3.8/config/types.d.ts for current field names.
+module.exports = withSentryConfig(nextConfig, {
+  // For all available options, see:
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
 
-    // Suppresses source map uploading logs during build
-    silent: true,
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
+  // Suppresses source map uploading logs during build
+  silent: true,
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Deletes the uploaded source maps from the public build output after Sentry has them
+  // (current equivalent of the removed `hideSourceMaps` option).
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
   },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
+  // Tree-shake Sentry SDK debug/logger statements out of the client bundle
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+  },
 
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: true,
+  // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+  tunnelRoute: "/monitoring",
 
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
+  webpack: {
     // Enables automatic instrumentation of Vercel Cron Monitors.
     // See the following for more information:
     // https://docs.sentry.io/product/crons/
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
     automaticVercelMonitors: true,
-  }
-);
+  },
+});
