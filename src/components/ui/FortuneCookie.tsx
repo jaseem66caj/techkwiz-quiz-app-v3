@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface FortuneMessage {
@@ -117,6 +118,14 @@ export function FortuneCookie({ className }: { className?: string }) {
   const [isAnimating, setIsAnimating] = useState(false)
   const [clickCount, setClickCount] = useState(0)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Portal to document.body: an ancestor layout wrapper uses backdrop-filter,
+  // which makes it the containing block for position:fixed descendants,
+  // pinning this widget near the bottom of the full page instead of the viewport.
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -155,7 +164,9 @@ export function FortuneCookie({ className }: { className?: string }) {
     setIsAnimating(false)
   }
 
-  return (
+  if (!mounted) return null
+
+  return createPortal(
     <>
       {/* Fortune Cookie Button - Engaging but Small */}
       <motion.div
@@ -452,6 +463,7 @@ export function FortuneCookie({ className }: { className?: string }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </>,
+    document.body
   )
 }
