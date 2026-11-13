@@ -20,3 +20,9 @@ function officialGaId(): string {
 }
 
 export const GA_MEASUREMENT_ID = officialGaId()
+
+/** Public contact already used on the TechKwiz blog. Do not invent other @techkwiz.com mailboxes. */
+export const CONTACT_EMAIL = 'techkwiz@gmail.com'
+
+/** Fixed date shown on Privacy, Terms, and Contact. Do not use `new Date()` on the page. */
+export const LEGAL_LAST_UPDATED = '13 November 2026'

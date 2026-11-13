@@ -1,6 +1,7 @@
 'use client'
 
 import { AchievementNotification } from '@/components/user'
+import { LegalFooter } from '@/components/seo/LegalFooter'
 import { useApp } from '@/app/providers'
 
 export function MobileLayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -15,6 +16,7 @@ export function MobileLayoutWrapper({ children }: { children: React.ReactNode })
       {/* Mobile-web container for desktop */}
       <div className="mx-auto max-w-sm sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm 2xl-max-w-sm min-h-screen bg-gray-900/50 backdrop-blur-sm border-x border-white/10">
         {children}
+        <LegalFooter />
         <AchievementNotification achievement={state.notification} onClose={handleCloseNotification} />
       </div>
     </div>

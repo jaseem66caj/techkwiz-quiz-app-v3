@@ -35,6 +35,18 @@ export default function sitemap() {
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
       priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
     }
   ]
 

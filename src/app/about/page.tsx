@@ -1,180 +1,82 @@
-'use client'
+import Link from 'next/link'
+import { CONTACT_EMAIL } from '@/config/site'
+import { QUIZ_CATEGORIES } from '@/data/quizDatabase'
+import { LegalPageShell } from '@/components/seo/LegalPageShell'
 
-import { UnifiedNavigation } from '@/components/navigation'
+const categoryNames = Object.values(QUIZ_CATEGORIES).map((category) => category.name)
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      <UnifiedNavigation mode="simple" />
-      
-      <main className="flex-1 p-4 max-w-4xl mx-auto">
-        <div className="glass-effect p-8 rounded-2xl">
-          <h1 className="text-4xl font-bold text-white mb-6 text-center">
-            About <span className="text-orange-400">Tech</span>Kwiz
-          </h1>
+    <LegalPageShell title={<AboutTitle />}>
+      <section className="text-center">
+        <p className="text-xl text-blue-200 leading-relaxed">
+          TechKwiz Play is a free browser quiz site for short rounds on technology and general
+          knowledge.
+        </p>
+      </section>
 
-          <div className="space-y-8 text-white">
-            <section className="text-center">
-              <div className="text-6xl mb-4">🚀</div>
-              <p className="text-xl text-blue-200 leading-relaxed">
-                Empowering developers and tech enthusiasts worldwide through interactive learning and skill assessment.
-              </p>
-            </section>
+      <section className="space-y-3">
+        <h2 className="text-2xl font-semibold text-orange-400">What you can play</h2>
+        <p>
+          Quizzes on this site currently cover: {categoryNames.slice(0, -1).join(', ')}, and{' '}
+          {categoryNames.slice(-1)[0]}. Each category round draws five questions from that
+          quiz&apos;s bank. Coins you earn are virtual and are not cash.
+        </p>
+      </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Our Mission</h2>
-              <div className="text-blue-100 space-y-4">
-                <p>
-                  TechKwiz is dedicated to making technology education accessible, engaging, and effective for everyone. We believe that learning should be interactive, challenging, and rewarding.
-                </p>
-                <p>
-                  Our platform serves developers, students, job seekers, and tech enthusiasts who want to test their knowledge, identify skill gaps, and continuously improve their technical expertise.
-                </p>
-              </div>
-            </section>
+      <section className="space-y-3">
+        <h2 className="text-2xl font-semibold text-orange-400">How it works</h2>
+        <ul className="list-disc list-inside space-y-2">
+          <li>Play on the homepage or open a category from the catalog.</li>
+          <li>Rounds have beginner, intermediate, and advanced questions where those exist.</li>
+          <li>
+            Questions are written or reviewed for this site. Some drafts may be prepared with AI
+            assistance and checked before they go live.
+          </li>
+          <li>You can track a streak and see a leaderboard. There is no cash prize.</li>
+        </ul>
+      </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">What We Offer</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl mb-3">📚</div>
-                  <h3 className="text-lg font-semibold text-yellow-300 mb-2">Comprehensive Categories</h3>
-                  <p className="text-blue-200 text-sm">
-                    8 major tech categories including Programming, AI/ML, Web Development, Mobile Development, Data Science, Cybersecurity, Cloud Computing, and Blockchain.
-                  </p>
-                </div>
+      <section className="space-y-3">
+        <h2 className="text-2xl font-semibold text-orange-400">Get started</h2>
+        <p>
+          <Link href="/start" className="text-orange-400 hover:text-orange-300">
+            Browse the quiz catalog
+          </Link>{' '}
+          or start a quick round from the homepage.
+        </p>
+      </section>
 
-                <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl mb-3">🎯</div>
-                  <h3 className="text-lg font-semibold text-yellow-300 mb-2">Multiple Difficulty Levels</h3>
-                  <p className="text-blue-200 text-sm">
-                    Beginner, Intermediate, and Advanced levels ensure appropriate challenges for all skill levels.
-                  </p>
-                </div>
+      <section className="space-y-3">
+        <h2 className="text-2xl font-semibold text-orange-400">Contact</h2>
+        <p>
+          Questions or feedback:{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-orange-400 hover:text-orange-300">
+            {CONTACT_EMAIL}
+          </a>
+          . See also the{' '}
+          <Link href="/contact" className="text-orange-400 hover:text-orange-300">
+            contact page
+          </Link>
+          ,{' '}
+          <Link href="/privacy" className="text-orange-400 hover:text-orange-300">
+            privacy policy
+          </Link>
+          , and{' '}
+          <Link href="/terms" className="text-orange-400 hover:text-orange-300">
+            terms
+          </Link>
+          .
+        </p>
+      </section>
+    </LegalPageShell>
+  )
+}
 
-                <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl mb-3">💡</div>
-                  <h3 className="text-lg font-semibold text-yellow-300 mb-2">Expert-Crafted Content</h3>
-                  <p className="text-blue-200 text-sm">
-                    All quiz questions are carefully crafted by experienced developers and tech professionals.
-                  </p>
-                </div>
-
-                <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl mb-3">🏆</div>
-                  <h3 className="text-lg font-semibold text-yellow-300 mb-2">Gamified Learning</h3>
-                  <p className="text-blue-200 text-sm">
-                    Earn coins, unlock achievements, compete on leaderboards, and track your progress.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Why Choose TechKwiz?</h2>
-              <div className="text-blue-100 space-y-4">
-                <div className="flex items-start space-x-3">
-                  <span className="text-green-400 text-xl">✓</span>
-                  <div>
-                    <strong className="text-white">Free Access:</strong> All quizzes and features are completely free to use.
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-green-400 text-xl">✓</span>
-                  <div>
-                    <strong className="text-white">Mobile Optimized:</strong> Perfect experience on all devices - mobile, tablet, and desktop.
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-green-400 text-xl">✓</span>
-                  <div>
-                    <strong className="text-white">Instant Feedback:</strong> Get immediate results with detailed explanations and fun facts.
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-green-400 text-xl">✓</span>
-                  <div>
-                    <strong className="text-white">Progress Tracking:</strong> Monitor your learning journey with comprehensive statistics.
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-green-400 text-xl">✓</span>
-                  <div>
-                    <strong className="text-white">Community:</strong> Join thousands of learners and compete globally.
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Our Commitment</h2>
-              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 p-6 rounded-xl">
-                <div className="text-blue-100 space-y-3">
-                  <p>
-                    <strong className="text-white">Quality Education:</strong> We continuously update our content to reflect the latest industry trends and technologies.
-                  </p>
-                  <p>
-                    <strong className="text-white">User Privacy:</strong> Your data privacy and security are our top priorities.
-                  </p>
-                  <p>
-                    <strong className="text-white">Accessibility:</strong> We strive to make our platform accessible to learners worldwide.
-                  </p>
-                  <p>
-                    <strong className="text-white">Continuous Improvement:</strong> We actively listen to user feedback and constantly enhance our platform.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Perfect For</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl mb-2">👨‍💻</div>
-                  <h3 className="font-semibold text-yellow-300 mb-2">Developers</h3>
-                  <p className="text-blue-200 text-sm">Test and improve your coding skills</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl mb-2">🎓</div>
-                  <h3 className="font-semibold text-yellow-300 mb-2">Students</h3>
-                  <p className="text-blue-200 text-sm">Supplement your tech education</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl mb-2">💼</div>
-                  <h3 className="font-semibold text-yellow-300 mb-2">Job Seekers</h3>
-                  <p className="text-blue-200 text-sm">Prepare for technical interviews</p>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Get Started Today</h2>
-              <div className="text-center">
-                <p className="text-blue-200 mb-6">
-                  Join thousands of tech enthusiasts who are already improving their skills with TechKwiz.
-                </p>
-                <button
-                  onClick={() => window.location.href = '/'}
-                  className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-xl text-lg transition-colors"
-                >
-                  Start Your Learning Journey
-                </button>
-              </div>
-            </section>
-
-            <section className="text-center pt-8 border-t border-white/10">
-              <h2 className="text-2xl font-semibold text-orange-400 mb-4">Contact Us</h2>
-              <div className="text-blue-200">
-                <p>Have questions or feedback? We'd love to hear from you!</p>
-                <div className="mt-4 space-y-2">
-                  <p><strong>Email:</strong> <a href="mailto:contact@techkwiz.com" className="text-orange-400 hover:text-orange-300">contact@techkwiz.com</a></p>
-                  <p><strong>Support:</strong> <a href="mailto:support@techkwiz.com" className="text-orange-400 hover:text-orange-300">support@techkwiz.com</a></p>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </main>
-    </div>
+function AboutTitle() {
+  return (
+    <>
+      About <span className="text-orange-400">Tech</span>Kwiz
+    </>
   )
 }
