@@ -74,6 +74,18 @@ export class QuizDataError extends Error {
 
 // Singleton class for managing all quiz-related data operations
 // Uses localStorage for client-side data persistence
+function shuffleQuestions<T>(items: T[]): T[] {
+  const next = items.slice()
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = next[i]
+    next[i] = next[j]
+    next[j] = tmp
+  }
+  return next
+}
+
+
 class QuizDataManager {
   // Singleton instance
   private static instance: QuizDataManager
@@ -195,12 +207,8 @@ class QuizDataManager {
         )
       }
 
-      // Check cache first
-      const cachedQuestions = this.getCachedQuestions(cacheKey)
-      if (cachedQuestions && cachedQuestions.length >= count) {
-        console.info(`⚡ Cache hit for ${categoryId}: returning ${cachedQuestions.length} cached questions`)
-        return cachedQuestions.slice(0, count)
-      }
+      // Do not return a cached first-N slice. A larger bank must be able to
+      // shuffle a new round from the full set on each play.
 
       console.info(`🔄 Loading ${count} questions for category: ${categoryId}${section ? ` (section: ${section})` : ''}`)
 
@@ -215,7 +223,7 @@ class QuizDataManager {
       }
 
       if (adminQuestions.length >= Math.min(count, 3)) {
-        const selectedQuestions = adminQuestions.slice(0, count)
+        const selectedQuestions = shuffleQuestions(adminQuestions).slice(0, count)
         console.info(`✅ Using ${selectedQuestions.length} admin questions for category: ${categoryId}`)
 
         // Cache the results
@@ -271,11 +279,8 @@ class QuizDataManager {
           }
 
           if (validatedQuestions.length > 0) {
-            const selectedQuestions = validatedQuestions.slice(0, count)
-            console.info(`✅ Using ${selectedQuestions.length} static questions for category: ${categoryId}`)
-
-            // Cache the final results
-            this.setCachedQuestions(cacheKey, selectedQuestions)
+            const selectedQuestions = shuffleQuestions(validatedQuestions).slice(0, count)
+            console.info(`✅ Using ${selectedQuestions.length} static questions for category: ${categoryId} (from ${validatedQuestions.length} in the bank)`)
 
             this.logQuestionLoadSuccess('static', categoryId, selectedQuestions.length, Date.now() - startTime)
             return selectedQuestions

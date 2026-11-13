@@ -35,6 +35,7 @@ export default function StartPage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL')
 
   const [categories, setCategories] = useState<QuizCategory[]>([])
+  const [totalQuestions, setTotalQuestions] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [insufficientCoinsCategory, setInsufficientCoinsCategory] = useState<{
@@ -51,7 +52,7 @@ export default function StartPage() {
       setError('');
 
       console.info('🔄 Loading quiz categories...');
-      const { QUIZ_CATEGORIES } = await import('@/data/quizDatabase');
+      const { QUIZ_CATEGORIES, QUIZ_DATABASE } = await import('@/data/quizDatabase');
 
       if (!QUIZ_CATEGORIES || typeof QUIZ_CATEGORIES !== 'object') {
         throw new Error('Invalid quiz categories data structure');
@@ -64,6 +65,8 @@ export default function StartPage() {
       }
 
       setCategories(categoriesArray);
+      const questionTotal = Object.values(QUIZ_DATABASE).reduce((sum, bank) => sum + bank.length, 0);
+      setTotalQuestions(questionTotal);
       console.info('✅ Loaded categories from local database:', categoriesArray.length);
     } catch (error) {
       console.error('❌ Error loading local categories:', error);
@@ -288,7 +291,7 @@ export default function StartPage() {
               Select a category to start your quiz journey
             </p>
             <p className="text-blue-300 text-xs">
-              {categories.length} categories • 50+ questions • Multiple levels
+              {categories.length} categories • {totalQuestions} questions • Multiple levels
             </p>
           </motion.div>
 

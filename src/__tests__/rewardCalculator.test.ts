@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { calculateQuizReward, calculateCategoryMaxCoins } from '@/utils/rewardCalculator'
 import { DEFAULT_REWARD_CONFIG } from '@/types/reward'
 import { QUIZ_DATABASE } from '@/data/quizDatabase'
+import { QUESTIONS_PER_ROUND } from '@/config/quiz'
 
 describe('reward calculator utilities', () => {
   it('computes total coins with bonus and streak breakdown', () => {
@@ -14,7 +15,7 @@ describe('reward calculator utilities', () => {
   })
 
   it('calculates maximum coins for a category based on question count', () => {
-    const programmingQuestions = QUIZ_DATABASE.programming.length
+    const programmingQuestions = Math.min(QUIZ_DATABASE.programming.length, QUESTIONS_PER_ROUND)
     const expected = programmingQuestions * DEFAULT_REWARD_CONFIG.coinValues.correct
 
     expect(calculateCategoryMaxCoins('programming')).toBe(expected)
