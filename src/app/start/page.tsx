@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useApp } from '../providers'
 import { UnifiedNavigation } from '@/components/navigation'
-import { seoConfig } from '@/utils/seo'
 
 const NewsSection = dynamic(() => import('@/components/ui/NewsSection').then(mod => mod.NewsSection), {
   ssr: false,
@@ -105,24 +104,6 @@ export default function StartPage() {
 
   useEffect(() => {
     fetchCategories();
-
-    // Set page title and meta description for SEO
-    document.title = seoConfig.categories.title
-
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', seoConfig.categories.description)
-    }
-
-    // Add keywords meta tag
-    let metaKeywords = document.querySelector('meta[name="keywords"]')
-    if (!metaKeywords) {
-      metaKeywords = document.createElement('meta')
-      metaKeywords.setAttribute('name', 'keywords')
-      document.head.appendChild(metaKeywords)
-    }
-    metaKeywords.setAttribute('content', seoConfig.categories.keywords)
   }, [])
 
   const categoryTabs = [

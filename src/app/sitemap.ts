@@ -1,8 +1,10 @@
+import { SITE_URL } from '@/config/site'
+import { QUIZ_CATEGORIES } from '@/data/quizDatabase'
+
 export default function sitemap() {
-  const baseUrl = 'https://techkwiz.com'
+  const baseUrl = SITE_URL
   const currentDate = new Date()
-  
-  // Static pages with proper priorities and change frequencies
+
   const staticPages = [
     {
       url: baseUrl,
@@ -23,12 +25,6 @@ export default function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/profile`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.6,
-    },
-    {
       url: `${baseUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
@@ -42,27 +38,13 @@ export default function sitemap() {
     }
   ]
 
-  // Quiz category pages - high priority as they're core content
-  const categories = [
-    { slug: 'programming', name: 'Programming' },
-    { slug: 'ai', name: 'Artificial Intelligence' },
-    { slug: 'web-dev', name: 'Web Development' }, 
-    { slug: 'mobile-dev', name: 'Mobile Development' },
-    { slug: 'data-science', name: 'Data Science' },
-    { slug: 'cybersecurity', name: 'Cybersecurity' },
-    { slug: 'cloud', name: 'Cloud Computing' },
-    { slug: 'blockchain', name: 'Blockchain' }
-  ]
-
-  const categoryPages = categories.map(category => ({
-    url: `${baseUrl}/quiz/${category.slug}`,
+  // Quiz category pages - sourced from the real category list so this can't drift
+  const categoryPages = Object.keys(QUIZ_CATEGORIES).map(slug => ({
+    url: `${baseUrl}/quiz/${slug}`,
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
 
-  // Future: Dynamic news article pages could be added here
-  // if we implement individual news article pages
-  
   return [...staticPages, ...categoryPages]
 }

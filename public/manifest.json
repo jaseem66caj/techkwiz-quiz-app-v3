@@ -1,7 +1,7 @@
 {
   "name": "TechKwiz",
   "short_name": "TechKwiz",
-  "description": "Test your knowledge with TechKwiz - the ultimate quiz app",
+  "description": "Play short quizzes on TechKwiz. Answer questions, earn coins, and keep a daily streak.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1f2937",
