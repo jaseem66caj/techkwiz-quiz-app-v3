@@ -1,5 +1,6 @@
 import { rewardDataManager } from './rewardDataManager'
 import { DEFAULT_REWARD_CONFIG } from '@/types/reward'
+import { QUESTIONS_PER_ROUND } from '@/config/quiz'
 
 /**
  * Centralized reward calculation utility
@@ -156,10 +157,14 @@ function getQuestionCountForCategory(categoryId: string): number {
     // Import QUIZ_DATABASE dynamically to avoid circular dependencies
     const { QUIZ_DATABASE } = require('../data/quizDatabase')
     const questions = QUIZ_DATABASE[categoryId] || []
-    return questions.length
+    // Prize pool is the maximum coins for one playable round, not the whole bank.
+    if (questions.length === 0) {
+      return 0
+    }
+    return Math.min(questions.length, QUESTIONS_PER_ROUND)
   } catch (error) {
     console.warn(`Failed to load question count for category ${categoryId}, using fallback:`, error)
-    return 5 // Fallback to prevent UI breakage
+    return QUESTIONS_PER_ROUND
   }
 }
 

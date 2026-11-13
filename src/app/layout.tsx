@@ -35,18 +35,18 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon-512.png',
-        width: 512,
-        height: 512,
+        url: '/og/default.png',
+        width: 1200,
+        height: 630,
         alt: SITE_NAME,
       },
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: ['/icon-512.png'],
+    images: ['/og/default.png'],
   },
 }
 
