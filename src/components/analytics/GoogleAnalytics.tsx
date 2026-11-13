@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Script from 'next/script'
 import { settingsDataManager } from '@/utils/settingsDataManager'
+import { GA_MEASUREMENT_ID } from '@/config/site'
 
 interface GoogleAnalyticsProps {
   trackingId?: string
@@ -25,14 +26,16 @@ export function GoogleAnalytics({ trackingId }: GoogleAnalyticsProps) {
       const settings = settingsDataManager.getSystemSettings()
       const configuredTrackingId = settings.analytics?.googleAnalyticsId
 
-      if (!configuredTrackingId) {
-        console.info('📊 Google Analytics: Disabled or no tracking ID configured')
+      // Official Play GA4 is loaded by PlayGa4 in the root layout. This helper
+      // stays in place for an optional extra ID from the in-app settings store.
+      const extraId = trackingId || configuredTrackingId
+      if (!extraId || extraId === GA_MEASUREMENT_ID) {
         return
       }
 
-      setGaTrackingId(configuredTrackingId)
+      setGaTrackingId(extraId)
 
-      const finalTrackingId = trackingId || configuredTrackingId
+      const finalTrackingId = extraId
 
       // Initialize Google Analytics
       if (typeof window.gtag === 'undefined') {

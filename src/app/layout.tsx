@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
-import { GoogleAnalytics } from '@/components/analytics'
+import { GoogleAnalytics, PlayGa4 } from '@/components/analytics'
 import { ErrorBoundary, GlobalErrorInitializer, MobileLayoutWrapper } from '@/components/layout'
 import { SITE_URL, SITE_NAME, DEFAULT_TITLE, DEFAULT_DESCRIPTION } from '@/config/site'
 import { generateStructuredData } from '@/utils/seo'
@@ -64,6 +64,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+        <PlayGa4 />
         <GoogleAnalytics />
         <GlobalErrorInitializer />
         <ErrorBoundary>
