@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { QuizQuestion } from '@/types/quiz'
 import { quizDataManager } from '@/utils/quizDataManager'
 
@@ -70,88 +70,82 @@ function createFallbackQuestions(): QuizQuestion[] {
 }
 
 export function useHomepageQuizQuestions() {
-  const [questions, setQuestions] = useState<QuizQuestion[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  // Start from the static fallback questions so the very first render (SSR
+  // and first paint) already has the real heading + first question instead
+  // of a spinner. `isLoading` no longer exists — there is nothing to wait on.
+  const [questions, setQuestions] = useState<QuizQuestion[]>(() => createFallbackQuestions())
+  const hasAnsweredRef = useRef(false)
 
-  const fallbackQuestions = useCallback(() => createFallbackQuestions(), [])
+  // Call this from the answer handler so the background upgrade below never
+  // swaps questions out from under a question the user already answered.
+  const markAnswered = useCallback(() => {
+    hasAnsweredRef.current = true
+  }, [])
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      setQuestions(fallbackQuestions())
-      setIsLoading(false)
+    if (hasAnsweredRef.current) {
       return
     }
 
-    const loadQuestions = async () => {
-      setIsLoading(true)
+    try {
+      const gameSyncData = localStorage.getItem('game_quiz_data')
+      let loadedQuestions: QuizQuestion[] = []
 
-      try {
-        const gameSyncData = localStorage.getItem('game_quiz_data')
-        let loadedQuestions: QuizQuestion[] = []
-
-        if (gameSyncData) {
-          loadedQuestions = JSON.parse(gameSyncData)
-        } else {
-          try {
-            loadedQuestions = quizDataManager.getQuestions() || []
-          } catch (error) {
-            console.error('Error loading admin questions:', error)
-            loadedQuestions = []
-          }
+      if (gameSyncData) {
+        loadedQuestions = JSON.parse(gameSyncData)
+      } else {
+        try {
+          loadedQuestions = quizDataManager.getQuestions() || []
+        } catch (error) {
+          console.error('Error loading admin questions:', error)
+          loadedQuestions = []
         }
-
-        const homepageQuestions = loadedQuestions.filter(
-          question => question.section === 'homepage'
-        )
-        const beginnerQuestions = loadedQuestions.filter(
-          question => question.difficulty === 'beginner'
-        )
-        const selectedQuestions =
-          homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
-
-        if (selectedQuestions.length >= 5) {
-          const normalized = selectedQuestions.slice(0, 5).map(question => ({
-            id: question.id,
-            question: question.question,
-            options: question.options,
-            correct_answer: question.correct_answer ?? 0,
-            difficulty: question.difficulty,
-            fun_fact: question.fun_fact || 'Thanks for playing!',
-            category: question.category,
-            subcategory: question.subcategory || question.category,
-            question_type: question.question_type,
-            emoji_clue: question.emoji_clue,
-            visual_options: question.visual_options,
-            personality_trait: question.personality_trait,
-            prediction_year: question.prediction_year,
-            section: question.section,
-            tags: question.tags,
-            type: question.type,
-            createdAt: question.createdAt,
-            updatedAt: question.updatedAt,
-          }))
-
-          setQuestions(normalized)
-        } else {
-          setQuestions(fallbackQuestions())
-        }
-      } catch (error) {
-        console.error('❌ Error loading quiz questions:', error)
-        setQuestions(fallbackQuestions())
-      } finally {
-        setIsLoading(false)
       }
+
+      const homepageQuestions = loadedQuestions.filter(
+        question => question.section === 'homepage'
+      )
+      const beginnerQuestions = loadedQuestions.filter(
+        question => question.difficulty === 'beginner'
+      )
+      const selectedQuestions =
+        homepageQuestions.length >= 5 ? homepageQuestions : beginnerQuestions
+
+      // Same 5-question / 4-option shape as the fallback, so swapping in the
+      // upgraded set does not change card geometry (no CLS).
+      if (selectedQuestions.length >= 5 && !hasAnsweredRef.current) {
+        const normalized = selectedQuestions.slice(0, 5).map(question => ({
+          id: question.id,
+          question: question.question,
+          options: question.options,
+          correct_answer: question.correct_answer ?? 0,
+          difficulty: question.difficulty,
+          fun_fact: question.fun_fact || 'Thanks for playing!',
+          category: question.category,
+          subcategory: question.subcategory || question.category,
+          question_type: question.question_type,
+          emoji_clue: question.emoji_clue,
+          visual_options: question.visual_options,
+          personality_trait: question.personality_trait,
+          prediction_year: question.prediction_year,
+          section: question.section,
+          tags: question.tags,
+          type: question.type,
+          createdAt: question.createdAt,
+          updatedAt: question.updatedAt,
+        }))
+
+        setQuestions(normalized)
+      }
+      // else: keep showing the fallback questions already rendered — no swap.
+    } catch (error) {
+      console.error('❌ Error loading quiz questions:', error)
+      // keep showing the fallback questions already rendered
     }
-
-    loadQuestions()
-  }, [fallbackQuestions])
-
-  const quickStartQuiz = useMemo(() => {
-    return questions.length > 0 ? questions : fallbackQuestions()
-  }, [questions, fallbackQuestions])
+  }, [])
 
   return {
-    quickStartQuiz,
-    isLoading,
+    quickStartQuiz: questions,
+    markAnswered,
   }
 }

@@ -13,7 +13,6 @@ import { calculateCorrectAnswerReward } from '@/utils/rewardCalculator'
 import { useCategoryQuizLoader } from '@/hooks/useCategoryQuizLoader'
 
 const UnifiedQuizInterface = dynamic(() => import('@/components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
-  ssr: false,
   loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
@@ -22,9 +21,11 @@ const QuizResultsDisplay = dynamic(() => import('@/components/quiz/QuizResultsDi
   loading: () => <div className="h-48 bg-gray-800/50 rounded-xl animate-pulse" />
 })
 
+// Reserved height matches CountdownTimer's real rendered box (mb-6 + p-4 card
+// with label/time row + progress bar) so its ssr:false swap doesn't shift layout.
 const CountdownTimer = dynamic(() => import('@/components/quiz/CountdownTimer').then(mod => mod.CountdownTimer), {
   ssr: false,
-  loading: () => <div className="h-8 bg-gray-800/50 rounded-xl animate-pulse" />
+  loading: () => <div className="h-28 mb-6 bg-slate-800/50 rounded-xl animate-pulse" />
 })
 
 // Main Quiz Page component for a specific category
@@ -66,7 +67,6 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
   const {
     questions,
-    loading,
     error,
     insufficientCoins,
     earningPotential,
@@ -296,51 +296,13 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // ===================================================================
   // Render loading and error states
 
-  // Render loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-400 mx-auto"></div>
-          <p className="text-orange-100 mt-4">Loading TechKwiz Sequential Quiz...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Insufficient coins redirection UI
-  if (insufficientCoins) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-        <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-8 border border-slate-700/50 max-w-lg text-center mx-4">
-          <div className="text-5xl mb-4">🪙</div>
-          <h2 className="text-2xl font-bold text-orange-200 mb-2">Insufficient coins</h2>
-          <p className="text-slate-300 mb-2">Taking you to the homepage quiz where you can earn coins for free!</p>
-          <p className="text-orange-300 font-medium mb-4">Earn up to <span className="text-white font-bold">{earningPotential}</span> coins in the homepage quiz.</p>
-          <div className="text-slate-400 mb-6">Redirecting to homepage quiz in {redirectCountdown}...</div>
-          <button
-            onClick={() => {
-              try { router.push('/') } catch (error) {
-                import('@sentry/nextjs').then(Sentry => Sentry.captureException(error))
-                if (typeof window !== 'undefined') window.location.href = '/'
-              }
-            }}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg"
-          >
-            Go to Homepage Quiz Now
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   // Render error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+        <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl text-center">
           <p className="text-red-400 text-xl mb-4">{error}</p>
-          <button onClick={() => router.push('/start')} className="bg-orange-500 hover:bg-orange-600 text-white px  -6 py-3 rounded-lg">Back to Categories</button>
+          <button onClick={() => router.push('/start')} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg">Back to Categories</button>
         </div>
       </div>
     )
@@ -352,8 +314,8 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
   // Render the complete quiz interface with all components
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-      <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl">
+    <div className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      <div className="container mx-auto px-4 pt-10 pb-8 max-w-2xl" aria-hidden={insufficientCoins}>
         {/* Header with user information and coin balance */}
         <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 mb-6">
           {/* User info display for authenticated users */}
@@ -438,6 +400,37 @@ export default function QuizPage({ params }: { params: Promise<{ category: strin
 
       {showTimeUp && (
         <TimeUpModal isOpen={showTimeUp} question={questions[current]} onClose={advance} autoCloseDelay={2000} />
+      )}
+
+      {insufficientCoins && (
+        <div
+          className="absolute inset-0 z-20 flex items-start justify-center px-4 pt-10"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="insufficient-coins-title"
+        >
+          <div className="absolute inset-0 bg-indigo-950/80" />
+          <div className="relative container mx-auto max-w-2xl">
+            <div className="bg-slate-800/50 backdrop-blur-md rounded-xl p-8 border border-slate-700/50 text-center">
+              <div className="text-5xl mb-4">🪙</div>
+              <h2 id="insufficient-coins-title" className="text-2xl font-bold text-orange-200 mb-2">Insufficient coins</h2>
+              <p className="text-slate-300 mb-2">Taking you to the homepage quiz where you can earn coins for free!</p>
+              <p className="text-orange-300 font-medium mb-4">Earn up to <span className="text-white font-bold">{earningPotential}</span> coins in the homepage quiz.</p>
+              <div className="text-slate-400 mb-6">Redirecting to homepage quiz in {redirectCountdown}...</div>
+              <button
+                onClick={() => {
+                  try { router.push('/') } catch (error) {
+                    import('@sentry/nextjs').then(Sentry => Sentry.captureException(error))
+                    if (typeof window !== 'undefined') window.location.href = '/'
+                  }
+                }}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg"
+              >
+                Go to Homepage Quiz Now
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -398,10 +398,7 @@ export function UnifiedQuizInterface({
         </motion.div>
       )}
       
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
+      <div
         className={`bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full ${animateIn ? 'animate-fade-in' : ''}`}
         data-testid="quiz-interface"
       >
@@ -447,7 +444,7 @@ export function UnifiedQuizInterface({
         
         {/* Question content based on type */}
         {renderQuestionContent()}
-      </motion.div>
+      </div>
     </div>
   )
 }
