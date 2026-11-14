@@ -40,7 +40,8 @@ Leave auth as a local profile unless a task designs a server. Do not store passw
 | Playwright viewports are 375, 768, 1280, not the eight required widths | Audit | `playwright.config.ts` |
 | Inter is loaded twice (`next/font` and a CSS `@import`) | Audit | `src/app/layout.tsx`, `src/app/globals.css` |
 | No CMP component in `src/` | Audit | — |
-| AI bank asks which architecture is “best for image recognition” and the keyed answer is CNN. Owner roadmap flagged this for a factual review. Do not “fix” it inside an unrelated edit | Owner roadmap, confirmed in code | `src/data/quizDatabase.ts` question `id` near line 855 |
+| AI bank asks which architecture is “best for image recognition” and the keyed answer is CNN. Owner roadmap flagged this for a factual review. Do not “fix” it inside an unrelated edit | Owner roadmap, confirmed in code | `src/data/quizDatabase.ts` question `id` `ai_002` |
+| `correct_answer: -1` on `swipe-personality` and `social-identity` never equals an option index. Category page and `useHomepageQuizProgression` mark every choice wrong and pay 0 coins. The preference branch is only in unused `src/components/layout/HomePageClient.tsx` | Codex review on the context PR, confirmed in code | `src/app/quiz/[category]/page.tsx`, `src/hooks/useHomepageQuizProgression.ts` |
 
 ## Not a backlog item
 

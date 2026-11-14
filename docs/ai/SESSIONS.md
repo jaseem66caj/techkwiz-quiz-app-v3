@@ -17,6 +17,13 @@ Copy this block to the top of the log:
 
 ## Log
 
+### 2026-11-14 — correct the -1 scoring note
+
+- Date: 2026-11-14
+- Completed: CI on `cursor/ai-agent-context-0a66` (`c242645`) succeeded. Updated `.agents/skills/revise-quiz-content/SKILL.md` so new questions use a real option index. `correct_answer: -1` stays only on the existing `swipe-personality` and `social-identity` banks. Category scoring and `useHomepageQuizProgression` treat `-1` as a miss.
+- Blockers: none. Scoring behavior is unchanged. A later app PR would be required to treat `-1` as “any choice counts”.
+- Next step: owner review of https://github.com/jaseem66caj/techkwiz-quiz-app-v3/pull/11
+
 ### 2026-11-14 — agent context suite
 
 - Date: 2026-11-14

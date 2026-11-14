@@ -16,7 +16,7 @@ Use this when the task adds, edits, fact-checks, or removes questions, fun facts
 
 1. Read the category object and its array in `src/data/quizDatabase.ts`. Slugs: `swipe-personality`, `pop-culture-flash`, `micro-trivia`, `social-identity`, `trend-vibes`, `future-you`, `programming`, `ai`.
 2. Read the matching key in `src/content/quizLandings.ts` and `QUESTIONS_PER_ROUND` in `src/config/quiz.ts` (5).
-3. Personality banks (`swipe-personality` and any item with no right answer) use `correct_answer: -1`. Scored banks use a 0-based index into `options`.
+3. New questions use a `correct_answer` from `0` to `options.length - 1`. Category scoring (`src/app/quiz/[category]/page.tsx`) and the live homepage hook (`useHomepageQuizProgression`) count a hit only when that index equals the chosen option. `-1` matches nothing, so the choice is marked wrong, shown in red (`UnifiedQuizInterface`), and pays 0 coins. `swipe-personality` and `social-identity` already store `-1`. Leave those values as they are when editing wording. The “any choice counts” branch lives only in unused `src/components/layout/HomePageClient.tsx`. A scorer change is a separate app PR, not part of this skill.
 4. Rounds still call `getStaticQuestions`, which slices the bank to 5, then `quizDataManager.getUnifiedQuestions(categoryId, 5, 'category')`. A longer bank does not lengthen a round. Programming and AI already have 27 questions; the other banks have 5.
 5. If the task is the AI “best for image recognition” / CNN item, stop and say so. The owner asked for a factual review. Do not strengthen that claim in passing.
 
