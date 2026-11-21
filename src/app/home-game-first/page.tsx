@@ -21,7 +21,7 @@ export default function GameFirstHomePage() {
   }))
 
   return (
-    <div className="pb-8 text-[#E6E3DC]">
+    <div className="min-h-screen bg-[#1C1C1E] pb-8 text-[#E6E3DC]">
       <HomeExposure variant="game_first" />
       <header className="px-4 pt-4">
         <h1 className="text-xl font-bold leading-7 text-[#F2EFE8]">TechKwiz Play</h1>
