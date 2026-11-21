@@ -39,7 +39,9 @@ function Round({
   const router = useRouter()
   const { currentQuestion, selectedAnswer, score, showResult, quizCompleted, handleAnswerSelect } =
     useHomepageQuizProgression(questions)
-  const [secondsLeft, setSecondsLeft] = useState(SECONDS_PER_QUESTION)
+  // Timer state is keyed by question index so a new question always starts at the full time
+  // (no stale 0 from the previous question).
+  const [timer, setTimer] = useState({ q: 0, left: SECONDS_PER_QUESTION })
   const [showExit, setShowExit] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [shareNote, setShareNote] = useState('')
@@ -63,11 +65,7 @@ function Round({
     [category, handleAnswerSelect]
   )
 
-  // Per-question countdown, reset whenever the question changes.
-  useEffect(() => {
-    if (quizCompleted) return
-    setSecondsLeft(SECONDS_PER_QUESTION)
-  }, [currentQuestion, quizCompleted])
+  const secondsLeft = timer.q === currentQuestion ? timer.left : SECONDS_PER_QUESTION
 
   useEffect(() => {
     if (quizCompleted || selectedAnswer !== null) return
@@ -75,9 +73,9 @@ function Round({
       answer(TIMEOUT_ANSWER)
       return
     }
-    const t = setTimeout(() => setSecondsLeft(s => s - 1), 1000)
+    const t = setTimeout(() => setTimer({ q: currentQuestion, left: secondsLeft - 1 }), 1000)
     return () => clearTimeout(t)
-  }, [secondsLeft, selectedAnswer, quizCompleted, answer])
+  }, [secondsLeft, selectedAnswer, quizCompleted, answer, currentQuestion])
 
   useEffect(() => {
     if (!(quizCompleted && showResult) || completedRef.current) return
