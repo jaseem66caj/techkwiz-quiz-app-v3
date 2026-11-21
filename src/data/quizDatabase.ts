@@ -219,16 +219,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'TikTok'
     },
     {
-      id: 'pop_003',
-      question: 'Which artist broke Spotify streaming records in 2024?',
-      options: ['Taylor Swift', 'Bad Bunny', 'Billie Eilish', 'The Weeknd'],
-      correct_answer: 0,
-      difficulty: 'intermediate',
-      fun_fact: 'Taylor Swift\'s re-recorded albums have dominated streaming platforms!',
-      category: 'pop-culture-flash', 
-      subcategory: 'Music'
-    },
-    {
       id: 'pop_004',
       question: 'What does "periodt" mean in Gen Z slang?',
       options: ['Time period', 'End of discussion', 'Asking a question', 'Being confused'],
@@ -245,6 +235,216 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       correct_answer: 1,
       difficulty: 'beginner',
       fun_fact: 'Charlie Day\'s conspiracy theory scene became a popular meme for explaining complex ideas!',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_006',
+      question: 'Which celebrity launched the makeup brand Fenty Beauty in 2017?',
+      options: ['Kylie Jenner', 'Rihanna', 'Lady Gaga', 'Kim Kardashian'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Fenty Beauty\'s inclusive foundation range won a spot on Time\'s Best Inventions list.',
+      category: 'pop-culture-flash',
+      subcategory: 'Celebrities'
+    },
+    {
+      id: 'pop_007',
+      question: 'What animal is featured in the \'Doge\' meme?',
+      options: ['Cat', 'Dog', 'Rabbit', 'Hamster'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'The original Doge photo features Kabosu, a Shiba Inu rescue dog from Japan.',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_008',
+      question: 'Which TikTok trend involves users freezing in place while a specific audio plays?',
+      options: ['The Blinding Lights Challenge', 'The Mannequin Challenge', 'The Savage Challenge', 'The Wipe It Down Challenge'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'The Mannequin Challenge went viral in 2016, with even celebrities participating.',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_009',
+      question: 'What meme features a character from the show \'Real Housewives\' yelling at a cat?',
+      options: ['Woman Yelling at a Cat', 'Distracted Boyfriend', 'Mocking SpongeBob', 'Change My Mind'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The meme combines a scene from \'The Real Housewives of Beverly Hills\' with a confused cat photo.',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_010',
+      question: 'Which Netflix series about a chess prodigy became a viral hit in 2020?',
+      options: ['The Crown', 'Stranger Things', 'The Queen\'s Gambit', 'Bridgerton'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'The series sparked a surge in chess set sales and online chess memberships.',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_011',
+      question: 'What social media app popularized short-form videos with trends like \'Renegade\' and \'Savage\'?',
+      options: ['Instagram', 'Snapchat', 'TikTok', 'YouTube Shorts'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'TikTok was the most downloaded app of 2020, surpassing 2 billion global downloads.',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_012',
+      question: 'Which artist released the album \'Future Nostalgia\' in 2020?',
+      options: ['Dua Lipa', 'Lady Gaga', 'Katy Perry', 'Miley Cyrus'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The album\'s single \'Don\'t Start Now\' became a TikTok dance favorite.',
+      category: 'pop-culture-flash',
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_013',
+      question: 'Which celebrity became known for the phrase \'OK, boomer\' in a 2019 viral moment?',
+      options: ['Chlöe Swarbrick', 'Greta Thunberg', 'Lil Nas X', 'Noah Centineo'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'New Zealand politician Chlöe Swarbrick used the phrase in parliament, bringing it mainstream.',
+      category: 'pop-culture-flash',
+      subcategory: 'Celebrities'
+    },
+    {
+      id: 'pop_014',
+      question: 'What meme format uses a screenshot of a character from the show \'The Office\' with a smug expression?',
+      options: ['Pepe the Frog', 'Roll Safe', 'Drake Hotline Bling', 'Arthur Fist'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'The Roll Safe meme features actor Kayode Ewumi from the web series \'Hood Documentary\'.',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_015',
+      question: 'What 2021 song by Olivia Rodrigo broke Spotify records for most streams in a week?',
+      options: ['drivers license', 'good 4 u', 'deja vu', 'traitor'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The song debuted at number one on the Billboard Hot 100, fueled by TikTok virality.',
+      category: 'pop-culture-flash',
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_016',
+      question: 'Which actor portrayed the Joker in the 2019 film directed by Todd Phillips?',
+      options: ['Jared Leto', 'Joaquin Phoenix', 'Heath Ledger', 'Jack Nicholson'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Joaquin Phoenix won the Academy Award for Best Actor for the role.',
+      category: 'pop-culture-flash',
+      subcategory: 'Celebrities'
+    },
+    {
+      id: 'pop_017',
+      question: 'Which TikTok trend had people pretending to be in a music video for the song \'Blinding Lights\'?',
+      options: ['The Blinding Lights Challenge', 'The Renegade', 'The Cannibal Dance', 'The Kiki Challenge'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The challenge involved coordinated dance moves to The Weeknd\'s 2019 hit.',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_018',
+      question: 'What band released the album \'After Hours\' in 2020?',
+      options: ['The Weeknd', 'Maroon 5', 'Imagine Dragons', 'Coldplay'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The Weeknd\'s red-suited character from the album became a viral meme.',
+      category: 'pop-culture-flash',
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_019',
+      question: 'What meme features a photo of a man checking out another woman while his girlfriend looks on disapprovingly?',
+      options: ['Distracted Boyfriend', 'Woman Yelling at a Cat', 'Left Exit 12 Off Ramp', 'Disaster Girl'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The original stock photo was taken in 2015 by photographer Antonio Guillem.',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_020',
+      question: 'Which artist\'s song \'WAP\' featuring Megan Thee Stallion broke streaming records in 2020?',
+      options: ['Cardi B', 'Nicki Minaj', 'Doja Cat', 'Saweetie'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The song\'s controversial lyrics prompted political commentary and a viral dance challenge.',
+      category: 'pop-culture-flash',
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_021',
+      question: 'Which celebrity couple\'s 2021 divorce was heavily covered on social media?',
+      options: ['Kim Kardashian and Kanye West', 'Jennifer Lopez and Alex Rodriguez', 'Gwen Stefani and Blake Shelton', 'Miley Cyrus and Liam Hemsworth'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Kim Kardashian filed for divorce after nearly seven years of marriage to Kanye West.',
+      category: 'pop-culture-flash',
+      subcategory: 'Celebrities'
+    },
+    {
+      id: 'pop_022',
+      question: 'What meme features a screenshot of a character from \'SpongeBob SquarePants\' looking exhausted?',
+      options: ['Mocking SpongeBob', 'Surprised Pikachu', 'Roll Safe', 'Hide the Pain Harold'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The Mocking SpongeBob meme uses the image of SpongeBob with a distorted face from the episode \'Little Yellow Book\'.',
+      category: 'pop-culture-flash',
+      subcategory: 'Memes'
+    },
+    {
+      id: 'pop_023',
+      question: 'Which TikTok trend involved users showing off their outfits while walking to the song \'Savage\'?',
+      options: ['The Savage Challenge', 'The Outfit Change', 'The #BussItChallenge', 'The Fashion Walk'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The trend featured a specific dance to Megan Thee Stallion\'s \'Savage\'.',
+      category: 'pop-culture-flash',
+      subcategory: 'TikTok'
+    },
+    {
+      id: 'pop_024',
+      question: 'Which singer released the visual album \'Lemonade\' in 2016?',
+      options: ['Beyoncé', 'Rihanna', 'Alicia Keys', 'Jennifer Hudson'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The album\'s film premiered on HBO and explored themes of betrayal and Black womanhood.',
+      category: 'pop-culture-flash',
+      subcategory: 'Music'
+    },
+    {
+      id: 'pop_025',
+      question: 'Which celebrity has a famous feud with Taylor Swift that started over a business deal?',
+      options: ['Katy Perry', 'Kim Kardashian', 'Scooter Braun', 'Kanye West'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'The feud escalated when Scooter Braun acquired the rights to Taylor\'s early masters.',
+      category: 'pop-culture-flash',
+      subcategory: 'Celebrities'
+    },
+    {
+      id: 'pop_026',
+      question: 'What meme uses a photo of a young girl smiling in front of a burning house?',
+      options: ['Disaster Girl', 'Success Kid', 'Bad Luck Brian', 'Side-Eyeing Chloe'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The photo was taken in 2005 and the girl, Zoe Roth, later sold it as an NFT for $500,000.',
       category: 'pop-culture-flash',
       subcategory: 'Memes'
     }
@@ -271,16 +471,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'Quick Fire'
     },
     {
-      id: 'micro_003', 
-      question: 'Which planet spins backwards?',
-      options: ['Mars', 'Venus', 'Uranus', 'Neptune'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'Venus rotates clockwise, opposite to most planets in our solar system!',
-      category: 'micro-trivia',
-      subcategory: 'Brain Teasers'
-    },
-    {
       id: 'micro_004',
       question: 'What\'s the fastest land animal?',
       options: ['Lion', 'Cheetah', 'Gazelle', 'Greyhound'],
@@ -291,12 +481,302 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'Speed Round'
     },
     {
-      id: 'micro_005',
-      question: 'How many bones are babies born with?',
-      options: ['206', '270', '350', '400'],
+      id: 'micro_006',
+      question: 'What is the hardest natural substance on Earth?',
+      options: ['Diamond', 'Quartz', 'Topaz', 'Corundum'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Diamonds are made of pure carbon and can only be scratched by another diamond.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_007',
+      question: 'Which planet has the most moons in our solar system?',
+      options: ['Earth', 'Mars', 'Saturn', 'Jupiter'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Saturn has over 270 confirmed moons, far more than any other planet in the solar system.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_008',
+      question: 'What is the largest ocean on Earth?',
+      options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+      correct_answer: 3,
+      difficulty: 'beginner',
+      fun_fact: 'The Pacific Ocean covers more area than all land combined.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_009',
+      question: 'How many continents are there on Earth?',
+      options: ['5', '6', '7', '8'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'The seven continents are Africa, Antarctica, Asia, Europe, North America, Oceania, and South America.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_010',
+      question: 'What is the chemical symbol for water?',
+      options: ['H2O', 'CO2', 'O2', 'NaCl'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Water is the only substance found naturally on Earth in all three states: solid, liquid, and gas.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_011',
+      question: 'Which country is both an island and a continent?',
+      options: ['Australia', 'Greenland', 'Madagascar', 'Japan'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Australia is the smallest continent and the sixth-largest country by area.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_012',
+      question: 'What is the longest bone in the human body?',
+      options: ['Femur', 'Tibia', 'Humerus', 'Fibula'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The femur, or thigh bone, can support up to 30 times the weight of an adult human.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_013',
+      question: 'Which planet is known as the Red Planet?',
+      options: ['Jupiter', 'Mars', 'Venus', 'Mercury'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Mars gets its red color from iron oxide, or rust, on its surface.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_014',
+      question: 'What is the smallest prime number?',
+      options: ['0', '1', '2', '3'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: '2 is the only even prime number.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_015',
+      question: 'Who wrote the play \'Romeo and Juliet\'?',
+      options: ['Charles Dickens', 'Jane Austen', 'William Shakespeare', 'Mark Twain'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Shakespeare wrote 37 plays and 154 sonnets.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_016',
+      question: 'What is the speed of light in vacuum approximately?',
+      options: ['300,000 km/s', '150,000 km/s', '450,000 km/s', '600,000 km/s'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Light travels around Earth 7.5 times in one second.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_017',
+      question: 'What is the largest species of shark?',
+      options: ['Great white shark', 'Whale shark', 'Tiger shark', 'Hammerhead shark'],
       correct_answer: 1,
       difficulty: 'intermediate',
-      fun_fact: 'Babies are born with 270 bones, but many fuse together as they grow!',
+      fun_fact: 'Whale sharks can grow up to 12 meters long and are filter feeders.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_018',
+      question: 'In what year did the Titanic sink?',
+      options: ['1905', '1912', '1915', '1920'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'The Titanic sank on April 15, 1912, after hitting an iceberg.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_019',
+      question: 'What is the rarest blood type?',
+      options: ['A negative', 'B negative', 'AB negative', 'O negative'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'Only about 1% of the population has AB negative blood.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_020',
+      question: 'What is the largest desert in the world?',
+      options: ['Sahara', 'Gobi', 'Arabian', 'Antarctic'],
+      correct_answer: 3,
+      difficulty: 'intermediate',
+      fun_fact: 'Antarctica is the largest desert because it receives less than 250 mm of precipitation annually.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_021',
+      question: 'Which element is liquid at room temperature?',
+      options: ['Mercury', 'Iron', 'Aluminum', 'Copper'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Mercury is the only metal that is liquid at standard room temperature.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_022',
+      question: 'What is the study of mushrooms called?',
+      options: ['Mycology', 'Botany', 'Zoology', 'Microbiology'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Mycology comes from the Greek word \'mykes\' meaning fungus.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_023',
+      question: 'How many hearts does an octopus have?',
+      options: ['1', '2', '3', '4'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'Two hearts pump blood to the gills, while the third pumps it to the rest of the body.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_024',
+      question: 'What is the highest mountain in Africa?',
+      options: ['Mount Kenya', 'Mount Kilimanjaro', 'Mount Stanley', 'Mount Elgon'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Mount Kilimanjaro is a dormant volcano with three volcanic cones.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_025',
+      question: 'Which gas do plants absorb from the atmosphere?',
+      options: ['Oxygen', 'Nitrogen', 'Carbon dioxide', 'Hydrogen'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'During photosynthesis, plants convert carbon dioxide and water into glucose and oxygen.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_026',
+      question: 'What is the smallest country in the world by area?',
+      options: ['Monaco', 'Vatican City', 'Nauru', 'San Marino'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Vatican City is about 0.44 square kilometers and has fewer than 1,000 residents.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_027',
+      question: 'What is the only bird that can fly backwards?',
+      options: ['Hummingbird', 'Sparrow', 'Eagle', 'Pigeon'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Hummingbirds can flap their wings up to 80 times per second.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_028',
+      question: 'Which ancient wonder was located in Babylon?',
+      options: ['Hanging Gardens', 'Great Pyramid', 'Colossus of Rhodes', 'Lighthouse of Alexandria'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The Hanging Gardens were said to be built by King Nebuchadnezzar II for his homesick wife.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_029',
+      question: 'What is the rarest naturally occurring element on Earth?',
+      options: ['Astatine', 'Francium', 'Oganesson', 'Neptunium'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Astatine is so rare that less than 1 gram exists in Earth\'s crust at any time.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_030',
+      question: 'How many ribs do most humans have?',
+      options: ['22', '24', '26', '28'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Humans have 12 pairs of ribs, but some people have an extra cervical rib.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_031',
+      question: 'What is the strongest muscle in the human body relative to its size?',
+      options: ['Masseter', 'Heart', 'Gluteus maximus', 'Tongue'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'The masseter can exert a force of up to 200 pounds on the molars.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_032',
+      question: 'Which planet has the shortest day?',
+      options: ['Jupiter', 'Saturn', 'Neptune', 'Uranus'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Jupiter rotates once every 9 hours and 56 minutes.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_033',
+      question: 'What is the only metal that is a liquid at room temperature and was historically used in thermometers?',
+      options: ['Mercury', 'Gallium', 'Cesium', 'Rubidium'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Mercury was used in thermometers because it expands uniformly with temperature.',
+      category: 'micro-trivia',
+      subcategory: 'Random Facts'
+    },
+    {
+      id: 'micro_034',
+      question: 'Which country has the most natural lakes?',
+      options: ['Canada', 'Russia', 'United States', 'Finland'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Canada has over 60,000 lakes, more than any other country.',
+      category: 'micro-trivia',
+      subcategory: 'Quick Fire'
+    },
+    {
+      id: 'micro_035',
+      question: 'What is the hardest known natural mineral after diamond?',
+      options: ['Cubic boron nitride', 'Corundum', 'Moissanite', 'Wurtzite boron nitride'],
+      correct_answer: 1,
+      difficulty: 'advanced',
+      fun_fact: 'Corundum, found naturally as ruby and sapphire, rates 9 on the Mohs scale, just below diamond\'s 10.',
       category: 'micro-trivia',
       subcategory: 'Random Facts'
     }
@@ -365,22 +845,12 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'TikTok Slang'
     },
     {
-      id: 'trend_002',
-      question: 'Which dance trend was popularized by "Renegade"?',
-      options: ['Flossing', 'The Dab', 'Whip and Nae Nae', 'Arm wave sequences'],
-      correct_answer: 3,
-      difficulty: 'intermediate',
-      fun_fact: 'The Renegade dance had over 500 million views on TikTok within months!',
-      category: 'trend-vibes',
-      subcategory: 'Viral Trends'
-    },
-    {
       id: 'trend_003',
       question: 'What does "rizz" refer to?',
       options: ['Skill in picking up romantic partners', 'A type of car', 'A dance move', 'A food item'],
       correct_answer: 0,
       difficulty: 'beginner',
-      fun_fact: '"Rizz" was added to the Oxford English Dictionary in 2022!',
+      fun_fact: '"Rizz" was named Oxford Word of the Year and added to the Oxford English Dictionary in 2023!',
       category: 'trend-vibes',
       subcategory: 'Gen Z Language'
     },
@@ -400,9 +870,389 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A dance move', 'A type of music', 'A meme trend', 'All of the above'],
       correct_answer: 3,
       difficulty: 'beginner',
-      fun_fact: '"Skibidi" originated from a 2019 song but resurfaced as a viral meme in 2023!',
+      fun_fact: '"Skibidi" originated from a 2018 song by Little Big but resurfaced as a viral meme trend in 2023!',
       category: 'trend-vibes',
       subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_006',
+      question: 'What does \'POV\' stand for on TikTok?',
+      options: ['Point of View', 'Power of Video', 'Picture on Video', 'Play Over Voice'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'POV videos often show scenarios from the viewer\'s perspective, like being the main character.',
+      category: 'trend-vibes',
+      subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_007',
+      question: 'Which viral dance trend involves a \'renegade\'?',
+      options: ['The Renegade', 'The Floss', 'The Woah', 'The Stanky Leg'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The Renegade was created by Jalaiah Harmon and went viral on TikTok in 2020.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_008',
+      question: 'In Gen Z slang, what does \'no cap\' mean?',
+      options: ['No lie', 'No hat', 'No limit', 'No problem'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: '\'Cap\' meaning lie or exaggeration became widely used in hip-hop before mainstream adoption.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_009',
+      question: 'What is the name of the Spanish festival where participants throw tomatoes?',
+      options: ['La Tomatina', 'Running of the Bulls', 'Las Fallas', 'Feria de Abril'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'La Tomatina is held annually in Buñol, Spain, on the last Wednesday of August.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_010',
+      question: 'What does \'GOAT\' mean in internet slang?',
+      options: ['Greatest of All Time', 'Goat as in animal', 'Going Over All Topics', 'Good at All Things'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The term GOAT gained popularity through sports debates and LL Cool J\'s album \'G.O.A.T.\' in 2000.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_011',
+      question: 'Which social media platform is known for disappearing \'Stories\'?',
+      options: ['Snapchat', 'Facebook', 'Twitter', 'LinkedIn'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Snapchat launched Stories in 2013, a feature later copied by Instagram, Facebook, and WhatsApp.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_012',
+      question: 'The \'Ice Bucket Challenge\' raised awareness for which disease?',
+      options: ['ALS', 'Cancer', 'Diabetes', 'Alzheimer\'s'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The Ice Bucket Challenge went viral in 2014 and raised over $115 million for the ALS Association.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_013',
+      question: 'What does \'FOMO\' stand for?',
+      options: ['Fear of Missing Out', 'Feeling of Missing Out', 'Fear of Making Out', 'Forget My Old Opinion'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'FOMO was added to the Oxford English Dictionary in 2013.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_014',
+      question: 'Which traditional Japanese dish consists of vinegared rice and raw fish?',
+      options: ['Sushi', 'Ramen', 'Tempura', 'Sashimi'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Sushi originated in Southeast Asia as a way to preserve fish in fermented rice.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_015',
+      question: 'On TikTok, what does \'duet\' refer to?',
+      options: ['A feature to react to another video', 'A singing competition', 'A dance challenge', 'A type of filter'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The duet feature allows users to record a video alongside another user\'s video in a split-screen.',
+      category: 'trend-vibes',
+      subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_016',
+      question: 'Which social media platform popularized the hashtag?',
+      options: ['Twitter', 'Instagram', 'Facebook', 'Tumblr'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Twitter user Chris Messina proposed using the hash symbol to group tweets in 2007.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_017',
+      question: 'What does \'TBH\' stand for?',
+      options: ['To Be Honest', 'To Be Hated', 'Total Bad Habit', 'Throw Back Here'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'TBH is often used in comments to give honest opinions or compliments.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_018',
+      question: 'The \'Dab\' dance move originated from which music scene?',
+      options: ['Atlanta hip-hop', 'K-pop', 'Latin pop', 'Country'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The dab was popularized by rappers like Migos and became a global phenomenon in 2016.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_019',
+      question: 'What does \'AFK\' mean in online chat?',
+      options: ['Away from keyboard', 'All for keeping', 'A free kill', 'Another fine kid'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'AFK has been used since the early days of internet relay chat (IRC) in the 1990s.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_020',
+      question: 'Which Indian festival is known as the festival of lights?',
+      options: ['Diwali', 'Holi', 'Navratri', 'Eid'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Diwali symbolizes the victory of light over darkness and is celebrated by Hindus, Sikhs, and Jains.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_021',
+      question: 'What is the name of the trend where people post photos of themselves as old people?',
+      options: ['FaceApp challenge', 'Age challenge', 'Old filter trend', 'Time warp challenge'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The FaceApp old age filter went viral in 2019, with many celebrities sharing their aged photos.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_022',
+      question: 'What does the slang term \'lit\' mean?',
+      options: ['Exciting or excellent', 'Intoxicated', 'On fire', 'Bright'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: '\'Lit\' has been used as slang for \'intoxicated\' since the 1910s and later evolved to mean \'exciting\'.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_023',
+      question: 'Which country celebrates the Day of the Dead (Día de los Muertos)?',
+      options: ['Mexico', 'Spain', 'Brazil', 'Argentina'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Día de los Muertos blends indigenous Aztec rituals with Catholicism and honors deceased loved ones.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_024',
+      question: 'On TikTok, what does \'ratio\' mean in comments?',
+      options: ['When replies outnumber likes', 'A type of filter', 'A dance move', 'A video editing technique'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Getting ratioed means a reply or quote tweet has more likes than the original post, often indicating criticism.',
+      category: 'trend-vibes',
+      subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_025',
+      question: 'What is the \'ok boomer\' phrase used to dismiss?',
+      options: ['Outdated attitudes', 'Gen Z slang', 'Millennial fashion', 'Internet memes'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: '\'OK boomer\' became popular in 2019 as a retort to perceived condescension from older generations.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_026',
+      question: 'Which social media platform introduced the \'Like\' button?',
+      options: ['Facebook', 'Twitter', 'Instagram', 'YouTube'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Facebook introduced the Like button in 2009; Twitter\'s favorite (heart) came later in 2015.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_027',
+      question: 'What does \'sksksk\' typically express?',
+      options: ['Excitement or laughter', 'Sadness', 'Anger', 'Confusion'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Sksksk is associated with VSCO girls, a subculture that emerged in 2019.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_028',
+      question: 'Which food is traditionally eaten during Chinese New Year for good luck?',
+      options: ['Dumplings', 'Pizza', 'Sushi', 'Tacos'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Dumplings are shaped like ancient Chinese gold ingots, symbolizing wealth and prosperity.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_029',
+      question: 'The \'Harlem Shake\' viral videos featured which song?',
+      options: ['Harlem Shake by Baauer', 'Gangnam Style by Psy', 'Watch Me (Whip/Nae Nae)', 'Old Town Road'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The Harlem Shake meme peaked in February 2013, with thousands of videos uploaded daily.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_030',
+      question: 'What does \'stan\' mean in internet culture?',
+      options: ['An obsessive fan', 'A hater', 'A casual follower', 'A content creator'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Stan comes from Eminem\'s 2000 song about an obsessed fan, blending \'stalker\' and \'fan\'.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_031',
+      question: 'Which platform is known for \'threads\' of connected posts?',
+      options: ['Twitter', 'Instagram', 'TikTok', 'Snapchat'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Twitter threads allow users to bypass the character limit by linking multiple tweets.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_032',
+      question: 'What is the traditional Scottish dish made from sheep\'s stomach?',
+      options: ['Haggis', 'Black pudding', 'Shepherd\'s pie', 'Scotch egg'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Haggis is traditionally served on Burns Night, celebrating poet Robert Burns.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_033',
+      question: 'On TikTok, what is a \'niche\' sound?',
+      options: ['An audio clip specific to a small community', 'A popular song', 'A sound effect', 'A royalty-free track'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Niche sounds often come from obscure TV shows or movies and become in-jokes within subcultures.',
+      category: 'trend-vibes',
+      subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_034',
+      question: 'Which viral challenge involved people pouring ice water over their heads?',
+      options: ['Ice Bucket Challenge', 'Cold Water Challenge', 'Freeze Challenge', 'Polar Plunge'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The Ice Bucket Challenge also led to the discovery of a new ALS gene due to increased research funding.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_035',
+      question: 'What does \'yeet\' mean?',
+      options: ['To throw forcefully', 'To agree', 'To dance', 'To laugh'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Yeet gained popularity in 2014 from a Vine video and is often used as an exclamation.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_036',
+      question: 'Which country\'s tradition involves a tomato fight called La Tomatina?',
+      options: ['Spain', 'Italy', 'Mexico', 'Portugal'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'La Tomatina started in 1945 when a crowd began throwing tomatoes during a parade.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_037',
+      question: 'What does \'main character\' mean on TikTok?',
+      options: ['Someone who acts like the protagonist of their life', 'A lead actor', 'A video editor', 'A content creator'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The \'main character\' trend encourages people to romanticize their daily lives as if in a movie.',
+      category: 'trend-vibes',
+      subcategory: 'TikTok Slang'
+    },
+    {
+      id: 'trend_038',
+      question: 'Which social media platform\'s logo is a ghost?',
+      options: ['Snapchat', 'TikTok', 'Instagram', 'Twitter'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Snapchat\'s ghost logo is named \'Ghostface Chillah\' after rapper Ghostface Killah.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_039',
+      question: 'What does \'sus\' mean?',
+      options: ['Suspicious', 'Superb', 'Sustained', 'Surprised'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Sus gained widespread use from the game Among Us, where players accuse each other of being impostors.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_040',
+      question: 'Which festival in Thailand involves throwing water at people?',
+      options: ['Songkran', 'Loy Krathong', 'Yi Peng', 'Phi Ta Khon'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Songkran marks the Thai New Year and is celebrated with water fights symbolizing cleansing.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
+    },
+    {
+      id: 'trend_041',
+      question: 'What is \'shadowbanning\' on social media?',
+      options: ['Limiting a user\'s visibility without notification', 'Banning a user permanently', 'Reporting a user', 'Blocking a user'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Shadowbanning was first reported on Twitter in 2018, though platforms often deny the practice.',
+      category: 'trend-vibes',
+      subcategory: 'Viral Trends'
+    },
+    {
+      id: 'trend_042',
+      question: 'What does \'iykyk\' stand for?',
+      options: ['If you know, you know', 'In your kindness, you know', 'If you knew, you knew', 'I yell, kids yell'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'IYKYK is used to reference insider knowledge or niche memes.',
+      category: 'trend-vibes',
+      subcategory: 'Gen Z Language'
+    },
+    {
+      id: 'trend_043',
+      question: 'Which traditional Korean side dish is made from fermented vegetables?',
+      options: ['Kimchi', 'Bulgogi', 'Bibimbap', 'Tteokbokki'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Kimchi has hundreds of varieties and is considered Korea\'s national dish.',
+      category: 'trend-vibes',
+      subcategory: 'Local Culture'
     }
   ],
   'future-you': [
@@ -417,44 +1267,394 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'Tech Future'
     },
     {
-      id: 'future_002',
-      question: 'What percentage of future jobs don\'t exist today?',
-      options: ['25%', '50%', '75%', '90%'],
-      correct_answer: 1,
-      difficulty: 'advanced',
-      fun_fact: 'The World Economic Forum estimates that 65% of children entering primary school today will work in jobs that don\'t yet exist!',
+      id: 'future_006',
+      question: 'Which planet has the shortest day in our solar system?',
+      options: ['Jupiter', 'Saturn', 'Mercury', 'Venus'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Jupiter spins once every 9.9 hours despite being the largest planet.',
       category: 'future-you',
       subcategory: 'Career Paths'
     },
     {
-      id: 'future_003',
-      question: 'Which technology will most impact education by 2030?',
-      options: ['Virtual Reality', 'Artificial Intelligence', 'Blockchain', 'Quantum Computing'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'AI-powered personalized learning could revolutionize how we approach education!',
+      id: 'future_007',
+      question: 'Which element is commonly used in solar panels?',
+      options: ['Silicon', 'Copper', 'Helium', 'Lithium'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Over 90% of solar panels use silicon as the semiconductor material.',
       category: 'future-you',
       subcategory: 'Tech Future'
     },
     {
-      id: 'future_004',
-      question: 'What\'s the predicted timeline for human-level AI?',
-      options: ['2030', '2040', '2050', '2060+'],
-      correct_answer: 2,
-      difficulty: 'advanced',
-      fun_fact: 'Experts predict human-level AI could emerge between 2040-2050, but timelines are highly debated!',
+      id: 'future_008',
+      question: 'Which device converts mechanical energy into electrical energy?',
+      options: ['Generator', 'Motor', 'Transformer', 'Battery'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Generators work on the principle of electromagnetic induction discovered by Faraday.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_009',
+      question: 'What does \'AI\' stand for?',
+      options: ['Artificial Intelligence', 'Automated Interface', 'Advanced Internet', 'Algorithmic Integration'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The term \'artificial intelligence\' was coined in 1956 at a Dartmouth workshop.',
       category: 'future-you',
       subcategory: 'AI vs Human'
     },
     {
-      id: 'future_005',
-      question: 'Which skill will be most valuable in 2030?',
-      options: ['Technical coding', 'Emotional intelligence', 'Data analysis', 'Digital marketing'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'Soft skills like emotional intelligence are increasingly valued as automation handles technical tasks!',
+      id: 'future_010',
+      question: 'Which company developed the Watson AI that won Jeopardy!?',
+      options: ['IBM', 'Google', 'Microsoft', 'Amazon'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Watson beat two former champions in 2011 and now aids in healthcare and finance.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_011',
+      question: 'Which programming language is named after a comedy troupe?',
+      options: ['Python', 'Java', 'Ruby', 'C++'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Guido van Rossum named it after Monty Python\'s Flying Circus.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_012',
+      question: 'Which company\'s DeepMind created AlphaGo?',
+      options: ['Google', 'Microsoft', 'IBM', 'Facebook'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'AlphaGo defeated world champion Lee Sedol in 2016 using deep neural networks.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_013',
+      question: 'Which scientist is known for the laws of motion?',
+      options: ['Isaac Newton', 'Albert Einstein', 'Galileo Galilei', 'Nikola Tesla'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Newton\'s laws laid the foundation for classical mechanics and spaceflight.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_014',
+      question: 'Which type of energy uses heat from the Earth?',
+      options: ['Geothermal', 'Solar', 'Wind', 'Hydroelectric'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Iceland generates nearly 30% of its electricity from geothermal sources.',
       category: 'future-you',
       subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_015',
+      question: 'What was the first human-made object to leave the solar system?',
+      options: ['Voyager 1', 'Pioneer 10', 'Voyager 2', 'New Horizons'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Voyager 1 entered interstellar space in 2012, carrying a golden record.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_016',
+      question: 'Which company is known for the Roomba robot vacuum?',
+      options: ['iRobot', 'Dyson', 'Samsung', 'LG'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The first Roomba was introduced in 2002 and has sold over 30 million units.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_017',
+      question: 'Which AI defeated world chess champion Garry Kasparov in 1997?',
+      options: ['Deep Blue', 'Watson', 'AlphaZero', 'Stockfish'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Deep Blue was an IBM supercomputer that won the six-game match 3.5-2.5.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_018',
+      question: 'Which career involves designing buildings and structures?',
+      options: ['Architect', 'Civil Engineer', 'Urban Planner', 'Surveyor'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Architects must balance aesthetics, safety, and functionality in their designs.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_019',
+      question: 'Which type of engineer designs robots?',
+      options: ['Robotics Engineer', 'Mechanical Engineer', 'Electrical Engineer', 'Software Engineer'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Robotics engineers combine mechanical, electrical, and computer science skills.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_020',
+      question: 'Which space telescope discovered thousands of exoplanets?',
+      options: ['Kepler', 'Hubble', 'Spitzer', 'James Webb'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Kepler found over 2,600 confirmed planets before retiring in 2018.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_021',
+      question: 'Which country launched the first artificial satellite?',
+      options: ['Soviet Union', 'USA', 'China', 'France'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Sputnik 1 was launched on October 4, 1957, starting the space age.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_022',
+      question: 'What is the most abundant gas in Earth\'s atmosphere?',
+      options: ['Nitrogen', 'Oxygen', 'Carbon Dioxide', 'Argon'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Nitrogen makes up about 78% of the atmosphere, oxygen about 21%.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_023',
+      question: 'Which scientist proposed the theory of general relativity?',
+      options: ['Albert Einstein', 'Isaac Newton', 'Stephen Hawking', 'Niels Bohr'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'General relativity explains gravity as the curvature of spacetime by mass.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_024',
+      question: 'Which company\'s AI assistant is named Alexa?',
+      options: ['Amazon', 'Google', 'Apple', 'Microsoft'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Alexa was inspired by the library of Alexandria and first launched in 2014.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_025',
+      question: 'What is the capital of Australia?',
+      options: ['Canberra', 'Sydney', 'Melbourne', 'Perth'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Canberra was purpose-built as the capital in 1913 to avoid rivalry between Sydney and Melbourne.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_026',
+      question: 'Which planet is known as the Red Planet?',
+      options: ['Mars', 'Venus', 'Jupiter', 'Saturn'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Mars appears red due to iron oxide (rust) on its surface.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_027',
+      question: 'What type of star is our Sun?',
+      options: ['Yellow dwarf', 'Red giant', 'White dwarf', 'Blue giant'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The Sun is a G-type main-sequence star, about 4.6 billion years old.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_028',
+      question: 'Which element is the primary fuel for nuclear fusion in stars?',
+      options: ['Hydrogen', 'Helium', 'Carbon', 'Oxygen'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Stars fuse hydrogen into helium, releasing energy that makes them shine.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_029',
+      question: 'Which technology company is known for the Windows operating system?',
+      options: ['Microsoft', 'Apple', 'Google', 'IBM'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Microsoft was founded by Bill Gates and Paul Allen in 1975.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_030',
+      question: 'Which country built the International Space Station module called Kibo?',
+      options: ['Japan', 'USA', 'Russia', 'Germany'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Kibo is the largest module on the ISS and includes a logistics module and external platform.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_031',
+      question: 'What is the name of the first reusable spacecraft?',
+      options: ['Space Shuttle', 'Apollo', 'Soyuz', 'Vostok'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'The Space Shuttle flew 135 missions between 1981 and 2011.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_032',
+      question: 'Which psychological phenomenon describes improved performance on simple tasks in the presence of others?',
+      options: ['Social facilitation', 'Groupthink', 'Bystander effect', 'Diffusion of responsibility'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Social facilitation was first studied by Norman Triplett in 1898 with cyclists.',
+      category: 'future-you',
+      subcategory: 'Life Predictions'
+    },
+    {
+      id: 'future_033',
+      question: 'What is the term for the smallest unit of data in computing?',
+      options: ['Bit', 'Byte', 'Nibble', 'Word'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'A bit can represent 0 or 1, and 8 bits make a byte.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_034',
+      question: 'Which scientist developed the first successful polio vaccine?',
+      options: ['Jonas Salk', 'Louis Pasteur', 'Edward Jenner', 'Robert Koch'],
+      correct_answer: 0,
+      difficulty: 'intermediate',
+      fun_fact: 'Salk\'s vaccine was announced in 1955 and used an inactivated virus.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_035',
+      question: 'What is the primary component of natural gas?',
+      options: ['Methane', 'Propane', 'Butane', 'Ethanol'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Methane is a potent greenhouse gas and a major fossil fuel.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_036',
+      question: 'Which mathematician is often called the father of computer science?',
+      options: ['Alan Turing', 'Charles Babbage', 'Ada Lovelace', 'John von Neumann'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Turing\'s 1936 paper introduced the concept of a universal machine.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_037',
+      question: 'What is the name of the closest star system to our Sun?',
+      options: ['Alpha Centauri', 'Barnard\'s Star', 'Sirius', 'Procyon'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Alpha Centauri is about 4.37 light-years away and contains Proxima Centauri.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_038',
+      question: 'Which type of battery is commonly used in smartphones and laptops?',
+      options: ['Lithium-ion', 'Lead-acid', 'Nickel-cadmium', 'Alkaline'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Lithium-ion batteries have high energy density and low self-discharge.',
+      category: 'future-you',
+      subcategory: 'Career Paths'
+    },
+    {
+      id: 'future_039',
+      question: 'What is the term for a robot designed to resemble a human?',
+      options: ['Humanoid', 'Android', 'Cyborg', 'Automaton'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Humanoid robots often have arms, legs, and a head to work in human environments.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_040',
+      question: 'Which principle states that no two electrons in an atom can have the same set of quantum numbers?',
+      options: ['Pauli exclusion principle', 'Heisenberg uncertainty principle', 'Aufbau principle', 'Hund\'s rule'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'The Pauli exclusion principle explains the structure of the periodic table.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_041',
+      question: 'What is the largest moon in our solar system?',
+      options: ['Ganymede', 'Titan', 'Callisto', 'Io'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Ganymede, a moon of Jupiter, is larger than the planet Mercury.',
+      category: 'future-you',
+      subcategory: 'AI vs Human'
+    },
+    {
+      id: 'future_042',
+      question: 'Which company developed the first commercial microprocessor?',
+      options: ['Intel', 'AMD', 'Motorola', 'Texas Instruments'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Intel\'s 4004, released in 1971, was the first commercially available microprocessor.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_043',
+      question: 'What is the approximate efficiency of current commercial solar panels?',
+      options: ['15-20%', '5-10%', '30-40%', '50%'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Most silicon panels convert 15-20% of sunlight into electricity; lab cells exceed 40%.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
+    },
+    {
+      id: 'future_044',
+      question: 'Which physicist first observed the photoelectric effect?',
+      options: ['Heinrich Hertz', 'Albert Einstein', 'Max Planck', 'Niels Bohr'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Hertz noticed the effect in 1887, but Einstein explained it in 1905.',
+      category: 'future-you',
+      subcategory: 'Tech Future'
     }
   ],
   'programming': [
@@ -837,6 +2037,206 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       fun_fact: "`deepcopy` builds a new object and recursively copies all nested objects, whereas `copy` (shallow copy) creates a new object but references the same nested objects as the original.",
       category: "programming",
       subcategory: "Python"
+    },
+    {
+      id: 'prog_006',
+      question: 'Which symbol is used for single-line comments in Python?',
+      options: ['//', '#', '/*', '--'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Python\'s # comment syntax was inspired by Unix shell scripts.',
+      category: 'programming',
+      subcategory: 'Python'
+    },
+    {
+      id: 'prog_007',
+      question: 'What does the \'typeof\' operator return for an array in JavaScript?',
+      options: ['\'array\'', '\'object\'', '\'list\'', '\'undefined\''],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Arrays are objects in JavaScript; use Array.isArray() to check correctly.',
+      category: 'programming',
+      subcategory: 'JavaScript'
+    },
+    {
+      id: 'prog_008',
+      question: 'Which HTML tag is used for the largest heading?',
+      options: ['<h6>', '<heading>', '<h1>', '<head>'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'There are six heading levels, h1 through h6.',
+      category: 'programming',
+      subcategory: 'HTML'
+    },
+    {
+      id: 'prog_009',
+      question: 'Which algorithm finds the shortest path in an unweighted graph by exploring it level by level, without requiring any edge weights?',
+      options: ['Depth-First Search', 'Binary Search', 'Breadth-First Search', 'Dijkstra\'s Algorithm'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'BFS explores level by level, guaranteeing shortest paths in unweighted graphs.',
+      category: 'programming',
+      subcategory: 'Algorithms'
+    },
+    {
+      id: 'prog_010',
+      question: 'In Python, what is the result of 3 * \'ab\'?',
+      options: ['\'ababab\'', '\'ab3\'', 'TypeError', '\'ab\''],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'Multiplying a string by an integer repeats it.',
+      category: 'programming',
+      subcategory: 'Python'
+    },
+    {
+      id: 'prog_011',
+      question: 'Which JavaScript method adds new elements to the end of an array?',
+      options: ['push()', 'pop()', 'shift()', 'unshift()'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'push() returns the new length of the array.',
+      category: 'programming',
+      subcategory: 'JavaScript'
+    },
+    {
+      id: 'prog_012',
+      question: 'What is the correct HTML attribute for specifying an image source?',
+      options: ['src', 'href', 'link', 'source'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'The src attribute is required for the <img> tag.',
+      category: 'programming',
+      subcategory: 'HTML'
+    },
+    {
+      id: 'prog_013',
+      question: 'Big O notation for binary search on a sorted array is:',
+      options: ['O(n)', 'O(n log n)', 'O(log n)', 'O(1)'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'Binary search halves the search space each step.',
+      category: 'programming',
+      subcategory: 'Algorithms'
+    },
+    {
+      id: 'prog_014',
+      question: 'Which keyword is used to define a function in Python?',
+      options: ['function', 'def', 'func', 'define'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'def comes from \'define\'.',
+      category: 'programming',
+      subcategory: 'Python'
+    },
+    {
+      id: 'prog_015',
+      question: 'What is the output of console.log(typeof null) in JavaScript?',
+      options: ['\'null\'', '\'object\'', '\'undefined\'', '\'number\''],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'This is a famous quirk from JavaScript\'s early implementation.',
+      category: 'programming',
+      subcategory: 'JavaScript'
+    },
+    {
+      id: 'prog_016',
+      question: 'Which HTML element is used to define a table row?',
+      options: ['<td>', '<tr>', '<th>', '<table>'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: '<tr> stands for \'table row\'.',
+      category: 'programming',
+      subcategory: 'HTML'
+    },
+    {
+      id: 'prog_017',
+      question: 'Which sorting algorithm has an average time complexity of O(n log n)?',
+      options: ['Bubble Sort', 'Insertion Sort', 'Merge Sort', 'Selection Sort'],
+      correct_answer: 2,
+      difficulty: 'intermediate',
+      fun_fact: 'Merge sort is a divide-and-conquer algorithm.',
+      category: 'programming',
+      subcategory: 'Algorithms'
+    },
+    {
+      id: 'prog_018',
+      question: 'What will \'list(range(3))\' return in Python?',
+      options: ['[1,2,3]', '[0,1,2]', '[0,1,2,3]', '[1,2]'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'range(n) generates numbers from 0 to n-1.',
+      category: 'programming',
+      subcategory: 'Python'
+    },
+    {
+      id: 'prog_019',
+      question: 'Which JavaScript method removes the last element from an array?',
+      options: ['pop()', 'push()', 'shift()', 'slice()'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: 'pop() returns the removed element.',
+      category: 'programming',
+      subcategory: 'JavaScript'
+    },
+    {
+      id: 'prog_020',
+      question: 'Which HTML attribute is used to uniquely identify an element?',
+      options: ['class', 'id', 'name', 'key'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'The id must be unique within a page.',
+      category: 'programming',
+      subcategory: 'HTML'
+    },
+    {
+      id: 'prog_021',
+      question: 'Which data structure is used in Depth-First Search?',
+      options: ['Queue', 'Stack', 'Priority Queue', 'Linked List'],
+      correct_answer: 1,
+      difficulty: 'advanced',
+      fun_fact: 'DFS can be implemented recursively, using the call stack.',
+      category: 'programming',
+      subcategory: 'Algorithms'
+    },
+    {
+      id: 'prog_022',
+      question: 'What does the \'self\' parameter represent in a Python class method?',
+      options: ['The class itself', 'The instance', 'The module', 'The parent class'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'It\'s conventional to name it \'self\', though any name works.',
+      category: 'programming',
+      subcategory: 'Python'
+    },
+    {
+      id: 'prog_023',
+      question: 'Which statement correctly checks if a variable x is an array in JavaScript?',
+      options: ['x.isArray()', 'Array.isArray(x)', 'typeof x == \'array\'', 'x instanceof Object'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Array.isArray() is reliable across different execution contexts.',
+      category: 'programming',
+      subcategory: 'JavaScript'
+    },
+    {
+      id: 'prog_024',
+      question: 'Which HTML tag is used to create a hyperlink?',
+      options: ['<a>', '<link>', '<href>', '<url>'],
+      correct_answer: 0,
+      difficulty: 'beginner',
+      fun_fact: '<a> stands for \'anchor\'.',
+      category: 'programming',
+      subcategory: 'HTML'
+    },
+    {
+      id: 'prog_025',
+      question: 'What is the time complexity of accessing an element by index in an array?',
+      options: ['O(n)', 'O(log n)', 'O(1)', 'O(n^2)'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Arrays provide constant-time random access.',
+      category: 'programming',
+      subcategory: 'Algorithms'
     }
   ],
   'ai': [
@@ -1219,6 +2619,176 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       fun_fact: "Hallucinations occur because LLMs are trained to produce fluent text, not necessarily factual text, and they may invent details when unsure; this is an active area of research.",
       category: "ai",
       subcategory: "NLP"
+    },
+    {
+      id: 'ai_006',
+      question: 'What does \'GP\' stand for in Gaussian Process?',
+      options: ['General Purpose', 'Gaussian Process', 'Gradient Propagation', 'Graph Partition'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Gaussian Processes are used in Bayesian optimization to model unknown functions with uncertainty.',
+      category: 'ai',
+      subcategory: 'Machine Learning'
+    },
+    {
+      id: 'ai_007',
+      question: 'Which activation function outputs values between -1 and 1?',
+      options: ['ReLU', 'Sigmoid', 'Tanh', 'Softmax'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Tanh is zero-centered, unlike sigmoid, which helps with optimization in some networks.',
+      category: 'ai',
+      subcategory: 'Deep Learning'
+    },
+    {
+      id: 'ai_008',
+      question: 'What is the main purpose of TF-IDF in NLP?',
+      options: ['Word embedding', 'Text normalization', 'Term weighting', 'Syntax parsing'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'TF-IDF downweights common words like \'the\' and highlights rare, informative terms.',
+      category: 'ai',
+      subcategory: 'NLP'
+    },
+    {
+      id: 'ai_009',
+      question: 'Which computer vision task involves assigning a class label to each pixel?',
+      options: ['Image classification', 'Object detection', 'Semantic segmentation', 'Pose estimation'],
+      correct_answer: 2,
+      difficulty: 'beginner',
+      fun_fact: 'Semantic segmentation is used in autonomous driving to identify road, vehicles, and pedestrians at pixel level.',
+      category: 'ai',
+      subcategory: 'Computer Vision'
+    },
+    {
+      id: 'ai_010',
+      question: 'In a confusion matrix, what does \'precision\' measure?',
+      options: ['TP/(TP+FN)', 'TP/(TP+FP)', 'TN/(TN+FP)', 'Accuracy'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Precision is useful when the cost of false positives is high, such as in spam detection.',
+      category: 'ai',
+      subcategory: 'Machine Learning'
+    },
+    {
+      id: 'ai_011',
+      question: 'Which algorithm is commonly used for reducing dimensionality while preserving variance?',
+      options: ['K-means', 'PCA', 'DBSCAN', 'Apriori'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'PCA projects data onto orthogonal axes, which are the eigenvectors of the covariance matrix.',
+      category: 'ai',
+      subcategory: 'Machine Learning'
+    },
+    {
+      id: 'ai_012',
+      question: 'What type of neural network architecture is designed for sequential data?',
+      options: ['CNN', 'RNN', 'GAN', 'MLP'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'RNNs share weights across time steps, allowing them to process variable-length sequences.',
+      category: 'ai',
+      subcategory: 'Deep Learning'
+    },
+    {
+      id: 'ai_013',
+      question: 'Which concept refers to a model performing well on training data but poorly on new data?',
+      options: ['Underfitting', 'Overfitting', 'Regularization', 'Cross-validation'],
+      correct_answer: 1,
+      difficulty: 'beginner',
+      fun_fact: 'Overfitting can be mitigated with dropout, early stopping, or more training data.',
+      category: 'ai',
+      subcategory: 'Machine Learning'
+    },
+    {
+      id: 'ai_014',
+      question: 'What is the function of the attention mechanism in neural networks?',
+      options: ['Reduce model size', 'Focus on relevant parts', 'Speed up training', 'Increase depth'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Attention was introduced for machine translation to align source and target words dynamically.',
+      category: 'ai',
+      subcategory: 'NLP'
+    },
+    {
+      id: 'ai_015',
+      question: 'Which computer vision model architecture introduced residual connections?',
+      options: ['VGG', 'ResNet', 'Inception', 'AlexNet'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'ResNet\'s skip connections allow training of networks with over 100 layers without vanishing gradients.',
+      category: 'ai',
+      subcategory: 'Computer Vision'
+    },
+    {
+      id: 'ai_016',
+      question: 'Which loss function is typically used for binary classification?',
+      options: ['MSE', 'Binary cross-entropy', 'Hinge loss', 'Huber loss'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'Binary cross-entropy measures the divergence between predicted probabilities and true labels.',
+      category: 'ai',
+      subcategory: 'Machine Learning'
+    },
+    {
+      id: 'ai_017',
+      question: 'What does BERT use to learn bidirectional context?',
+      options: ['Autoregressive prediction', 'Masked language model', 'Next sentence prediction only', 'Word2Vec embeddings'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'BERT randomly masks 15% of tokens in input and predicts them using both left and right context.',
+      category: 'ai',
+      subcategory: 'NLP'
+    },
+    {
+      id: 'ai_018',
+      question: 'In object detection, what does IoU measure?',
+      options: ['Image quality', 'Overlap between boxes', 'Inference speed', 'Feature similarity'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'IoU is defined as intersection area divided by union area; threshold 0.5 is common for correct detection.',
+      category: 'ai',
+      subcategory: 'Computer Vision'
+    },
+    {
+      id: 'ai_019',
+      question: 'Which of these is a generative model?',
+      options: ['SVM', 'Variational Autoencoder', 'Random Forest', 'Logistic Regression'],
+      correct_answer: 1,
+      difficulty: 'intermediate',
+      fun_fact: 'VAEs learn a latent distribution and generate new samples by decoding sampled latent vectors.',
+      category: 'ai',
+      subcategory: 'Deep Learning'
+    },
+    {
+      id: 'ai_020',
+      question: 'Which metric is used to evaluate machine translation by comparing n-gram overlaps?',
+      options: ['ROUGE', 'BLEU', 'Perplexity', 'F1'],
+      correct_answer: 1,
+      difficulty: 'advanced',
+      fun_fact: 'BLEU was proposed in 2002 by Papineni et al. and remains widely used despite known limitations.',
+      category: 'ai',
+      subcategory: 'NLP'
+    },
+    {
+      id: 'ai_021',
+      question: 'What is the primary advantage of self-attention over recurrent layers?',
+      options: ['Lower memory', 'Parallel computation', 'Fewer parameters', 'No need for positional encoding'],
+      correct_answer: 1,
+      difficulty: 'advanced',
+      fun_fact: 'Self-attention allows all positions to be processed simultaneously, speeding up training on GPUs.',
+      category: 'ai',
+      subcategory: 'Deep Learning'
+    },
+    {
+      id: 'ai_022',
+      question: 'Which technique is used to visualize which parts of an image influence a CNN\'s decision?',
+      options: ['Grad-CAM', 'PCA', 't-SNE', 'LIME'],
+      correct_answer: 0,
+      difficulty: 'advanced',
+      fun_fact: 'Grad-CAM uses gradients of the class score with respect to the last convolutional layer to produce a heatmap.',
+      category: 'ai',
+      subcategory: 'Computer Vision'
     }
   ]
 }
