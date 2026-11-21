@@ -8,19 +8,23 @@ import { ExitConfirmationModal } from '@/components/modals'
 import { CreateProfile } from '@/components/user/CreateProfile'
 import { useExitPrevention } from '@/hooks/useExitPrevention'
 import { useHomepageQuizProgression } from '@/hooks/useHomepageQuizProgression'
+import { useDailyStreak, DAILY_UPDATED_EVENT } from '@/hooks/useDailyStreak'
 import { saveUser } from '@/utils/auth'
 import { calculateQuizReward } from '@/utils/rewardCalculator'
 import { getDailyChallenge, utcDateKey } from '@/utils/dailyChallenge'
+import { secondsUntilUtcMidnight, formatHMS } from '@/utils/dailyStreak'
 import { QUIZ_CATEGORIES } from '@/data/quizDatabase'
 import type { QuizQuestion } from '@/types/quiz'
 import { trackEvent, readAbContext } from '@/lib/ga4'
+import { Confetti } from './Confetti'
+import { FlameIcon } from './CategoryIcons'
+import './home-motion.css'
 
 const UnifiedQuizInterface = dynamic(
   () => import('@/components/quiz/UnifiedQuizInterface').then(m => m.UnifiedQuizInterface),
-  { loading: () => <div className="h-64 animate-pulse rounded-lg bg-[#2A2A2D]" /> }
+  { loading: () => <div className="h-64 animate-pulse rounded-lg bg-white/10" /> }
 )
 
-/** Seconds per question. The timer is always on; running out counts as a wrong answer. */
 export const SECONDS_PER_QUESTION = 20
 const TIMEOUT_ANSWER = -2
 
@@ -37,10 +41,9 @@ function Round({
 }) {
   const { state, dispatch } = useApp()
   const router = useRouter()
+  const streak = useDailyStreak()
   const { currentQuestion, selectedAnswer, score, showResult, quizCompleted, handleAnswerSelect } =
     useHomepageQuizProgression(questions)
-  // Timer state is keyed by question index so a new question always starts at the full time
-  // (no stale 0 from the previous question).
   const [timer, setTimer] = useState({ q: 0, left: SECONDS_PER_QUESTION })
   const [showExit, setShowExit] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
@@ -91,6 +94,7 @@ function Round({
     })
     try {
       localStorage.setItem(`tk_daily_done_${utcDateKey()}`, String(score))
+      window.dispatchEvent(new Event(DAILY_UPDATED_EVENT))
     } catch {
       /* storage unavailable */
     }
@@ -102,6 +106,11 @@ function Round({
   })
 
   const reward = calculateQuizReward(score, questions.length).totalCoins
+  const cat = QUIZ_CATEGORIES[category]
+  const totalQuizzes = state.user?.totalQuizzes ?? 0
+  const level = state.user?.level ?? 1
+  const quizzesTowardNext = totalQuizzes % 5
+  const pctCorrect = Math.round((score / questions.length) * 100)
 
   const share = async () => {
     const text = `I scored ${score}/${questions.length} on today's TechKwiz daily challenge. Can you beat it?`
@@ -143,34 +152,60 @@ function Round({
 
   if (quizCompleted && showResult) {
     return (
-      <div className="px-4 pt-6" data-testid="game-first-result">
-        <div className="rounded-lg border border-[#3A3A3D] bg-[#2A2A2D] p-5 text-center">
-          <h2 className="text-xl font-bold text-[#F2EFE8]">Daily challenge done</h2>
-          <p className="mt-3 text-4xl font-bold text-[#F2EFE8]">
-            {score}/{questions.length}
+      <div className="relative pt-6" data-testid="game-first-result">
+        <Confetti />
+        <div className="relative z-10 rounded-2xl border border-white/10 bg-[rgba(30,60,114,.8)] p-6 text-center shadow backdrop-blur-[10px]">
+          <h2 className="text-2xl font-bold text-white">Nice round!</h2>
+          <p className="mt-3 text-5xl font-extrabold text-white">
+            {score} / {questions.length}
           </p>
-          <p className="mt-1 text-sm text-[#ADADA6]">+{reward} virtual coins</p>
+          <p className="mt-1 text-sm text-gray-300">{cat?.name ?? category} daily challenge</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <span className="rounded-full border border-orange-400 bg-orange-500/20 px-3 py-1 text-sm font-semibold text-orange-300">+{reward} coins</span>
+            {streak > 0 && (
+              <span className="flex items-center gap-1 rounded-full border border-orange-400 bg-orange-500/20 px-3 py-1 text-sm font-semibold text-orange-300">
+                <FlameIcon /> {streak}-day streak
+              </span>
+            )}
+          </div>
+          <div className="mt-5 grid gap-3">
+            <div className="rounded-xl border border-green-400/30 bg-green-500/10 p-3">
+              <p className="text-xs font-semibold uppercase text-green-300">Score</p>
+              <p className="mt-1 text-lg font-bold text-white">{score} of {questions.length} correct, {pctCorrect}%</p>
+            </div>
+            <div className="rounded-xl border border-orange-400/30 bg-orange-500/10 p-3">
+              <p className="text-xs font-semibold uppercase text-orange-300">Reward</p>
+              <p className="mt-1 text-lg font-bold text-white">+{reward} coins earned</p>
+            </div>
+            <div className="rounded-xl border border-blue-400/30 bg-blue-500/10 p-3">
+              <p className="text-xs font-semibold uppercase text-blue-300">Next</p>
+              <p className="mt-1 text-lg font-bold text-white">Level {level}: {quizzesTowardNext} of 5 quizzes to Level {level + 1}</p>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500" style={{ width: `${(quizzesTowardNext / 5) * 100}%` }} />
+              </div>
+            </div>
+          </div>
           <div className="mt-5 flex flex-col gap-3">
             <button
               onClick={onPlayAgain}
-              className="min-h-[48px] rounded-md bg-[#1F77D0] px-4 font-semibold text-white hover:bg-[#4DB2FF] hover:text-[#100F0F]"
+              className="min-h-[48px] rounded-xl bg-orange-500 px-4 font-bold text-white transition-colors hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              Play again
+              Play another quiz
             </button>
             <button
               onClick={share}
-              className="min-h-[48px] rounded-md border border-[#3A3A3D] px-4 font-semibold text-[#F2EFE8] hover:border-[#4DB2FF]"
+              className="min-h-[48px] rounded-xl border border-white/20 px-4 font-semibold text-white transition-colors hover:border-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
-              Share result
+              Share my score
             </button>
             <button
               onClick={() => setShowProfile(true)}
-              className="min-h-[48px] rounded-md border border-[#3A3A3D] px-4 font-semibold text-[#F2EFE8] hover:border-[#4DB2FF]"
+              className="min-h-[48px] rounded-xl border border-white/20 px-4 font-semibold text-white transition-colors hover:border-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
               Save progress: create profile
             </button>
           </div>
-          <p role="status" className="mt-2 min-h-[20px] text-xs text-[#ADADA6]">
+          <p role="status" className="mt-2 min-h-[20px] text-xs text-gray-300">
             {shareNote}
           </p>
         </div>
@@ -183,20 +218,20 @@ function Round({
 
   return (
     <>
-      <div className="px-4 pt-4">
-        <div className="mb-3 flex items-center justify-between text-sm text-[#E6E3DC]">
+      <div className="pt-4">
+        <div className="mb-3 flex items-center justify-between text-sm text-white">
           <span>
             Question {currentQuestion + 1} of {questions.length}
           </span>
           <span
-            className={`font-semibold tabular-nums ${urgent ? 'text-[#FCA5A5]' : 'text-[#E6E3DC]'}`}
+            className={`font-semibold tabular-nums ${urgent ? 'text-red-300' : 'text-white'}`}
             data-testid="timer"
           >
             {selectedAnswer === null ? `${secondsLeft}s` : 'Locked in'}
           </span>
         </div>
         <div
-          className="mb-4 h-2 overflow-hidden rounded-full bg-[#242426]"
+          className="mb-4 h-2 overflow-hidden rounded-full bg-white/10"
           role="progressbar"
           aria-label="Time left for this question"
           aria-valuemin={0}
@@ -204,7 +239,7 @@ function Round({
           aria-valuenow={secondsLeft}
         >
           <div
-            className={`h-full rounded-full ${urgent ? 'bg-[#FCA5A5]' : 'bg-[#0091F9]'} transition-[width] duration-1000 ease-linear motion-reduce:transition-none`}
+            className={`h-full rounded-full ${urgent ? 'bg-purple-300' : 'bg-blue-400'} transition-[width] duration-1000 ease-linear motion-reduce:transition-none`}
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -219,7 +254,7 @@ function Round({
           encouragementMessages={false}
           mode="enhanced"
         />
-        <button onClick={() => setShowExit(true)} className="mt-4 min-h-[44px] text-sm text-[#ADADA6] underline">
+        <button onClick={() => setShowExit(true)} className="mt-4 min-h-[44px] text-sm text-gray-300 underline">
           Leave quiz
         </button>
       </div>
@@ -237,19 +272,22 @@ function Round({
   )
 }
 
-/** Above-the-fold hero: daily challenge card + big Start quiz button. */
 export function GameFirstHero() {
-  const [round, setRound] = useState(0) // 0 = not started
+  const [round, setRound] = useState(0)
   const [daily] = useState(() => getDailyChallenge())
-  const [doneScore, setDoneScore] = useState<string | null>(null)
+  const [countdown, setCountdown] = useState('--:--:--')
+  const [mounted, setMounted] = useState(false)
+  const streak = useDailyStreak()
 
   useEffect(() => {
-    try {
-      setDoneScore(localStorage.getItem(`tk_daily_done_${utcDateKey()}`))
-    } catch {
-      /* ignore */
+    setMounted(true)
+    const update = () => {
+      setCountdown(formatHMS(secondsUntilUtcMidnight(new Date())))
     }
-  }, [round])
+    update()
+    const interval = setInterval(update, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   const cat = QUIZ_CATEGORIES[daily.category]
 
@@ -278,27 +316,34 @@ export function GameFirstHero() {
   }
 
   return (
-    <section aria-labelledby="daily-heading" className="px-4 pt-3">
-      <div className="rounded-lg border border-[#3A3A3D] bg-[#2A2A2D] p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[#EF7300]">Daily challenge</p>
-        <h2 id="daily-heading" className="mt-1 text-xl font-bold leading-7 text-[#F2EFE8]">
-          <span aria-hidden="true">{cat?.icon} </span>
+    <section aria-labelledby="daily-heading" className="pt-3 lg:pt-0">
+      <div className="rounded-2xl border border-white/10 bg-[rgba(30,60,114,.8)] p-5 shadow backdrop-blur-[10px]">
+        <p className="text-xs font-bold uppercase tracking-wide text-blue-200">Daily challenge</p>
+        <h2 id="daily-heading" className="mt-2 text-3xl font-bold text-orange-400">
           {cat?.name ?? daily.category}
         </h2>
-        <p className="mt-1 text-sm text-[#E6E3DC]">
-          5 questions, {SECONDS_PER_QUESTION} seconds each. New challenge every day at midnight UTC.
+        <p className="mt-1 text-sm text-gray-200">
+          5 questions, {SECONDS_PER_QUESTION} seconds each.
         </p>
-        {doneScore !== null && (
-          <p className="mt-2 text-sm text-[#2EA48B]">Today&apos;s best on this device: {doneScore}/5</p>
-        )}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-200">
+            <span className="sr-only">Resets at 00:00 UTC. Time remaining: </span>
+            <span aria-hidden="true">Resets in {mounted ? countdown : '--:--:--'} (00:00 UTC)</span>
+          </span>
+          {streak > 0 && (
+            <span className="flex items-center gap-1 rounded-full border border-orange-400/30 bg-orange-500/10 px-3 py-1.5 text-sm font-semibold text-orange-300">
+              <FlameIcon /> {streak}-day streak
+            </span>
+          )}
+        </div>
         <button
           onClick={start}
           data-testid="start-quiz"
-          className="mt-4 min-h-[56px] w-full rounded-md bg-[#1F77D0] px-4 text-lg font-bold text-white transition-colors hover:bg-[#4DB2FF] hover:text-[#100F0F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4DB2FF]"
+          className="tk-start-bounce mt-4 min-h-[56px] w-full rounded-xl bg-orange-500 px-4 text-xl font-extrabold text-white transition-colors hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Start quiz
         </button>
-        <p className="mt-2 text-xs text-[#ADADA6]">Free to play. Coins are virtual, not cash.</p>
+        <p className="mt-2 text-xs text-gray-300">Free to play. Coins are virtual, not cash.</p>
       </div>
     </section>
   )
