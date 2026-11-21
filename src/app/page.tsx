@@ -1,9 +1,11 @@
 import { QuizCatalog } from '@/components/seo/QuizCatalog'
 import HomePageClient from './HomePageClient'
+import { HomeExposure } from '@/components/home/HomeExposure'
 
 export default function HomePage() {
   return (
     <>
+      <HomeExposure variant="control" />
       <header className="px-4 pt-4 pb-2 text-white">
         <h1 className="text-xl font-semibold leading-7">TechKwiz Play</h1>
         <p className="mt-2 text-sm leading-6 text-gray-200">

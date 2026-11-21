@@ -8,7 +8,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -20,6 +20,7 @@ import { saveUser } from '@/utils/auth'
 import { calculateQuizReward } from '@/utils/rewardCalculator'
 import { useHomepageQuizQuestions } from '@/hooks/useHomepageQuizQuestions'
 import { useHomepageQuizProgression } from '@/hooks/useHomepageQuizProgression'
+import { trackEvent, readAbContext } from '@/lib/ga4'
 
 const UnifiedQuizInterface = dynamic(() => import('@/components/quiz/UnifiedQuizInterface').then(mod => mod.UnifiedQuizInterface), {
   loading: () => <div className="h-64 bg-gray-800/50 rounded-xl animate-pulse" />
@@ -51,7 +52,34 @@ export default function HomePage() {
     handleAnswerSelect,
   } = useHomepageQuizProgression(quickStartQuiz)
 
+  const startedTracked = useRef(false)
+  const completedTracked = useRef(false)
+
+  useEffect(() => {
+    if (!(showResult && quizCompleted) || completedTracked.current) return
+    completedTracked.current = true
+    const ctx = readAbContext('control')
+    trackEvent('quiz_complete', {
+      category: 'homepage_quick',
+      source: 'homepage_quick',
+      score,
+      total: quickStartQuiz.length,
+      experiment_variant: ctx.variant,
+      experiment_group: ctx.group,
+    })
+  }, [showResult, quizCompleted, score, quickStartQuiz.length])
+
   const handleQuizAnswerSelect = (answerIndex: number) => {
+    if (!startedTracked.current) {
+      startedTracked.current = true
+      const ctx = readAbContext('control')
+      trackEvent('quiz_start', {
+        category: 'homepage_quick',
+        source: 'homepage_quick',
+        experiment_variant: ctx.variant,
+        experiment_group: ctx.group,
+      })
+    }
     markAnswered()
     handleAnswerSelect(answerIndex)
   }
