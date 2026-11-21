@@ -219,16 +219,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'TikTok'
     },
     {
-      id: 'pop_003',
-      question: 'Which artist broke Spotify streaming records in 2024?',
-      options: ['Taylor Swift', 'Bad Bunny', 'Billie Eilish', 'The Weeknd'],
-      correct_answer: 0,
-      difficulty: 'intermediate',
-      fun_fact: 'Taylor Swift\'s re-recorded albums have dominated streaming platforms!',
-      category: 'pop-culture-flash', 
-      subcategory: 'Music'
-    },
-    {
       id: 'pop_004',
       question: 'What does "periodt" mean in Gen Z slang?',
       options: ['Time period', 'End of discussion', 'Asking a question', 'Being confused'],
@@ -481,16 +471,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'Quick Fire'
     },
     {
-      id: 'micro_003', 
-      question: 'Which planet spins backwards?',
-      options: ['Mars', 'Venus', 'Uranus', 'Neptune'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'Venus rotates clockwise, opposite to most planets in our solar system!',
-      category: 'micro-trivia',
-      subcategory: 'Brain Teasers'
-    },
-    {
       id: 'micro_004',
       question: 'What\'s the fastest land animal?',
       options: ['Lion', 'Cheetah', 'Gazelle', 'Greyhound'],
@@ -499,16 +479,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       fun_fact: 'Cheetahs can reach speeds up to 70 mph in short bursts!',
       category: 'micro-trivia',
       subcategory: 'Speed Round'
-    },
-    {
-      id: 'micro_005',
-      question: 'How many bones are babies born with?',
-      options: ['206', '270', '350', '400'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'Babies are born with 270 bones, but many fuse together as they grow!',
-      category: 'micro-trivia',
-      subcategory: 'Random Facts'
     },
     {
       id: 'micro_006',
@@ -875,22 +845,12 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       subcategory: 'TikTok Slang'
     },
     {
-      id: 'trend_002',
-      question: 'Which dance trend was popularized by "Renegade"?',
-      options: ['Flossing', 'The Dab', 'Whip and Nae Nae', 'Arm wave sequences'],
-      correct_answer: 3,
-      difficulty: 'intermediate',
-      fun_fact: 'The Renegade dance had over 500 million views on TikTok within months!',
-      category: 'trend-vibes',
-      subcategory: 'Viral Trends'
-    },
-    {
       id: 'trend_003',
       question: 'What does "rizz" refer to?',
       options: ['Skill in picking up romantic partners', 'A type of car', 'A dance move', 'A food item'],
       correct_answer: 0,
       difficulty: 'beginner',
-      fun_fact: '"Rizz" was added to the Oxford English Dictionary in 2022!',
+      fun_fact: '"Rizz" was named Oxford Word of the Year and added to the Oxford English Dictionary in 2023!',
       category: 'trend-vibes',
       subcategory: 'Gen Z Language'
     },
@@ -910,7 +870,7 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       options: ['A dance move', 'A type of music', 'A meme trend', 'All of the above'],
       correct_answer: 3,
       difficulty: 'beginner',
-      fun_fact: '"Skibidi" originated from a 2019 song but resurfaced as a viral meme in 2023!',
+      fun_fact: '"Skibidi" originated from a 2018 song by Little Big but resurfaced as a viral meme trend in 2023!',
       category: 'trend-vibes',
       subcategory: 'TikTok Slang'
     },
@@ -1305,46 +1265,6 @@ export const QUIZ_DATABASE: Record<string, QuizQuestion[]> = {
       fun_fact: 'Jobs requiring creativity, emotional intelligence, and complex problem-solving are less likely to be automated!',
       category: 'future-you',
       subcategory: 'Tech Future'
-    },
-    {
-      id: 'future_002',
-      question: 'What percentage of future jobs don\'t exist today?',
-      options: ['25%', '50%', '75%', '90%'],
-      correct_answer: 1,
-      difficulty: 'advanced',
-      fun_fact: 'The World Economic Forum estimates that 65% of children entering primary school today will work in jobs that don\'t yet exist!',
-      category: 'future-you',
-      subcategory: 'Career Paths'
-    },
-    {
-      id: 'future_003',
-      question: 'Which technology will most impact education by 2030?',
-      options: ['Virtual Reality', 'Artificial Intelligence', 'Blockchain', 'Quantum Computing'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'AI-powered personalized learning could revolutionize how we approach education!',
-      category: 'future-you',
-      subcategory: 'Tech Future'
-    },
-    {
-      id: 'future_004',
-      question: 'What\'s the predicted timeline for human-level AI?',
-      options: ['2030', '2040', '2050', '2060+'],
-      correct_answer: 2,
-      difficulty: 'advanced',
-      fun_fact: 'Experts predict human-level AI could emerge between 2040-2050, but timelines are highly debated!',
-      category: 'future-you',
-      subcategory: 'AI vs Human'
-    },
-    {
-      id: 'future_005',
-      question: 'Which skill will be most valuable in 2030?',
-      options: ['Technical coding', 'Emotional intelligence', 'Data analysis', 'Digital marketing'],
-      correct_answer: 1,
-      difficulty: 'intermediate',
-      fun_fact: 'Soft skills like emotional intelligence are increasingly valued as automation handles technical tasks!',
-      category: 'future-you',
-      subcategory: 'Career Paths'
     },
     {
       id: 'future_006',
