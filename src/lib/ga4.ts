@@ -21,12 +21,20 @@ function privacySignal(): boolean {
   return nav.doNotTrack === '1' || nav.globalPrivacyControl === true
 }
 
+/** Variant label from the first-party A/B cookie: game_first, control, or none (excluded / test off). */
+export function homeVariantParam(): 'game_first' | 'control' | 'none' {
+  if (!HOME_AB_ENABLED || typeof document === 'undefined') return 'none'
+  return readAbContext('control').group === 'assigned' ? readAbContext('control').variant : 'none'
+}
+
 export function trackEvent(name: string, params: Params = {}): void {
   if (typeof window === 'undefined' || privacySignal()) return
+  // home_variant (event-scoped custom dimension in GA4) is added to every event. No PII.
   const clean: Record<string, Primitive> = {}
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined) clean[k] = v
   }
+  clean.home_variant = homeVariantParam() // set last so callers cannot override it
   const w = window as unknown as GtagWindow
   if (typeof w.gtag !== 'function') {
     // Tag script not loaded yet: install the standard gtag stub so events queue in dataLayer.
